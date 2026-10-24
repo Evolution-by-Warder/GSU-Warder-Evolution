@@ -127,7 +127,9 @@ class OriginalPortTests(unittest.TestCase):
             self.assertEqual(screen.getCaidInfo(info),'0624  181D  0668')
         screen.runECMTimer1=MagicMock();screen.showPicCode=MagicMock()
         ecm=(' (2.26.09-11968-802)\n','OScam\n','','0668\n','000000\n','000000\n','0C0A\n','server\n','192.168.10.6\n','0\n','0\n','0.126\n','Irdeto','','')
-        with patch.object(module,'ECMparser',return_value=ecm):screen.readEcmInfo()
+        with patch.object(module,'ECMparser',return_value=ecm) as parser:
+            screen.readEcmInfo()
+            parser.assert_called_once_with(cl=24)
         rows=screen['ecmValues'].text.splitlines()
         self.assertEqual(len(rows),11)
         self.assertEqual(rows[0],'OScam (2.26.09-11968-802)')
@@ -146,6 +148,16 @@ class OriginalPortTests(unittest.TestCase):
             screen.dataAvail('warning: read retry\n200 300 250 280\n190 200 195 199\n210 310 260 290\n191 201 196 200\n')
             self.assertEqual(screen['bit_act'].text,'Act:\n290\n200')
             self.assertEqual(screen['bit_avg'].text,'Avg:\n260\n196')
+
+    def test_channel_cam_width_leaves_room_for_full_revision_without_overlap(self):
+        import xml.etree.ElementTree as ET
+        screen=self.plugin.channelInfoCenter(types.SimpleNamespace())
+        tree=ET.fromstring(screen.skin)
+        values=tree.find("widget[@name='ecmValues']")
+        self.assertEqual(values.get('size'),'340,345')
+        x=int(values.get('position').split(',')[0])
+        channel=tree.find("widget[@name='picchannel']")
+        self.assertLess(x+340,int(channel.get('position').split(',')[0]))
 
     def test_every_original_class_function_and_signature_is_retained(self):
         tree=ast.parse(SOURCE.read_text());actual={}

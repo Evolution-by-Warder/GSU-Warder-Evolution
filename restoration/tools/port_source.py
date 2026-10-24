@@ -317,6 +317,11 @@ def _gsu_helper(name):
     body=''.join(lines)
     body=body.replace("if self.isBit == True and os.path.isfile(_gsu_helper('bitgenerator')):","if self.isBit:")
     source=source[:start]+body+source[end:]
+    start=source.index('class channelInfoCenter(');end=source.index('\nclass ',start+1)
+    body=source[start:end]
+    body=body.replace('self.skin = channelInfo_Center', r"""self.skin = sub(r'(<widget name="ecmValues"[^>]*size=")(\d+),(\d+)(")', lambda match: match[1] + '%d,%s' % (int(match[2]) * 340 // 292, match[3]) + match[4], channelInfo_Center)""", 1)
+    body=body.replace('= ECMparser()', '= ECMparser(cl=24)', 1)
+    source=source[:start]+body+source[end:]
     # Preserve class and method signatures; no placeholder function bodies.
     compile(source, 'plugin.py', 'exec')
     return source

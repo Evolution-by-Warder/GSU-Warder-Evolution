@@ -1,15 +1,15 @@
 {
   "python": "3.14.7",
-  "host_checks": 18,
+  "host_checks": 19,
   "host_checks_passed": true,
   "receiver_tested": false,
-  "source_sha256": "25be26f28a22299f5cfc4198a2c43ce0cecd62d4de4895c05cc0301747a374ec",
+  "source_sha256": "c82a7f2922460a00b03148d8b4e727b6b07cfb01bb2bcb822a90c7eb163171a3",
   "original_named_classes": 62,
   "original_named_functions": 510,
   "compatibility_replaced_internal_closures": [
     "generatePS.chck"
   ],
   "note": "Native API doubles validate import and menu construction, not hardware functionality.",
-  "receiver_evidence": "r5 screenshot confirms working video TS rate and all ECM rows. Audio TS rate is bursty (zero samples and a 1539 kbit/s spike); original PES helper previously measured stable 186-191 kbit/s on the same audio PID. r6 retains video TS filtering and uses a separate smaller-buffer PES audio filter; receiver confirmation pending.",
+  "receiver_evidence": "User confirmed r6 audio no longer jumps; screenshots show 194 kbit/s current audio, ~190 average and working video. r7 widens channel ECM value column from 292 to 340 px at FHD (scaled for SD/UHD), raises parser limit to 24 for full five-digit CAM revision; receiver confirmation pending.",
   "bitrate_worker_sha256": "b44d016d9900242a98e1afb753abe36225a9cfdcfa50bfc21be677fc6536fcdd"
 }

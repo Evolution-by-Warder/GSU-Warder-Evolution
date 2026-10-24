@@ -2380,7 +2380,7 @@ class GlassSysInfoBrowser(Screen):
 class channelInfoCenter(Screen):
 
     def __init__(self, session):
-        self.skin = channelInfo_Center
+        self.skin = sub(r'(<widget name="ecmValues"[^>]*size=")(\d+),(\d+)(")', lambda match: match[1] + '%d,%s' % (int(match[2]) * 340 // 292, match[3]) + match[4], channelInfo_Center)
         self.session = session
         Screen.__init__(self, session)
         self['ecmValues'] = Label()
@@ -2797,7 +2797,7 @@ class channelInfoCenter(Screen):
 
     def readEcmInfo(self):
         self.runECMTimer1.stop()
-        (oscVer, typecam, system, caid, provider, provid, pid, using, adress, hops, share, ecmTime, coding, dcw0, dcw1) = ECMparser()
+        (oscVer, typecam, system, caid, provider, provid, pid, using, adress, hops, share, ecmTime, coding, dcw0, dcw1) = ECMparser(cl=24)
         if using == 'unsupported CAs\n':
             self['ecmValues'].setText('..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............\n')
             coding = 'Unknown'
