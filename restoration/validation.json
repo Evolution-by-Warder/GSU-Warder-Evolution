@@ -1,6 +1,6 @@
 {
   "python": "3.14.7",
-  "host_checks": 17,
+  "host_checks": 18,
   "host_checks_passed": true,
   "receiver_tested": false,
   "source_sha256": "25be26f28a22299f5cfc4198a2c43ce0cecd62d4de4895c05cc0301747a374ec",
@@ -10,6 +10,6 @@
     "generatePS.chck"
   ],
   "note": "Native API doubles validate import and menu construction, not hardware functionality.",
-  "receiver_evidence": "r4 CAID deduplication confirmed, native ellipsis hid multiline ECM. Legacy helper log confirms zero video for PID 3001 and working audio PID 3011. r5 changes use a standalone TS-demux worker and nonwrapping multiline ECM; real receiver results pending.",
-  "bitrate_worker_sha256": "3e5e2c5a81b1e4fa338410188ec5c1bd4d2807bfc831b823dfca3e4ff48640d5"
+  "receiver_evidence": "r5 screenshot confirms working video TS rate and all ECM rows. Audio TS rate is bursty (zero samples and a 1539 kbit/s spike); original PES helper previously measured stable 186-191 kbit/s on the same audio PID. r6 retains video TS filtering and uses a separate smaller-buffer PES audio filter; receiver confirmation pending.",
+  "bitrate_worker_sha256": "b44d016d9900242a98e1afb753abe36225a9cfdcfa50bfc21be677fc6536fcdd"
 }

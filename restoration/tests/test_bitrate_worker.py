@@ -19,6 +19,12 @@ class WorkerTests(unittest.TestCase):
             self.assertEqual(ioctl.call_args_list[0].args,(17,worker.DMX_SET_BUFFER_SIZE,1048576))
             self.assertEqual(struct.unpack('=H2xIIII',ioctl.call_args_list[1].args[2]),(3001,0,3,20,4))
 
+    def test_audio_uses_pes_tap_with_smaller_buffer(self):
+        with patch.object(worker.os,'open',return_value=18),patch.object(worker.fcntl,'ioctl') as ioctl:
+            self.assertEqual(worker.open_reader(0,0,3011,output=1),18)
+            self.assertEqual(ioctl.call_args_list[0].args,(18,worker.DMX_SET_BUFFER_SIZE,65536))
+            self.assertEqual(struct.unpack('=H2xIIII',ioctl.call_args_list[1].args[2]),(3011,0,1,20,4))
+
     def test_failed_filter_closes_fd_and_missing_pid_opens_nothing(self):
         with patch.object(worker.os,'open',return_value=17) as op,patch.object(worker.os,'close') as close,patch.object(worker.fcntl,'ioctl',side_effect=OSError(22,'unsupported')):
             with self.assertRaises(OSError):worker.open_reader(0,0,3001)
@@ -32,7 +38,9 @@ class WorkerTests(unittest.TestCase):
 
     def test_two_pid_sampling_outputs_rates_and_closes_on_stop(self):
         output=io.StringIO()
-        with patch.object(worker,'open_reader',side_effect=[17,18]),patch.object(worker,'read_ready',side_effect=[100000,25000,200000,25000]),patch.object(worker.select,'select',side_effect=[([17,18],[],[]),([17,18],[],[]),KeyboardInterrupt()]),patch.object(worker.time,'monotonic',side_effect=[0,0,1,1,2,2]),patch.object(worker.os,'close') as close,contextlib.redirect_stdout(output):
+        with patch.object(worker,'open_reader',side_effect=[17,18]) as reader,patch.object(worker,'read_ready',side_effect=[100000,25000,200000,25000]) as read,patch.object(worker.select,'select',side_effect=[([17,18],[],[]),([17,18],[],[]),KeyboardInterrupt()]),patch.object(worker.time,'monotonic',side_effect=[0,0,1,1,2,2]),patch.object(worker.os,'close') as close,contextlib.redirect_stdout(output):
             with self.assertRaises(KeyboardInterrupt):worker.main(['0','0','3001','3011'])
         self.assertEqual(output.getvalue().splitlines(),['800 800 800 800','200 200 200 200','800 1600 1200 1600','200 200 200 200'])
         self.assertEqual({c.args[0] for c in close.call_args_list},{17,18})
+        self.assertEqual([c.kwargs['output'] for c in reader.call_args_list],[3,1])
+        self.assertEqual([c.args for c in read.call_args_list],[(17,262144),(18,32768),(17,262144),(18,32768)])

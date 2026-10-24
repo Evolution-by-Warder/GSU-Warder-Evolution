@@ -2,7 +2,8 @@
 
 Linux DVB demux UAPI: DMX_OUT_TSDEMUX_TAP delivers filtered TS packets
 from the demux fd, including packets a legacy PES reader cannot deliver.
-Rates include transport headers. No decoder filters or receiver settings change.
+Video rates include transport headers; audio uses the low-latency PES tap.
+No decoder filters or receiver settings change.
 """
 import errno
 import fcntl
@@ -17,26 +18,26 @@ DMX_SET_BUFFER_SIZE = (0x20000000 if platform.machine().startswith('mips') else 
 DMX_SET_PES_FILTER = (0x80000000 if platform.machine().startswith('mips') else 0x40000000) | (20 << 16) | 0x6f2c
 
 
-def open_reader(adapter, demux, pid):
+def open_reader(adapter, demux, pid, output=3):
     if not 0 <= pid < 0x1fff:
         return None
     fd = os.open('/dev/dvb/adapter%d/demux%d' % (adapter, demux), os.O_RDONLY | os.O_NONBLOCK)
     try:
-        fcntl.ioctl(fd, DMX_SET_BUFFER_SIZE, 1024 * 1024)
-        # pid, input=FRONTEND, output=TSDEMUX_TAP, pes_type=OTHER,
+        fcntl.ioctl(fd, DMX_SET_BUFFER_SIZE, 64 * 1024 if output == 1 else 1024 * 1024)
+        # pid, input=FRONTEND, output=TSDEMUX_TAP (video) / TAP (audio),
         # flags=IMMEDIATE_START; explicit padding matches the 20-byte UAPI.
-        fcntl.ioctl(fd, DMX_SET_PES_FILTER, struct.pack('=H2xIIII', pid, 0, 3, 20, 4))
+        fcntl.ioctl(fd, DMX_SET_PES_FILTER, struct.pack('=H2xIIII', pid, 0, output, 20, 4))
         return fd
     except BaseException:
         os.close(fd)
         raise
 
 
-def read_ready(fd):
+def read_ready(fd, chunk_size=256 * 1024):
     total = 0
     for _ in range(8):
         try:
-            data = os.read(fd, 256 * 1024)
+            data = os.read(fd, chunk_size)
         except BlockingIOError:
             break
         except OSError as error:
@@ -78,7 +79,7 @@ def main(arguments):
     try:
         for index, pid in enumerate((vpid, apid)):
             try:
-                fd = open_reader(adapter, demux, pid)
+                fd = open_reader(adapter, demux, pid, output=3 if index == 0 else 1)
                 if fd is not None:
                     readers[fd] = index
             except OSError as error:
@@ -90,7 +91,8 @@ def main(arguments):
             ready, _, _ = select.select(list(readers), [], [], max(0, 1 - (time.monotonic() - last)))
             for fd in ready:
                 try:
-                    counters[readers[fd]] += read_ready(fd)
+                    index = readers[fd]
+                    counters[index] += read_ready(fd, 32 * 1024 if index == 1 else 256 * 1024)
                 except OSError as error:
                     print('read failed errno=%s' % error.errno, file=sys.stderr, flush=True)
                     os.close(fd)
