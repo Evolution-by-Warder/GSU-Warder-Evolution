@@ -153,6 +153,52 @@ def _gsu_helper(name):
         source=source.replace(repr('/usr/bin/hdd_temp_g'+suffix), "(_gsu_helper('hdd_temp_g') + "+repr(suffix)+")")
     source=source.replace("    cpu = open('/proc/cpuinfo', 'r').read()", "    with open('/proc/cpuinfo', 'r') as _cpu_file:\n        cpu = _cpu_file.read()")
     source=source.replace("self['blue'] = Label(_('Update'))", "self['blue'] = Label('')", 1)
+    # Both Enigma timer APIs must reach the same initial panel population.
+    # Keep one CPU timer when yellow refresh is pressed repeatedly.
+    tree=ast.parse(source)
+    lines=source.splitlines(keepends=True)
+    screen=next(n for n in tree.body if isinstance(n,ast.ClassDef) and n.name=='GlassSysInfoBrowser')
+    edits=[]
+    for method in screen.body:
+        if not isinstance(method,ast.FunctionDef):
+            continue
+        if method.name=='__init__':
+            for node in ast.walk(method):
+                if isinstance(node,ast.Assign) and any(isinstance(t,ast.Attribute) and t.attr=='cpu_count' for t in node.targets):
+                    edits.append((node.lineno-1,node.lineno-1,'        self.cpuTimer = None\n'))
+        elif method.name=='exit':
+            edits.append((method.lineno-1,method.end_lineno,"""    def exit(self):
+        system('rm -rf /tmp/top.info')
+        if self.cpuTimer is not None:
+            self.cpuTimer.stop()
+        self.cpuTimer = None
+        self.close()
+        return
+"""))
+        elif method.name=='LetsgoParty':
+            edits.append((method.lineno-1,method.end_lineno,"""    def LetsgoParty(self):
+        self.ena = True
+        if self.size < 1280:
+            self.close()
+            return
+        self.getMemInfo()
+        self.getSpaceInfo()
+        self.getServicesInfo()
+        self['sensors'].setText(self.getTempSensorsInfo())
+        if self.cpuTimer is None:
+            self.cpuTimer = eTimer()
+            try:
+                self.cpuTimer_conn = self.cpuTimer.timeout.connect(self.getCPUInfo)
+            except AttributeError:
+                self.cpuTimer.timeout.get().append(self.getCPUInfo)
+        self.cpuTimer.start(200)
+        self['ProccessInfo'].setText(self.getProccess())
+        self['DmesgInfo'].setText(self.getDmesg())
+        return
+"""))
+    for start,end,text in sorted(edits,reverse=True):
+        lines[start:end]=[text]
+    source=''.join(lines)
     # Preserve class and method signatures; no placeholder function bodies.
     compile(source, 'plugin.py', 'exec')
     return source

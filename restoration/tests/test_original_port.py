@@ -17,6 +17,41 @@ class OriginalPortTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):cls.plugin=load(ROOT)
 
+    def test_system_panels_and_cpu_refresh_work_with_both_timer_apis(self):
+        from unittest.mock import MagicMock
+        module=self.plugin
+        for modern in (False, True):
+            with self.subTest(modern=modern):
+                callbacks=[]
+                signal=types.SimpleNamespace(get=lambda:callbacks)
+                if modern:
+                    signal.connect=lambda cb:callbacks.append(cb)
+                timer=MagicMock();timer.timeout=signal
+                with patch.object(module,'eTimer',return_value=timer) as factory:
+                    screen=module.GlassSysInfoBrowser(types.SimpleNamespace())
+                    for name in ('getMemInfo','getSpaceInfo','getServicesInfo'):
+                        setattr(screen,name,MagicMock())
+                    screen.getTempSensorsInfo=MagicMock(return_value='CPU Temp.: 65 C')
+                    screen.getProccess=MagicMock(return_value='3013 oscam-stable\n')
+                    screen.getDmesg=MagicMock(return_value='Linux receiver kernel\n')
+                    screen.LetsgoParty()
+                    self.assertEqual(screen['ProccessInfo'].text,'3013 oscam-stable\n')
+                    self.assertEqual(screen['DmesgInfo'].text,'Linux receiver kernel\n')
+                    timer.start.assert_called_with(200)
+                    self.assertEqual(callbacks,[screen.getCPUInfo])
+                    screen.getProccess.return_value='3017 oscam-stable\n'
+                    screen.LetsgoParty()
+                    self.assertEqual(screen['ProccessInfo'].text,'3017 oscam-stable\n')
+                    self.assertEqual(factory.call_count,1)
+                    self.assertEqual(callbacks,[screen.getCPUInfo])
+                    screen.exit()
+                    timer.stop.assert_called_once()
+
+    def test_system_screen_can_close_before_initial_refresh(self):
+        screen=self.plugin.GlassSysInfoBrowser(types.SimpleNamespace())
+        screen.exit()
+        self.assertIsNone(screen.cpuTimer)
+
     def test_every_original_class_function_and_signature_is_retained(self):
         tree=ast.parse(SOURCE.read_text());actual={}
         def walk(nodes,prefix=''):

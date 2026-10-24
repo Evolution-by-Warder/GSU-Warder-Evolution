@@ -2041,6 +2041,7 @@ class GlassSysInfoBrowser(Screen):
         self['red'] = Label(_('Exit'))
         self['green'] = Label(_('Help'))
         self['yellow'] = Label(_('Refresh'))
+        self.cpuTimer = None
         self.cpu_count = 0
         self.prev_info = self.getCpuInfo(-3)
         self.curr_info = self.getCpuInfo()
@@ -2065,7 +2066,7 @@ class GlassSysInfoBrowser(Screen):
 
     def exit(self):
         system('rm -rf /tmp/top.info')
-        if self.cpuTimer.isActive():
+        if self.cpuTimer is not None:
             self.cpuTimer.stop()
         self.cpuTimer = None
         self.close()
@@ -2073,22 +2074,22 @@ class GlassSysInfoBrowser(Screen):
 
     def LetsgoParty(self):
         self.ena = True
-        if self.size >= 1280:
-            self.getMemInfo()
-            self.getSpaceInfo()
-            self.getServicesInfo()
-            self['sensors'].setText(self.getTempSensorsInfo())
+        if self.size < 1280:
+            self.close()
+            return
+        self.getMemInfo()
+        self.getSpaceInfo()
+        self.getServicesInfo()
+        self['sensors'].setText(self.getTempSensorsInfo())
+        if self.cpuTimer is None:
             self.cpuTimer = eTimer()
             try:
                 self.cpuTimer_conn = self.cpuTimer.timeout.connect(self.getCPUInfo)
-            except:
+            except AttributeError:
                 self.cpuTimer.timeout.get().append(self.getCPUInfo)
-            else:
-                self.cpuTimer.start(200)
-                self['ProccessInfo'].setText(self.getProccess())
-                self['DmesgInfo'].setText(self.getDmesg())
-        else:
-            self.close()
+        self.cpuTimer.start(200)
+        self['ProccessInfo'].setText(self.getProccess())
+        self['DmesgInfo'].setText(self.getDmesg())
         return
 
     def pageUp(self):
