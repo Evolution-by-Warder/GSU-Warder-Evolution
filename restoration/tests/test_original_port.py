@@ -92,7 +92,9 @@ class OriginalPortTests(unittest.TestCase):
                 for name in ('picchannel','picprov','picsat','piccode','piccam'):
                     screen[name].instance.setPixmapFromFile=MagicMock()
                 screen.showPicCode=MagicMock()
+                screen['ecmValues'].instance.setWrap=MagicMock()
                 screen.startInfo()
+                screen['ecmValues'].instance.setWrap.assert_called_once_with(0)
                 self.assertEqual(len(timers),2)
                 self.assertEqual(callbacks,[[screen.startBitrate],[screen.readEcmInfo]])
                 timers[0].start.assert_called_with(1000)

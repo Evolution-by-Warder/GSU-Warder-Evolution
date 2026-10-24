@@ -286,6 +286,37 @@ def _gsu_helper(name):
     assert old in body
     body=body.replace(old,new,1)
     source=source[:start]+body+source[end:]
+    start=source.index('class channelInfoCenter(');end=source.index('\nclass ',start+1)
+    body=source[start:end].replace("self['ecmValues'].instance.setWrap(2)","self['ecmValues'].instance.setWrap(0)")
+    body=body.replace('if not ENAEBTR and not ENA_Z:', 'if not ENAEBTR:')
+    body=body.replace("'native' if ENAEBTR else 'helper'","'native' if ENAEBTR else 'python-tsdemux'")
+    tree=ast.parse(body)
+    method=next(n for n in tree.body[0].body if isinstance(n,ast.FunctionDef) and n.name=='startBitrate')
+    # Replace only the legacy binary fallback; optional native calculator stays.
+    branch=next(n for n in ast.walk(method) if isinstance(n,ast.If) and isinstance(n.test,ast.BoolOp) and any(isinstance(x,ast.Constant) and x.value=='bitgenerator' for x in ast.walk(n.test)))
+    lines=body.splitlines(keepends=True)
+    lines[branch.lineno-1:branch.end_lineno]=[r"""            elif not self.isBit:
+                adapter = demux = 0
+                try:
+                    stream = service.stream()
+                    streamdata = stream.getStreamingData() if stream else {}
+                    adapter = int(streamdata.get('adapter', 0))
+                    demux = int(streamdata.get('demux', 0))
+                except (AttributeError, TypeError, ValueError):
+                    pass
+                worker = GSU_PATH + 'bitrate_worker.py'
+                python = shutil.which('python3') or '/usr/bin/python3'
+                cmd = '%s -u %s %d %d %d %d' % (python, worker, adapter, demux, vpid, apid)
+                try:
+                    with open('/tmp/gsu-bitrate.log', 'a') as handle:
+                        handle.write('engine=python-tsdemux\n' + cmd + '\n')
+                except OSError:
+                    pass
+                self.isBit = self.container.execute(cmd) == 0
+"""]
+    body=''.join(lines)
+    body=body.replace("if self.isBit == True and os.path.isfile(_gsu_helper('bitgenerator')):","if self.isBit:")
+    source=source[:start]+body+source[end:]
     # Preserve class and method signatures; no placeholder function bodies.
     compile(source, 'plugin.py', 'exec')
     return source

@@ -2419,7 +2419,7 @@ class channelInfoCenter(Screen):
         return
 
     def startInfo(self):
-        self['ecmValues'].instance.setWrap(2)
+        self['ecmValues'].instance.setWrap(0)
         for x in ('picprov', 'picsat', 'picchannel', 'piccode', 'piccam'):
             self[x].instance.setScale(1)
 
@@ -2656,7 +2656,7 @@ class channelInfoCenter(Screen):
         self._bitrate_buffer = ''
         self._bitrate_rows = []
         self._bitrate_samples = 0
-        if not ENAEBTR and not ENA_Z:
+        if not ENAEBTR:
             self.container = eConsoleAppContainer()
             self.container.dataAvail.append(self.dataAvail)
         service = self.session.nav.getCurrentService()
@@ -2668,7 +2668,7 @@ class channelInfoCenter(Screen):
             apid = serviceinfo.getInfo(iServiceInformation.sAudioPID)
             try:
                 with open('/tmp/gsu-bitrate.log', 'w') as handle:
-                    handle.write('engine=%s vpid=%d apid=%d\n' % ('native' if ENAEBTR else 'helper', vpid, apid))
+                    handle.write('engine=%s vpid=%d apid=%d\n' % ('native' if ENAEBTR else 'python-tsdemux', vpid, apid))
             except OSError:
                 pass
             if ENAEBTR:
@@ -2715,31 +2715,24 @@ class channelInfoCenter(Screen):
                         except:
                             pass
 
-            elif not ENA_Z and os.path.isfile(_gsu_helper('bitgenerator')) and self.isBit == False:
-                demux = 2
-                a = ''
+            elif not self.isBit:
+                adapter = demux = 0
                 try:
                     stream = service.stream()
-                    if stream:
-                        streamdata = stream.getStreamingData()
-                        if streamdata:
-                            if 'demux' in streamdata:
-                                demux = streamdata['demux']
-                            if XCPU == 'arm':
-                                a = '0 '
-                                if 'adapter' in streamdata:
-                                    a = str(streamdata['adapter']) + ' '
-                except:
+                    streamdata = stream.getStreamingData() if stream else {}
+                    adapter = int(streamdata.get('adapter', 0))
+                    demux = int(streamdata.get('demux', 0))
+                except (AttributeError, TypeError, ValueError):
                     pass
-                else:
-                    cmd = '%s %s%s %s %s' % (_gsu_helper('bitgenerator'), a, str(demux), str(vpid), str(apid))
-                    try:
-                        with open('/tmp/gsu-bitrate.log', 'a') as handle:
-                            handle.write(cmd + '\n')
-                    except OSError:
-                        pass
-                    self.container.execute(cmd)
-                    self.isBit = True
+                worker = GSU_PATH + 'bitrate_worker.py'
+                python = shutil.which('python3') or '/usr/bin/python3'
+                cmd = '%s -u %s %d %d %d %d' % (python, worker, adapter, demux, vpid, apid)
+                try:
+                    with open('/tmp/gsu-bitrate.log', 'a') as handle:
+                        handle.write('engine=python-tsdemux\n' + cmd + '\n')
+                except OSError:
+                    pass
+                self.isBit = self.container.execute(cmd) == 0
         return
 
     def getVideoBitrateData(self, value, status):
@@ -2788,7 +2781,7 @@ class channelInfoCenter(Screen):
         return
 
     def exit(self):
-        if self.isBit == True and os.path.isfile(_gsu_helper('bitgenerator')):
+        if self.isBit:
             self.isBit = False
             self.container.kill()
         if self.runECMTimer1 is not None:
