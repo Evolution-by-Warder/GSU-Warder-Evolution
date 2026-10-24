@@ -50,3 +50,7 @@ Read modern HTML reader rows by `readercol` cell classes rather than positional 
 ## 13.40-r10: exact 11968 receiver markup
 
 The supplied receiver HTML establishes that status/address is readercol20, protocol is the readercol2 data-sort-value, and the added TOUT column moves the two-value Filtered counter to readercol7 and EMM error/written/skipped/blocked to readercol8-11. Read these correctly while retaining the older four-value readercol7 layout. A sanitized four-row fixture derived from the actual page validates exact counters for local/upstream readers, disabled status, protocol metadata, status/address spacing and HTML reflow. Only the sanitized table rows are committed, not the supplied full WebIf page. Receiver confirmation pending.
+
+## Receiver checkpoint — 2026-10-24 evening
+
+The r10 Readers screen is now confirmed on the receiver. Detailed partial validation, remaining limits and the exact next step are recorded in [TESTOVANIE.md](TESTOVANIE.md). Resume at standalone ECM Information: confirm live ECM Time refresh, fix its still-truncated five-digit CAM revision, then continue with CAM/SRV. This documentation checkpoint does not change the runtime or issue another IPK.

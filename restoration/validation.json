@@ -10,7 +10,8 @@
     "generatePS.chck"
   ],
   "note": "Native API doubles validate import and menu construction, not hardware functionality.",
-  "receiver_evidence": "Supplied real Readers HTML from OSCam 2.26.09-11968-802 confirms status/address in readercol20, plaintext protocol in readercol2, Filtered in readercol7, EMM counters in readercol8-11. Sanitized four-row fixture validates exact source counts and backward compatibility. r10 receiver display confirmation pending.",
+  "receiver_evidence": "Partial receiver validation through 2026-10-24 evening: r10 reader protocols/status/address and EMM columns confirmed in four screenshots; system/channel displays and scrolling, measured bitrate, OSCam live log/config viewing, card entitlements and uptime script execution confirmed. IPK install/remove lists and empty TAR screen open; package-changing operations untested. Standalone ECM screen loads data/logo; live refresh confirmation pending and CAM revision still truncated to 1196.. . See TESTOVANIE.md for exact resume point and remaining limits.",
   "bitrate_worker_sha256": "b44d016d9900242a98e1afb753abe36225a9cfdcfa50bfc21be677fc6536fcdd",
-  "oscam_readers_parser_sha256": "dfac5fba47e8181bd3d4f2cb55f026c06d107e73307b9401c0deea229c8d3a85"
+  "oscam_readers_parser_sha256": "dfac5fba47e8181bd3d4f2cb55f026c06d107e73307b9401c0deea229c8d3a85",
+  "receiver_validation_scope": "partial; receiver_tested=false means the complete plugin is not yet validated"
 }
