@@ -336,6 +336,34 @@ def _gsu_helper(name):
                 if lines[row].strip():lines[row]=lines[row][4:]
             lines[first-1]=''
     source=''.join(lines)
+    source=source.replace('from Plugins.Extensions.GlassSysUtil.cccam_transport import open_text as _cccam_open', 'from Plugins.Extensions.GlassSysUtil.cccam_transport import open_text as _cccam_open\nfrom Plugins.Extensions.GlassSysUtil.oscam_readers_parser import parse_readers as _oscam_readers',1)
+    start=source.index('class oscam_readers(');end=source.index('\nclass ',start+1)
+    body=source[start:end]
+    marker="        self.list = []\n        tmptxt = []"
+    replacement=r"""        records = _oscam_readers(data)
+        if records:
+            self.list = []
+            for index, record in enumerate(records):
+                color = 'green' if record['enabled'] else 'red'
+                values = [str(index), record['label'], record['protocol']] + record['counts'] + [color]
+                infoline = '*'.join(value.replace('*', ' ') for value in values)
+                text = _('Name') + ': ' + record['label'] + ', ' + _('used protocol') + ': ' + record['protocol']
+                if record['status']:
+                    text += ' | ' + record['status']
+                item = [infoline]
+                item.append(MultiContentEntryText(pos=(fhd(25), 0), size=(fhd(850), fhd(22)), font=0, text=text))
+                item.append(MultiContentEntryPixmapAlphaTest(pos=(0, fhd(3)), size=(fhd(15), fhd(16)), png=LoadPixmap(BP_ICO % color)))
+                self.list.append(item)
+            self['list'].l.setList(self.list)
+            self.reactivate()
+            return
+        self.list = []
+        tmptxt = []"""
+    assert marker in body
+    body=body.replace(marker,replacement,1)
+    # Legacy parser still applies when column-class markup is absent.
+    body=body.replace("            self['list'].l.setList(self.list)\n            self.reactivate()\n        return", "        self['list'].l.setList(self.list)\n        self.reactivate()\n        return",1)
+    source=source[:start]+body+source[end:]
     # Preserve class and method signatures; no placeholder function bodies.
     compile(source, 'plugin.py', 'exec')
     return source

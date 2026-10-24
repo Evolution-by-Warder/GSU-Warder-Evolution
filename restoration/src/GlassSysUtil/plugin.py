@@ -5,6 +5,7 @@
 # Compiled at: 2021-03-28 16:56:23
 from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox
 from Plugins.Extensions.GlassSysUtil.cccam_transport import open_text as _cccam_open
+from Plugins.Extensions.GlassSysUtil.oscam_readers_parser import parse_readers as _oscam_readers
 from Components.Console import Console as CompConsole
 from Components.Sources.StaticText import StaticText
 from Plugins.Plugin import PluginDescriptor
@@ -7116,6 +7117,23 @@ class oscam_readers(Screen):
         if not isinstance(data, list):
             self.close()
             return
+        records = _oscam_readers(data)
+        if records:
+            self.list = []
+            for index, record in enumerate(records):
+                color = 'green' if record['enabled'] else 'red'
+                values = [str(index), record['label'], record['protocol']] + record['counts'] + [color]
+                infoline = '*'.join(value.replace('*', ' ') for value in values)
+                text = _('Name') + ': ' + record['label'] + ', ' + _('used protocol') + ': ' + record['protocol']
+                if record['status']:
+                    text += ' | ' + record['status']
+                item = [infoline]
+                item.append(MultiContentEntryText(pos=(fhd(25), 0), size=(fhd(850), fhd(22)), font=0, text=text))
+                item.append(MultiContentEntryPixmapAlphaTest(pos=(0, fhd(3)), size=(fhd(15), fhd(16)), png=LoadPixmap(BP_ICO % color)))
+                self.list.append(item)
+            self['list'].l.setList(self.list)
+            self.reactivate()
+            return
         self.list = []
         tmptxt = []
         state = []
@@ -7202,8 +7220,8 @@ class oscam_readers(Screen):
                 item.append(MultiContentEntryPixmapAlphaTest(pos=(0, fhd(3)), size=(fhd(15), fhd(16)), png=pix))
                 self.list.append(item)
 
-            self['list'].l.setList(self.list)
-            self.reactivate()
+        self['list'].l.setList(self.list)
+        self.reactivate()
         return
 
     def reactivate(self):

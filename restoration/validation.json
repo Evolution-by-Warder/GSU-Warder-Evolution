@@ -1,15 +1,15 @@
 {
   "python": "3.14.7",
-  "host_checks": 23,
+  "host_checks": 26,
   "host_checks_passed": true,
   "receiver_tested": false,
-  "source_sha256": "778193ac4f94613b6ccfad850fdbb54e53a1783cd6b632057f1720143f5cbce4",
+  "source_sha256": "c37e1391cb7de196349176785527a4a2157f9a5f20277106482480d36ca81bae",
   "original_named_classes": 62,
   "original_named_functions": 510,
   "compatibility_replaced_internal_closures": [
     "generatePS.chck"
   ],
   "note": "Native API doubles validate import and menu construction, not hardware functionality.",
-  "receiver_evidence": "User confirmed r7 channel display with complete CAM revision 11968 and working stable audio/video. r8 CCcam transport passes an actual local HTTP Basic authentication/Unicode test and menu tests; real CCcam WebInfo receiver validation pending.",
+  "receiver_evidence": "User confirmed OSCam summary selected details, entitlement rows after inserting a physical card, live log updates and scrolling, and oscam.version viewing/scrolling. Client populated state untested (no remote clients). Reader list screenshot showed status in protocol position, joined online/IP, and displaced EMM counters; r9 column-based parsing awaits receiver confirmation.",
   "bitrate_worker_sha256": "b44d016d9900242a98e1afb753abe36225a9cfdcfa50bfc21be677fc6536fcdd"
 }

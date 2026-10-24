@@ -177,6 +177,21 @@ class OriginalPortTests(unittest.TestCase):
         self.assertEqual(len(screen['list'].list),1)
         self.assertFalse(screen.status[screen['list'].getCurrent()[0]])
 
+    def test_oscam_reader_screen_uses_real_protocol_and_four_emm_counters(self):
+        from test_oscam_readers import fixture
+        from unittest.mock import MagicMock
+        module=self.plugin;session=types.SimpleNamespace(open=MagicMock())
+        screen=module.oscam_readers(session,'http://127.0.0.1:8888/','','')
+        with patch.object(module,'getUrlData',return_value=fixture()):screen.oscamreaders()
+        row=screen['list'].getCurrent()
+        self.assertIn('cs378x',row[1]['text'])
+        self.assertIn('online 192.168.10.6',row[1]['text'])
+        self.assertEqual(screen['status_values_0'].text,'0 / 1 / 2 / 3\n4 / 5 / 6 / 7')
+        self.assertEqual(screen['status_values_1'].text,'8 / 9 / 10 / 11\n12 / 13 / 14 / 15')
+        self.assertEqual(row[0].split('*')[2],'cs378x')
+        with patch.object(module.MessageBox,'TYPE_INFO',0,create=True):screen.entitlements()
+        self.assertIs(session.open.call_args.args[0],module.MessageBox)
+
     def test_every_original_class_function_and_signature_is_retained(self):
         tree=ast.parse(SOURCE.read_text());actual={}
         def walk(nodes,prefix=''):
