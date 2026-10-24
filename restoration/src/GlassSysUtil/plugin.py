@@ -4,6 +4,7 @@
 # Embedded file name: /usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/plugin.py
 # Compiled at: 2021-03-28 16:56:23
 from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox
+from Plugins.Extensions.GlassSysUtil.cccam_transport import open_text as _cccam_open
 from Components.Console import Console as CompConsole
 from Components.Sources.StaticText import StaticText
 from Plugins.Plugin import PluginDescriptor
@@ -853,7 +854,7 @@ def providerCount(url):
     if url.__contains__('127.0.0.1'):
         url = readURL()
     try:
-        file = urllibXX.urlopen(url + '/providers')
+        file = _cccam_open(url + '/providers')
     except:
         file = ''
 
@@ -2962,7 +2963,7 @@ class cccamInfo(Screen):
         if url.__contains__('127.0.0.1'):
             url = readURL()
         try:
-            file = urllibXX.urlopen(url + '/servers')
+            file = _cccam_open(url + '/servers')
         except:
             file = ''
 
@@ -3008,7 +3009,7 @@ class cccamInfo(Screen):
             self.status[x[0]] = False
             if x[0] != 'summary':
                 try:
-                    file = urllibXX.urlopen(url + '/' + x[0])
+                    file = _cccam_open(url + '/' + x[0])
                     for line in file.readlines():
                         if line.__contains__('card'):
                             if line.__contains__('no or unknown card inserted'):
@@ -3162,7 +3163,7 @@ class serversStatus(Screen):
         self.isReadyToChange = self.testFtp(url)
         file = ''
         try:
-            file = urllibXX.urlopen(url + '/servers')
+            file = _cccam_open(url + '/servers')
         except:
             file = ''
 
@@ -3278,7 +3279,7 @@ class providerStatus(Screen):
             url = readURL()
         file = ''
         try:
-            file = urllibXX.urlopen(url + '/providers')
+            file = _cccam_open(url + '/providers')
         except:
             file = ''
 
@@ -3345,7 +3346,7 @@ class sharesStatus(Screen):
         count = 0
         file = ''
         try:
-            file = urllibXX.urlopen(url + '/shares')
+            file = _cccam_open(url + '/shares')
         except:
             file = ''
 
@@ -3467,7 +3468,7 @@ class clientsStatus(Screen):
         self.isReadyToChange = self.testFtp(url)
         file = ''
         try:
-            file = urllibXX.urlopen(url + '/clients')
+            file = _cccam_open(url + '/clients')
         except:
             file = ''
 
@@ -3604,7 +3605,7 @@ class activeClientsStatus(Screen):
             url = readURL()
         file = ''
         try:
-            file = urllibXX.urlopen(url + '/activeclients')
+            file = _cccam_open(url + '/activeclients')
         except:
             file = ''
 
@@ -3685,7 +3686,7 @@ class entitlements(Screen):
         tmptxt = ''
         file = ''
         try:
-            file = urllibXX.urlopen(url + '/entitlements')
+            file = _cccam_open(url + '/entitlements')
         except:
             file = ''
 
@@ -3735,7 +3736,7 @@ class cccamSummary(Screen):
             url = readURL()
         file = ''
         try:
-            file = urllibXX.urlopen(url)
+            file = _cccam_open(url)
         except:
             file = ''
 
@@ -3771,7 +3772,7 @@ class cccamSummary(Screen):
                     peak = str(pomocna[1])
 
         try:
-            file = urllibXX.urlopen(url + '/servers')
+            file = _cccam_open(url + '/servers')
             for line in file.readlines():
                 if line.__contains__('Server connections:'):
                     pomocna = line.strip().split(':')
@@ -3781,7 +3782,7 @@ class cccamSummary(Screen):
             pass
 
         try:
-            file = urllibXX.urlopen(url + '/shares')
+            file = _cccam_open(url + '/shares')
             for line in file.readlines():
                 if line.__contains__('Available shares:'):
                     pomocna = line.strip().split(':')
@@ -3849,19 +3850,18 @@ class cccamInfoChoiceServer(Screen):
                                             url = url.replace('http://', 'http://%s:%s@' % (tmp[3], tmp[4]))
                                 self.status[line] = False
                                 try:
-                                    file = urllibXX.urlopen(url + '/shares')
+                                    file = _cccam_open(url + '/shares')
                                 except:
                                     file = ''
-                                else:
-                                    if file != '':
-                                        self.status[line] = True
-                                    c = c + 1
-                                    item = [line]
-                                    item.append(MultiContentEntryText(pos=(0, 0), size=(fhd(35), fhd(22)), font=0, text=str(c) + '.'))
-                                    item.append(MultiContentEntryText(pos=(fhd(65), 0), size=(fhd(310), fhd(22)), font=0, text=tmp[1], color_sel=int({True: '0x00d100', False: '0xd10000'}[self.status.get(line)], 16), color=int({True: '0xffffff', False: '0x666666'}[self.status.get(line)], 16)))
-                                    pix = LoadPixmap({True: (BP_ICO % 'green'), False: (BP_ICO % 'red')}[self.status.get(line)])
-                                    item.append(MultiContentEntryPixmapAlphaTest(pos=(fhd(40), fhd(3)), size=(fhd(15), fhd(16)), png=pix))
-                                    self.list.append(item)
+                                if file != '':
+                                    self.status[line] = True
+                                c = c + 1
+                                item = [line]
+                                item.append(MultiContentEntryText(pos=(0, 0), size=(fhd(35), fhd(22)), font=0, text=str(c) + '.'))
+                                item.append(MultiContentEntryText(pos=(fhd(65), 0), size=(fhd(310), fhd(22)), font=0, text=tmp[1], color_sel=int({True: '0x00d100', False: '0xd10000'}[self.status.get(line)], 16), color=int({True: '0xffffff', False: '0x666666'}[self.status.get(line)], 16)))
+                                pix = LoadPixmap({True: (BP_ICO % 'green'), False: (BP_ICO % 'red')}[self.status.get(line)])
+                                item.append(MultiContentEntryPixmapAlphaTest(pos=(fhd(40), fhd(3)), size=(fhd(15), fhd(16)), png=pix))
+                                self.list.append(item)
 
                     self['list'].l.setList(self.list)
                     self.reactivate()
@@ -3955,7 +3955,7 @@ class providerCardView(Screen):
             url = readURL()
         file = ''
         try:
-            file = urllibXX.urlopen(url + '/providers')
+            file = _cccam_open(url + '/providers')
         except:
             file = ''
 
@@ -3990,7 +3990,7 @@ class providerCardView(Screen):
         count = 0
         file = ''
         try:
-            file = urllibXX.urlopen(url + '/shares')
+            file = _cccam_open(url + '/shares')
         except:
             file = ''
 

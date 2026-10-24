@@ -322,6 +322,20 @@ def _gsu_helper(name):
     body=body.replace('self.skin = channelInfo_Center', r"""self.skin = sub(r'(<widget name="ecmValues"[^>]*size=")(\d+),(\d+)(")', lambda match: match[1] + '%d,%s' % (int(match[2]) * 340 // 292, match[3]) + match[4], channelInfo_Center)""", 1)
     body=body.replace('= ECMparser()', '= ECMparser(cl=24)', 1)
     source=source[:start]+body+source[end:]
+    source=source.replace('from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox', 'from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox\nfrom Plugins.Extensions.GlassSysUtil.cccam_transport import open_text as _cccam_open',1)
+    source=source.replace('urllibXX.urlopen(', '_cccam_open(')
+    # Keep unreachable configured servers visible as unavailable entries.
+    tree=ast.parse(source);lines=source.splitlines(keepends=True)
+    screen=next(n for n in tree.body if isinstance(n,ast.ClassDef) and n.name=='cccamInfoChoiceServer')
+    method=next(n for n in screen.body if isinstance(n,ast.FunctionDef) and n.name=='readCccamServers')
+    for node in ast.walk(method):
+        if isinstance(node,ast.Try) and node.orelse and any(isinstance(n,ast.Name) and n.id=='_cccam_open' for stmt in node.body for n in ast.walk(stmt)):
+            first=node.orelse[0].lineno-1
+            assert lines[first-1].strip()=='else:'
+            for row in range(first,node.orelse[-1].end_lineno):
+                if lines[row].strip():lines[row]=lines[row][4:]
+            lines[first-1]=''
+    source=''.join(lines)
     # Preserve class and method signatures; no placeholder function bodies.
     compile(source, 'plugin.py', 'exec')
     return source

@@ -159,6 +159,24 @@ class OriginalPortTests(unittest.TestCase):
         channel=tree.find("widget[@name='picchannel']")
         self.assertLess(x+340,int(channel.get('position').split(',')[0]))
 
+    def test_cccam_menu_consumes_text_and_retains_all_original_choices(self):
+        import io
+        module=self.plugin
+        data='CCcam WebInfo\nConnected clients: 1\nAvailable shares: 1\nAvailable providers: 1\ncard inserted\n| CAID | Provider |\n| 0668 | Local |\n'
+        with patch.object(module,'_cccam_open',side_effect=lambda url:io.StringIO(data)):
+            screen=module.cccamInfo(types.SimpleNamespace(),url='http://example.invalid:16001')
+            screen.updatemenulist()
+        self.assertEqual(len(screen['list'].list),8)
+        self.assertTrue(all(screen.status.values()))
+
+    def test_cccam_unreachable_configured_server_remains_visible(self):
+        module=self.plugin
+        with patch.object(module,'fileExists',return_value=True),patch('builtins.open',unittest.mock.mock_open(read_data='C: Office example.invalid:16001\n')),patch.object(module,'_cccam_open',side_effect=OSError('unavailable')):
+            screen=module.cccamInfoChoiceServer(types.SimpleNamespace())
+            screen.readCccamServers()
+        self.assertEqual(len(screen['list'].list),1)
+        self.assertFalse(screen.status[screen['list'].getCurrent()[0]])
+
     def test_every_original_class_function_and_signature_is_retained(self):
         tree=ast.parse(SOURCE.read_text());actual={}
         def walk(nodes,prefix=''):
