@@ -1,0 +1,13 @@
+{
+  "python": "3.14.7",
+  "host_checks": 8,
+  "host_checks_passed": true,
+  "receiver_tested": false,
+  "source_sha256": "9fb7aa12bdbb204bec6caace0e91c572d655b057a42ea882e89dd49c76b31d6d",
+  "original_named_classes": 62,
+  "original_named_functions": 510,
+  "compatibility_replaced_internal_closures": [
+    "generatePS.chck"
+  ],
+  "note": "Native API doubles validate import and menu construction, not hardware functionality."
+}

@@ -1,0 +1,32 @@
+name: Original GSU Python 3.14
+on:
+  push:
+    branches: [original-python314]
+    paths: ['restoration/**', '.github/workflows/original-python314.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14.7'
+      - name: Verify original interfaces and compatibility
+        run: |
+          python --version
+          python -m compileall -q restoration/src
+          python -m unittest discover -s restoration/tests -v
+      - name: Build receiver candidate twice and compare
+        run: |
+          python restoration/tools/build_ipk.py --output restoration/dist
+          cp restoration/dist/*.ipk /tmp/first.ipk
+          python restoration/tools/build_ipk.py --output restoration/dist
+          cmp /tmp/first.ipk restoration/dist/*.ipk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GSU-original-Python314-receiver-candidate
+          path: restoration/dist/*
+          retention-days: 90

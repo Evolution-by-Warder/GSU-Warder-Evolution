@@ -1,0 +1,2306 @@
+{
+  "original_ipk_sha256": "81aea6eb25b5ed519e904af87a3d7bece5d32ae6886a1690dac8ab47306fe3f7",
+  "source_bytecode": "plugin.pyo / Python 2.6",
+  "signature_reference": "plugin.py312o / Python 3.12",
+  "identical_signature_inventory": true,
+  "objects": [
+    {
+      "name": "Writelog",
+      "args": 1
+    },
+    {
+      "name": "cpLibCr",
+      "args": 0
+    },
+    {
+      "name": "chckPckg",
+      "args": 0
+    },
+    {
+      "name": "chckPckgList",
+      "args": 0
+    },
+    {
+      "name": "fhd",
+      "args": 1
+    },
+    {
+      "name": "generatePS",
+      "args": 0
+    },
+    {
+      "name": "generatePS.chck",
+      "args": 1
+    },
+    {
+      "name": "main",
+      "args": 1
+    },
+    {
+      "name": "main1",
+      "args": 1
+    },
+    {
+      "name": "main3",
+      "args": 1
+    },
+    {
+      "name": "main2",
+      "args": 1
+    },
+    {
+      "name": "main4",
+      "args": 1
+    },
+    {
+      "name": "main5",
+      "args": 1
+    },
+    {
+      "name": "startViaMenu",
+      "args": 1
+    },
+    {
+      "name": "sessionAutostart",
+      "args": 1
+    },
+    {
+      "name": "InfoBarPlugins__init__",
+      "args": 1
+    },
+    {
+      "name": "keyStartGreen",
+      "args": 1
+    },
+    {
+      "name": "keyStartRed",
+      "args": 1
+    },
+    {
+      "name": "Plugins",
+      "args": 1
+    },
+    {
+      "name": "chckMount",
+      "args": 1
+    },
+    {
+      "name": "getTunerPiconInfo",
+      "args": 1
+    },
+    {
+      "name": "alternative",
+      "args": 1
+    },
+    {
+      "name": "alternative.alternativeChannels",
+      "args": 1
+    },
+    {
+      "name": "listDir",
+      "args": 1
+    },
+    {
+      "name": "realizeNetmount",
+      "args": 9
+    },
+    {
+      "name": "writeNCcfg",
+      "args": 3
+    },
+    {
+      "name": "countServers",
+      "args": 0
+    },
+    {
+      "name": "fromFile2",
+      "args": 0
+    },
+    {
+      "name": "oscamRunning",
+      "args": 1
+    },
+    {
+      "name": "resPicon",
+      "args": 2
+    },
+    {
+      "name": "getServiceInfoValue",
+      "args": 3
+    },
+    {
+      "name": "findPicon",
+      "args": 2
+    },
+    {
+      "name": "chckFtp",
+      "args": 0
+    },
+    {
+      "name": "readURL",
+      "args": 0
+    },
+    {
+      "name": "Rst_E2",
+      "args": 1
+    },
+    {
+      "name": "providerCount",
+      "args": 1
+    },
+    {
+      "name": "parseEcmInfoLine",
+      "args": 2
+    },
+    {
+      "name": "ECMparser",
+      "args": 1
+    },
+    {
+      "name": "ECMparser.chckIdx",
+      "args": 1
+    },
+    {
+      "name": "ECMparser.cutMe",
+      "args": 1
+    },
+    {
+      "name": "ECMparser.setEcmTime",
+      "args": 1
+    },
+    {
+      "name": "ECMparser.fixCW",
+      "args": 1
+    },
+    {
+      "name": "ListboxSys",
+      "args": 0
+    },
+    {
+      "name": "ListboxSys.__init__",
+      "args": 3
+    },
+    {
+      "name": "ListboxSys2",
+      "args": 0
+    },
+    {
+      "name": "ListboxSys2.__init__",
+      "args": 3
+    },
+    {
+      "name": "ListboxSys3",
+      "args": 0
+    },
+    {
+      "name": "ListboxSys3.__init__",
+      "args": 3
+    },
+    {
+      "name": "ftp_center",
+      "args": 0
+    },
+    {
+      "name": "ftp_center.__init__",
+      "args": 3
+    },
+    {
+      "name": "ftp_center.readType",
+      "args": 2
+    },
+    {
+      "name": "ftp_center.exit",
+      "args": 1
+    },
+    {
+      "name": "ftp_center.updatemenulist",
+      "args": 1
+    },
+    {
+      "name": "ftp_center.doSelection",
+      "args": 1
+    },
+    {
+      "name": "ftp_center.cmdAnsw",
+      "args": 1
+    },
+    {
+      "name": "settings_satxml",
+      "args": 0
+    },
+    {
+      "name": "settings_satxml.__init__",
+      "args": 2
+    },
+    {
+      "name": "settings_satxml.updatemenulist",
+      "args": 1
+    },
+    {
+      "name": "settings_satxml.reactivate",
+      "args": 1
+    },
+    {
+      "name": "settings_satxml.doSelection",
+      "args": 1
+    },
+    {
+      "name": "settings_center",
+      "args": 0
+    },
+    {
+      "name": "settings_center.__init__",
+      "args": 4
+    },
+    {
+      "name": "settings_center.selectedmenuitem",
+      "args": 1
+    },
+    {
+      "name": "settings_center.updateList",
+      "args": 1
+    },
+    {
+      "name": "settings_center.restartAnswer",
+      "args": 2
+    },
+    {
+      "name": "settings_center.removeSetting",
+      "args": 1
+    },
+    {
+      "name": "settings_center.removeZip",
+      "args": 1
+    },
+    {
+      "name": "SysUtilMngMain",
+      "args": 0
+    },
+    {
+      "name": "SysUtilMngMain.__init__",
+      "args": 2
+    },
+    {
+      "name": "SysUtilMngMain.resetRootPass",
+      "args": 2
+    },
+    {
+      "name": "SysUtilMngMain._commandFinished",
+      "args": 2
+    },
+    {
+      "name": "SysUtilMngMain.selectedmenuitem",
+      "args": 1
+    },
+    {
+      "name": "SysUtilMngMain.updatemenulist",
+      "args": 1
+    },
+    {
+      "name": "SysUtilMngMain.cfgGsu",
+      "args": 1
+    },
+    {
+      "name": "SysUtilMngMain.cfgAnswer",
+      "args": 2
+    },
+    {
+      "name": "SysUtilMngMain.updatechckact",
+      "args": 1
+    },
+    {
+      "name": "SysUtilMngMain.updAnswer",
+      "args": 2
+    },
+    {
+      "name": "SysUtilMngMain.cmdAnsw",
+      "args": 1
+    },
+    {
+      "name": "SysUtilMngMain.rstAnswer",
+      "args": 2
+    },
+    {
+      "name": "SysUtilMngMain.setWindowTitle",
+      "args": 2
+    },
+    {
+      "name": "SysUtilMngMain.readVersion",
+      "args": 1
+    },
+    {
+      "name": "SysUtilMngMain.reactivate",
+      "args": 1
+    },
+    {
+      "name": "SysUtilMngMain.checkCam",
+      "args": 1
+    },
+    {
+      "name": "SysUtilMngMain.cccamRunning",
+      "args": 1
+    },
+    {
+      "name": "SysUtilMngMain.mboxRunning",
+      "args": 1
+    },
+    {
+      "name": "GlassSysInfoBrowser",
+      "args": 0
+    },
+    {
+      "name": "GlassSysInfoBrowser.__init__",
+      "args": 2
+    },
+    {
+      "name": "GlassSysInfoBrowser.HelpKey",
+      "args": 1
+    },
+    {
+      "name": "GlassSysInfoBrowser.exit",
+      "args": 1
+    },
+    {
+      "name": "GlassSysInfoBrowser.LetsgoParty",
+      "args": 1
+    },
+    {
+      "name": "GlassSysInfoBrowser.pageUp",
+      "args": 1
+    },
+    {
+      "name": "GlassSysInfoBrowser.pageDown",
+      "args": 1
+    },
+    {
+      "name": "GlassSysInfoBrowser.pageUp1",
+      "args": 1
+    },
+    {
+      "name": "GlassSysInfoBrowser.pageDown1",
+      "args": 1
+    },
+    {
+      "name": "GlassSysInfoBrowser.getMemInfo",
+      "args": 1
+    },
+    {
+      "name": "GlassSysInfoBrowser.getMemInfo.parse",
+      "args": 1
+    },
+    {
+      "name": "GlassSysInfoBrowser.getMemInfo.setUnits",
+      "args": 1
+    },
+    {
+      "name": "GlassSysInfoBrowser.getSpaceInfo",
+      "args": 1
+    },
+    {
+      "name": "GlassSysInfoBrowser.getProccess",
+      "args": 1
+    },
+    {
+      "name": "GlassSysInfoBrowser.getDmesg",
+      "args": 1
+    },
+    {
+      "name": "GlassSysInfoBrowser.getServicesInfo",
+      "args": 1
+    },
+    {
+      "name": "GlassSysInfoBrowser.getCPUInfo",
+      "args": 1
+    },
+    {
+      "name": "GlassSysInfoBrowser.getCpuInfo",
+      "args": 2
+    },
+    {
+      "name": "GlassSysInfoBrowser.getCpuInfo.validCpu",
+      "args": 1
+    },
+    {
+      "name": "GlassSysInfoBrowser.getTempSensorsInfo",
+      "args": 1
+    },
+    {
+      "name": "channelInfoCenter",
+      "args": 0
+    },
+    {
+      "name": "channelInfoCenter.__init__",
+      "args": 2
+    },
+    {
+      "name": "channelInfoCenter.startInfo",
+      "args": 1
+    },
+    {
+      "name": "channelInfoCenter.getCaidInfo",
+      "args": 2
+    },
+    {
+      "name": "channelInfoCenter.<lambda>",
+      "args": 1
+    },
+    {
+      "name": "channelInfoCenter.getServiceInfoString",
+      "args": 4
+    },
+    {
+      "name": "channelInfoCenter.getTunerInfo",
+      "args": 2
+    },
+    {
+      "name": "channelInfoCenter.startBitrate",
+      "args": 1
+    },
+    {
+      "name": "channelInfoCenter.getVideoBitrateData",
+      "args": 3
+    },
+    {
+      "name": "channelInfoCenter.getAudioBitrateData",
+      "args": 3
+    },
+    {
+      "name": "channelInfoCenter.updBtrData",
+      "args": 1
+    },
+    {
+      "name": "channelInfoCenter.dataAvail",
+      "args": 2
+    },
+    {
+      "name": "channelInfoCenter.exit",
+      "args": 1
+    },
+    {
+      "name": "channelInfoCenter.readEcmInfo",
+      "args": 1
+    },
+    {
+      "name": "channelInfoCenter.showPicCode",
+      "args": 3
+    },
+    {
+      "name": "channelInfoCenter.showPicCode.res",
+      "args": 1
+    },
+    {
+      "name": "channelInfoCenter.setPicons",
+      "args": 2
+    },
+    {
+      "name": "channelInfoCenter.setPicons.<lambda>",
+      "args": 1
+    },
+    {
+      "name": "channelInfoCenter.chckIPTVprov",
+      "args": 2
+    },
+    {
+      "name": "cccamInfo",
+      "args": 0
+    },
+    {
+      "name": "cccamInfo.__init__",
+      "args": 4
+    },
+    {
+      "name": "cccamInfo.selectedmenuitem",
+      "args": 1
+    },
+    {
+      "name": "cccamInfo.updatemenulist",
+      "args": 1
+    },
+    {
+      "name": "cccamInfo.exit",
+      "args": 1
+    },
+    {
+      "name": "cccamInfo.testFtp",
+      "args": 2
+    },
+    {
+      "name": "serversStatus",
+      "args": 0
+    },
+    {
+      "name": "serversStatus.__init__",
+      "args": 3
+    },
+    {
+      "name": "serversStatus.setTitlenew",
+      "args": 1
+    },
+    {
+      "name": "serversStatus.exit",
+      "args": 1
+    },
+    {
+      "name": "serversStatus.enaServer",
+      "args": 1
+    },
+    {
+      "name": "serversStatus.disServer",
+      "args": 1
+    },
+    {
+      "name": "serversStatus.writecfg",
+      "args": 4
+    },
+    {
+      "name": "serversStatus.refresh",
+      "args": 1
+    },
+    {
+      "name": "serversStatus.readServersStatus",
+      "args": 1
+    },
+    {
+      "name": "serversStatus.reactivate",
+      "args": 1
+    },
+    {
+      "name": "serversStatus.testFtp",
+      "args": 2
+    },
+    {
+      "name": "providerStatus",
+      "args": 0
+    },
+    {
+      "name": "providerStatus.__init__",
+      "args": 3
+    },
+    {
+      "name": "providerStatus.readProvidersStatus",
+      "args": 1
+    },
+    {
+      "name": "providerStatus.exit",
+      "args": 1
+    },
+    {
+      "name": "providerStatus.reactivate",
+      "args": 1
+    },
+    {
+      "name": "sharesStatus",
+      "args": 0
+    },
+    {
+      "name": "sharesStatus.__init__",
+      "args": 3
+    },
+    {
+      "name": "sharesStatus.readSharesStatus",
+      "args": 1
+    },
+    {
+      "name": "sharesStatus.exit",
+      "args": 1
+    },
+    {
+      "name": "sharesStatus.reactivate",
+      "args": 1
+    },
+    {
+      "name": "clientsStatus",
+      "args": 0
+    },
+    {
+      "name": "clientsStatus.__init__",
+      "args": 3
+    },
+    {
+      "name": "clientsStatus.setTitlenew",
+      "args": 1
+    },
+    {
+      "name": "clientsStatus.writecfg",
+      "args": 1
+    },
+    {
+      "name": "clientsStatus.refresh",
+      "args": 1
+    },
+    {
+      "name": "clientsStatus.readClientsStatus",
+      "args": 1
+    },
+    {
+      "name": "clientsStatus.exit",
+      "args": 1
+    },
+    {
+      "name": "clientsStatus.reactivate",
+      "args": 1
+    },
+    {
+      "name": "clientsStatus.testFtp",
+      "args": 2
+    },
+    {
+      "name": "activeClientsStatus",
+      "args": 0
+    },
+    {
+      "name": "activeClientsStatus.__init__",
+      "args": 3
+    },
+    {
+      "name": "activeClientsStatus.readActiveClientsStatus",
+      "args": 1
+    },
+    {
+      "name": "activeClientsStatus.exit",
+      "args": 1
+    },
+    {
+      "name": "activeClientsStatus.reactivate",
+      "args": 1
+    },
+    {
+      "name": "entitlements",
+      "args": 0
+    },
+    {
+      "name": "entitlements.__init__",
+      "args": 3
+    },
+    {
+      "name": "entitlements.pageUp",
+      "args": 1
+    },
+    {
+      "name": "entitlements.pageDown",
+      "args": 1
+    },
+    {
+      "name": "entitlements.readEntitlements",
+      "args": 1
+    },
+    {
+      "name": "entitlements.exit",
+      "args": 1
+    },
+    {
+      "name": "cccamSummary",
+      "args": 0
+    },
+    {
+      "name": "cccamSummary.__init__",
+      "args": 3
+    },
+    {
+      "name": "cccamSummary.readSummaryStatus",
+      "args": 1
+    },
+    {
+      "name": "cccamSummary.exit",
+      "args": 1
+    },
+    {
+      "name": "cccamInfoChoiceServer",
+      "args": 0
+    },
+    {
+      "name": "cccamInfoChoiceServer.__init__",
+      "args": 2
+    },
+    {
+      "name": "cccamInfoChoiceServer.readCccamServers",
+      "args": 1
+    },
+    {
+      "name": "cccamInfoChoiceServer.choiseServer",
+      "args": 1
+    },
+    {
+      "name": "cccamInfoChoiceServer.reactivate",
+      "args": 1
+    },
+    {
+      "name": "providerCardView",
+      "args": 0
+    },
+    {
+      "name": "providerCardView.__init__",
+      "args": 3
+    },
+    {
+      "name": "providerCardView.readProviders",
+      "args": 1
+    },
+    {
+      "name": "providerCardView.fillProviderCardList",
+      "args": 1
+    },
+    {
+      "name": "providerCardView.exit",
+      "args": 1
+    },
+    {
+      "name": "oscamLineCfg",
+      "args": 0
+    },
+    {
+      "name": "oscamLineCfg.__init__",
+      "args": 2
+    },
+    {
+      "name": "oscamLineCfg.chckWhite",
+      "args": 1
+    },
+    {
+      "name": "oscamLineCfg.setTitlenew",
+      "args": 1
+    },
+    {
+      "name": "oscamLineCfg.keyLeft",
+      "args": 1
+    },
+    {
+      "name": "oscamLineCfg.chckSetup",
+      "args": 1
+    },
+    {
+      "name": "oscamLineCfg.keyRight",
+      "args": 1
+    },
+    {
+      "name": "oscamLineCfg.runSetup",
+      "args": 1
+    },
+    {
+      "name": "oscamLineCfg.ActivateselectedFnc",
+      "args": 1
+    },
+    {
+      "name": "oscamLineCfg.dirSelected",
+      "args": 2
+    },
+    {
+      "name": "oscamLineCfg.save",
+      "args": 1
+    },
+    {
+      "name": "oscamLineCfg.exitCancel",
+      "args": 1
+    },
+    {
+      "name": "univCamMng",
+      "args": 0
+    },
+    {
+      "name": "univCamMng.__init__",
+      "args": 2
+    },
+    {
+      "name": "univCamMng.setTitlenew",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.ActivateselectedFnc",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.selectFnc",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.changeDelay",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.setNewDelay",
+      "args": 2
+    },
+    {
+      "name": "univCamMng.showActDelay",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.enaAutochck",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.enaAutochckChck",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.enaSrvRestart",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.enaSrvRestartChck",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.enaDisKeystart",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.enaDisKeystartChck",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.lessCamSrv",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.moreCamSrv",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.chckOscam",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.setLatestOscam",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.setOscam",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.chckOscamFiles",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.start",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.ChckMsg",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.moveTimerCommRun",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.checkStatCam",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.killDccamd",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.doLnk",
+      "args": 3
+    },
+    {
+      "name": "univCamMng.chckDccamd",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.inicializeUCM",
+      "args": 2
+    },
+    {
+      "name": "univCamMng.CamSrvMsg",
+      "args": 2
+    },
+    {
+      "name": "univCamMng.moveTimerTextRun",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.stop",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.keyLeft",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.keyRight",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.exit",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.rstAnswer",
+      "args": 2
+    },
+    {
+      "name": "univCamMng.startCam",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.startSrv",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.executeCommand",
+      "args": 5
+    },
+    {
+      "name": "univCamMng.refreshMsgScriptInfo",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.isStartedCamSrv",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.setCamSrvinfo",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.refreshinfo",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.CamSrvList",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.checkSrvBin",
+      "args": 2
+    },
+    {
+      "name": "univCamMng.checkCamBin",
+      "args": 2
+    },
+    {
+      "name": "univCamMng.readSrvName",
+      "args": 2
+    },
+    {
+      "name": "univCamMng.getSrvName",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.getMsgInfo",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.readCamName",
+      "args": 2
+    },
+    {
+      "name": "univCamMng.getCamName",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.firstInfo",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.showEcmInfo",
+      "args": 1
+    },
+    {
+      "name": "univCamMng.getCaidInfo",
+      "args": 2
+    },
+    {
+      "name": "univCamMng.statcommPics",
+      "args": 3
+    },
+    {
+      "name": "AutoCams",
+      "args": 0
+    },
+    {
+      "name": "AutoCams.__init__",
+      "args": 1
+    },
+    {
+      "name": "AutoCams.autoStartCheck",
+      "args": 2
+    },
+    {
+      "name": "AutoCams.chckCifsNfs",
+      "args": 1
+    },
+    {
+      "name": "AutoCams.startCamSrv",
+      "args": 1
+    },
+    {
+      "name": "AutoCams.CheckbinCamSrv",
+      "args": 2
+    },
+    {
+      "name": "AutoCams.startCam1",
+      "args": 1
+    },
+    {
+      "name": "AutoCams.startCamSrvEvent",
+      "args": 3
+    },
+    {
+      "name": "AutoCams.isAutoStartedCamSrv",
+      "args": 1
+    },
+    {
+      "name": "AutoCams.readSrvName",
+      "args": 2
+    },
+    {
+      "name": "AutoCams.readCamName",
+      "args": 2
+    },
+    {
+      "name": "AutoCams.checkRunningCam",
+      "args": 1
+    },
+    {
+      "name": "ipk_script_center",
+      "args": 0
+    },
+    {
+      "name": "ipk_script_center.__init__",
+      "args": 2
+    },
+    {
+      "name": "ipk_script_center.selectedmenuitem",
+      "args": 1
+    },
+    {
+      "name": "ipk_script_center.updatemenulist",
+      "args": 1
+    },
+    {
+      "name": "ipk_script_center.exit",
+      "args": 1
+    },
+    {
+      "name": "ipk_script_center.reactivate",
+      "args": 1
+    },
+    {
+      "name": "script_center",
+      "args": 0
+    },
+    {
+      "name": "script_center.__init__",
+      "args": 2
+    },
+    {
+      "name": "script_center.selectedmenuitem",
+      "args": 1
+    },
+    {
+      "name": "script_center.updateList",
+      "args": 1
+    },
+    {
+      "name": "script_center.runCmd",
+      "args": 2
+    },
+    {
+      "name": "script_center.scriptNameDesc",
+      "args": 2
+    },
+    {
+      "name": "script_center.reactivate",
+      "args": 1
+    },
+    {
+      "name": "ipk_center",
+      "args": 0
+    },
+    {
+      "name": "ipk_center.__init__",
+      "args": 3
+    },
+    {
+      "name": "ipk_center.selectedmenuitem",
+      "args": 1
+    },
+    {
+      "name": "ipk_center.installIpk",
+      "args": 2
+    },
+    {
+      "name": "ipk_center.updateList",
+      "args": 1
+    },
+    {
+      "name": "ipk_center.exit",
+      "args": 1
+    },
+    {
+      "name": "ipk_center.removeIpk",
+      "args": 1
+    },
+    {
+      "name": "ipk_uninstall_center",
+      "args": 0
+    },
+    {
+      "name": "ipk_uninstall_center.__init__",
+      "args": 3
+    },
+    {
+      "name": "ipk_uninstall_center.selectedmenuitem",
+      "args": 1
+    },
+    {
+      "name": "ipk_uninstall_center.uninstallIpk",
+      "args": 2
+    },
+    {
+      "name": "ipk_uninstall_center.chckCamSrv",
+      "args": 2
+    },
+    {
+      "name": "ipk_uninstall_center.setWindowTitle",
+      "args": 2
+    },
+    {
+      "name": "ipk_uninstall_center.updateList",
+      "args": 1
+    },
+    {
+      "name": "ipk_uninstall_center.exit",
+      "args": 1
+    },
+    {
+      "name": "tar_center",
+      "args": 0
+    },
+    {
+      "name": "tar_center.__init__",
+      "args": 2
+    },
+    {
+      "name": "tar_center.selectedmenuitem",
+      "args": 1
+    },
+    {
+      "name": "tar_center.installTar",
+      "args": 2
+    },
+    {
+      "name": "tar_center.updateList",
+      "args": 1
+    },
+    {
+      "name": "tar_center.runCmd",
+      "args": 2
+    },
+    {
+      "name": "tar_center.exit",
+      "args": 1
+    },
+    {
+      "name": "tar_center.removeTar",
+      "args": 1
+    },
+    {
+      "name": "oscamInfoChoiceServer",
+      "args": 0
+    },
+    {
+      "name": "oscamInfoChoiceServer.__init__",
+      "args": 2
+    },
+    {
+      "name": "oscamInfoChoiceServer.readOScamServers",
+      "args": 1
+    },
+    {
+      "name": "oscamInfoChoiceServer.choiseServer",
+      "args": 1
+    },
+    {
+      "name": "oscamInfoChoiceServer.reactivate",
+      "args": 1
+    },
+    {
+      "name": "getUrlData",
+      "args": 3
+    },
+    {
+      "name": "readOscamCfg",
+      "args": 0
+    },
+    {
+      "name": "readOscamWebInfo",
+      "args": 2
+    },
+    {
+      "name": "ColorLabel",
+      "args": 0
+    },
+    {
+      "name": "ColorLabel.__init__",
+      "args": 2
+    },
+    {
+      "name": "ColorLabel.colorWhite",
+      "args": 1
+    },
+    {
+      "name": "ColorLabel.colorRed",
+      "args": 1
+    },
+    {
+      "name": "ColorLabel.color1",
+      "args": 1
+    },
+    {
+      "name": "ColorLabel.color2",
+      "args": 1
+    },
+    {
+      "name": "ColorLabel.colorGreen",
+      "args": 1
+    },
+    {
+      "name": "ColorLabel.colorOrange",
+      "args": 1
+    },
+    {
+      "name": "oscamInfo",
+      "args": 0
+    },
+    {
+      "name": "oscamInfo.__init__",
+      "args": 6
+    },
+    {
+      "name": "oscamInfo.selectedmenuitem",
+      "args": 1
+    },
+    {
+      "name": "oscamInfo.updatemenulist",
+      "args": 1
+    },
+    {
+      "name": "oscamInfo.warning_Show",
+      "args": 1
+    },
+    {
+      "name": "oscamInfo.exit",
+      "args": 1
+    },
+    {
+      "name": "oscam_Files",
+      "args": 0
+    },
+    {
+      "name": "oscam_Files.__init__",
+      "args": 5
+    },
+    {
+      "name": "oscam_Files.selectedmenuitem",
+      "args": 1
+    },
+    {
+      "name": "oscam_Files.updatemenulist",
+      "args": 1
+    },
+    {
+      "name": "oscam_Files_detailed",
+      "args": 0
+    },
+    {
+      "name": "oscam_Files_detailed.__init__",
+      "args": 6
+    },
+    {
+      "name": "oscam_Files_detailed.setWindowTitle",
+      "args": 2
+    },
+    {
+      "name": "oscam_Files_detailed.loadfileInfo",
+      "args": 1
+    },
+    {
+      "name": "oscam_Files_detailed.pageUp",
+      "args": 1
+    },
+    {
+      "name": "oscam_Files_detailed.pageDown",
+      "args": 1
+    },
+    {
+      "name": "oscam_logInfo",
+      "args": 0
+    },
+    {
+      "name": "oscam_logInfo.__init__",
+      "args": 5
+    },
+    {
+      "name": "oscam_logInfo.oscamLogInfo",
+      "args": 1
+    },
+    {
+      "name": "oscam_logInfo.exit",
+      "args": 1
+    },
+    {
+      "name": "oscam_Summary",
+      "args": 0
+    },
+    {
+      "name": "oscam_Summary.__init__",
+      "args": 5
+    },
+    {
+      "name": "oscam_Summary.setTitlenew",
+      "args": 1
+    },
+    {
+      "name": "oscam_Summary.rstOsc",
+      "args": 1
+    },
+    {
+      "name": "oscam_Summary.restartAnswer",
+      "args": 2
+    },
+    {
+      "name": "oscam_Summary.oscamStatus",
+      "args": 1
+    },
+    {
+      "name": "oscam_Summary.exit",
+      "args": 1
+    },
+    {
+      "name": "oscam_Summary.reactivate",
+      "args": 1
+    },
+    {
+      "name": "oscam_readers",
+      "args": 0
+    },
+    {
+      "name": "oscam_readers.__init__",
+      "args": 5
+    },
+    {
+      "name": "oscam_readers.setTitlenew",
+      "args": 1
+    },
+    {
+      "name": "oscam_readers.exit",
+      "args": 1
+    },
+    {
+      "name": "oscam_readers.entitlements",
+      "args": 1
+    },
+    {
+      "name": "oscam_readers.oscamreaders",
+      "args": 1
+    },
+    {
+      "name": "oscam_readers.reactivate",
+      "args": 1
+    },
+    {
+      "name": "oscam_readers.chngState",
+      "args": 1
+    },
+    {
+      "name": "oscam_entitlements",
+      "args": 0
+    },
+    {
+      "name": "oscam_entitlements.__init__",
+      "args": 6
+    },
+    {
+      "name": "oscam_entitlements.setTitlenew",
+      "args": 1
+    },
+    {
+      "name": "oscam_entitlements.refreshEntitl",
+      "args": 1
+    },
+    {
+      "name": "oscam_entitlements.exit",
+      "args": 1
+    },
+    {
+      "name": "oscam_entitlements.oscamEntitlements",
+      "args": 1
+    },
+    {
+      "name": "oscam_entitlements.oscamEntitlements.appDataClean",
+      "args": 1
+    },
+    {
+      "name": "oscam_Users",
+      "args": 0
+    },
+    {
+      "name": "oscam_Users.__init__",
+      "args": 5
+    },
+    {
+      "name": "oscam_Users.setTitlenew",
+      "args": 1
+    },
+    {
+      "name": "oscam_Users.oscamUsers",
+      "args": 1
+    },
+    {
+      "name": "oscam_Users.oscamUsers.cleanMe",
+      "args": 1
+    },
+    {
+      "name": "oscam_Users.exit",
+      "args": 1
+    },
+    {
+      "name": "oscam_Users.reactivate",
+      "args": 1
+    },
+    {
+      "name": "oscam_Users.chngState",
+      "args": 1
+    },
+    {
+      "name": "ECMInfo",
+      "args": 0
+    },
+    {
+      "name": "ECMInfo.__init__",
+      "args": 2
+    },
+    {
+      "name": "ECMInfo.setTitlenew",
+      "args": 1
+    },
+    {
+      "name": "ECMInfo.exit",
+      "args": 1
+    },
+    {
+      "name": "ECMInfo.startSearchInfo",
+      "args": 1
+    },
+    {
+      "name": "ECMInfo.readEcmInfo",
+      "args": 1
+    },
+    {
+      "name": "OnScreenEcmScreen",
+      "args": 0
+    },
+    {
+      "name": "OnScreenEcmScreen.__init__",
+      "args": 2
+    },
+    {
+      "name": "OnScreenEcmScreen.firstRun",
+      "args": 1
+    },
+    {
+      "name": "OnScreenEcmScreen.staticEcmStart",
+      "args": 2
+    },
+    {
+      "name": "OnScreenEcmScreen.staticEcm",
+      "args": 1
+    },
+    {
+      "name": "OnScreenEcmScreen.StartrollTextInfo",
+      "args": 2
+    },
+    {
+      "name": "OnScreenEcmScreen.rollText",
+      "args": 1
+    },
+    {
+      "name": "OnScreenEcmScreen.readEcmInfo",
+      "args": 1
+    },
+    {
+      "name": "OnScreenEcmScreen.rstInfos",
+      "args": 1
+    },
+    {
+      "name": "OnScreenEcmScreen.__endShow",
+      "args": 1
+    },
+    {
+      "name": "OnScreenEcmScreen.__startSearchInfo",
+      "args": 1
+    },
+    {
+      "name": "OnScreenEcmMain",
+      "args": 0
+    },
+    {
+      "name": "OnScreenEcmMain.__init__",
+      "args": 1
+    },
+    {
+      "name": "OnScreenEcmMain.startShowOSD",
+      "args": 2
+    },
+    {
+      "name": "OnScreenEcmMain.makeShow",
+      "args": 2
+    },
+    {
+      "name": "OSD_ECM_Menu",
+      "args": 0
+    },
+    {
+      "name": "OSD_ECM_Menu.__init__",
+      "args": 2
+    },
+    {
+      "name": "OSD_ECM_Menu.chckWhite",
+      "args": 1
+    },
+    {
+      "name": "OSD_ECM_Menu.keyLeft",
+      "args": 1
+    },
+    {
+      "name": "OSD_ECM_Menu.chckSetup",
+      "args": 1
+    },
+    {
+      "name": "OSD_ECM_Menu.keyRight",
+      "args": 1
+    },
+    {
+      "name": "OSD_ECM_Menu.updatemenulist",
+      "args": 1
+    },
+    {
+      "name": "OSD_ECM_Menu.setNewTitle",
+      "args": 1
+    },
+    {
+      "name": "OSD_ECM_Menu.ActivateselectedFnc",
+      "args": 1
+    },
+    {
+      "name": "OSD_ECM_Menu.save",
+      "args": 1
+    },
+    {
+      "name": "OSD_ECM_Menu.saveOnly",
+      "args": 2
+    },
+    {
+      "name": "OSD_ECM_Menu.exitCancel",
+      "args": 1
+    },
+    {
+      "name": "OSD_ECM_Menu.cleanExit",
+      "args": 1
+    },
+    {
+      "name": "OSD_ECM_Menu.changeShow",
+      "args": 1
+    },
+    {
+      "name": "OSD_ECM_Menu.changeToBig",
+      "args": 2
+    },
+    {
+      "name": "OSD_ECM_Menu.changeType",
+      "args": 1
+    },
+    {
+      "name": "OSD_ECM_Menu.setPosition",
+      "args": 1
+    },
+    {
+      "name": "OSD_ECM_Menu.restoreShow",
+      "args": 2
+    },
+    {
+      "name": "SelectPosition",
+      "args": 0
+    },
+    {
+      "name": "SelectPosition.__init__",
+      "args": 2
+    },
+    {
+      "name": "SelectPosition.setNewPosition",
+      "args": 1
+    },
+    {
+      "name": "SelectPosition.left",
+      "args": 1
+    },
+    {
+      "name": "SelectPosition.up",
+      "args": 1
+    },
+    {
+      "name": "SelectPosition.right",
+      "args": 1
+    },
+    {
+      "name": "SelectPosition.down",
+      "args": 1
+    },
+    {
+      "name": "SelectPosition.ok",
+      "args": 1
+    },
+    {
+      "name": "SelectPosition.exit",
+      "args": 1
+    },
+    {
+      "name": "mboxInfo",
+      "args": 0
+    },
+    {
+      "name": "mboxInfo.__init__",
+      "args": 2
+    },
+    {
+      "name": "mboxInfo.selectedmenuitem",
+      "args": 1
+    },
+    {
+      "name": "mboxInfo.updatemenulist",
+      "args": 1
+    },
+    {
+      "name": "mboxInfo.debugStatus",
+      "args": 1
+    },
+    {
+      "name": "mboxInfo.exit",
+      "args": 1
+    },
+    {
+      "name": "m_pid",
+      "args": 0
+    },
+    {
+      "name": "m_pid.__init__",
+      "args": 2
+    },
+    {
+      "name": "m_pid.showList",
+      "args": 1
+    },
+    {
+      "name": "m_pid.reactivate",
+      "args": 1
+    },
+    {
+      "name": "m_servers",
+      "args": 0
+    },
+    {
+      "name": "m_servers.__init__",
+      "args": 2
+    },
+    {
+      "name": "m_servers.showList",
+      "args": 1
+    },
+    {
+      "name": "m_servers.reactivate",
+      "args": 1
+    },
+    {
+      "name": "m_stat",
+      "args": 0
+    },
+    {
+      "name": "m_stat.__init__",
+      "args": 2
+    },
+    {
+      "name": "m_stat.showList",
+      "args": 1
+    },
+    {
+      "name": "m_stat.reactivate",
+      "args": 1
+    },
+    {
+      "name": "m_share",
+      "args": 0
+    },
+    {
+      "name": "m_share.__init__",
+      "args": 2
+    },
+    {
+      "name": "m_share.showList",
+      "args": 1
+    },
+    {
+      "name": "m_share.reactivate",
+      "args": 1
+    },
+    {
+      "name": "swap_manager",
+      "args": 0
+    },
+    {
+      "name": "swap_manager.__init__",
+      "args": 2
+    },
+    {
+      "name": "swap_manager.add",
+      "args": 1
+    },
+    {
+      "name": "swap_manager.setTitlenew",
+      "args": 1
+    },
+    {
+      "name": "swap_manager.readSwapInfo",
+      "args": 2
+    },
+    {
+      "name": "swap_manager.swapDeleteQuestion",
+      "args": 1
+    },
+    {
+      "name": "swap_manager.swapDelete",
+      "args": 2
+    },
+    {
+      "name": "deleteFstab",
+      "args": 1
+    },
+    {
+      "name": "SwapCreate",
+      "args": 0
+    },
+    {
+      "name": "SwapCreate.__init__",
+      "args": 2
+    },
+    {
+      "name": "SwapCreate.mountDevices",
+      "args": 1
+    },
+    {
+      "name": "SwapCreate.SwapDefine",
+      "args": 1
+    },
+    {
+      "name": "SwapCreate.SwapCreate",
+      "args": 1
+    },
+    {
+      "name": "checkDevices",
+      "args": 0
+    },
+    {
+      "name": "checkHdd",
+      "args": 1
+    },
+    {
+      "name": "getMount",
+      "args": 1
+    },
+    {
+      "name": "setUnits",
+      "args": 1
+    },
+    {
+      "name": "getSpace",
+      "args": 1
+    },
+    {
+      "name": "getUSBinfo",
+      "args": 1
+    },
+    {
+      "name": "readUSBHDDInfo",
+      "args": 1
+    },
+    {
+      "name": "getUUID",
+      "args": 1
+    },
+    {
+      "name": "writeFstab",
+      "args": 1
+    },
+    {
+      "name": "chckOscamScript",
+      "args": 0
+    },
+    {
+      "name": "writeOscamCfgPath",
+      "args": 0
+    },
+    {
+      "name": "partitionsChck",
+      "args": 1
+    },
+    {
+      "name": "devMngMain",
+      "args": 0
+    },
+    {
+      "name": "devMngMain.__init__",
+      "args": 2
+    },
+    {
+      "name": "devMngMain.setTitlenew",
+      "args": 1
+    },
+    {
+      "name": "devMngMain.selection",
+      "args": 1
+    },
+    {
+      "name": "devMngMain.fixPartitions",
+      "args": 2
+    },
+    {
+      "name": "devMngMain.updateDevList",
+      "args": 2
+    },
+    {
+      "name": "devMngMain.numPart",
+      "args": 2
+    },
+    {
+      "name": "devMngMain.reactivate",
+      "args": 1
+    },
+    {
+      "name": "devMngMain.getCapacity",
+      "args": 2
+    },
+    {
+      "name": "devMngMain.createNetmount",
+      "args": 2
+    },
+    {
+      "name": "devMngMain.delNetmount",
+      "args": 1
+    },
+    {
+      "name": "devMngMain.delAnswer",
+      "args": 2
+    },
+    {
+      "name": "createCifsNfs",
+      "args": 0
+    },
+    {
+      "name": "createCifsNfs.__init__",
+      "args": 3
+    },
+    {
+      "name": "createCifsNfs.setTitlenew",
+      "args": 1
+    },
+    {
+      "name": "createCifsNfs.setMenu",
+      "args": 1
+    },
+    {
+      "name": "createCifsNfs.changedEntry",
+      "args": 1
+    },
+    {
+      "name": "createCifsNfs.keyLeft",
+      "args": 1
+    },
+    {
+      "name": "createCifsNfs.keyRight",
+      "args": 1
+    },
+    {
+      "name": "createCifsNfs.doNetmount",
+      "args": 1
+    },
+    {
+      "name": "createCifsNfs.fromFile",
+      "args": 1
+    },
+    {
+      "name": "createCifsNfs.exit",
+      "args": 1
+    },
+    {
+      "name": "HDD_USB_SD_Main",
+      "args": 0
+    },
+    {
+      "name": "HDD_USB_SD_Main.__init__",
+      "args": 5
+    },
+    {
+      "name": "HDD_USB_SD_Main.setWindowTitle",
+      "args": 1
+    },
+    {
+      "name": "HDD_USB_SD_Main.updateHddList",
+      "args": 2
+    },
+    {
+      "name": "HDD_USB_SD_Main.reactivate",
+      "args": 1
+    },
+    {
+      "name": "HDD_USB_SD_Main.selection",
+      "args": 1
+    },
+    {
+      "name": "HDD_USB_SD_Main.mountAnswer",
+      "args": 2
+    },
+    {
+      "name": "HDD_USB_SD_Main.formatAnswer",
+      "args": 2
+    },
+    {
+      "name": "selectPartition",
+      "args": 0
+    },
+    {
+      "name": "selectPartition.__init__",
+      "args": 4
+    },
+    {
+      "name": "selectPartition.enaSelection",
+      "args": 1
+    },
+    {
+      "name": "selectPartition.setWindowTitle",
+      "args": 1
+    },
+    {
+      "name": "selectPartition.showPartition",
+      "args": 2
+    },
+    {
+      "name": "selectPartition.sizePart",
+      "args": 2
+    },
+    {
+      "name": "selectPartition.selection",
+      "args": 1
+    },
+    {
+      "name": "selectPartition.noPartAnswer",
+      "args": 2
+    },
+    {
+      "name": "selectPartition.addPartition",
+      "args": 1
+    },
+    {
+      "name": "selectPartition.numAddPartition",
+      "args": 2
+    },
+    {
+      "name": "selectPartition.sizeAddPartition",
+      "args": 2
+    },
+    {
+      "name": "selectPartition.rstAnswer",
+      "args": 2
+    },
+    {
+      "name": "selectPartition.delPartition",
+      "args": 1
+    },
+    {
+      "name": "selectPartition.delAnswer",
+      "args": 2
+    },
+    {
+      "name": "autoInstallMain",
+      "args": 0
+    },
+    {
+      "name": "autoInstallMain.__init__",
+      "args": 2
+    },
+    {
+      "name": "autoInstallMain.chckWhite",
+      "args": 1
+    },
+    {
+      "name": "autoInstallMain.setNewtitle",
+      "args": 1
+    },
+    {
+      "name": "autoInstallMain.runSetup",
+      "args": 1
+    },
+    {
+      "name": "autoInstallMain.ActivateselectedFnc",
+      "args": 1
+    },
+    {
+      "name": "autoInstallMain.dirSelected",
+      "args": 2
+    },
+    {
+      "name": "autoInstallMain.doItnow",
+      "args": 1
+    },
+    {
+      "name": "autoInstallMain.doItnowAnswer",
+      "args": 2
+    },
+    {
+      "name": "autoInstallMain.showState",
+      "args": 1
+    },
+    {
+      "name": "autoInstallMain.trySavePath",
+      "args": 1
+    },
+    {
+      "name": "autoInstallMain.save",
+      "args": 1
+    },
+    {
+      "name": "autoInstallMain.exitCancel",
+      "args": 1
+    },
+    {
+      "name": "autoInstallMngMain",
+      "args": 0
+    },
+    {
+      "name": "autoInstallMngMain.__init__",
+      "args": 1
+    },
+    {
+      "name": "autoInstallMngMain.autoInstallStart",
+      "args": 2
+    },
+    {
+      "name": "autoInstallMngMain.autoInstMain",
+      "args": 1
+    },
+    {
+      "name": "autoInstallMngMain.InstIpk",
+      "args": 2
+    },
+    {
+      "name": "autoInstallMngMain.autoInstIpkList",
+      "args": 1
+    },
+    {
+      "name": "autoInstStatus",
+      "args": 0
+    },
+    {
+      "name": "autoInstStatus.__init__",
+      "args": 2
+    },
+    {
+      "name": "autoInstStatus.readStatus",
+      "args": 1
+    },
+    {
+      "name": "UCMPanel",
+      "args": 0
+    },
+    {
+      "name": "UCMPanel.__init__",
+      "args": 1
+    },
+    {
+      "name": "UCMPanel.UCM_Open",
+      "args": 1
+    },
+    {
+      "name": "fill",
+      "args": 3
+    },
+    {
+      "name": "cronMng",
+      "args": 0
+    },
+    {
+      "name": "cronMng.__init__",
+      "args": 2
+    },
+    {
+      "name": "cronMng.CrondStart",
+      "args": 1
+    },
+    {
+      "name": "cronMng.autostart",
+      "args": 1
+    },
+    {
+      "name": "cronMng.symUnlink",
+      "args": 3
+    },
+    {
+      "name": "cronMng.addtocron",
+      "args": 1
+    },
+    {
+      "name": "cronMng.delcron",
+      "args": 1
+    },
+    {
+      "name": "cronMng.doDelCron",
+      "args": 2
+    },
+    {
+      "name": "cronMng.info",
+      "args": 1
+    },
+    {
+      "name": "cronMng.updateList",
+      "args": 1
+    },
+    {
+      "name": "SetupCronConf",
+      "args": 0
+    },
+    {
+      "name": "SetupCronConf.__init__",
+      "args": 3
+    },
+    {
+      "name": "SetupCronConf.setTitlenew",
+      "args": 1
+    },
+    {
+      "name": "SetupCronConf.createSetup",
+      "args": 2
+    },
+    {
+      "name": "SetupCronConf.finishSetup",
+      "args": 1
+    },
+    {
+      "name": "SetupCronConf.changedEntry",
+      "args": 1
+    },
+    {
+      "name": "SetupCronConf.getCurrentEntry",
+      "args": 1
+    },
+    {
+      "name": "SetupCronConf.KeyText",
+      "args": 1
+    },
+    {
+      "name": "SetupCronConf.VirtualKeyBoardCallback",
+      "args": 2
+    },
+    {
+      "name": "SetupCronConf.chcknewCron",
+      "args": 1
+    },
+    {
+      "name": "SetupCronConf.save",
+      "args": 1
+    },
+    {
+      "name": "TxtEditor",
+      "args": 0
+    },
+    {
+      "name": "TxtEditor.__init__",
+      "args": 3
+    },
+    {
+      "name": "TxtEditor.exitAndSave",
+      "args": 1
+    },
+    {
+      "name": "TxtEditor.Gettxt",
+      "args": 2
+    },
+    {
+      "name": "TxtEditor.editLine",
+      "args": 1
+    },
+    {
+      "name": "TxtEditor.writeEditLine",
+      "args": 2
+    },
+    {
+      "name": "TxtEditor.SaveEditedFile",
+      "args": 2
+    },
+    {
+      "name": "cfgGsuScreen",
+      "args": 0
+    },
+    {
+      "name": "cfgGsuScreen.__init__",
+      "args": 2
+    },
+    {
+      "name": "cfgGsuScreen.setTitlenew",
+      "args": 1
+    },
+    {
+      "name": "cfgGsuScreen.save",
+      "args": 1
+    },
+    {
+      "name": "cfgGsuScreen.exitCancel",
+      "args": 1
+    },
+    {
+      "name": "dirBrowser",
+      "args": 0
+    },
+    {
+      "name": "dirBrowser.__init__",
+      "args": 4
+    },
+    {
+      "name": "dirBrowser.updTitle",
+      "args": 1
+    },
+    {
+      "name": "dirBrowser.cancel",
+      "args": 1
+    },
+    {
+      "name": "dirBrowser.green",
+      "args": 1
+    },
+    {
+      "name": "dirBrowser.up",
+      "args": 1
+    },
+    {
+      "name": "dirBrowser.down",
+      "args": 1
+    },
+    {
+      "name": "dirBrowser.left",
+      "args": 1
+    },
+    {
+      "name": "dirBrowser.right",
+      "args": 1
+    },
+    {
+      "name": "dirBrowser.ok",
+      "args": 1
+    }
+  ],
+  "converted_source_sha256": "df36b154cb20e1b28027534013779a070ad74c966cc22c8214b0afe2881cc8a3",
+  "limits": "Syntax and signature parity are not proof of behavioral equivalence."
+}
