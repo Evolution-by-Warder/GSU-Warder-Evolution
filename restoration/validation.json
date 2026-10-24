@@ -1,14 +1,14 @@
 {
   "python": "3.14.7",
-  "host_checks": 10,
+  "host_checks": 11,
   "host_checks_passed": true,
   "receiver_tested": false,
-  "source_sha256": "6b70547296173b9a78f9c22585aeb46a176fcf19394afecf5d0be92e445151b5",
+  "source_sha256": "39acf0c115f7f14f9e26af1d08d7b32611e6e532f9a972ca199b64eaad3c232e",
   "original_named_classes": 62,
   "original_named_functions": 510,
   "compatibility_replaced_internal_closures": [
     "generatePS.chck"
   ],
   "note": "Native API doubles validate import and menu construction, not hardware functionality.",
-  "receiver_evidence": "13.40-r1 screenshots confirm original screens open; system process/dmesg panels blank. r2 timer fix awaits receiver validation."
+  "receiver_evidence": "User confirmed r2 system panels, CPU usage and independent scrolling on OpenATV 8. r3 channel screen changes await receiver confirmation."
 }

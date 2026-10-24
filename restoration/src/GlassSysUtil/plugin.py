@@ -2438,104 +2438,102 @@ class channelInfoCenter(Screen):
                 self.runBitTimer1_conn = self.runBitTimer1.timeout.connect(self.startBitrate)
             except:
                 self.runBitTimer1.timeout.get().append(self.startBitrate)
-            else:
-                self.runBitTimer1.start(1000)
-                self.runECMTimer1 = eTimer()
-                try:
-                    self.runECMTimer1_conn = self.runECMTimer1.timeout.connect(self.readEcmInfo)
-                except:
-                    self.runECMTimer1.timeout.get().append(self.readEcmInfo)
-                else:
-                    serviceinfo = service.info()
-                    data = []
-                    data.append('%0.4X' % serviceinfo.getInfo(iServiceInformation.sVideoPID))
-                    data.append('%0.4X' % serviceinfo.getInfo(iServiceInformation.sAudioPID))
-                    data.append('%0.4X' % serviceinfo.getInfo(iServiceInformation.sPCRPID))
-                    data.append('%0.4X' % serviceinfo.getInfo(iServiceInformation.sPMTPID))
-                    data.append('%0.4X' % serviceinfo.getInfo(iServiceInformation.sTXTPID))
-                    data.append('%0.4X' % serviceinfo.getInfo(iServiceInformation.sTSID))
-                    data.append('%0.4X' % serviceinfo.getInfo(iServiceInformation.sONID))
-                    data.append('%0.4X' % serviceinfo.getInfo(iServiceInformation.sSID))
-                    data.append('%s x %s' % (serviceinfo.getInfo(iServiceInformation.sVideoWidth), serviceinfo.getInfo(iServiceInformation.sVideoHeight)))
-                    for x in range(0, len(data)):
-                        if str(data[x]) == '-0001' or '-1' in str(data[x]):
-                            data[x] = '..............'
+            self.runBitTimer1.start(1000)
+            self.runECMTimer1 = eTimer()
+            try:
+                self.runECMTimer1_conn = self.runECMTimer1.timeout.connect(self.readEcmInfo)
+            except:
+                self.runECMTimer1.timeout.get().append(self.readEcmInfo)
+            serviceinfo = service.info()
+            data = []
+            data.append('%0.4X' % serviceinfo.getInfo(iServiceInformation.sVideoPID))
+            data.append('%0.4X' % serviceinfo.getInfo(iServiceInformation.sAudioPID))
+            data.append('%0.4X' % serviceinfo.getInfo(iServiceInformation.sPCRPID))
+            data.append('%0.4X' % serviceinfo.getInfo(iServiceInformation.sPMTPID))
+            data.append('%0.4X' % serviceinfo.getInfo(iServiceInformation.sTXTPID))
+            data.append('%0.4X' % serviceinfo.getInfo(iServiceInformation.sTSID))
+            data.append('%0.4X' % serviceinfo.getInfo(iServiceInformation.sONID))
+            data.append('%0.4X' % serviceinfo.getInfo(iServiceInformation.sSID))
+            data.append('%s x %s' % (serviceinfo.getInfo(iServiceInformation.sVideoWidth), serviceinfo.getInfo(iServiceInformation.sVideoHeight)))
+            for x in range(0, len(data)):
+                if str(data[x]) == '-0001' or '-1' in str(data[x]):
+                    data[x] = '..............'
 
-                    ref = eServiceReference(info.getInfoString(iServiceInformation.sServiceref))
+            ref = eServiceReference(info.getInfoString(iServiceInformation.sServiceref))
+            if ref is not None:
+                ref = ref.toString()
+                if ref.startswith('-1:'):
+                    ref = self.session.nav.getCurrentlyPlayingServiceReference()
                     if ref is not None:
                         ref = ref.toString()
-                        if ref.startswith('-1:'):
-                            ref = self.session.nav.getCurrentlyPlayingServiceReference()
-                            if ref is not None:
-                                ref = ref.toString()
-                    tmp = alternative(ref).split(':', 10)
-                    if len(tmp) > 10:
-                        addr = tmp[10].split(':')[0].replace('%3a', ':')
-                    if tmp[0] == '4097' and addr == '':
-                        ac = self.session.nav.getCurrentlyPlayingServiceReference()
-                        if ac is not None:
-                            ac = ac.toString()
-                            ac = ac.split(':', 10)
-                            if len(ac) > 10:
-                                addr = ac[10].split(':')[0].replace('%3a', ':')
-                    tmp = tmp[:10]
-                    ref = (':').join(tmp)
-                    self.setPicons(('_').join(tmp))
-                    tmp = self.getCaidInfo(info)
-                    if serviceinfo.getInfo(iServiceInformation.sIsCrypted) and tmp != _('No CA info available'):
-                        self.runECMTimer1.start(100)
+            tmp = alternative(ref).split(':', 10)
+            if len(tmp) > 10:
+                addr = tmp[10].split(':')[0].replace('%3a', ':')
+            if tmp[0] == '4097' and addr == '':
+                ac = self.session.nav.getCurrentlyPlayingServiceReference()
+                if ac is not None:
+                    ac = ac.toString()
+                    ac = ac.split(':', 10)
+                    if len(ac) > 10:
+                        addr = ac[10].split(':')[0].replace('%3a', ':')
+            tmp = tmp[:10]
+            ref = (':').join(tmp)
+            self.setPicons(('_').join(tmp))
+            tmp = self.getCaidInfo(info)
+            if serviceinfo.getInfo(iServiceInformation.sIsCrypted) and tmp != _('No CA info available'):
+                self.runECMTimer1.start(100)
+            else:
+                self.showPicCode('Fta-fs8', 'Fta-fs8')
+            ac = iswide = '..............'
+            if len(data) > 8:
+                if data[8] != '..............':
+                    if serviceinfo.getInfo(iServiceInformation.sAspect) in (3,
+                                                                            4,
+                                                                            7,
+                                                                            8,
+                                                                            11,
+                                                                            12,
+                                                                            15,
+                                                                            16):
+                        iswide = '16:9'
                     else:
-                        self.showPicCode('Fta-fs8', 'Fta-fs8')
-                    ac = iswide = '..............'
-                    if len(data) > 8:
-                        if data[8] != '..............':
-                            if serviceinfo.getInfo(iServiceInformation.sAspect) in (3,
-                                                                                    4,
-                                                                                    7,
-                                                                                    8,
-                                                                                    11,
-                                                                                    12,
-                                                                                    15,
-                                                                                    16):
-                                iswide = '16:9'
-                            else:
-                                iswide = '4:3'
-                    num = 0
-                    audio = service.audioTracks()
-                    if audio:
-                        num = audio.getNumberOfTracks()
+                        iswide = '4:3'
+            num = 0
+            audio = service.audioTracks()
+            if audio:
+                num = audio.getNumberOfTracks()
+                try:
+                    i = audio.getTrackInfo(audio.getCurrentTrack())
+                    x = i.getDescription().upper()
+                    idx = i.getLanguage().upper()
+                    if '5.1' in x or '5.1' in idx:
+                        ac = 'Dolby Digital 5.1'
+                    elif '2.0' in x or '2.0' in idx:
+                        ac = 'Dolby Digital 2.0'
+                    elif 'MPEG' in x or 'MPEG' in idx:
+                        ac = 'MPEG'
+                    elif 'DTS' in x or 'DTS' in idx:
+                        ac = 'DTS'
+                    elif 'AAC' in x or 'AAC' in idx:
+                        ac = 'AAC'
+                    elif 'DOLBY' in x or 'AC3' in x or 'DOLBY' in idx or 'AC3' in idx:
+                        ac = 'AC3'
+                except:
+                    pass
+                else:
+                    if EACC and ac == '..............':
                         try:
-                            i = audio.getTrackInfo(audio.getCurrentTrack())
-                            x = i.getDescription().upper()
-                            idx = i.getLanguage().upper()
-                            if '5.1' in x or '5.1' in idx:
-                                ac = 'Dolby Digital 5.1'
-                            elif '2.0' in x or '2.0' in idx:
-                                ac = 'Dolby Digital 2.0'
-                            elif 'MPEG' in x or 'MPEG' in idx:
-                                ac = 'MPEG'
-                            elif 'DTS' in x or 'DTS' in idx:
+                            idx = i.getType()
+                            if idx in (iAt.atDTS, iAt.atDTSHD):
                                 ac = 'DTS'
-                            elif 'AAC' in x or 'AAC' in idx:
+                            elif idx == iAt.atMPEG:
+                                ac = 'MPEG'
+                            elif idx in (iAt.atAAC, iAt.atAACHE):
                                 ac = 'AAC'
-                            elif 'DOLBY' in x or 'AC3' in x or 'DOLBY' in idx or 'AC3' in idx:
+                            elif idx in (iAt.atDDP, iAt.atAC3):
                                 ac = 'AC3'
                         except:
                             pass
-                        else:
-                            if EACC and ac == '..............':
-                                try:
-                                    idx = i.getType()
-                                    if idx in (iAt.atDTS, iAt.atDTSHD):
-                                        ac = 'DTS'
-                                    elif idx == iAt.atMPEG:
-                                        ac = 'MPEG'
-                                    elif idx in (iAt.atAAC, iAt.atAACHE):
-                                        ac = 'AAC'
-                                    elif idx in (iAt.atDDP, iAt.atAC3):
-                                        ac = 'AC3'
-                                except:
-                                    pass
 
         try:
             (x, i) = self.getTunerInfo(service)
@@ -2617,7 +2615,7 @@ class channelInfoCenter(Screen):
                                         position = '%sE' % position
                                     if position.startswith('.'):
                                         position = '0%s' % position
-                                    allSat[position] = str(name.encode('utf-8'))
+                                    allSat[position] = name
 
                     except:
                         pass
@@ -2781,6 +2779,7 @@ class channelInfoCenter(Screen):
             self.runECMTimer1 = None
             self.runECMTimer1_conn = None
         if self.runBitTimer1 is not None:
+            self.runBitTimer1.stop()
             self.runBitTimer1 = None
             self.runBitTimer1_conn = None
         self.close()
@@ -2854,7 +2853,7 @@ class channelInfoCenter(Screen):
             self['picprov'].instance.setPixmapFromFile(pngname)
             provname = self.getServiceInfoString(info, iServiceInformation.sTransferBPS, (lambda x: '%d kB/s' % (x / 1024)))
             if provname != 'N/A':
-                self['stream_btr'].setText(sname)
+                self['stream_btr'].setText(provname)
             if enaIp:
                 sname = 'IPTV'
                 if provname == 'N/A':

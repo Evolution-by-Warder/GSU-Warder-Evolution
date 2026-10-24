@@ -52,6 +52,70 @@ class OriginalPortTests(unittest.TestCase):
         screen.exit()
         self.assertIsNone(screen.cpuTimer)
 
+    def test_channel_initial_data_and_ecm_work_with_both_timer_apis(self):
+        from unittest.mock import MagicMock
+        from contextlib import ExitStack
+        from xml.etree.ElementTree import ElementTree, fromstring
+        module=self.plugin
+        ref='1:0:19:13A5:C85:3:EB0000:0:0:0:'
+        fields=('sVideoPID','sAudioPID','sPCRPID','sPMTPID','sTXTPID',
+                'sTSID','sONID','sSID','sVideoWidth','sVideoHeight','sAspect',
+                'sServiceref','sIsCrypted','sCAIDs','sProvider','sTransferBPS')
+        constants=types.SimpleNamespace(**{k:k for k in fields},resIsString=-2)
+        values={'sVideoPID':0x668,'sAudioPID':0x669,'sVideoWidth':1920,
+                'sVideoHeight':1080,'sAspect':3,'sProvider':-2,'sTransferBPS':2048}
+        info=types.SimpleNamespace(getInfo=lambda key:values.get(key,1),
+            getInfoString=lambda key:ref if key=='sServiceref' else 'CANAL+ CZ',
+            getInfoObject=lambda key:[0x668])
+        frontend={'tuner_type':'DVB-S2','orbital_position':235,
+                  'frequency':12207000,'symbol_rate':27500000}
+        service=types.SimpleNamespace(info=lambda:info,audioTracks=lambda:None,
+            frontendInfo=lambda:types.SimpleNamespace(getAll=lambda original:frontend))
+        session=types.SimpleNamespace(nav=types.SimpleNamespace(getCurrentService=lambda:service))
+        for modern in (False,True):
+            with self.subTest(modern=modern),ExitStack() as stack:
+                timers=[];callbacks=[]
+                def make_timer():
+                    slots=[];signal=types.SimpleNamespace(get=lambda:slots)
+                    if modern:signal.connect=lambda cb:slots.append(cb)
+                    timer=MagicMock();timer.timeout=signal
+                    timers.append(timer);callbacks.append(slots)
+                    return timer
+                stack.enter_context(patch.object(module,'eTimer',side_effect=make_timer))
+                stack.enter_context(patch.object(module,'iServiceInformation',constants))
+                stack.enter_context(patch.object(module,'eServiceReference',lambda value:types.SimpleNamespace(toString=lambda:value)))
+                stack.enter_context(patch.object(module,'ENA_TT',False))
+                stack.enter_context(patch.object(module,'ConvertToHumanReadable',lambda data:{'system':'DVB-S2','modulation':'8PSK','polarization':'Horizontal','fec_inner':'3/4'}))
+                stack.enter_context(patch.object(module,'parse',return_value=ElementTree(fromstring('<satellites><sat name="Astra č. 3" position="235"/></satellites>'))))
+                lookup=stack.enter_context(patch.object(module,'resPicon',side_effect=lambda name,kind:kind+'/'+name+'.png'))
+                screen=module.channelInfoCenter(session)
+                for name in ('picchannel','picprov','picsat','piccode','piccam'):
+                    screen[name].instance.setPixmapFromFile=MagicMock()
+                screen.showPicCode=MagicMock()
+                screen.startInfo()
+                self.assertEqual(len(timers),2)
+                self.assertEqual(callbacks,[[screen.startBitrate],[screen.readEcmInfo]])
+                timers[0].start.assert_called_with(1000)
+                timers[1].start.assert_called_with(100)
+                self.assertEqual(screen['tp_ref'].text,ref.rstrip(':'))
+                self.assertEqual(screen['tp_sat'].text,'Astra č. 3')
+                self.assertIn('DVB-S2\n8PSK\n12207 MHz',screen['tp_values'].text)
+                self.assertIn('0668\n0669',screen['tp_values'].text)
+                self.assertIn('1920 x 1080',screen['tp_values'].text)
+                screen['picchannel'].instance.setPixmapFromFile.assert_called_once()
+                screen['picprov'].instance.setPixmapFromFile.assert_called_once()
+                screen['picsat'].instance.setPixmapFromFile.assert_called_once()
+                self.assertEqual(screen['stream_btr'].text,'2 kB/s')
+                ecm=('OSCam ', 'OSCam\n', '', '0668\n', '000000\n', '000000\n', '0C0A\n', 'server\n', 'local\n', '0\n', '0\n', '0.117\n', 'Irdeto', '', '')
+                stack.enter_context(patch.object(module,'ECMparser',return_value=ecm))
+                callbacks[1][0]()
+                self.assertIn('0668',screen['ecmValues'].text)
+                screen.showPicCode.assert_called_with('Irdeto-fs8','OSCam-fs8')
+                timers[1].start.assert_called_with(3000)
+                screen.exit()
+                timers[0].stop.assert_called_once()
+                self.assertEqual(timers[1].stop.call_count,2)
+
     def test_every_original_class_function_and_signature_is_retained(self):
         tree=ast.parse(SOURCE.read_text());actual={}
         def walk(nodes,prefix=''):

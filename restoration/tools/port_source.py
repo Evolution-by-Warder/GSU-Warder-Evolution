@@ -199,6 +199,28 @@ def _gsu_helper(name):
     for start,end,text in sorted(edits,reverse=True):
         lines[start:end]=[text]
     source=''.join(lines)
+    # The channel screen must populate after either timer connection API,
+    # including when both fall back to timeout.get().
+    tree=ast.parse(source)
+    channel=next(n for n in tree.body if isinstance(n,ast.ClassDef) and n.name=='channelInfoCenter')
+    method=next(n for n in channel.body if isinstance(n,ast.FunctionDef) and n.name=='startInfo')
+    lines=source.splitlines(keepends=True)
+    dedent={};remove=set()
+    for node in ast.walk(method):
+        if isinstance(node,ast.Try) and node.orelse and any(isinstance(n,ast.Attribute) and n.attr=='connect' for stmt in node.body for n in ast.walk(stmt)):
+            first=node.orelse[0].lineno-1
+            assert lines[first-1].strip()=='else:'
+            remove.add(first-1)
+            for row in range(first,node.orelse[-1].end_lineno):
+                dedent[row]=dedent.get(row,0)+4
+    source=''.join(line[dedent.get(i,0):] if line.strip() else line for i,line in enumerate(lines) if i not in remove)
+    start=source.index('class channelInfoCenter(')
+    end=source.index('\nclass ',start+1)
+    body=source[start:end]
+    body=body.replace("str(name.encode('utf-8'))",'name')
+    body=body.replace("self['stream_btr'].setText(sname)","self['stream_btr'].setText(provname)")
+    body=body.replace("if self.runBitTimer1 is not None:\n            self.runBitTimer1 = None", "if self.runBitTimer1 is not None:\n            self.runBitTimer1.stop()\n            self.runBitTimer1 = None")
+    source=source[:start]+body+source[end:]
     # Preserve class and method signatures; no placeholder function bodies.
     compile(source, 'plugin.py', 'exec')
     return source
