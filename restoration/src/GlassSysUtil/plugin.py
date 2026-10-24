@@ -2419,6 +2419,7 @@ class channelInfoCenter(Screen):
         return
 
     def startInfo(self):
+        self['ecmValues'].instance.setWrap(2)
         for x in ('picprov', 'picsat', 'picchannel', 'piccode', 'piccam'):
             self[x].instance.setScale(1)
 
@@ -2552,15 +2553,9 @@ class channelInfoCenter(Screen):
         return
 
     def getCaidInfo(self, info):
-        cainfo = ''
-        if info:
-            caids = info.getInfoObject(iServiceInformation.sCAIDs)
-            if caids:
-                if len(caids) > 0:
-                    for caid in caids:
-                        cainfo += '%0.4X' % caid + '  '
-
-                    return cainfo
+        caids = info.getInfoObject(iServiceInformation.sCAIDs) if info else None
+        if caids:
+            return '  '.join('%04X' % caid for caid in dict.fromkeys(caids))
         return _('No CA info available')
 
     def getServiceInfoString(self, info, what, convert=(lambda x: '%d' % x)):
@@ -2658,6 +2653,9 @@ class channelInfoCenter(Screen):
 
     def startBitrate(self):
         self.runBitTimer1.stop()
+        self._bitrate_buffer = ''
+        self._bitrate_rows = []
+        self._bitrate_samples = 0
         if not ENAEBTR and not ENA_Z:
             self.container = eConsoleAppContainer()
             self.container.dataAvail.append(self.dataAvail)
@@ -2668,6 +2666,11 @@ class channelInfoCenter(Screen):
             serviceinfo = service.info()
             vpid = serviceinfo.getInfo(iServiceInformation.sVideoPID)
             apid = serviceinfo.getInfo(iServiceInformation.sAudioPID)
+            try:
+                with open('/tmp/gsu-bitrate.log', 'w') as handle:
+                    handle.write('engine=%s vpid=%d apid=%d\n' % ('native' if ENAEBTR else 'helper', vpid, apid))
+            except OSError:
+                pass
             if ENAEBTR:
                 ref = self.session.nav.getCurrentlyPlayingServiceReference()
                 if not ref.getPath():
@@ -2730,6 +2733,11 @@ class channelInfoCenter(Screen):
                     pass
                 else:
                     cmd = '%s %s%s %s %s' % (_gsu_helper('bitgenerator'), a, str(demux), str(vpid), str(apid))
+                    try:
+                        with open('/tmp/gsu-bitrate.log', 'a') as handle:
+                            handle.write(cmd + '\n')
+                    except OSError:
+                        pass
                     self.container.execute(cmd)
                     self.isBit = True
         return
@@ -2755,19 +2763,28 @@ class channelInfoCenter(Screen):
         return
 
     def dataAvail(self, str):
-        try:
-            if ISP38:
-                str = str.decode('ascii')
-            cmddata = str.split(' ')
-            tmp = cmddata[3].split('\n')
-            tmp1 = cmddata[6]
-            self['bit_min'].setText('Min:\n' + cmddata[0] + '\n' + tmp[1])
-            self['bit_max'].setText('Max:\n' + cmddata[1] + '\n' + cmddata[4])
-            self['bit_avg'].setText('Avg:\n' + cmddata[2] + '\n' + cmddata[5])
-            self['bit_act'].setText('Act:\n' + tmp[0] + '\n' + tmp1[:-1])
-        except:
-            pass
-
+        text = str.decode('ascii', 'replace') if isinstance(str, bytes) else str
+        if getattr(self, '_bitrate_samples', 0) < 6:
+            self._bitrate_samples = getattr(self, '_bitrate_samples', 0) + 1
+            try:
+                with open('/tmp/gsu-bitrate.log', 'a') as handle:
+                    handle.write(repr(text[:512]) + '\n')
+            except OSError:
+                pass
+        self._bitrate_buffer = getattr(self, '_bitrate_buffer', '') + text
+        rows = self._bitrate_buffer.split('\n')
+        self._bitrate_buffer = rows.pop()[-1024:]
+        pending = getattr(self, '_bitrate_rows', [])
+        for row in rows:
+            values = row.split()
+            if len(values) == 4 and all(value.isdigit() for value in values):
+                pending.append(values)
+                if len(pending) == 2:
+                    video, audio = pending
+                    for index, name in enumerate(('min', 'max', 'avg', 'act')):
+                        self['bit_' + name].setText(name.capitalize() + ':\n' + video[index] + '\n' + audio[index])
+                    pending = []
+        self._bitrate_rows = pending
         return
 
     def exit(self):
@@ -2796,7 +2813,7 @@ class channelInfoCenter(Screen):
                 self['ecmlabels'].setText(self.e.replace(config.plugins.GlassSysUtil.par83.value, 'CHID:'))
             else:
                 self['ecmlabels'].setText(self.e)
-            self['ecmValues'].setText(typecam.replace('\n', oscVer) + coding + '\n' + caid + provider + provid + pid + using + adress + hops + share + ecmTime)
+            self['ecmValues'].setText('\n'.join(' '.join(value.split()) for value in (typecam.replace('\n', oscVer), coding, caid, provider, provid, pid, using, adress, hops, share, ecmTime)))
         if coding == '..............':
             coding = 'Unknown'
         self.showPicCode(coding + '-fs8', typecam[:-1] + '-fs8')

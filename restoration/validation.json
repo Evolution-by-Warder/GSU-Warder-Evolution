@@ -1,14 +1,14 @@
 {
   "python": "3.14.7",
-  "host_checks": 11,
+  "host_checks": 13,
   "host_checks_passed": true,
   "receiver_tested": false,
-  "source_sha256": "39acf0c115f7f14f9e26af1d08d7b32611e6e532f9a972ca199b64eaad3c232e",
+  "source_sha256": "6a5cd53b4a3f52e532a9f758a3c2a51aa7f9f21fa583b840b430dd3a87751eb5",
   "original_named_classes": 62,
   "original_named_functions": 510,
   "compatibility_replaced_internal_closures": [
     "generatePS.chck"
   ],
   "note": "Native API doubles validate import and menu construction, not hardware functionality.",
-  "receiver_evidence": "User confirmed r2 system panels, CPU usage and independent scrolling on OpenATV 8. r3 channel screen changes await receiver confirmation."
+  "receiver_evidence": "User confirmed r2 system panels/CPU/scrolling. r3 screenshot confirms channel picons, ECM and transponder data, audio bitrate; ECM wrapping/duplicate CAIDs and zero video rate remain in that screenshot. r4 display/parser fixes await receiver validation; helper video measurement unresolved."
 }

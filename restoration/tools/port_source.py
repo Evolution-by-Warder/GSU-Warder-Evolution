@@ -221,6 +221,71 @@ def _gsu_helper(name):
     body=body.replace("self['stream_btr'].setText(sname)","self['stream_btr'].setText(provname)")
     body=body.replace("if self.runBitTimer1 is not None:\n            self.runBitTimer1 = None", "if self.runBitTimer1 is not None:\n            self.runBitTimer1.stop()\n            self.runBitTimer1 = None")
     source=source[:start]+body+source[end:]
+    tree=ast.parse(source)
+    lines=source.splitlines(keepends=True)
+    channel=next(n for n in tree.body if isinstance(n,ast.ClassDef) and n.name=='channelInfoCenter')
+    edits=[]
+    for method in channel.body:
+        if not isinstance(method,ast.FunctionDef):continue
+        if method.name=='getCaidInfo':
+            text="""    def getCaidInfo(self, info):
+        caids = info.getInfoObject(iServiceInformation.sCAIDs) if info else None
+        if caids:
+            return '  '.join('%04X' % caid for caid in dict.fromkeys(caids))
+        return _('No CA info available')
+"""
+        elif method.name=='dataAvail':
+            text=r"""    def dataAvail(self, str):
+        text = str.decode('ascii', 'replace') if isinstance(str, bytes) else str
+        if getattr(self, '_bitrate_samples', 0) < 6:
+            self._bitrate_samples = getattr(self, '_bitrate_samples', 0) + 1
+            try:
+                with open('/tmp/gsu-bitrate.log', 'a') as handle:
+                    handle.write(repr(text[:512]) + '\n')
+            except OSError:
+                pass
+        self._bitrate_buffer = getattr(self, '_bitrate_buffer', '') + text
+        rows = self._bitrate_buffer.split('\n')
+        self._bitrate_buffer = rows.pop()[-1024:]
+        pending = getattr(self, '_bitrate_rows', [])
+        for row in rows:
+            values = row.split()
+            if len(values) == 4 and all(value.isdigit() for value in values):
+                pending.append(values)
+                if len(pending) == 2:
+                    video, audio = pending
+                    for index, name in enumerate(('min', 'max', 'avg', 'act')):
+                        self['bit_' + name].setText(name.capitalize() + ':\n' + video[index] + '\n' + audio[index])
+                    pending = []
+        self._bitrate_rows = pending
+        return
+"""
+        else:continue
+        edits.append((method.lineno-1,method.end_lineno,text))
+    for start,end,text in sorted(edits,reverse=True):lines[start:end]=[text]
+    source=''.join(lines)
+    start=source.index('class channelInfoCenter(');end=source.index('\nclass ',start+1)
+    body=source[start:end]
+    body=body.replace("    def startInfo(self):\n", "    def startInfo(self):\n        self['ecmValues'].instance.setWrap(2)\n",1)
+    body=body.replace("        self.runBitTimer1.stop()\n", "        self.runBitTimer1.stop()\n        self._bitrate_buffer = ''\n        self._bitrate_rows = []\n        self._bitrate_samples = 0\n",1)
+    body=body.replace("            if ENAEBTR:\n", """            try:
+                with open('/tmp/gsu-bitrate.log', 'w') as handle:
+                    handle.write('engine=%s vpid=%d apid=%d\\n' % ('native' if ENAEBTR else 'helper', vpid, apid))
+            except OSError:
+                pass
+            if ENAEBTR:
+""",1)
+    body=body.replace("                    self.container.execute(cmd)", """                    try:
+                        with open('/tmp/gsu-bitrate.log', 'a') as handle:
+                            handle.write(cmd + '\\n')
+                    except OSError:
+                        pass
+                    self.container.execute(cmd)""",1)
+    old="self['ecmValues'].setText(typecam.replace('\\n', oscVer) + coding + '\\n' + caid + provider + provid + pid + using + adress + hops + share + ecmTime)"
+    new="self['ecmValues'].setText('\\n'.join(' '.join(value.split()) for value in (typecam.replace('\\n', oscVer), coding, caid, provider, provid, pid, using, adress, hops, share, ecmTime)))"
+    assert old in body
+    body=body.replace(old,new,1)
+    source=source[:start]+body+source[end:]
     # Preserve class and method signatures; no placeholder function bodies.
     compile(source, 'plugin.py', 'exec')
     return source

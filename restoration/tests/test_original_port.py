@@ -116,6 +116,35 @@ class OriginalPortTests(unittest.TestCase):
                 timers[0].stop.assert_called_once()
                 self.assertEqual(timers[1].stop.call_count,2)
 
+    def test_channel_caids_are_unique_and_ecm_keeps_eleven_rows(self):
+        from unittest.mock import MagicMock
+        module=self.plugin
+        screen=module.channelInfoCenter(types.SimpleNamespace())
+        info=types.SimpleNamespace(getInfoObject=lambda key:[0x624,0x181D,0x624,0x668,0x181D])
+        with patch.object(module,'iServiceInformation',types.SimpleNamespace(sCAIDs=1)):
+            self.assertEqual(screen.getCaidInfo(info),'0624  181D  0668')
+        screen.runECMTimer1=MagicMock();screen.showPicCode=MagicMock()
+        ecm=(' (2.26.09-11968-802)\n','OScam\n','','0668\n','000000\n','000000\n','0C0A\n','server\n','192.168.10.6\n','0\n','0\n','0.126\n','Irdeto','','')
+        with patch.object(module,'ECMparser',return_value=ecm):screen.readEcmInfo()
+        rows=screen['ecmValues'].text.splitlines()
+        self.assertEqual(len(rows),11)
+        self.assertEqual(rows[0],'OScam (2.26.09-11968-802)')
+        self.assertEqual(rows[1:4],['Irdeto','0668','000000'])
+        self.assertEqual(rows[-1],'0.126')
+
+    def test_channel_bitrate_output_handles_partial_and_combined_reads(self):
+        module=self.plugin
+        screen=module.channelInfoCenter(types.SimpleNamespace())
+        with patch('builtins.open',unittest.mock.mock_open()):
+            screen.dataAvail(b'100 200 150 1')
+            self.assertEqual(screen['bit_act'].text,'')
+            screen.dataAvail(b'80\n 180  192 186 191\n')
+            self.assertEqual(screen['bit_act'].text,'Act:\n180\n191')
+            self.assertEqual(screen['bit_min'].text,'Min:\n100\n180')
+            screen.dataAvail('warning: read retry\n200 300 250 280\n190 200 195 199\n210 310 260 290\n191 201 196 200\n')
+            self.assertEqual(screen['bit_act'].text,'Act:\n290\n200')
+            self.assertEqual(screen['bit_avg'].text,'Avg:\n260\n196')
+
     def test_every_original_class_function_and_signature_is_retained(self):
         tree=ast.parse(SOURCE.read_text());actual={}
         def walk(nodes,prefix=''):
