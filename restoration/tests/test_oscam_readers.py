@@ -28,6 +28,19 @@ class ReaderTests(unittest.TestCase):
         self.assertEqual(row['counts'],['0 / 1 / 2 / 3','4 / 5 / 6 / 7','8 / 9 / 10 / 11','12 / 13 / 14 / 15'])
         self.assertTrue(row['enabled'])
 
+    def test_receiver_11968_columns_status_protocol_and_emm_counters(self):
+        html=(ROOT/'tests/fixtures/oscam_readers_11968.html').read_text()
+        records=readers.parse_readers(html.splitlines())
+        self.assertEqual(len(records),4)
+        card,disabled,server,emulator=records
+        self.assertEqual((card['protocol'],card['status']),('internal','active'))
+        self.assertEqual(card['counts'],['0 / 15 / 0 / 0','0 / 771 / 120 / 0','0 / 24 / 146 / 0','0 / 0 / 0 / 0'])
+        self.assertEqual((server['protocol'],server['status']),('cs378x','online 192.0.2.6'))
+        self.assertEqual(server['counts'],['0 / 0 / 0 / 0','0 / 960 / 61 / 0','0 / 0 / 0 / 0','0 / 0 / 0 / 0'])
+        self.assertEqual((disabled['protocol'],disabled['status'],disabled['enabled']),('-','offline',False))
+        self.assertEqual((emulator['protocol'],emulator['status']),('emu','active'))
+        self.assertEqual(records,readers.parse_readers([''.join(html.splitlines())]))
+
     def test_reflowed_html_disabled_rows_and_entities(self):
         html=''.join(fixture('TV &amp; radio','newcamd',False)).lower()
         row=readers.parse_readers([html])[0]

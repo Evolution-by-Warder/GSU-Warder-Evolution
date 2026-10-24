@@ -1,6 +1,6 @@
 {
   "python": "3.14.7",
-  "host_checks": 26,
+  "host_checks": 27,
   "host_checks_passed": true,
   "receiver_tested": false,
   "source_sha256": "c37e1391cb7de196349176785527a4a2157f9a5f20277106482480d36ca81bae",
@@ -10,6 +10,7 @@
     "generatePS.chck"
   ],
   "note": "Native API doubles validate import and menu construction, not hardware functionality.",
-  "receiver_evidence": "User confirmed OSCam summary selected details, entitlement rows after inserting a physical card, live log updates and scrolling, and oscam.version viewing/scrolling. Client populated state untested (no remote clients). Reader list screenshot showed status in protocol position, joined online/IP, and displaced EMM counters; r9 column-based parsing awaits receiver confirmation.",
-  "bitrate_worker_sha256": "b44d016d9900242a98e1afb753abe36225a9cfdcfa50bfc21be677fc6536fcdd"
+  "receiver_evidence": "Supplied real Readers HTML from OSCam 2.26.09-11968-802 confirms status/address in readercol20, plaintext protocol in readercol2, Filtered in readercol7, EMM counters in readercol8-11. Sanitized four-row fixture validates exact source counts and backward compatibility. r10 receiver display confirmation pending.",
+  "bitrate_worker_sha256": "b44d016d9900242a98e1afb753abe36225a9cfdcfa50bfc21be677fc6536fcdd",
+  "oscam_readers_parser_sha256": "dfac5fba47e8181bd3d4f2cb55f026c06d107e73307b9401c0deea229c8d3a85"
 }

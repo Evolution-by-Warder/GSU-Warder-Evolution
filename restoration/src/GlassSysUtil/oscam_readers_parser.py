@@ -22,6 +22,8 @@ class ReaderTable(HTMLParser):
                 self.row['cells'].setdefault(self.cell, [])
             if self.cell == 'readercol1':
                 self.row['label'] = attrs.get('data-sort-value', '')
+            elif self.cell == 'readercol2':
+                self.row['protocol'] = attrs.get('data-sort-value', '')
         action = attrs.get('data-next-action', '')
         query = parse_qs(urlsplit(attrs.get('href', '')).query)
         action = action or query.get('action', [''])[0]
@@ -56,10 +58,15 @@ def parse_readers(data):
         if not label or row['enabled'] is None:
             continue
         protocol = row['protocol']
-        status = cells.get('readercol2', '')
+        status = cells.get('readercol20', cells.get('readercol2', ''))
+        if status == protocol:
+            status = ''
         if not protocol and status.lower() in ('internal', 'mouse', 'pcsc', 'cs378x', 'camd35', 'cccam', 'newcamd', 'emu', 'serial', 'smartreader', 'radegast', 'pandora'):
             protocol, status = status, ''
+        # Versions with a TOUT column put Filtered in readercol7,
+        # a two-value counter. EMM columns then begin at readercol8.
+        start = 7 if len(cells.get('readercol7', '').split('/')) == 4 else 8
         records.append({'label': label, 'protocol': protocol or '-', 'status': status,
                         'enabled': row['enabled'],
-                        'counts': [cells.get('readercol%d' % col, '0 / 0 / 0 / 0') for col in (7, 8, 9, 10)]})
+                        'counts': [cells.get('readercol%d' % col, '0 / 0 / 0 / 0') for col in range(start, start + 4)]})
     return records
