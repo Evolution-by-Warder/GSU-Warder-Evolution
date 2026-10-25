@@ -268,3 +268,18 @@ Najbližšie iba nainštalovaťr26 + GUIrestart aotvoriťSprávcuCAM. Na tomto p
 - Prešlo136 testov na Python3.14.7, kompilácia a deterministický build. Testy overujú návrat menu, neprítomnosť widgetu, pomocníka a metód aj zachovanie existujúcich CAM a SRV kontrol. Zobrazenie r27 na prijímači zatiaľ nie je potvrdené.
 
 Najbližšie: inštalácia r27, reštart GUI a snímka Správcu CAM bez Pripraviť exp.image. Modré musí z Autokontroly prejsť na Ukončiť. Skutočná prevádzka samostatného SRV zostáva neoverená, pretože na prijímači nie je nainštalovaný.
+
+
+## 2026-10-25 — r27 prijímač potvrdený; r28 OSD ECM a kontrolka CAM
+
+- Snímky093241/093350/093351 potvrdzujú odstránenie exp.image z r27 a návrat modrým z Autokontroly na Ukončiť. Pomocník uvádza15 sekúnd. OSCam a ECM ostávajú aktívne.
+- Používateľ požiadal o zelený znak pred CAM spustené a červený pri zastavení. Výslovne chcel túto kozmetiku spojiť s ďalším krokom, bez samostatného IPK.
+- Ďalšia sekcia je OSD ECM. Používateľ sa pýtal na účel, porovnal ho s ECM Info cez dlhé modré a chce vidieť skutočnú ukážku. OSD zatiaľ zachovať; nejde o požiadavku odstránenia. Následne explicitne autorizoval všetko opraviť a sprístupniť. Pôvodný vzhľad sa nemení.
+- r28 opravuje chybný tok readEcmInfo: priradenie času a volanie ECMparser boli za return vo vetve nezmeneného súboru. Pri novom súbore tak caid a ďalšie premenné nemali hodnotu. Parsovanie teraz predchádza porovnaniu zmien. Opravená voľba static/rolling a návrat po unsupported-CA správe.
+- Statické widgety sa vytvoria pri oboch eTimer signal API. prepareOsd je bound layout metóda a vypína orezávanie viacriadkových štítkov. Čas parser normalizuje na sekundy, prah sa preto porovnáva po násobení1000.
+- Vypnutie a koniec služby zastavia oba časovače a vyčistia cache. FTA má jasnú informáciu, nečíta staré ECM z kódovanej stanice. Scrolling začne s krátkym odsadením. Režimy stále používajú pôvodné skiny; zmena typu zostáva s pôvodným GUI restart potvrdením.
+- Polohovací dialóg stopne časovač na OK aj späť a hranice počíta podľa reálneho rozmeru obrazovky a okna. Save/cancel zahrnie aj voľby, ktoré sa po vypnutí OSD skryli. Samostatné potvrdenie polohy zostáva zachované.
+- Kontrolka statPic pri natívnom CAM: zelená pri aktívnom procese, červená pri zastavení. Inicializácia aj dokončenie ručných príkazov aktualizujú farbu. Existujúci500ms timer žiada najviac raz za sekundu async active_name cez deferToThread, nie proc scan na GUI vlákne. UI sa aktualizuje len pri zmene. Generácia bráni použitiu starého výsledku po ručnom príkaze, closed guard po zatvorení.
+- Prešlo149 testov Python3.14.7 vrátane oboch OSD režimov/API, zmeneného a nezmeneného ECM, prahu času, chýbajúceho súboru, FTA, vypnutia, polohy, skrytých nastavení a async farieb/stale výsledkov. Zdrojové transformácie reprodukujú runtime. OSD ani farby na prijímači r28 ešte nie sú potvrdené.
+
+Najbližšie: inštalovať r28 a reštartovať GUI. OSD ECM informácie → Povoliť Áno, ponechať Rolované info, zelené Uložiť, zavrieť GSU a prepnúť na kódovanú stanicu. Po krátkom štarte má ísť posúvaný text cez TV obraz; vyžiadať skutočnú snímku a spätnú väzbu. Potom skúsiť Statické info a potvrdiť požadovaný GUI restart. Overiť polohu a vypnutie bez pretrvávajúceho overlay. Súčasne v Správcovi CAM overiť zelenú/červenú pred stavovým riadkom vrátane automatickej obnovy. Zostať pri OSD až do dokončenia sekcie.

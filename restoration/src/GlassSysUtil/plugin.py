@@ -4,6 +4,7 @@
 # Embedded file name: /usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/plugin.py
 # Compiled at: 2021-03-28 16:56:23
 from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox
+from Plugins.Extensions.GlassSysUtil.native_status import request as _native_status_request
 from Plugins.Extensions.GlassSysUtil.srv_visibility import apply as _srv_visibility, prepare_skin as _srv_skin, binary_status as _srv_binary_status, menu_text as _cam_menu_text
 from Plugins.Extensions.GlassSysUtil.native_autostart import begin as _native_autostart_begin, configure as _native_autostart_configure, autocheck_help as _native_autocheck_help
 from Plugins.Extensions.GlassSysUtil.cam_package_actions import controls as _cam_package_controls, update as _cam_package_update, remove as _cam_package_remove, is_cam_package as _is_cam_package, refresh_registry as _cam_package_registry, start_config as _cam_start_config
@@ -4467,6 +4468,7 @@ class univCamMng(Screen):
 
     def chckOscam(self):
         self.chckOscamTimer.stop()
+        _native_status_request(self, _)
         if _cam_package_controls(self):
             self.chckOscamTimer.start(500)
             return
@@ -4836,7 +4838,9 @@ class univCamMng(Screen):
 
     def checkStatCam(self):
         if self.nativeSoftcam.available():
-            self.CamSrvMsg(_cam_menu_text(self, _, 'CAM/SRV Running') if self.nativeSoftcam.active_name() else _cam_menu_text(self, _, 'No Running CAM/SRV'))
+            active = self.nativeSoftcam.active_name()
+            self.statcommPics('stat', 'green' if active else 'red')
+            self.CamSrvMsg(_cam_menu_text(self, _, 'CAM/SRV Running') if active else _cam_menu_text(self, _, 'No Running CAM/SRV'))
             return True
         stat = False
         if generatePS():
@@ -4861,7 +4865,7 @@ class univCamMng(Screen):
             f.close()
             system(RM_A_TMP)
         self.CamSrvMsg(_cam_menu_text(self, _, 'No Running CAM/SRV'))
-        self.statcommPics('stat', 'blue')
+        self.statcommPics('stat', 'red')
         return True
 
 
@@ -7689,10 +7693,9 @@ class OnScreenEcmScreen(Screen):
                 self.rollTimerText_conn = self.rollTimerText.timeout.connect(self.staticEcm)
             except:
                 self.rollTimerText.timeout.get().append(self.staticEcm)
-            else:
-                self.e = 'CAID:\nProvID:\nPID:\nSID:\nUsing:\nTime:\nSystem:\nCAM:'
-                self['ecm_items'] = Label(self.e)
-                self['OSD_Ecm_info'] = Label('..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............')
+            self.e = 'CAID:\nProvID:\nPID:\nSID:\nUsing:\nTime:\nSystem:\nCAM:'
+            self['ecm_items'] = Label(self.e)
+            self['OSD_Ecm_info'] = Label('..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............')
         else:
             self.skin = onScreenEcm_scr
             try:
@@ -7707,12 +7710,14 @@ class OnScreenEcmScreen(Screen):
         except:
             self.runOSDECMTimer.timeout.get().append(self.readEcmInfo)
 
+        self.cryptService = False
         self.allInfos = {}
         self.status = 'end'
         self.rstInfos()
         self.ecmInfo_time = None
         self.__event_tracker = ServiceEventTracker(screen=self, eventmap={(iPlayableService.evStopped): (self.__endShow), (iPlayableService.evTunedIn): (self.__startSearchInfo)})
         self.onShow.append(self.firstRun)
+        self.onLayoutFinish.append(self.prepareOsd)
         return
 
     def firstRun(self):
@@ -7778,7 +7783,7 @@ class OnScreenEcmScreen(Screen):
 
     def readEcmInfo(self):
         self.runOSDECMTimer.stop()
-        if not config.plugins.GlassSysUtil.par0.value:
+        if not config.plugins.GlassSysUtil.par0.value or not self.cryptService:
             return
         else:
             try:
@@ -7790,12 +7795,13 @@ class OnScreenEcmScreen(Screen):
                 if self.status == 'end':
                     self.runOSDECMTimer.start(1000 * config.plugins.GlassSysUtil.par81.value, True)
                 return
-                self.ecmInfo_time = ecmInfo_time
-                (oscVer, typecam, system, caid, provider, provid, pid, using, adress, hops, share, ecmTime, coding, dcw0, dcw1) = ECMparser(10)
-                if using == 'unsupported CAs\n':
-                    config.plugins.GlassSysUtil.par3.value or self.StartrollTextInfo('                                           ' + '***    ' + _('Unsuported CA found, incorrect ECM info') + '    ***')
-                else:
+            self.ecmInfo_time = ecmInfo_time
+            (oscVer, typecam, system, caid, provider, provid, pid, using, adress, hops, share, ecmTime, coding, dcw0, dcw1) = ECMparser(10)
+            if using == 'unsupported CAs\n':
+                if config.plugins.GlassSysUtil.par3.value:
                     self.staticEcmStart('\n***    ' + _('Unsuported CA found, incorrect ECM info') + '    ***')
+                else:
+                    self.StartrollTextInfo('   ***    ' + _('Unsuported CA found, incorrect ECM info') + '    ***')
                 return
             isneedShow = False
             tmpline = tmplineStatic = ''
@@ -7836,9 +7842,7 @@ class OnScreenEcmScreen(Screen):
                 self.allInfos['ecmTime'] = ecmTime
                 if ecmTime != '..............\n' and ecmOldtmp != '..............\n':
                     try:
-                        ecmOldtmp = abs(float(ecmOldtmp[:-1]) - float(ecmTime[:-1]))
-                        if len(ecmTime[:-1]) > 3:
-                            ecmOldtmp *= 1000
+                        ecmOldtmp = abs(float(ecmOldtmp[:-1]) - float(ecmTime[:-1])) * 1000
                         if int(ecmOldtmp) > config.plugins.GlassSysUtil.par4.value:
                             tmpline += ' ... ECM Time: ' + ecmTime[:-1]
                             isneedShow = True
@@ -7865,12 +7869,12 @@ class OnScreenEcmScreen(Screen):
                 tmpline += ' ... CAM: ' + typecam.replace('\n', oscVer)
                 isneedShow = True
             tmplineStatic += typecam
-            if config.plugins.GlassSysUtil.par3.value or tmpline != '':
+            if not config.plugins.GlassSysUtil.par3.value and isneedShow and tmpline != '':
                 if config.plugins.GlassSysUtil.par83.value != '':
                     tmpline = tmpline.replace(config.plugins.GlassSysUtil.par83.value, 'CHID:')
-                self.StartrollTextInfo('                                           ' + tmpline + '   ')
+                self.StartrollTextInfo('   ' + tmpline + '   ')
                 return
-            elif isneedShow:
+            elif config.plugins.GlassSysUtil.par3.value and isneedShow:
                 self.staticEcmStart(tmplineStatic)
                 return
             self.runOSDECMTimer.start(1000 * config.plugins.GlassSysUtil.par81.value, True)
@@ -7891,14 +7895,15 @@ class OnScreenEcmScreen(Screen):
         return
 
     def __endShow(self):
-        if config.plugins.GlassSysUtil.par0.value:
-            self.rstInfos()
-            self.status = 'end'
-            if self.runOSDECMTimer.isActive():
-                self.runOSDECMTimer.stop()
-            if self.rollTimerText.isActive():
-                self.rollTimerText.stop()
-            OnScreenEcm.makeShow('hide')
+        self.cryptService = False
+        self.ecmInfo_time = None
+        self.rstInfos()
+        self.status = 'end'
+        if self.runOSDECMTimer.isActive():
+            self.runOSDECMTimer.stop()
+        if self.rollTimerText.isActive():
+            self.rollTimerText.stop()
+        OnScreenEcm.makeShow('hide')
         if not config.plugins.GlassSysUtil.par3.value:
             self['OSD_Ecm_info'].setText('         *** ' + _('Ready') + ' ***')
         else:
@@ -7906,19 +7911,30 @@ class OnScreenEcmScreen(Screen):
         return
 
     def __startSearchInfo(self):
+        self.cryptService = False
         if config.plugins.GlassSysUtil.par0.value:
             service = self.session.nav.getCurrentService()
             info = service and service.info()
             if info:
                 serviceinfo = service.info()
                 if serviceinfo.getInfo(iServiceInformation.sIsCrypted):
+                    self.cryptService = True
                     self.sid = '%0.4X' % serviceinfo.getInfo(iServiceInformation.sSID)
                     self.readEcmInfo()
                 elif not config.plugins.GlassSysUtil.par3.value:
-                    self.StartrollTextInfo('                                      ***    ' + _('Free To Air') + '    ***')
+                    self.StartrollTextInfo('   ***    ' + _('Free To Air') + '    ***')
                 else:
+                    self['ecm_items'].setText('')
+                    self['OSD_Ecm_info'].setText(_('Free To Air'))
                     self.staticEcmStart()
+            else:
+                OnScreenEcm.makeShow('hide')
         return
+
+    def prepareOsd(self):
+        for name in ('OSD_Ecm_info', 'ecm_items'):
+            if name in self:
+                self[name].instance.setWrap(0)
 
 
 class OnScreenEcmMain():
@@ -7933,11 +7949,13 @@ class OnScreenEcmMain():
         return
 
     def makeShow(self, whatDo='None'):
+        if self.dialog is None:
+            return
         if whatDo == 'None':
             if config.plugins.GlassSysUtil.par0.value:
                 self.dialog.show()
             else:
-                self.dialog.hide()
+                self.dialog._OnScreenEcmScreen__endShow()
         elif whatDo == 'show':
             self.dialog.show()
         elif whatDo == 'hide':
@@ -8052,8 +8070,8 @@ class OSD_ECM_Menu(Screen, ConfigListScreen):
         return
 
     def saveOnly(self, rst=False):
-        for x in self['config'].list:
-            x[1].save()
+        for key in ('par0', 'par4', 'par5', 'par78', 'par80', 'par81'):
+            getattr(config.plugins.GlassSysUtil, key).save()
 
         configfile.save()
         if rst:
@@ -8063,8 +8081,8 @@ class OSD_ECM_Menu(Screen, ConfigListScreen):
         return
 
     def exitCancel(self):
-        for x in self['config'].list:
-            x[1].cancel()
+        for key in ('par0', 'par4', 'par5', 'par78', 'par80', 'par81'):
+            getattr(config.plugins.GlassSysUtil, key).cancel()
 
         self.changeShow()
         self.cleanExit()
@@ -8157,22 +8175,23 @@ class SelectPosition(Screen):
     def right(self):
         value = config.plugins.GlassSysUtil.par1.value
         value += 5
-        if value > fhd(1180):
-            value = fhd(1180)
+        if value > max(0, getDesktop(0).size().width() - self.instance.size().width()):
+            value = max(0, getDesktop(0).size().width() - self.instance.size().width())
         config.plugins.GlassSysUtil.par1.value = value
         return
 
     def down(self):
         value = config.plugins.GlassSysUtil.par2.value
         value += 5
-        if value > fhd(700):
-            value = fhd(700)
+        if value > max(0, getDesktop(0).size().height() - self.instance.size().height()):
+            value = max(0, getDesktop(0).size().height() - self.instance.size().height())
         config.plugins.GlassSysUtil.par2.value = value
         return
 
     def ok(self):
         config.plugins.GlassSysUtil.par1.save()
         config.plugins.GlassSysUtil.par2.save()
+        self.moveTimer.stop()
         self.moveTimer = None
         self.close()
         return
@@ -8180,6 +8199,7 @@ class SelectPosition(Screen):
     def exit(self):
         config.plugins.GlassSysUtil.par1.cancel()
         config.plugins.GlassSysUtil.par2.cancel()
+        self.moveTimer.stop()
         self.moveTimer = None
         self.close()
         return

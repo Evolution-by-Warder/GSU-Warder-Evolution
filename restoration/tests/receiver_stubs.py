@@ -42,7 +42,7 @@ class MenuList(Component):
 class Screen(dict):
     def __init__(self,session,*args,**kwargs):
         dict.__init__(self);self.session=session
-        self.onLayoutFinish=[];self.onShown=[];self.onHide=[];self.onClose=[]
+        self.onLayoutFinish=[];self.onShown=[];self.onShow=[];self.onHide=[];self.onClose=[]
         self.onExecBegin=[];self.onExecEnd=[]
     def setTitle(self,title):self.title=title
     def close(self,*args):self.result=args

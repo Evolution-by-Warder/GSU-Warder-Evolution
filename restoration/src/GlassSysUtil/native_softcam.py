@@ -220,13 +220,17 @@ class NativeSoftcam:
         return 0
 
 
-def refresh_state(screen,translate):
+_UNKNOWN_STATE=object()
+
+
+def refresh_state(screen,translate,active=_UNKNOWN_STATE):
     from .srv_visibility import menu_text
     original_translate=translate
     translate=lambda text:menu_text(screen,original_translate,text)
-    active=screen.nativeSoftcam.active_name()
+    if active is _UNKNOWN_STATE:active=screen.nativeSoftcam.active_name()
     screen['activCam'].setText(translate('Active')+' CAM: '+(active or translate('None')))
     screen['statCamSrvbin'].setText(translate('CAM/SRV Running') if active else translate('No Running CAM/SRV'))
+    screen.statcommPics('stat','green' if active else 'red')
     screen.statcommPics('piccam','green' if active else 'blue')
 
 
@@ -255,6 +259,7 @@ def handle_action(screen, action, container_factory, translate):
         screen['statCamSrvcmd'].setText(translate('No Command Allowed'))
         return True
     screen.enCommand=False
+    screen.nativeStatusGeneration=getattr(screen,'nativeStatusGeneration',0)+1
     screen['statCamSrvcmd'].setText(translate({'start':'Starting','stop':'Stopping','restart':'Restarting'}[operation])+' CAM '+name)
     screen.statcommPics('comm','yellow')
     container=container_factory()
@@ -274,6 +279,7 @@ def handle_action(screen, action, container_factory, translate):
         manual_end(ticket,success)
         screen['activCam'].setText(translate('Active')+' CAM: '+(active if active else translate('None')))
         screen['statCamSrvbin'].setText(translate('CAM/SRV Running') if active else translate('No Running CAM/SRV'))
+        screen.statcommPics('stat','green' if active else 'red')
         screen.statcommPics('piccam','green' if active else 'blue')
         screen.statcommPics('comm','green' if success else 'red')
         screen['statCamSrvcmd'].setText(translate({'start':'Start Script Executed','restart':'Restart Script Executed','stop':'Stop Script Executed'}[operation]) if success else name+' '+translate('Error'))

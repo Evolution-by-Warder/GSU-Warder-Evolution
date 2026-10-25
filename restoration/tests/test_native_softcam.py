@@ -262,6 +262,7 @@ with cam.command_lock(sys.argv[2]): print('acquired',flush=True)
                         callbacks[0](0)
                         self.assertTrue(screen.enCommand)
                         screen['statCamSrvbin'].setText.assert_called_with('CAM Running' if operation != 'stop' else 'No Running CAM')
+                        screen.statcommPics.assert_any_call('stat','green' if operation!='stop' else 'red')
                         screen.statcommPics.assert_any_call('comm','green')
 
     def test_failed_execution_and_failed_start_never_report_success(self):
