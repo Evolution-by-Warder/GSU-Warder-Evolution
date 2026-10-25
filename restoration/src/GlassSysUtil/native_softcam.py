@@ -221,6 +221,9 @@ class NativeSoftcam:
 
 
 def refresh_state(screen,translate):
+    from .srv_visibility import menu_text
+    original_translate=translate
+    translate=lambda text:menu_text(screen,original_translate,text)
     active=screen.nativeSoftcam.active_name()
     screen['activCam'].setText(translate('Active')+' CAM: '+(active or translate('None')))
     screen['statCamSrvbin'].setText(translate('CAM/SRV Running') if active else translate('No Running CAM/SRV'))
@@ -229,6 +232,9 @@ def refresh_state(screen,translate):
 
 def handle_action(screen, action, container_factory, translate):
     """Return True when native handling consumes a button press."""
+    from .srv_visibility import menu_text
+    original_translate=translate
+    translate=lambda text:menu_text(screen,original_translate,text)
     native=screen.nativeSoftcam
     current=screen['config'].getCurrent()
     name=current[1].getText() if current else None

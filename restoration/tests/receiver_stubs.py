@@ -28,6 +28,9 @@ class Component:
     def connect(self,callback):self.callback.append(callback);return callback
     def show(self):self.visible=True
     def hide(self):self.visible=False
+    def position(self):return self.__dict__.get('_position',types.SimpleNamespace(x=lambda:0,y=lambda:0))
+    def move(self,value):self._position=value
+    def resize(self,value):self._size=value
     def __getattr__(self,name):return lambda *a,**kw:None
 
 
@@ -117,6 +120,8 @@ class Finder(importlib.abc.MetaPathFinder,importlib.abc.Loader):
         elif name=='enigma':
             module.getDesktop=lambda i:types.SimpleNamespace(size=lambda:types.SimpleNamespace(width=lambda:1920,height=lambda:1080))
             module.addFont=lambda *a:None;module.gFont=lambda *a:a
+            module.ePoint=lambda x,y:types.SimpleNamespace(x=lambda:x,y=lambda:y)
+            module.eSize=lambda w,h:types.SimpleNamespace(width=lambda:w,height=lambda:h)
         elif name=='Tools.HardwareInfo':
             module.HardwareInfo=lambda:types.SimpleNamespace(get_device_name=lambda:'gbquad4kpro')
         elif name=='Tools.LoadPixmap':module.LoadPixmap=lambda *a,**kw:object()

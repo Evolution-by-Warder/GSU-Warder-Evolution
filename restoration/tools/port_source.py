@@ -8,6 +8,7 @@ from cam_feed_port import port_cam_feed
 from cam_management_port import port_cam_management
 from shortcut_removal_port import port_shortcut_removal
 from native_autostart_port import port_native_autostart
+from srv_visibility_port import port_srv_visibility
 
 
 def port(source):
@@ -389,6 +390,7 @@ def _gsu_helper(name):
     source=port_cam_management(port_cam_feed(port_native_softcam(source)))
     source=port_shortcut_removal(source)
     source=port_native_autostart(source)
+    source=port_srv_visibility(source)
     # Preserve original signatures; retired shortcut entry points are intentional no-ops.
     compile(source, 'plugin.py', 'exec')
     return source

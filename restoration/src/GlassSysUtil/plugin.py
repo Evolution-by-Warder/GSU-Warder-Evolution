@@ -4,6 +4,7 @@
 # Embedded file name: /usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/plugin.py
 # Compiled at: 2021-03-28 16:56:23
 from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox
+from Plugins.Extensions.GlassSysUtil.srv_visibility import apply as _srv_visibility, prepare_skin as _srv_skin, binary_status as _srv_binary_status, menu_text as _cam_menu_text
 from Plugins.Extensions.GlassSysUtil.native_autostart import begin as _native_autostart_begin, configure as _native_autostart_configure, autocheck_help as _native_autocheck_help
 from Plugins.Extensions.GlassSysUtil.cam_package_actions import controls as _cam_package_controls, update as _cam_package_update, remove as _cam_package_remove, is_cam_package as _is_cam_package, refresh_registry as _cam_package_registry, start_config as _cam_start_config
 from Plugins.Extensions.GlassSysUtil.cam_feed_ui import initialize as _cam_feed_initialize, load as _cam_feed_load, select as _cam_feed_select
@@ -4255,9 +4256,13 @@ class univCamMng(Screen):
         else:
             self.skin = UCM
         self.skin = _compact_cam_menu(self.skin)
+        self.skin = _srv_skin(self.skin)
         self.session = session
         Screen.__init__(self, session)
         self.nativeSoftcam = NativeSoftcam()
+        self.numSrv = 0
+        self['srvArrowLeft'] = Pixmap()
+        self['srvArrowRight'] = Pixmap()
         self['picECM'] = Pixmap()
         self['commPic'] = Pixmap()
         self['statPic'] = Pixmap()
@@ -4272,16 +4277,16 @@ class univCamMng(Screen):
         self['blue'] = Label(_('Move Selection'))
         self['helpTXT'] = Label()
         self['txt0'] = Label(_('Exit'))
-        self['txt1'] = Label(_('Download CAM/SRV'))
-        self['txt2'] = Label(_('Delete CAM/SRV'))
+        self['txt1'] = Label(_cam_menu_text(self, _, 'Download CAM/SRV'))
+        self['txt2'] = Label(_cam_menu_text(self, _, 'Delete CAM/SRV'))
         self['txt3'] = ColorLabel(_('Update OScam'))
         self['txt4'] = ColorLabel(_('OScam Start cfg'))
         self['txt5'] = Label('')
         self['txt6'] = ColorLabel(_('Delay'))
         self['txt7'] = ColorLabel(_('SRV Restart'))
-        self['txt8'] = ColorLabel(_('Autocheck CAM/SRV'))
+        self['txt8'] = ColorLabel(_cam_menu_text(self, _, 'Autocheck CAM/SRV'))
         self['txt9'] = ColorLabel(_('Prepare Exp. Image'))
-        self.aa = {0: _('Exit CAM/SRV Manager'), 1: _('Downloading CAM/SRV from server and installing to CAM/SRV Manager'), 2: _('Deleting CAM/SRV from CAM/SRV Manager'), 3: _('Update OScam to the highest available version'), 4: _('OScam starting with command line options like path to OScam cfg and more'), 6: _('Delayed start in seconds of CAM/SRV after start E2'), 7: _('Enabling or Disabling Restart SRV if CAM is running'), 8: _('Enabling or Disabling Autocheck of running CAM/SRV every 10 min and try to start CAM/SRV if is not running'), 9: _('Preparing experimental image to use CAM/SRV and disabling dccamd')}
+        self.aa = {0: _cam_menu_text(self, _, 'Exit CAM/SRV Manager'), 1: _cam_menu_text(self, _, 'Downloading CAM/SRV from server and installing to CAM/SRV Manager'), 2: _cam_menu_text(self, _, 'Deleting CAM/SRV from CAM/SRV Manager'), 3: _('Update OScam to the highest available version'), 4: _('OScam starting with command line options like path to OScam cfg and more'), 6: _cam_menu_text(self, _, 'Delayed start in seconds of CAM/SRV after start E2'), 7: _('Enabling or Disabling Restart SRV if CAM is running'), 8: _cam_menu_text(self, _, 'Enabling or Disabling Autocheck of running CAM/SRV every 10 min and try to start CAM/SRV if is not running'), 9: _cam_menu_text(self, _, 'Preparing experimental image to use CAM/SRV and disabling dccamd')}
         if self.nativeSoftcam.selected():
             self.aa[8] = _native_autocheck_help(globals())
         self['select_pict'] = Pixmap()
@@ -4331,7 +4336,7 @@ class univCamMng(Screen):
         return
 
     def setTitlenew(self):
-        self.setTitle(_('CAM/SRV Manager'))
+        self.setTitle(_cam_menu_text(self, _, 'CAM/SRV Manager'))
         self['helpTXT'].setText(self.aa.get(self.idxAllFnc, ''))
         try:
             for x in ('picECM', 'picprov', 'picsat', 'picchannel'):
@@ -4344,6 +4349,8 @@ class univCamMng(Screen):
         return
 
     def ActivateselectedFnc(self):
+        if self.idxAllFnc == 7 and not self.numSrv:
+            return
         if self.idxAllFnc == 0:
             self.exit()
         elif self.idxAllFnc == 1:
@@ -4367,6 +4374,8 @@ class univCamMng(Screen):
     def selectFnc(self):
         self.idxAllFnc += 1
         if self.idxAllFnc == 5:
+            self.idxAllFnc += 1
+        if self.idxAllFnc == 7 and not self.numSrv:
             self.idxAllFnc += 1
         if self.idxAllFnc > 9:
             self.idxAllFnc = 0
@@ -4411,10 +4420,10 @@ class univCamMng(Screen):
 
     def enaAutochckChck(self):
         if config.plugins.GlassSysUtil.par50.value:
-            self['txt8'].setText(_('Disable Autocheck CAM/SRV'))
+            self['txt8'].setText(_cam_menu_text(self, _, 'Disable Autocheck CAM/SRV'))
             self['txt8'].colorGreen()
         else:
-            self['txt8'].setText(_('Enable Autocheck CAM/SRV'))
+            self['txt8'].setText(_cam_menu_text(self, _, 'Enable Autocheck CAM/SRV'))
             self['txt8'].colorOrange()
         return
 
@@ -4795,7 +4804,7 @@ class univCamMng(Screen):
             self.textComm = self.CamSrvMsgErr
         else:
             self.statcommPics('comm', 'green')
-            self.textComm = _('BIN Files OK, CAM/SRV Found')
+            self.textComm = _cam_menu_text(self, _, 'BIN Files OK, CAM/SRV Found')
         if len(self.textComm) > 44:
             self.xComm = len(self.textComm) - 45
             self.idxComm = 0
@@ -4831,7 +4840,7 @@ class univCamMng(Screen):
 
     def checkStatCam(self):
         if self.nativeSoftcam.available():
-            self.CamSrvMsg(_('CAM/SRV Running') if self.nativeSoftcam.active_name() else _('No Running CAM/SRV'))
+            self.CamSrvMsg(_cam_menu_text(self, _, 'CAM/SRV Running') if self.nativeSoftcam.active_name() else _cam_menu_text(self, _, 'No Running CAM/SRV'))
             return True
         stat = False
         if generatePS():
@@ -4840,13 +4849,13 @@ class univCamMng(Screen):
                 p = str(z).lower()
                 if ('mpcs' in p or 'cam' in p or 'gbox' in p or 'mbox' in p or 'newcs' in p) and 'dreambox' not in p and '{' not in p and 'defunct' not in p:
                     if '/usr/ucm_camsrv_bin' in p:
-                        self.CamSrvMsg(_('CAM/SRV Running'))
+                        self.CamSrvMsg(_cam_menu_text(self, _, 'CAM/SRV Running'))
                         self.statcommPics('stat', 'green')
                         f.close()
                         system(RM_A_TMP)
                         return True
                     else:
-                        msg = _('Found another Cam running') + ':  ' + str(z) + '  ' + _('Please stop all CAM/SRV before using CAM/SRV') + '                    '
+                        msg = _('Found another Cam running') + ':  ' + str(z) + '  ' + _cam_menu_text(self, _, 'Please stop all CAM/SRV before using CAM/SRV') + '                    '
                         self.CamSrvMsg(msg)
                         self.statcommPics('stat', 'red')
                         f.close()
@@ -4855,7 +4864,7 @@ class univCamMng(Screen):
 
             f.close()
             system(RM_A_TMP)
-        self.CamSrvMsg(_('No Running CAM/SRV'))
+        self.CamSrvMsg(_cam_menu_text(self, _, 'No Running CAM/SRV'))
         self.statcommPics('stat', 'blue')
         return True
 
@@ -5281,7 +5290,7 @@ class univCamMng(Screen):
                     else:
                         Cam.append(CamName)
                         self.Cam_list[CamName] = x[:-7]
-                elif '_Srv.sh' in x:
+                elif x.endswith('_Srv.sh'):
                     SrvName = self.readSrvName(x[:-7])
                     SrvBinStatus = self.checkSrvBin(x[:-7])
                     if SrvBinStatus != 'Ok':
@@ -5301,31 +5310,19 @@ class univCamMng(Screen):
         self.numSrv = len(Srv) - 1
         self.list = []
         self.list.append(getConfigListEntry(_('CAMs') + ' (%s): ' % str(self.numCam), selCam))
-        self.list.append(getConfigListEntry(_('SRVs') + ' (%s): ' % str(self.numSrv), selSrv))
+        if self.numSrv:
+            self.list.append(getConfigListEntry(_('SRVs') + ' (%s): ' % str(self.numSrv), selSrv))
         self['config'].list = self.list
         self['config'].l.setList(self.list)
         if self.nativeSoftcam.available():
             _native_softcam_refresh(self, _)
         self.CamSrvMsgErr += '                    '
+        _srv_visibility(self, globals())
         return
 
     def checkSrvBin(self, srv):
-        try:
-            f = open('/usr/UCM_CamSrv_script/' + srv + '_Srv.sh', 'r')
-            for line in f.readlines():
-                if line.startswith('SrvBin='):
-                    f.close()
-                    stmp = '/usr/UCM_CamSrv_bin/%s' % line.split('=')[1][:-1]
-                    if fileExists(stmp):
-                        return 'Ok'
-                    return srv + '_Srv.sh ' + _('Missing BIN')
-
-            f.close()
-            return srv + '_Srv.sh ' + _('Undefined BIN')
-        except:
-            return srv + '_Srv.sh ' + _('Error Reading Script')
-
-        return
+        status = _srv_binary_status(srv)
+        return 'Ok' if status == 'Ok' else srv + '_Srv.sh ' + _(status)
 
     def checkCamBin(self, srv):
         try:
@@ -5481,7 +5478,7 @@ class univCamMng(Screen):
             self['fullEcmLine'].setText('***    ' + _('Unsuported CA found, incorrect ECM info') + '    ***')
             coding = 'Unknown'
         elif typecam == '..............\n' and system == '..............\n' and caid == '..............\n' and provider == '..............\n' and provid == '..............\n' and pid == '..............\n' and using == '..............\n' and adress == '..............\n' and hops == '..............\n' and share == '..............\n' and ecmTime == '..............\n':
-            self['fullEcmLine'].setText('***    ' + _('No Info from CAM/SRV') + '    ***')
+            self['fullEcmLine'].setText('***    ' + _cam_menu_text(self, _, 'No Info from CAM/SRV') + '    ***')
             coding = 'Unknown'
         elif caid != '..............\n':
             tmpline = tmpline + 'CAID: ' + caid[:-1]
@@ -5521,6 +5518,9 @@ class univCamMng(Screen):
         return _('No CA info available')
 
     def statcommPics(self, statcom, selpic):
+        if statcom == 'picsrv' and not getattr(self, 'numSrv', 0):
+            self['SrvPic'].hide()
+            return
         pngname = BP_ICO % selpic
         if fileExists(pngname):
             if statcom == 'stat':

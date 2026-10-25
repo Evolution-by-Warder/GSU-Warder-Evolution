@@ -208,7 +208,7 @@ class OriginalPortTests(unittest.TestCase):
         self.assertEqual(screen['activCam'].text,'Active CAM: oscam-uni')
         screen.CamSrvMsg=MagicMock()
         self.assertTrue(screen.checkStatCam())
-        screen.CamSrvMsg.assert_called_with('CAM/SRV Running')
+        screen.CamSrvMsg.assert_called_with('CAM Running')
         with patch.object(module,'_native_softcam_action',return_value=True) as action:
             screen.start();screen.stop()
             self.assertEqual([call.args[1] for call in action.call_args_list],['start','stop'])
@@ -216,7 +216,7 @@ class OriginalPortTests(unittest.TestCase):
         with patch('builtins.open',side_effect=FileNotFoundError):
             self.assertEqual(screen.getCamName(),'None')
         self.assertTrue(screen.checkStatCam())
-        screen.CamSrvMsg.assert_called_with('No Running CAM/SRV')
+        screen.CamSrvMsg.assert_called_with('No Running CAM')
 
     def test_cam_manager_caids_are_unique_in_broadcast_order(self):
         module=self.plugin
@@ -348,6 +348,7 @@ class OriginalPortTests(unittest.TestCase):
         for i in range(10):screen['txt%d'%i].instance=types.SimpleNamespace(position=lambda:point)
         screen['select_pict'].move=MagicMock()
         screen.idxAllFnc=0;visited=[]
+        screen.numSrv=1  # This test retains all non-retired server actions.
         for _ in range(9):
             screen.selectFnc();visited.append(screen.idxAllFnc)
         self.assertEqual(visited,[1,2,3,4,6,7,8,9,0])
