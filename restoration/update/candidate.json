@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r48",
-    "tag": "v13.40-r48",
-    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r48/enigma2-plugin-glasssysutil_13.40-r48_all.ipk",
-    "sha256": "4a0fa9047f56f643f8cba9ec8cff2d9f2274d9547132195f5a56c67986ee7383",
-    "bytes": 3633030,
-    "notes": "GSU 13.40-r48\n\n- Farebné plastické ikonky hardvéru namiesto schematických symbolov.\n- Názorné RAM moduly, disky, USB, pamäťové karty, čipy a teplomery so skutočne priehľadným okolím.\n- Bez čiernych dlaždíc, podkladov a odrazov.\n- Schválené šípky aj zelené a červené stavové bodky zostávajú nezmenené.\n"
+    "version": "13.40-r49",
+    "tag": "v13.40-r49",
+    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r49/enigma2-plugin-glasssysutil_13.40-r49_all.ipk",
+    "sha256": "80432461c90e190acc7be3b345b1c304aff9ef3b41b89bd7476ab9ba233d72c4",
+    "bytes": 3639402,
+    "notes": "GSU 13.40-r49\n\n- Nové farebné plastické ikonky hardvéru so skutočne priehľadným okolím, podobné pôvodným predmetom.\n- Plastické strieborno-tyrkysové šípky vľavo/vpravo a hore/dole v rovnakom dizajne.\n- Bez čiernych dlaždíc a odrazov; zachované významy a ovládanie.\n- Zelené a červené stavové bodky zostávajú nezmenené.\n"
   }
 }
