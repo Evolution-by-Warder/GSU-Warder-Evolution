@@ -23,6 +23,10 @@ Pred vydaním primerané testy Python3.14.7, kompilácia, dva zhodné buildy a C
 
 Aktuálny plugin, zdroje grafiky, testy, build a updater sú v plugin/. Starý paralelný src/, testy, packaging, legacy, staré roadmapy, dva nepoužívané workflow a dokončené jednorazové konverzné skripty sú odstránené. Pôvodné runtime resources.tar.gz, kontrolné súčty a inventár sú potrebné pre súčasný build a regresné testy, preto zostávajú. Historický priebeh je v Git histórii.
 
-restoration/update/candidate.json je iba kompatibilná adresa pre už nainštalované verzie. Publisher ju udržiava totožnú s plugin/update/candidate.json až po overení vydaného IPK. Nemať tam druhé jadro ani druhý build. Čistenie samo nemení runtime ani verziu/IPK; otvorené grafické a jazykové úlohy vyššie zostávajú rozpracované.
+restoration/update/candidate.json je iba kompatibilná adresa pre už nainštalované verzie. Publisher ju udržiava obsahovo zhodnú s plugin/update/candidate.json s pôvodnou adresou balíka pre prísnu kontrolu starého aktualizátora až po overení vydaného IPK. Nemať tam druhé jadro ani druhý build. Čistenie samo nemení runtime ani verziu/IPK; otvorené grafické a jazykové úlohy vyššie zostávajú rozpracované.
 
 Kontrola štruktúry: dva nezávislé buildy vytvorili presne pôvodný vydaný r49 IPK, 3639402 B, SHA256 80432461c90e190acc7be3b345b1c304aff9ef3b41b89bd7476ab9ba233d72c4. Zdrojový runtime a súbory prijímača sa čistením nemenia.
+
+## Premenovanie repozitára — r50
+
+Repozitár je Evolution-by-Warder/GSU-Warder-Evolution. Nový aktualizátor používa nový názov a plugin/update/candidate.json. Existujúce verzie používajú starú raw adresu (HTTP200 overené) a kompatibilný feed s pôvodným download URL; GitHub presmeruje stiahnutie. Test kontroluje manifest aj pôvodným prísnym parserom. Zachovať oba feedy pri každom vydaní. CI pri prvom presune zachytil chýbajúce ignorované PNG; požadované pôvodne verzované grafické súbory sú doplnené. Pred publikáciou overiť čistý checkout bez lokálnych neverzovaných súborov.

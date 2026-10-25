@@ -1,6 +1,6 @@
-GSU 13.40-r49
+GSU 13.40-r50
 
-- Nové farebné plastické ikonky hardvéru so skutočne priehľadným okolím, podobné pôvodným predmetom.
-- Plastické strieborno-tyrkysové šípky vľavo/vpravo a hore/dole v rovnakom dizajne.
-- Bez čiernych dlaždíc a odrazov; zachované významy a ovládanie.
-- Zelené a červené stavové bodky zostávajú nezmenené.
+- Projekt premenovaný na GSU-Warder-Evolution; aktualizátor a odkaz O plugine používajú nový repozitár.
+- Jednotná štruktúra plugin/ bez starého paralelného jadra a duplicitných zostavovacích postupov.
+- Zachovaný kompatibilný aktualizačný feed pre existujúce inštalácie.
+- Grafické a jazykové úpravy zapísané v pláne zostávajú ďalším krokom.

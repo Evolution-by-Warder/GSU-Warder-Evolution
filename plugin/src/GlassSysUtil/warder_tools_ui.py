@@ -55,7 +55,7 @@ def about_text(api,root=None):
         text(api,'Development and maintenance: Warder Evolution'),
         text(api,'Thanks to the original Glass System Utility authors.'),'',
         text(api,'Changes in this version'),changes or text(api,'Release notes are unavailable.'),'',
-        'https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution'])
+        'https://github.com/Evolution-by-Warder/GSU-Warder-Evolution'])
 
 
 class ToolsScreen(Screen):

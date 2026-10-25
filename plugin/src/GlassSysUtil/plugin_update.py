@@ -12,10 +12,10 @@ import tempfile
 from dataclasses import dataclass, field
 from urllib.request import Request, urlopen
 
-REPOSITORY = "Evolution-by-Warder/Glass-System-Utility-Warder-Evolution"
+REPOSITORY = "Evolution-by-Warder/GSU-Warder-Evolution"
 PACKAGE_ID = "enigma2-plugin-glasssysutil"
 # The recovered runtime has its own feed; production dashboards never enter it.
-FEED_URL = "https://raw.githubusercontent.com/" + REPOSITORY + "/original-python314/restoration/update/candidate.json"
+FEED_URL = "https://raw.githubusercontent.com/" + REPOSITORY + "/original-python314/plugin/update/candidate.json"
 MAX_IPK_BYTES = 128 * 1024 * 1024
 
 
@@ -85,7 +85,7 @@ def parse_release(payload, current_version):
 
 
 def _open(url, timeout=6):
-    request = Request(url, headers={"User-Agent": "Glass-System-Utility-Warder-Evolution", "Cache-Control": "no-cache"})
+    request = Request(url, headers={"User-Agent": "GSU-Warder-Evolution", "Cache-Control": "no-cache"})
     # Explicit context remains verified even when another legacy plugin changes
     # urllib's process-wide default SSL context.
     return urlopen(request, timeout=timeout, context=ssl.create_default_context())

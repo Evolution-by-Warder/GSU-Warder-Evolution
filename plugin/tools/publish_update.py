@@ -1,4 +1,5 @@
 """CI only: publish the verified restoration IPK, then advance its isolated feed."""
+import copy
 import hashlib
 import json
 import os
@@ -50,10 +51,16 @@ def publish():
     feed=BASE/'update/candidate.json'
     payload=json.dumps(document,ensure_ascii=False,indent=2)+'\n'
     compatibility=BASE.parent/'restoration/update/candidate.json'
-    feeds=[feed]
-    if compatibility.is_file():feeds.append(compatibility)
-    if all(item.read_text()==payload for item in feeds):return
-    for item in feeds:item.write_text(payload)
+    feeds={feed:payload}
+    if compatibility.is_file():
+        # Installed r49 and older validate the historical repository URL exactly.
+        # GitHub redirects its download endpoint to the renamed repository.
+        legacy=copy.deepcopy(document)
+        legacy['release']['url']=legacy['release']['url'].replace(
+            REPOSITORY,'Evolution-by-Warder/Glass-System-Utility-Warder-Evolution',1)
+        feeds[compatibility]=json.dumps(legacy,ensure_ascii=False,indent=2)+'\n'
+    if all(item.read_text()==text for item,text in feeds.items()):return
+    for item,text in feeds.items():item.write_text(text)
     run('git','add',*(str(item) for item in feeds))
     run('git','-c','user.name=github-actions[bot]','-c','user.email=41898282+github-actions[bot]@users.noreply.github.com',
         'commit','-m','Advance original-runtime update feed to '+version)
