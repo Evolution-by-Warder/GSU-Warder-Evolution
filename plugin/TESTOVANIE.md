@@ -27,3 +27,11 @@ Postupovať sekciu po sekcii; nepreskakovať medzi nimi. Hlavné menu:11 stabiln
 Informácie o systéme: pozadie/rám/panel vo vrstvách-3/-2/-1 a transparentné texty. Používateľ potvrdil texty, procesy/Dmesg a všetky4 šípky. Schématické ikony r47 odmietol; r48/r49 používajú farebné plastické predmety/šípky s alpha bez čierneho pozadia. Neobnovovať odmietnuté SVG ani negenerovať nové predmety pre geometrické úpravy.
 
 Funkčný priechod používateľ uzavrel po r40. Nežiadať znovu skúšky potvrdených CAM štart/stop/prepínanie,15s autocheck/manuálny stop, OSD polohy, swap test-cleanup, diagnostického archívu, aktualizácií, OSCam čítačiek a šípok. Zakázať/Povoliť klienta zachovať bez automatického CAM reštartu; živé lokálne DVBAPI môže pokračovať ako anonymous, používateľ toto správanie prijal. Skutočné CCcam/Mbox a samostatný SRV bez príslušnej služby nie sú hardvérovo overené. Nepripájať starý nedôveryhodný FTP.
+
+## r52 — jazyky a Informácie o kanáli
+
+Používateľ potvrdil r51 vzhľad na prijímači správou „teraz to je OK“, snímka1(20261025-175740).jpg. Veľkosť ikoniek a spodné bargrafy sú schválené, neotvárať ich znovu bez nového problému.
+
+Nový i18n.py má cachované katalógy10 jazykov,129 spoločných kľúčov a rozšírený SK fallback; pôvodné cs/sk gettext zostávajú. UI používa spoločný mechanizmus, rešpektuje par62, neznáme/chýbajúce texty sú anglické. Dni/mesiace bez globálnej zmeny locale. Nie všetky staré dialógy sú kompletne preložené; presný rozsah je v LOCALIZATION.md.
+
+Informácie o kanáli prevedené do spoločného Warder rámu: banner/header, názov služby, oddelené ECM/bitrate, logá/signal a transpondér, široká referencia dole, centrované červené ukončenie s krátkou čiarou. Zachované všetky pôvodné pomenované komponenty a natívne source/convert väzby, päť piconov, čítanie ECM/bitrate, stop/close a klávesy. Samostatný header timer sa zastaví pri zatvorení. Pôvodný funkčný timer test izoluje nový header, nové testy overujú jeho lifecycle a rozloženie HD/FHD/UHD. Nový vzhľad a jazyky treba posúdiť na prijímači.

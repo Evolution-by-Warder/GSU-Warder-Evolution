@@ -1,4 +1,5 @@
 """Warder main screen presentation; existing menu IDs and actions stay in plugin.py."""
+from .i18n import for_api as _i18n_text, language as _i18n_language
 from datetime import datetime
 from xml.sax.saxutils import escape
 
@@ -34,22 +35,13 @@ MONTHS = {
 
 
 def language(api):
-    return api['config'].osd.language.value.split('_')[0].lower()
+    settings=api['config']
+    enabled=getattr(getattr(getattr(getattr(settings,'plugins',None),'GlassSysUtil',None),'par62',None),'value',True)
+    return _i18n_language(settings.osd.language.value) if enabled else 'en'
 
 
-def text(api, value):
-    translated = api['_'](value)
-    if translated != value:
-        return translated
-    fallback = {
-        'sk': {'Version:': 'Verzia:', 'Main menu': 'Hlavná ponuka', 'Settings': 'Nastavenia',
-               'Select with OK': 'Vybrať s OK', 'Select a menu item': 'Vyber položku menu',
-               'Receiver information, CAM/ECM and diagnostics': 'Informácie o prijímači, CAM/ECM a diagnostika'},
-        'cs': {'Version:': 'Verze:', 'Main menu': 'Hlavní nabídka', 'Settings': 'Nastavení',
-               'Select with OK': 'Vybrat pomocí OK', 'Select a menu item': 'Vyber položku nabídky',
-               'Receiver information, CAM/ECM and diagnostics': 'Informace o přijímači, CAM/ECM a diagnostika'},
-    }
-    return fallback.get(language(api), {}).get(value, translated)
+def text(api,value):
+    return _i18n_text(api,value)
 
 
 def clock_values(now, lang):
@@ -59,7 +51,8 @@ def clock_values(now, lang):
         month = MONTHS[lang][now.month-1]
         date = '%d. %s %d' % (now.day, month, now.year)
     else:
-        day, date = now.strftime('%A'), now.strftime('%d. %B %Y')
+        day = DAYS['en'][now.weekday()]
+        date = '%d. %s %d' % (now.day,MONTHS['en'][now.month-1],now.year)
     return day, date, now.strftime('%H:%M'), now.strftime(':%S')
 
 

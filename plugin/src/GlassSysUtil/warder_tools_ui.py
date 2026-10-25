@@ -1,4 +1,5 @@
 """Diagnostic bundle and plugin information in the original GSU screen style."""
+from .i18n import for_api as _i18n_text
 from pathlib import Path
 from Components.ActionMap import ActionMap
 from Components.Label import Label
@@ -31,9 +32,7 @@ _SK={
 
 
 def text(api,value):
-    result=api['_'](value)
-    language=api['config'].osd.language.value
-    return _SK.get(value,result) if result==value and language.startswith('sk') else result
+    return _i18n_text(api,value,_SK)
 
 
 def open_tools(session,api):session.open(ToolsScreen,api)

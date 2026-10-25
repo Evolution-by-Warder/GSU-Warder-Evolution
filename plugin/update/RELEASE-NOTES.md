@@ -1,5 +1,6 @@
-GSU 13.40-r51
+GSU 13.40-r52
 
-- Hardvérové ikonky v Informáciách o systéme zväčšené o 20 % pri zachovaní pomerov strán a priestoru pre texty.
-- Spodné vertikálne bargrafy aj ich podklady zarovnané so spodkami príslušných ikoniek.
-- Zachované šípky, ovládanie, zber údajov a obnovovanie; rozloženie overené v HD, Full HD a Ultra HD.
+- Added shared system-language support for Slovak, Czech, English, German, Polish, Hungarian, Russian, French, Italian and Spanish; missing translations fall back to English.
+- Added translated menus, common controls, update messages, system and channel captions. Original Slovak/Czech gettext catalogs remain available.
+- Channel Information now uses the shared Warder banner, clock, two-line version, background and centered exit action.
+- Native ECM, bitrate and signal sources, service logos, callbacks and controls are retained. New layout still requires receiver review.

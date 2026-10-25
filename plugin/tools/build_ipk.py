@@ -54,6 +54,8 @@ def build(destination):
         entries.append((PLUGIN+'/'+path.name,path.read_bytes(),0o644))
     for path in sorted((runtime/'images').glob('*.png')):
         entries.append((PLUGIN+'/images/'+path.name,path.read_bytes(),0o644))
+    for path in sorted((runtime/'locale').glob('*.json')):
+        entries.append((PLUGIN+'/locale/'+path.name,path.read_bytes(),0o644))
     entries.append((PLUGIN+'/version',(version+'\n').encode(),0o644))
     notes=(BASE/'update/RELEASE-NOTES.md').read_text()
     assert notes.splitlines()[0]=='GSU '+version,'Release notes do not match runtime version'

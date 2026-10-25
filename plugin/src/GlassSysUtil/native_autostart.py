@@ -16,11 +16,8 @@ MAX_RETRY_INTERVAL=300
 
 def autocheck_help(api):
     text='Checks the selected native CAM every 15 seconds and restores it if stopped unexpectedly. Manual GSU stop pauses recovery.'
-    translated=api['_'](text)
-    language=getattr(getattr(getattr(api.get('config'),'osd',None),'language',None),'value','')
-    if translated==text and language.startswith('sk'):
-        return 'Kontrola vybraného CAM-u každých 15 sekúnd a obnova pri výpadku. Ručné zastavenie v GSU pozastaví obnovu.'
-    return translated
+    from .i18n import for_api
+    return for_api(api,text,{text:'Kontrola vybraného CAM-u každých 15 sekúnd a obnova pri výpadku. Ručné zastavenie v GSU pozastaví obnovu.'})
 
 
 def publish_guard(token,enabled):

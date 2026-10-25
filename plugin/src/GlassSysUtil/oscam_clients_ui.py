@@ -1,4 +1,5 @@
 """Original client screen, with bounded requests outside the GUI thread."""
+from .i18n import for_api as _i18n_text
 from twisted.internet.threads import deferToThread
 from xml.etree import ElementTree
 from .oscam_clients import EMPTY, COUNTERS, fetch_clients, set_enabled
@@ -31,10 +32,8 @@ def clients_skin(skin):
     return ElementTree.tostring(root, encoding='unicode')
 
 
-def tr(api, value):
-    result = api['_'](value)
-    language = getattr(getattr(getattr(api['config'], 'osd', None), 'language', None), 'value', '')
-    return _SK.get(value, result) if result == value and language.startswith('sk') else result
+def tr(api,value):
+    return _i18n_text(api,value,_SK)
 
 
 def initialize(screen):

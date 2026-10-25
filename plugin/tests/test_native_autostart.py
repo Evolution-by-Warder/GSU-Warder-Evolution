@@ -181,7 +181,7 @@ class NativeAutostartTests(unittest.TestCase):
 
     def test_native_autocheck_help_has_new_interval_and_slovak_text(self):
         api={'_':lambda text:text,'config':types.SimpleNamespace(osd=types.SimpleNamespace(language=types.SimpleNamespace(value='sk_SK')))}
-        self.assertIn('15 sekúnd',boot.autocheck_help(api))
+        self.assertIn('15 sekúnd',load(ROOT)._native_autocheck_help(api))
 
     def test_stale_guard_or_disabled_recovery_cannot_start_cam(self):
         with tempfile.TemporaryDirectory() as folder,patch.object(boot,'GUARD',Path(folder)/'guard.json'):

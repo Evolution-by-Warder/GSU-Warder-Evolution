@@ -4,7 +4,7 @@ Plugin pre Enigma2: informácie o prijímači a kanáli, ECM/OSCam, správa CAM,
 
 ## Aktuálny projekt
 
-Jediný udržiavaný kód je v [`plugin/`](plugin/). Overovaná platforma je OpenATV 8 / Python 3.14.7; úplná funkčnosť na všetkých prijímačoch sa netvrdí. Aktuálna vydaná verzia je **13.40-r51**.
+Jediný udržiavaný kód je v [`plugin/`](plugin/). Overovaná platforma je OpenATV 8 / Python 3.14.7; úplná funkčnosť na všetkých prijímačoch sa netvrdí. Aktuálna vydaná verzia je **13.40-r52**.
 
 - [`plugin/src/GlassSysUtil/`](plugin/src/GlassSysUtil/): Python zdroje a grafika pre prijímač.
 - [`plugin/tests/`](plugin/tests/): regresné testy.
@@ -27,3 +27,7 @@ Nainštalovaný plugin kontroluje novšiu verziu pri otvorení a ponúka aj ruč
 ## Autorstvo
 
 Pôvodné autorstvo Glass System Utility zostáva pôvodným autorom. Warder Evolution označuje pokračovanie, údržbu a úpravy. Potrebné pôvodné grafické a pomocné zdroje sú zachované s kontrolnými súčtami. Staré implementácie a dokumentácia zostávajú dostupné v Git histórii.
+
+## Jazyky
+
+Plugin sleduje jazyk prijímača: SK, CZ, EN, DE, PL, HU, RU, FR, IT a ES. Nové katalógy obsahujú spoločné menu, ovládanie, aktualizácie a systémové/kanálové popisky; pôvodné české a slovenské gettext preklady sa zachovávajú. Chýbajúce preklady zostávajú anglické, nejde o tvrdenie úplného prekladu každého historického dialógu. Podrobnosti: [plugin/LOCALIZATION.md](plugin/LOCALIZATION.md).
