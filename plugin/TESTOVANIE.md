@@ -33,3 +33,7 @@ Postupovať obrazovku po obrazovke. Teraz posúdiť r53 systémové rozloženie 
 Systémové vrstvy pozadie/rám/panel sú-3/-2/-1; transparentné texty musia zostať viditeľné vrátane natívneho ScrollLabel parentu na nule. Používateľ potvrdil texty a všetky4 šípky. Schematické r47 ikonky odmietol; zachovať farebné plastické r48/r49 PNG s alpha bez čiernych dlaždíc/odrazov. Grafické masters v artwork sa neinštalujú.
 
 Funkčný priechod uzavrel po r40. Nežiadať znovu skúšky potvrdených CAM štart/stop/prepínanie,15s autocheck/manuálny stop, OSD polohy, swap cleanup, diagnostického archívu, aktualizácií, čítačiek a šípok. Zakázať/Povoliť klienta zachovať bez automatického CAM reštartu; lokálne DVBAPI môže pokračovať ako anonymous, používateľ správanie prijal. CCcam/Mbox a samostatný SRV bez príslušnej služby nie sú hardvérovo overené. Starý nedôveryhodný FTP nikdy nepoužívať.
+
+## r54 — posledná kozmetika systémovej obrazovky
+
+Používateľ poslal1(20261025-182710).jpg (r53 systém) a2(20261025-182832).jpg (r52 kanál), obe prezreté. Výslovne potvrdil druhú obrazovku ako OK: kanálový Warder vzhľad je schválený. Pri systémovej žiada posunúť Protokoly o jeden riadok nižšie. R54 posúva všetky titulky protokolov a obe on/off stavové bodky o26 FHD px, proporcionálne HD/UHD. Zvislé prázdne textové bunky sa ohraničia spodkom panelu978; žiadne údaje ani detekcia služieb sa nemenia. Nové obrázky ani funkčné zmeny nepribúdajú.

@@ -61,6 +61,12 @@ def system_skin(original,width,height,translator=lambda value:value):
             node.set('pixmap',main.BACKGROUND.rsplit('/',1)[0]+'/system-status-'+basename+'.png')
             node.set('scale','1')
         if node.tag=='ePixmap':node.set('alphatest','blend')
+        if y/sy>=870:  # Protocol captions and both states of each status dot.
+            nx,ny=map(int,node.get('position').split(','))
+            nw,nh=map(int,node.get('size').split(','))
+            ny+=round(26*sy)
+            node.set('position','%d,%d'%(nx,ny))
+            node.set('size','%d,%d'%(nw,min(nh,round(978*sy)-ny)))
         root.append(node)
     def move_meter(meter,target_y,backing_name):
         original_position=meter.get('position')
