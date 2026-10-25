@@ -43,3 +43,9 @@ r52 publikované zo zdroja8982fbbe4247317f3b6704b3f2fdd2996ab26b90, CI4022023173
 Používateľ výslovne žiada odstrániť staré nepotrebné Releases. Pripravený explicitný zoznam28 starších release ID, ponechať v13.40-r52. Git tagy ani história kódu sa nemažú. cleanup_releases.py overuje zhodu oboch feedov, identitu každého starého release ID a skutočný aktuálny IPK (veľkosť,hash,control) pred prvým DELETE. Nemaže žiadne nevyžiadané ani aktuálne/novšie vydanie. Zoznam sa spustí cez samostatný workflow s contents:write; výsledok treba overiť API a po dokončení spotrebovaný request odstrániť. Päť testov ochrany, nesúladu feedov, zlých bajtov, idempotencie a presného zoznamu; spolu276 hostiteľských testov.
 
 Ďalší krok: posúdenie Informácií o kanáli a jazykov na prijímači. Neprerábať ďalšiu funkčnú sekciu pred týmto potvrdením, pokračovať obrazovku po obrazovke.
+
+## r53 — ikonky nad údajmi
+
+Snímka1(20261025-181813).jpg bola prezretá: r52 systémové údaje a procesy/log majú viditeľné SK popisky; používateľ žiada ikonky nad svojimi údajmi. Teraz sú tri rady ikoniek na190/445/700 FHD a ich údaje na280/535/790. Zachovaná20% väčšia veľkosť a horizontálne stredy; pamäťové a diskové bargrafy aj podklady sa presunú s údajmi, spodné zostávajú zarovnané s ikonkami. Spodné texty majú58px, aby sa nezrážali s protokolmi. Pôvodné zbery, časovače a pravé scrollovacie panely sa nemenia.277 testov overuje všetky tri rozlíšenia. Vzhľad r53 ešte čaká na prijímač; Informácie o kanáli zatiaľ používateľ samostatne neposúdil.
+
+Čistenie28 starých vydaní dokončené workflow40220658958 so success; API overilo, že zostalo iba v13.40-r52. Spotrebovaný explicitný request je odstránený. Po vydaní r53 odstrániť aj nahradené r52 tým istým overeným postupom. Git tagy/história zostávajú. Publisher používa názov GSU Warder Evolution namiesto starého titulku original runtime.

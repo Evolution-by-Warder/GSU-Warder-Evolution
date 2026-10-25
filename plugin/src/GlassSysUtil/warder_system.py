@@ -46,11 +46,14 @@ def system_skin(original,width,height,translator=lambda value:value):
             node.set('pixmap',main.BACKGROUND.rsplit('/',1)[0]+'/system-'+basename+'.png')
             px,py=map(int,node.get('position').split(','))
             pw,ph=map(int,node.get('size').split(','))
-            # Device slots have spare horizontal room; retain their centers and
-            # vertical bounds. Navigation arrows keep their approved size.
+            # Keep approved device size and horizontal centers; each picture
+            # precedes its own data block. Navigation arrows are unchanged.
             side=min(round(pw*1.2),ph) if '/devices/' in pixmap else min(pw,ph)
             node.set('position','%d,%d'%(px+(pw-side)//2,py+(ph-side)//2))
             node.set('size','%d,%d'%(side,side))
+            if '/devices/' in pixmap:
+                row_y=190 if y/sy<400 else 445 if y/sy<700 else 700
+                node.set('position','%d,%d'%(px+(pw-side)//2,round(row_y*sy)))
             node.set('scale','1')
             if '/devices/' in pixmap and y>=round(700*sy):
                 lower_icons.append(node)
@@ -59,27 +62,48 @@ def system_skin(original,width,height,translator=lambda value:value):
             node.set('scale','1')
         if node.tag=='ePixmap':node.set('alphatest','blend')
         root.append(node)
-    # Move each lower meter and its backing together to its adjacent icon.
-    # Do this after collecting pictures so XML ordering cannot affect alignment.
+    def move_meter(meter,target_y,backing_name):
+        original_position=meter.get('position')
+        original_size=meter.get('size')
+        mx=int(original_position.split(',')[0])
+        for node in root:
+            if node is meter or (node.tag=='ePixmap' and
+                    Path(node.get('pixmap','')).name==backing_name and
+                    node.get('position')==original_position and node.get('size')==original_size):
+                node.set('position','%d,%d'%(mx,target_y))
+
+    # Keep memory/storage meters beside their data after moving each block.
+    rows=(('ram',280,('mem_labels','ram','swap','mem_tot','root'),
+           ('membar','swapbar','memtotalbar','rootbar')),
+          ('hdd',535,('space_labels','hdd','usb','cf','sd'),
+           ('hddbar','usbbar','cfbar','sdbar')),
+          ('cpu',790,('HDDCPULabels','HDDTemperature','hdddev','cpu','sensors'),()))
+    for reference,target,names,meters in rows:
+        anchor=root.find("widget[@name='%s']"%reference)
+        delta=round(target*sy)-int(anchor.get('position').split(',')[1])
+        for name in meters:
+            meter=root.find("widget[@name='%s']"%name)
+            move_meter(meter,int(meter.get('position').split(',')[1])+delta,'bar_back.png')
+        for name in names:
+            field=root.find("widget[@name='%s']"%name)
+            fx=int(field.get('position').split(',')[0])
+            field.set('position','%d,%d'%(fx,round(target*sy)))
+            if target==790:
+                fw=int(field.get('size').split(',')[0])
+                field.set('size','%d,%d'%(fw,round(58*sy)))
+
+    # Lower meters stay bottom-aligned with their adjacent device pictures.
     for name in ('hddtempbar','hddstate','cpubar','tempDBbar'):
         meter=root.find("widget[@name='%s']"%name)
         if meter is None or not lower_icons:continue
-        mx,my=map(int,meter.get('position').split(','))
-        mw,mh=map(int,meter.get('size').split(','))
+        mx=int(meter.get('position').split(',')[0])
+        mh=int(meter.get('size').split(',')[1])
         adjacent=[n for n in lower_icons if int(n.get('position').split(',')[0])>mx]
         if not adjacent:continue
         icon=min(adjacent,key=lambda n:int(n.get('position').split(',')[0])-mx)
         iy=int(icon.get('position').split(',')[1])
         ih=int(icon.get('size').split(',')[1])
-        # Match the backing by its original geometry before moving the meter.
-        original_position=meter.get('position')
-        for node in root:
-            if node is meter or (node.tag=='ePixmap' and
-                    Path(node.get('pixmap','')).name=='barm_back.png' and
-                    node.get('position')==original_position and
-                    node.get('size')==meter.get('size')):
-                node.set('position','%d,%d'%(mx,iy+ih-mh))
-        meter.set('position','%d,%d'%(mx,iy+ih-mh))
+        move_meter(meter,iy+ih-mh,'barm_back.png')
     for index,(name,color) in enumerate((('red','#00ff526a'),('green','#0039ff59'),('yellow','#00ffdb52'))):
         x=55+index*610
         fill(x+195,996,200,2,color)

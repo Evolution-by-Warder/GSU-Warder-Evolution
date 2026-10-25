@@ -1,6 +1,6 @@
-GSU 13.40-r52
+GSU 13.40-r53
 
-- Added shared system-language support for Slovak, Czech, English, German, Polish, Hungarian, Russian, French, Italian and Spanish; missing translations fall back to English.
-- Added translated menus, common controls, update messages, system and channel captions. Original Slovak/Czech gettext catalogs remain available.
-- Channel Information now uses the shared Warder banner, clock, two-line version, background and centered exit action.
-- Native ECM, bitrate and signal sources, service logos, callbacks and controls are retained. New layout still requires receiver review.
+- System hardware icons now appear above the memory, storage and CPU/temperature data they represent.
+- Approved icon size is retained; data rows and their meter backings move together.
+- Lower meters remain bottom-aligned with their icons. HD, Full HD and Ultra HD layouts are checked.
+- Existing translations, channel information, live data collection and remote-control actions are retained.
