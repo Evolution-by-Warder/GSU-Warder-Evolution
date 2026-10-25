@@ -62,7 +62,7 @@ def build(destination):
         entries.append((PLUGIN+'/defaults/'+path.name,path.read_bytes(),0o644))
     for path in sorted((BASE/'scripts').glob('*.sh')):
         entries.append((PLUGIN+'/default-scripts/'+path.name,path.read_bytes(),0o755))
-    control=('Package: '+PACKAGE+'\nVersion: '+version+'\nArchitecture: all\nSection: extra\nPriority: optional\nMaintainer: Warder Evolution\nDepends: enigma2, python3-core, python3-xml, python3-netclient, python3-compression, python3-fcntl\nDescription: Original GSU 13.20 runtime recovered for Python 3.14; receiver validation candidate\n').encode()
+    control=('Package: '+PACKAGE+'\nVersion: '+version+'\nArchitecture: all\nSection: extra\nPriority: optional\nMaintainer: Warder Evolution\nDepends: enigma2, python3-core, python3-xml, python3-netclient, python3-compression, python3-fcntl, python3-json, python3-threading, ca-certificates\nDescription: Original GSU 13.20 runtime recovered for Python 3.14; receiver validation candidate\n').encode()
     postinst='''#!/bin/sh
 set -e
 [ -z "$D" ] || exit 0

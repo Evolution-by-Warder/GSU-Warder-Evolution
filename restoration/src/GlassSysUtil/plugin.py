@@ -1,3 +1,4 @@
+from Plugins.Extensions.GlassSysUtil.plugin_update_ui import StartupUpdateCheck as _StartupUpdateCheck, text as _plugin_update_text
 # uncompyle6 version 3.9.3
 # Python bytecode version base 2.6 (62161)
 # Decompiled from: Python 3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]
@@ -405,8 +406,7 @@ def main4(session, **kwargs):
 
 
 def main5(session, **kwargs):
-    session.open(devMngMain)
-    return
+    return  # Retired Devices Manager shortcut.
 
 
 def startViaMenu(menuid, **kwargs):
@@ -452,8 +452,6 @@ def Plugins(path, **kwargs):
         ret.append(PluginDescriptor(name='(GSU) ' + _('System Information'), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main1))
     if config.plugins.GlassSysUtil.par54.value:
         ret.append(PluginDescriptor(name='(GSU) ' + _('Channel Information'), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main4))
-    if MNG_DEV and config.plugins.GlassSysUtil.par55.value:
-        ret.append(PluginDescriptor(name='(GSU) ' + _('Devices Manager'), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main5))
     if config.plugins.GlassSysUtil.par51.value:
         ret.append(PluginDescriptor(name=_('Glass System Utility'), where=PluginDescriptor.WHERE_MENU, fnc=startViaMenu))
     if ENA_PS and config.plugins.GlassSysUtil.par56.value:
@@ -1504,32 +1502,17 @@ class SysUtilMngMain(Screen):
         Screen.__init__(self, session)
         self.list = []
         self.menuListAll = [
-         (
-          '0', _('System Information'), _('Displaying system info: temperature, used/available space on connected devices, etc.')),
-         (
-          '1', _('Channel Information'), _('Displaying channel info: transporder info, ECM info (if the channel is coded), etc.')),
-         (
-          '2', _('CCcam Information'), _('Management remote servers or local CCcam server. This item is enabled if CCcam is running or min 1 remote servers defined in /etc/remote_servers.cfg')),
-         (
-          '3', _('OScam Information'), _('Management remote servers or local OScam server. This item is enabled if OScam is running or min 1 remote servers defined in /etc/remote_servers.cfg')),
-         (
-          '4', _('Mbox Information'), _('Displaying Mbox info, local Cam only')),
-         (
-          '5', _('IPK/DEB and User Scripts'), _('Install or uninstall IPK, DEB, GZ, BZ2 files placed in /tmp or start user scripts')),
-         (
-          '6', _('ECM Information'), _('All about ECM info - will be available only if ecm.info file is generated')),
-         (
-          '7', _('CAM/SRV Manager'), _('Start, stop, restart, download, unistall CAM/SRV or set start cfg of OScam')),
-         (
-          '8', _('OSD ECM Information'), _('Enable/Disable OSD ECM Info, will be showed in top - right (default) of TV screen, show changes in ECM info only')),
-         (
-          '9', _('Swap Management'), _('Create,remove and show single/multi swap on mapped devices on your hw')),
-         (
-          '11', _('Devices Manager'), _('Management (format, mount, unmount) HDD, USB devices and autodetecting and managing (delete, create) of the partitions')),
-         (
-          '14', _('Text Editor'), _('Editing text file, supported files are: txt, conf, py, cfg, cw, sh, xml, dvbapi, keys, key, server, services, provid, users, tiers. Limited size of file is 50kB')),
-         (
-          '15', _('Reset root user password'), _('Reset root user password') + '\n' + _('Password') + ': ' + _('None'))]
+            ('0', _('System Information'), _('Displaying system info: temperature, used/available space on connected devices, etc.')),
+            ('1', _('Channel Information'), _('Displaying channel info: transporder info, ECM info (if the channel is coded), etc.')),
+            ('2', _('CCcam Information'), _('Management remote servers or local CCcam server. This item is enabled if CCcam is running or min 1 remote servers defined in /etc/remote_servers.cfg')),
+            ('3', _('OScam Information'), _('Management remote servers or local OScam server. This item is enabled if OScam is running or min 1 remote servers defined in /etc/remote_servers.cfg')),
+            ('4', _('Mbox Information'), _('Displaying Mbox info, local Cam only')),
+            ('5', _('IPK/DEB and User Scripts'), _('Install or uninstall IPK, DEB, GZ, BZ2 files placed in /tmp or start user scripts')),
+            ('6', _('ECM Information'), _('All about ECM info - will be available only if ecm.info file is generated')),
+            ('7', _('CAM/SRV Manager'), _('Start, stop, restart, download, unistall CAM/SRV or set start cfg of OScam')),
+            ('8', _('OSD ECM Information'), _('Enable/Disable OSD ECM Info, will be showed in top - right (default) of TV screen, show changes in ECM info only')),
+            ('9', _('Swap Management'), _('Create,remove and show single/multi swap on mapped devices on your hw')),
+            ('16', _plugin_update_text(globals(), 'Update'), _plugin_update_text(globals(), 'Check for a new version of Glass System Utility Warder Evolution'))]
         self.status = {}
         self['list'] = ListboxSys2(self.list)
         self['list'].onSelectionChanged.append(self.reactivate)
@@ -1538,50 +1521,17 @@ class SysUtilMngMain(Screen):
         self['green'] = Label(_('Select'))
         self['yellow'] = Label(_('Menu'))
         self['blue'] = Label('')
-        self['actions'] = ActionMap(['SetupActions', 'ColorActions', 'GlobalActions', 'WizardActions', 'MenuActions'], {'green': (self.selectedmenuitem), 
-           'ok': (self.selectedmenuitem), 
-           'red': (self.close), 
-           'yellow': (self.cfgGsu), 
-           'blue': (self.updatechckact), 
-           'back': (self.close), 
-           'menu': (self.cfgGsu)})
+        self['actions'] = ActionMap(['SetupActions', 'ColorActions', 'GlobalActions', 'WizardActions', 'MenuActions'], {'green': self.selectedmenuitem, 'ok': self.selectedmenuitem, 'red': self.close, 'yellow': self.cfgGsu, 'back': self.close, 'menu': self.cfgGsu})
         self.size = getDesktop(0).size().width()
         self.onLayoutFinish.append(self.updatemenulist)
+        self._plugin_update = _StartupUpdateCheck(self, globals())
         return
 
     def resetRootPass(self, a):
-        if not a:
-            return
-        self._container = eConsoleAppContainer()
-        if ENA_D:
-            self.__appClosed_conn = self._container.appClosed.connect(self._commandFinished)
-        else:
-            self.__appClosed_conn = self._container.appClosed.append(self._commandFinished)
-        ret = self._container.execute('passwd -d root')
-        if ret == 0:
-            msg = _('Successfully changed password for root user to: None')
-        else:
-            msg = _('Unable to reset password for root user')
-        self.session.open(MessageBox, msg, MessageBox.TYPE_INFO, 10)
-        return
+        return  # Retired legacy action.
 
     def _commandFinished(self, retval):
-        if ENA_D:
-            try:
-                del self._container
-            except:
-                pass
-
-        else:
-            try:
-                del self._container.dataAvail[:]
-                del self._container.appClosed[:]
-                del self._container
-            except:
-                pass
-
-        self.__appClosed_conn = None
-        return
+        return  # Retired legacy action.
 
     def selectedmenuitem(self):
         if self.size < 1280:
@@ -1615,12 +1565,8 @@ class SysUtilMngMain(Screen):
                 self.session.open(OSD_ECM_Menu)
             elif selectedItem == '9':
                 self.session.open(swap_manager)
-            elif selectedItem == '11':
-                self.session.open(devMngMain)
-            elif selectedItem == '14':
-                self.session.open(dirBrowser, '/', True)
-            elif selectedItem == '15':
-                self.session.openWithCallback(self.resetRootPass, MessageBox, _('Do you really want to reset password for user root?'), MessageBox.TYPE_YESNO, default=False)
+            elif selectedItem == '16':
+                self.updatechckact()
         return
 
     def updatemenulist(self):
@@ -1657,103 +1603,13 @@ class SysUtilMngMain(Screen):
         return
 
     def updatechckact(self):
-        (tt, self.wFtp) = chckFtp()
-        if tt != '':
-            self.session.open(MessageBox, tt, MessageBox.TYPE_ERROR, 6)
-            return
-        filenames = []
-        try:
-            ftp = ftplib.FTP(self.wFtp[0])
-            ftp.login(self.wFtp[1], self.wFtp[2])
-            data = []
-            ftp.cwd('gsu' + GVIP)
-            ftp.cwd(TYPE_DIR)
-            ftp.dir(data.append)
-            for line in data:
-                tmp = re.sub('\\s+', '*', line)
-                tmp = tmp.strip().split('*')
-                if len(tmp) > 8:
-                    if '.php' not in line and tmp[8] != '.' and tmp[8] != '..' and ':' in line:
-                        idx = line.index(':')
-                        zzz = line[idx + 4:]
-                        filenames.append(zzz)
-
-            ftp.quit()
-        except:
-            pass
-
-        msg = _('No files detected')
-        if len(filenames) == 1:
-            zzz = filenames[0].strip().split('_')[1]
-            try:
-                msg = _('Error reading version info')
-                if float(zzz) > float(self.readVersion()):
-                    msg = _('New version') + ' ' + zzz
-                else:
-                    msg = _('You have actual version installed, no update needed')
-            except:
-                pass
-
-        if _('New version') in msg:
-            self.fileName = filenames[0]
-            self.session.openWithCallback(self.updAnswer, MessageBox, msg + ' ' + _('Do you want update GSU?'), MessageBox.TYPE_YESNO)
-        else:
-            self.session.open(MessageBox, msg, MessageBox.TYPE_INFO, 6)
-        return
+        self._plugin_update.request(manual=True)
 
     def updAnswer(self, answer):
-        if answer:
-            state = False
-            try:
-                ftp = ftplib.FTP(self.wFtp[0])
-                ftp.login(self.wFtp[1], self.wFtp[2])
-                ftp.cwd('gsu' + GVIP)
-                ftp.cwd(TYPE_DIR)
-                ftp.retrbinary('RETR ' + self.fileName, open('/tmp/' + self.fileName, 'wb').write)
-                state = True
-                ftp.quit()
-            except:
-                pass
-
-            if state:
-                if '.rar' in self.fileName:
-                    system('%s x -p%s /tmp/%s /tmp' % (_gsu_helper('unrar_bin'),PWDV,self.fileName))
-                    system('rm -rf /tmp/' + self.fileName)
-                    if ENA_D:
-                        cmd = '.deb'
-                    else:
-                        cmd = '.ipk'
-                    self.fileName = self.fileName.replace('.rar', cmd)
-                if os.path.isfile('/tmp/' + self.fileName):
-                    if ENA_D:
-                        cmd = PKGBIN % self.fileName
-                    else:
-                        cmd = '%spkg install --force-overwrite /tmp/%s' % (PKGBIN, self.fileName)
-                    self.session.openWithCallback(self.cmdAnsw, Console, title=_('Installing package') + ': %s' % self.fileName, cmdlist=[cmd])
-                else:
-                    self.session.open(MessageBox, _('Error while downloading file'), MessageBox.TYPE_ERROR, 6)
-            else:
-                self.session.open(MessageBox, _('Error while downloading file'), MessageBox.TYPE_ERROR, 6)
-        return
+        return  # Retired legacy action.
 
     def cmdAnsw(self):
-        system('rm -rf /tmp/' + self.fileName)
-        contentInfo = chckPckgList()
-        tmp = ''
-        lenT = -1
-        if ENA_D:
-            lenT = -2
-        for line in contentInfo:
-            if line.__contains__('-plugin-glasssysutil'):
-                line = line.strip().split('-')
-                tmp = line[lenT].strip().split()[0]
-                break
-
-        if tmp and tmp == self.readVersion():
-            self.session.openWithCallback(self.rstAnswer, MessageBox, _('Update finished successfully. Do you want restart GUI to activate new version now?'), MessageBox.TYPE_YESNO)
-        else:
-            self.session.open(MessageBox, _('Error while updating to new version'), MessageBox.TYPE_INFO, 6)
-        return
+        return  # Retired legacy action.
 
     def rstAnswer(self, answer):
         Rst_E2(answer)
@@ -9761,7 +9617,7 @@ class cfgGsuScreen(Screen, ConfigListScreen):
         CfgConfigList.append(getConfigListEntry(_('Show System Information in extensions list'), config.plugins.GlassSysUtil.par53))
         CfgConfigList.append(getConfigListEntry(_('Show Channel Information in extensions list'), config.plugins.GlassSysUtil.par54))
         if MNG_DEV:
-            CfgConfigList.append(getConfigListEntry(_('Show Devices Manager in extensions list'), config.plugins.GlassSysUtil.par55))
+            pass  # Retired Devices Manager shortcut option.
         CfgConfigList.append(getConfigListEntry(_('Show CAM/SRV Manager in extensions list'), config.plugins.GlassSysUtil.par56))
         CfgConfigList.append(getConfigListEntry(_('Show Oscam Info in extensions list'), config.plugins.GlassSysUtil.par60))
         CfgConfigList.append(getConfigListEntry(_('Enable autocheck of mounts CIFS/NFS'), config.plugins.GlassSysUtil.par57))

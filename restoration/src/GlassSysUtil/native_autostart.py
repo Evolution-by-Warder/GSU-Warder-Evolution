@@ -209,7 +209,13 @@ def manual_end(ticket,success):
 
 def configure(owner):
     controller=getattr(owner,'nativeDelayedStart',None)
-    if controller:controller.configure()
+    if controller:
+        controller.configure()
+    else:
+        # No live controller may authorize an automatic worker from an old session.
+        try:publish_guard(os.urandom(16).hex(),False)
+        except OSError as error:log_event('automatic control unavailable: '+str(error))
+        log_event('autocheck unavailable: no session controller')
 
 
 def begin(owner,api):
@@ -217,13 +223,18 @@ def begin(owner,api):
     from .native_softcam import NativeSoftcam
     previous=getattr(owner,'nativeDelayedStart',None)
     if previous:previous.cancel()
+    if _ACTIVE is not None and _ACTIVE is not previous:_ACTIVE.cancel()
+    _ACTIVE=None
     native=NativeSoftcam()
-    if not native.selected():return False
     settings=api['config'].plugins.GlassSysUtil
     owner.nativeDelayedStart=DelayedNativeStart(native,api['eTimer'],api['eConsoleAppContainer'],settings.par48.value,lambda:settings.par50.value)
     _ACTIVE=owner.nativeDelayedStart
-    owner.nativeDelayedStart.schedule()
+    scheduled=owner.nativeDelayedStart.schedule()
+    # Keep the controller for a native CAM selected later through the manager.
+    # There is no boot request to delay when the session begins without one.
+    if not scheduled:owner.nativeDelayedStart.fired=True
     owner.nativeDelayedStart.configure()
+    if not scheduled:return False
     # Keep the independent mount checker, even when native CAM handling is used.
     if api['config'].plugins.GlassSysUtil.par57.value!='0':
         owner.cifsNfsTimer=api['eTimer']()

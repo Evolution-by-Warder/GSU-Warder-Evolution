@@ -5,7 +5,10 @@ on:
     paths: ['restoration/**', '.github/workflows/original-python314.yml']
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
+concurrency:
+  group: gsu-original-release
+  cancel-in-progress: false
 jobs:
   original:
     runs-on: ubuntu-latest
@@ -30,3 +33,8 @@ jobs:
           name: GSU-original-Python314-receiver-candidate
           path: restoration/dist/*
           retention-days: 90
+      - name: Publish tested restoration release and advance its feed
+        if: github.ref == 'refs/heads/original-python314'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python restoration/tools/publish_update.py

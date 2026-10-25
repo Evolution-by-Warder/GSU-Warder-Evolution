@@ -1,3 +1,21 @@
+# Aktuálny checkpoint — 25. 10. 2026, r36
+
+Pracovať výhradne v `original-python314`, runtime `restoration/src/GlassSysUtil`; produkčná vetva zostáva nedotknutá. Prijímač má zatiaľ potvrdenú r35, nová r36 čaká na inštaláciu a reštart GUI. Aktuálna diagnostika prijímača uvádza Python 3.14.9; hostiteľské testy bežia na 3.14.7. Staršie záznamy nižšie sú chronologická história, nie aktuálny nasledujúci krok.
+
+Najbližšie po r36: overiť jedenásť položiek menu s Aktualizáciou namiesto Správcu zariadení, Textového editora a Resetu hesla. Ručná Aktualizácia má oznámiť aktuálnu verziu, automatická kontrola rovnakej verzie nemá rušiť. Vo Správcovi CAM vypnúť autokontrolu a overiť zodpovedajúci pomocný stav; následne znovu zapnúť, ak ju používateľ chce používať. Scenár GUI štart bez vybraného CAM a dodatočný výber je zatiaľ hostiteľsky testovaný. Reálnu inštaláciu novšej verzie a reštart po troch sekundách bude možné overiť až pri ďalšom vydaní; nevyhlasovať ich za prijímačom potvrdené.
+
+## OSCam klienti — uzavretie skúšky r35
+
+Zrušenie otázky voľbou Nie, odchod/opätovné otvorenie, následné zakázanie a povolenie účtu Gigablue boli vyskúšané. Zákaz označil účet disabled/offline; živé lokálne DVBAPI spojenie pokračovalo ako anonymous. Povolenie odstránilo disabled, ale meno spojenia sa zmenilo späť na Gigablue až po ručnom reštarte OSCamu. Používateľ potvrdil obraz po prepnutí aj pred týmto reštartom a po reštarte dodal stav Gigablue OK. Podľa výslovného rozhodnutia Zakázať/Povoliť zachovať bez úpravy; nerobiť automatický CAM reštart ani nepremenovávať anonymous.
+
+Referenčný upstream OpenVisionE2/oscam module-webif.c: disable nastaví disabled=1 a kill_account_thread pri nenetworkovom module prepne cl->account na first_client->account; enable iba nastaví disabled=0. oscam-client.c pomenúva účet bez usr ako anonymous. To vysvetľuje pozorovaný jav, ale nejde o kontrolu presného zdroja nainštalovanej binárky.
+
+Dodaná gsu-cam-diagnostika.txt zachytáva monotónne časy 25121–25207: počas troch fáz rovnaký softcam symlink, hash init skriptu a živé PIDy 20965/20966. par50=False, pomocný guard enabled=true, autostart log nedostupný. Nesúlad môže byť starý súbor a nedokazuje bežiaci časovač. Diagnostika nezachytila pôvodnú stratu výberu CAM, jej príčina zostáva nepreukázaná. Predošlý log končil pri uptime17303, zatiaľ čo aktuálny uptime bol24725; preto ho nemožno pripísať poslednému zákazu/povoleniu klienta.
+
+r36 opravuje konkrétne reprodukovateľnú medzeru: pri GUI štarte bez native výberu sa pôvodne nevytvoril controller. Teraz existuje aj pre neskorší výber, rešpektuje živý prepínač a ručný GSU stop; bez živého controlleru sa zneplatní starý guard. 215 hostiteľských testov prešlo. Nový IPK a hash sú v aktuálnom dist výstupe a zázname vydania.
+
+---
+
 # Pokračovanie testovania GSU — 24. 10. 2026 večer
 
 ## Cieľ a pracovná verzia

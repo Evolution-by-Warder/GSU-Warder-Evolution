@@ -218,5 +218,58 @@ class NativeAutostartTests(unittest.TestCase):
             self.assertTrue(plugin.config.plugins.GlassSysUtil.par50.value)
             configure.assert_called_once_with(plugin.autocams)
 
+    def test_toggle_without_session_controller_revokes_stale_worker_guard(self):
+        boot.configure(types.SimpleNamespace())
+        token,enabled=boot.publish_guard.call_args.args
+        self.assertEqual(len(token),32)
+        self.assertFalse(enabled)
+
+    def test_session_without_selection_retains_live_toggle_and_manual_stop_suppression(self):
+        plugin=load(ROOT)
+        helper=__import__('Plugins.Extensions.GlassSysUtil.native_autostart',fromlist=['begin'])
+        native_module=__import__('Plugins.Extensions.GlassSysUtil.native_softcam',fromlist=['NativeSoftcam'])
+        self.native.selected.return_value=None
+        settings=plugin.config.plugins.GlassSysUtil
+        settings.par48.value=10;settings.par50.value=False;settings.par57.value='0'
+        timers=[MagicMock(),MagicMock()];factory=MagicMock()
+        factory.return_value.execute.return_value=0
+        owner=types.SimpleNamespace()
+        api={'config':plugin.config,'eTimer':iter(timers).__next__,'eConsoleAppContainer':factory}
+        with patch.object(helper,'_ACTIVE',None),patch.object(native_module,'NativeSoftcam',return_value=self.native),patch.object(helper,'log_event'),patch.object(helper,'publish_guard') as publish:
+            self.assertFalse(helper.begin(owner,api))  # Legacy startup remains available.
+            controller=owner.nativeDelayedStart
+            self.assertIs(helper._ACTIVE,controller)
+            timers[0].startLongTimer.assert_not_called()
+            self.assertFalse(publish.call_args.args[1])
+            settings.par50.value=True;helper.configure(owner)
+            timers[1].startLongTimer.assert_called_with(15)
+            controller.check();factory.assert_not_called()
+            self.native.selected.return_value='oscam-master'
+            ticket=helper.manual_begin('oscam-master','stop')
+            helper.manual_end(ticket,True)
+            controller.check();factory.assert_not_called()
+            ticket=helper.manual_begin('oscam-master','start')
+            helper.manual_end(ticket,True)
+            controller.check();factory.assert_called_once()
+            settings.par50.value=False;helper.configure(owner)
+            self.assertFalse(publish.call_args.args[1])
+            controller.finished(0);controller.check();factory.assert_called_once()
+            controller.cancel()
+            self.assertFalse(publish.call_args.args[1])
+
+    def test_new_session_without_selection_cancels_previous_controller(self):
+        plugin=load(ROOT)
+        helper=__import__('Plugins.Extensions.GlassSysUtil.native_autostart',fromlist=['begin'])
+        native_module=__import__('Plugins.Extensions.GlassSysUtil.native_softcam',fromlist=['NativeSoftcam'])
+        self.native.selected.return_value=None
+        settings=plugin.config.plugins.GlassSysUtil
+        settings.par48.value=10;settings.par50.value=False
+        previous=MagicMock();owner=types.SimpleNamespace(nativeDelayedStart=previous)
+        with patch.object(helper,'_ACTIVE',previous),patch.object(native_module,'NativeSoftcam',return_value=self.native),patch.object(helper,'log_event'),patch.object(helper,'publish_guard'):
+            self.assertFalse(helper.begin(owner,{'config':plugin.config,'eTimer':MagicMock(),'eConsoleAppContainer':MagicMock()}))
+            previous.cancel.assert_called_once()
+            self.assertIsNot(helper._ACTIVE,previous)
+            helper._ACTIVE.cancel()
+
 
 if __name__=='__main__':unittest.main()

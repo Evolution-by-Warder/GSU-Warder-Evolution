@@ -307,14 +307,14 @@ class OriginalPortTests(unittest.TestCase):
                 self.assertEqual(actual[item['name']],item['args'],item['name'])
         self.assertEqual(sum(isinstance(n,ast.ClassDef) for n in ast.walk(tree)),55)
 
-    def test_main_menu_keeps_remaining_thirteen_entries_and_real_contexts(self):
+    def test_main_menu_keeps_eleven_entries_with_one_update_and_real_contexts(self):
         module=self.plugin
         screen=module.SysUtilMngMain(types.SimpleNamespace())
-        self.assertEqual(len(screen.menuListAll),13)
-        self.assertTrue({'10','12','13'}.isdisjoint(item[0] for item in screen.menuListAll))
+        self.assertEqual(len(screen.menuListAll),11)
+        self.assertTrue({'10','11','12','13','14','15'}.isdisjoint(item[0] for item in screen.menuListAll))
         self.assertEqual(screen['actions'].contexts,['SetupActions','ColorActions','GlobalActions','WizardActions','MenuActions'])
         screen.updatemenulist()
-        self.assertEqual(len(screen['list'].list),13)
+        self.assertEqual(len(screen['list'].list),11)
 
     def test_main_menu_help_and_dispatch_follow_ids_after_importer_removal(self):
         from unittest.mock import MagicMock
@@ -324,18 +324,16 @@ class OriginalPortTests(unittest.TestCase):
             screen['list'].getCurrent=lambda entry=entry:[entry[0]]
             screen.reactivate()
             self.assertEqual(screen['info'].text,entry[2])
-        screen.status={'11':True,'14':True}
-        for identifier,expected in [('11',module.devMngMain)]:
-            screen['list'].getCurrent=lambda identifier=identifier:[identifier]
+        screen.status={'16':True}
+        screen['list'].getCurrent=lambda:['16']
+        with patch.object(screen._plugin_update,'request') as request:
             screen.selectedmenuitem()
-            session.open.assert_called_with(expected)
+            request.assert_called_once_with(manual=True)
         self.assertFalse(hasattr(module,'settings_satxml'))
         self.assertFalse(hasattr(module,'settings_center'))
         for name in ('autoInstallMain','autoInstallMngMain','autoInstStatus','autoInstallMng','cronMng','SetupCronConf','fill'):
             self.assertFalse(hasattr(module,name),name)
-        screen['list'].getCurrent=lambda:['14']
-        screen.selectedmenuitem()
-        session.open.assert_called_with(module.dirBrowser,'/',True)
+        session.open.assert_not_called()
 
     def _cam_process_files(self, processes):
         import io
