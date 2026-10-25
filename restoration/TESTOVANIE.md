@@ -363,3 +363,13 @@ Na zábere sa dlhý protokol a kanál zalamujú v ľavom hodnotovom Labeli, pret
 Prešlo199 host testov: navyše presný dlhý protokol z prijímača, zachovaných5 polí v poradí adresa/protokol/kanál/čas na kanáli/idle a všetkých6 setWrap volaní cez boundlayoutcallback. Zdrojová transformácia reprodukuje runtime zo vstupu r32(c5c0812). Zachovaná pôvodná geometria a ostatné obrazovky.
 
 Najbližšie: inštalovaťr34 a reštartGUI, otvoriť OSCam informácie→Stav klientov a porovnať spodné riadky. Protokol musí byť jedným riadkom, kanál priChannel, čas priCh_Time a nečinnosť priIdle, bez presahu do tlačidiel. Potom overiť odchod z okna a opätovné otvorenie/obnovu.
+
+## 2026-10-25 — r34 zarovnanie potvrdené; r35 širší ľavý stĺpec
+
+Snímka120658: r34 drží protokoldvbapi, Channel, Ch_Time a Idle na správnych riadkoch bez presahu do tlačidiel. Údaje a stavGigablueOK sa obnovujú; z jedného záberu nemožno hodnotiť celý cyklus ani reakcie ovládača. Používateľ výslovne žiada posunúť strednýOK/NOK a pravýCACHE/TUN stĺpec doprava, aby vošlo celé[M7Group].
+
+Novýclients_skin v oscam_clients_ui upraví iba runtimeXMLtejto obrazovky: stredná skupina +šírka/12, pravá +šírka/24; ľavá hodnota sa rozšíri o posun strednej. Šírka hodnôt strednej/pravej sa primerane zmenší, aby zostali medzery a pravý okraj. PriFullHDposuny120/60px, ľaváhodnota420px, hodnotyčítačov240px. Zachované fonty, výšky, pozícia a veľkosť okna, hornýzoznam a spodné tlačidlá. Pôvodné skinové súbory a ich hash zostávajú nedotknuté.
+
+Jednorazová kontrola geometrieSD/FHD/UHD: rozsahy skupín SD(10,100,380)/(390,500,660)/(670,790,950), FHD(15,150,570)/(585,750,990)/(1005,1185,1425), UHD(30,300,1140)/(1170,1500,1980)/(2010,2370,2850), kde trojica znamenázačiatoknázvov/začiatokhodnôt/koniechodnôt. Žiadne prekrývanie ani vodorovnýpresah; zoznam a tlačidlá majú totožné atribúty. Skutočný pribalenýprivfont pri25px: JOJ PLUS HD[M7Group] s medzerami podľaOSCamu meria316.33px, novýpriestor420px.
+
+Prešlo199existujúcichtestov Python3.14.7, transformácia reprodukuje runtime. Najbližšie: r35inštalácia/GUIreštart a rovnaké OSCam→Stavklientov; overiť celý názovkanála s[M7Group] a čitateľné stredné/pravéčítače.

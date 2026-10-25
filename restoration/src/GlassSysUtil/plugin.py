@@ -7262,7 +7262,7 @@ class oscam_entitlements(Screen):
 class oscam_Users(Screen):
 
     def __init__(self, session, url, login, passwd):
-        self.skin = oscam_Users_scr
+        self.skin = _oscam_clients_ui.clients_skin(oscam_Users_scr)
         self.session = session
         self.url = url
         self.login = login

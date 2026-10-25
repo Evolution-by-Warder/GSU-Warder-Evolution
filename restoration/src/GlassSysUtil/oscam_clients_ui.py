@@ -1,5 +1,6 @@
 """Original client screen, with bounded requests outside the GUI thread."""
 from twisted.internet.threads import deferToThread
+from xml.etree import ElementTree
 from .oscam_clients import EMPTY, COUNTERS, fetch_clients, set_enabled
 
 _SK = {
@@ -8,6 +9,26 @@ _SK = {
     'Unable to load OSCam clients.': 'Nepodarilo sa načítať klientov OSCam-u.',
     'Account change failed.': 'Zmena stavu účtu zlyhala.',
 }
+
+
+def clients_skin(skin):
+    """Give channel/provider text more space without moving the screen or footer."""
+    root = ElementTree.fromstring(skin)
+    width = int(root.get('size').split(',')[0])
+    middle_shift, right_shift = width // 12, width // 24
+    widgets = {node.get('name'): node for node in root if node.tag == 'widget'}
+    for group, shift in ((1, middle_shift), (2, right_shift)):
+        for kind in ('labels', 'values'):
+            node = widgets['status_' + kind + '_' + str(group)]
+            x, y = map(int, node.get('position').split(','))
+            node.set('position', '%d,%d' % (x + shift, y))
+    for name, delta in (('status_values_0', middle_shift),
+                        ('status_values_1', right_shift - middle_shift),
+                        ('status_values_2', -right_shift)):
+        node = widgets[name]
+        w, h = map(int, node.get('size').split(','))
+        node.set('size', '%d,%d' % (w + delta, h))
+    return ElementTree.tostring(root, encoding='unicode')
 
 
 def tr(api, value):

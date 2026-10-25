@@ -14,6 +14,7 @@ def port_oscam_clients(source):
             continue
         if method.name == '__init__':
             body = ast.get_source_segment(source, method)
+            body = body.replace('self.skin = oscam_Users_scr', 'self.skin = _oscam_clients_ui.clients_skin(oscam_Users_scr)')
             body = body.replace("        self['blue_button'] = Label('')", "        self['blue_button'] = Label('')\n        _oscam_clients_ui.initialize(self)")
             body = body.replace('        self.onLayoutFinish.append(self.oscamUsers)',
                 '        self.onLayoutFinish.append(self.prepareClients)\n        self.onLayoutFinish.append(self.oscamUsers)')
