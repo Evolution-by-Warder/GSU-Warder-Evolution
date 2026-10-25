@@ -56,11 +56,14 @@
   "plugin_update_ui_sha256": "176c289f60774144f82b20ea4a0038b7751f9067aec796215e3717d91ec27f93",
   "latest_candidate": {
     "version": "13.40-r54",
-    "published": false,
-    "feed_advanced": false,
+    "published": true,
+    "feed_advanced": true,
     "receiver_verified": false,
     "bytes": 3656746,
-    "sha256": "2e456424a946b6cf76ae685be382cbc3e4bdd3cdccd3bb5b8570e02f4ec580b9"
+    "sha256": "2e456424a946b6cf76ae685be382cbc3e4bdd3cdccd3bb5b8570e02f4ec580b9",
+    "source_commit": "b3656444b026a46e39837f2276c5f593bbd59b99",
+    "ci_run": 40221611839,
+    "ci_conclusion": "success"
   },
   "oscam_readers_ui_sha256": "88f2da2c4eba5a05db9b333b3d8de003ca4f6e6ad82d6e2c6eed41b6feb40865",
   "warder_tools_sha256": "ef23dab03508f12e73cc5c8196f04ebaa44fd1bf7bf0d357881acc49ac341563",
@@ -71,10 +74,10 @@
   "i18n_sha256": "85a45d5f6cf6d05674eb88f60996f12b2c90484eb1c3cc7aa1fe9386e31631ba",
   "warder_channel_sha256": "130a41b4de7fcc4de4481b4abf2488f989cfd67d3ffe52f0e2aaf7087ec0222e",
   "release_cleanup": {
-    "kept": "v13.40-r53",
-    "removed": 29,
+    "kept": "v13.40-r54",
+    "removed": 30,
     "first_run": 40220658958,
-    "final_run": 40221152719,
+    "final_run": 40221709652,
     "verified_release_count": 1,
     "tags_unchanged": true
   }

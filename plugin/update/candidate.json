@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r53",
-    "tag": "v13.40-r53",
-    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r53/enigma2-plugin-glasssysutil_13.40-r53_all.ipk",
-    "sha256": "79d8ab669d8c546e919bf95d4b972874dffad3fd341221e3a46049370d969cba",
-    "bytes": 3656708,
-    "notes": "GSU 13.40-r53\n\n- System hardware icons now appear above the memory, storage and CPU/temperature data they represent.\n- Approved icon size is retained; data rows and their meter backings move together.\n- Lower meters remain bottom-aligned with their icons. HD, Full HD and Ultra HD layouts are checked.\n- Existing translations, channel information, live data collection and remote-control actions are retained.\n"
+    "version": "13.40-r54",
+    "tag": "v13.40-r54",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r54/enigma2-plugin-glasssysutil_13.40-r54_all.ipk",
+    "sha256": "2e456424a946b6cf76ae685be382cbc3e4bdd3cdccd3bb5b8570e02f4ec580b9",
+    "bytes": 3656746,
+    "notes": "GSU 13.40-r54\n\n- Moved protocol captions and status dots one text row lower in System Information.\n- Retained the approved hardware icon arrangement and Channel Information layout.\n"
   }
 }
