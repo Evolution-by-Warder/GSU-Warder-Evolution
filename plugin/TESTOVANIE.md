@@ -41,3 +41,7 @@ Používateľ poslal1(20261025-182710).jpg (r53 systém) a2(20261025-182832).jpg
 R54 publikované a oba feedy overené. Používateľ následne upresnil, že myslí CELÝ blok Protokoly vrátane FTP/Telnet/VPN/Samba/NFS a farebných ukazovateľov pod nimi. Implementácia už od začiatku zahŕňa všetky titulky aj oba on/off stavy každej bodky; všetko sa posúva o jeden textový riadok spoločne. FHD titulky y884, bodky y918–943; spodok panelu978 má rezervu. HD/UHD pomerné polohy overené;277 testov aj CI success. Druhá dodaná obrazovka Informácie o kanáli je výslovne schválená ako OK, nemení sa.
 
 Po vydaní r54 odstránené aj nahradené r53, cleanup workflow40221709652 success. API overilo iba v13.40-r54; spolu odstránených30 starých vydaní, Git tagy/história zachované. Spotrebovaný request odstránený.
+
+## r55 — celé označenie CAM
+
+Používateľ potvrdil systémovú obrazovku r54 snímkou1(20261025-183534).jpg a textom1 beriem. Druhú kanálovú obrazovku tiež schvaľuje s jedinou opravou: zobraziť celý CAM názov/verziu. Snímka2(20261025-183534).jpg prezretá, viditeľné OScam (2.26.09-11968-8..). Príčinou je predčasné cutMe nad oscVersion v ECMparser(cl=24), nie chýbajúce dáta z OSCamu. Pre kanálový readEcmInfo sa pridáva keyword-only full_cam=True; pôvodný positional interface a limity ostatných polí aj správanie ostatných volaní zostávajú. Reálny parser test číta ecm.info a version a kontroluje celú2.26.09-11968-802 aj zhodu ostatných polí s pôvodným výsledkom. Rozloženie, fonty a ostatné obrazovky sa nemenia.

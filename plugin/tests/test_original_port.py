@@ -130,12 +130,28 @@ class OriginalPortTests(unittest.TestCase):
         ecm=(' (2.26.09-11968-802)\n','OScam\n','','0668\n','000000\n','000000\n','0C0A\n','server\n','192.168.10.6\n','0\n','0\n','0.126\n','Irdeto','','')
         with patch.object(module,'ECMparser',return_value=ecm) as parser:
             screen.readEcmInfo()
-            parser.assert_called_once_with(cl=24)
+            parser.assert_called_once_with(cl=24, full_cam=True)
         rows=screen['ecmValues'].text.splitlines()
         self.assertEqual(len(rows),11)
         self.assertEqual(rows[0],'OScam (2.26.09-11968-802)')
         self.assertEqual(rows[1:4],['Irdeto','0668','000000'])
         self.assertEqual(rows[-1],'0.126')
+
+    def test_channel_parser_keeps_complete_cam_version_and_preserves_other_limits(self):
+        import io
+        module=self.plugin
+        version='2.26.09-11968-802'
+        files={'/tmp/ecm.info':'caid: 0x0624\nreader: demo\necm time: 0.100\n',
+               '/tmp/.oscam/oscam.version':'Version: '+version+'\n'}
+        def read(path,*args,**kwargs):
+            if str(path) not in files:raise FileNotFoundError(path)
+            return io.StringIO(files[str(path)])
+        with patch('builtins.open',side_effect=read),patch.object(module.os.path,'isfile',side_effect=lambda p:str(p)=='/tmp/.oscam/oscam.version'),patch.object(module.os,'stat',return_value=types.SimpleNamespace(st_mtime=100)):
+            old=module.ECMparser(cl=24)
+            full=module.ECMparser(cl=24,full_cam=True)
+        self.assertEqual(full[0],' ('+version+')\n')
+        self.assertIn('..',old[0])
+        self.assertEqual(full[1:],old[1:])
 
     def test_standalone_ecm_full_revision_refresh_and_close_with_both_timer_apis(self):
         from unittest.mock import MagicMock
