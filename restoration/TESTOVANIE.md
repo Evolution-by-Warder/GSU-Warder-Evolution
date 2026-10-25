@@ -335,3 +335,21 @@ Odstránenie nemení skutočné zoznamy staníc, archívy, systémový cron, jeh
 ID ďalších položiek zachované. SysUtilMngMain.reactivate vyhľadáva popis podľa ID, nie podľa indexu v skrátenom zozname. 177 host testov zahŕňa popisy všetkých zostávajúcich riadkov, spustenie Správcu zariadení/Textového editora a session štart s par15=True, kde sa nevytvorí žiadny inštalačný timer ani príkaz. Transformácie reprodukujú runtime; zostavenie a syntax overené pred vydaním.
 
 Najbližšie: nainštalovať r32, reštart GUI a overiť hlavné menu bez troch vyradených sekcií a správne pomocné texty. Správca zariadení zostáva, kým nebude jednoznačne odsúhlasené jeho odstránenie. Nepovažovať otázku na účel za súhlas so zmazaním.
+
+## 2026-10-25 — r33: OSCam / Stav klientov
+
+Používateľ sa vrátil k OSCam informáciám. Snímky114112 a124102: WebIf pri porte8884 ukazuje Clients1/1, klientGigablue, protokoldvbapi, camd.socket, kanálJOJ PLUS HD, stavOK. Snímka114230: GSU Stav klientov má prázdny zoznam a iba bodky v detailoch. Používateľ žiada pokračovať v oprave. Nehardcodovať modelprijímača ani menoGigablue; použiť názov účtu zOSCamu.
+
+Príčina v kóde: oscam_Users čítal iba userconfig.html a rozpoznával presné riadkyHTML/tabulátory/poradie atribútov, potom vyžadoval konkrétny počet pozícií. Moderný usercol1 s vnoreným odkazom/iným poradím atribútov alebo oznamovacím číslom mohol preskočiť alebo zahodiť. Nepreukázané, ktorý konkrétny detailHTML bol na tomto prijímači rozhodujúci; jeho skutočnýHTMLdump nemáme.
+
+Nové oscam_clients.py: APIpart=status typc pre živých klientov; APIpart=userstats pre účty a čítače; spojenie podľa názvu bez premenovania. Samostatné IDthid zachová viac relácií jedného účtu. Server/http/readers/proxies sa nezamieňajú za klientov. Offline účty ponechané. HTMLfallback podľa triedusercol/statuscol, data-sort-value/odkazu používateľa; dekoratívny notifier s číslom sa neprilepí k názvu. Bez štatistík zostane živý klient viditeľný, chýbajúce hodnoty sú pomlčky, nie nuly. Čítače patria celému účtu; pri viacerých reláciách nejde o samostatné per-session čítače. CWCycleAPI neposkytuje a zostáva pomlčka.
+
+Zdroj schémy: OpenVisionE2/oscam master, webif/api.xml/status_statusbits.xml, userconfiglist_userconfigs.xml, status.xml, userconfiglist.xml, webif/userconfig/userconfig_entry.html, webif/status/status_clientstatusbit.html a module-webif.c. Nepovažovať syntetické testovacie odpovede podľa týchto šablón za zachytenú odpoveď prijímača.
+
+oscam_clients_ui.py: pôvodnýskin a verejné metódy, sieť mimoGUI cezdeferToThread, jeden request naraz, timer8s až po dokončení, zachovanie vybratej položky podľa ID, zastavenie a ignorovanie callbackov po zavretí. Pri chybe zobraziť neúspešné načítanie, vymazať staré hodnoty a naplánovať ďalší pokus; neuzavrieť okno. Modré existujúce enable/disable najprv potvrdí konkrétny účet(defaultNie), zachytí meno pred dialógom, URLzakóduje a v pracovnom vlákne overí vrátený stav. Bez čitateľného účtu tlačidlo nedostupné. Otvorenie/obnova nikdy nemení účty.
+
+Prešlo197 host testov naPython3.14.7 vrátane reálneho lokálnehoHTTPservera sBasicprihlásením, obochAPIendpointov, modernéhoHTMLsnotifierom2, viacerýchrelácií, chýbajúcichčítačov, neplatnejXML/DOCTYPE, výberu poobnove, chýb a zatvorenia počasnačítania. Pôvodné metódyoscam_Users majú zachované signatúry; zaniknuté vnorenécleanMe je výslovne evidovaná implementačná náhrada, podobne akogeneratePS.chck. Transformáciaoscam_clients_port reprodukujeruntime AST.
+
+Najbližšie: nainštalovaťr33, reštartGUI, OSCam informácie→Stav klientov. Overiť Gigablue/dvbapi a aktuálnykanál, rozumnéčítače, pohybvýberu ak je viacúčtov, obnovu a odchod bezpádu. Počas prvej skúšky netreba meniť účet modrým. Ak sú údaje stále prázdne, získať odpoveďAPIstatus/userstats s odfiltrovanými citlivýmiúdajmi; nezačať hádať modelnázov.
+
+Správca zariadení, Textovýeditor a Reset hesla zostávajú, lebo boli predmetom otázok/odporúčania, nie výslovného súhlasu s odstránením. Tri sekcie odsúhlasené v r32 sú odstránené aj v tejto verzii.

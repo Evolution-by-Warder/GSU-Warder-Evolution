@@ -4,6 +4,7 @@
 # Embedded file name: /usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/plugin.py
 # Compiled at: 2021-03-28 16:56:23
 from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox
+from Plugins.Extensions.GlassSysUtil import oscam_clients_ui as _oscam_clients_ui
 from Plugins.Extensions.GlassSysUtil import swap_ui as _swap_ui
 from Plugins.Extensions.GlassSysUtil.osd_layout import rolling_skin as _wide_osd_skin, place as _place_osd, right_limit as _osd_right_limit
 from Plugins.Extensions.GlassSysUtil.native_status import request as _native_status_request
@@ -7276,8 +7277,9 @@ class oscam_Users(Screen):
         self['status_labels_1'] = Label('OK:\nNOK:\nIGN:\nTOUT:\nCW Cycle:')
         self['status_values_1'] = Label('..........\n..........\n..........\n..........\n..........')
         self['status_labels_2'] = Label('CACHE:\nTUN:\nLTIME:\nEOK:\nENOK:')
-        self['status_values_2'] = Label('..........\n..........\n..........')
+        self['status_values_2'] = Label('..........\n..........\n..........\n..........\n..........')
         self['blue_button'] = Label('')
+        _oscam_clients_ui.initialize(self)
         self['actions'] = ActionMap(['ColorActions', 'SetupActions', 'DirectionActions'], {'green': (self.exit), 
            'ok': (self.exit), 
            'red': (self.exit), 
@@ -7299,151 +7301,16 @@ class oscam_Users(Screen):
         return
 
     def oscamUsers(self):
-
-        def cleanMe(w):
-            w = w.replace('<b>', '').replace('</b>', '').replace('<B>', '').replace('</B>', '')
-            w = w.replace('<SPAN TITLE="">', '').replace('</SPAN>', '').replace(' title="No sleep defined">', '').replace('<SPAN>', '')
-            return w.replace('<BR>', '')
-
-        self.refreshTimer.stop()
-        self.newV = False
-        self.list = []
-        data = getUrlData(self.url + 'userconfig.html', self.login, self.passwd)
-        if not isinstance(data, list):
-            self.exit()
-            return
-        result = {}
-        cnt = 0
-        typeEnt = enaRead = ena_new = False
-        for x in data:
-            if enaRead:
-                if ('\t\t\t<TD class="usercol' in x or '\t\t\t<TD CLASS="usercol' in x) and not x.__contains__('<A HREF='):
-                    newData = x.replace('\t\t\t<TD class="', '').replace('</TD>', '').replace('\t\t\t<TD CLASS="', '')
-                    newData = newData.replace('<b>', '').replace('</b>', '').replace('<B>', '').replace('</B>', '')
-                    newData = newData.replace('<SPAN TITLE="">', '').replace('</SPAN>', '').replace(' title="No sleep defined">', '').replace('<SPAN>', '')
-                    for i in range(1, 23):
-                        newData = newData.replace('usercol%s">' % i, '').replace('usercol%s" TITLE="">' % i, '').replace('usercol%s" title="">' % i, '').replace('usercol%s"' % i, '')
-
-                    x.__contains__('="groups') or result[cnt].append(newData)
-            elif ena_new and '\t<TD CLASS="usercol' in x:
-                if '</TD>' in x and '">' in x and '<A class="' not in x and 'CLASS="groups"' not in x and '<A HREF="user_edit.' not in x:
-                    cut = False
-                    if ('\t<TD CLASS="usercol2' in x or '\t<TD CLASS="usercol3' in x) and '<BR>' in x:
-                        cut = True
-                    tpm = x.strip().split('</TD>')[0].strip().split('">')[1]
-                    if cut:
-                        cut = tpm.strip().split('<BR>')
-                        tpm = cut[1]
-                        result[cnt].append(cleanMe(cut[0]))
-                    result[cnt].append(cleanMe(tpm))
-            elif ena_new and '<TD CLASS="usercol23"><A HREF="' in x:
-                ena_new = False
-            elif x != '':
-                enaRead = False
-            if x.startswith('\t\t\t<TD class="usercol1"><SPAN TITLE="">') or x.startswith('\t\t\t<TD CLASS="usercol1"><SPAN TITLE="">'):
-                typeEnt = True
-                enaRead = True
-                cnt += 1
-                newData = x.replace('\t\t\t<TD class="usercol1"><SPAN TITLE="">', '').replace('\t\t\t<TD CLASS="usercol1"><SPAN TITLE="">', '')
-                newData = newData.replace('</SPAN></TD>', '')
-                for i in range(1, 30):
-                    newData = newData.replace('</SPAN><SPAN CLASS="span_notifier">%s' % i, '')
-
-                result[cnt] = []
-                result[cnt].append(newData)
-            elif '\t\t\t<TD CLASS="usercol1" data-sort' in x and '</A>' in x and '">' in x and '<A HREF="' in x:
-                self.newV = True
-                typeEnt = True
-                ena_new = True
-                cnt += 1
-                result[cnt] = []
-                result[cnt].append(x.strip().split('</A>')[0].strip().split('<A HREF="')[1].strip().split('">')[1])
-
-        if typeEnt:
-            if self.newV:
-                for i in list(result.keys()):
-                    try:
-                        tmp = result[i][4]
-                        result[i][4] = result[i][6]
-                        result[i][6] = tmp
-                        tmp = result[i][7]
-                        for x in range(7, 11):
-                            result[i][x] = result[i][x + 1]
-
-                        result[i][11] = result[i][17]
-                        result[i][14] = tmp
-                    except:
-                        pass
-
-            for i in list(result.keys()):
-                tmp = ''
-                try:
-                    for x in range(0, 22):
-                        if result[i][x] == '':
-                            result[i][x] = '..........'
-                        tmp += result[i][x] + '*'
-
-                except:
-                    pass
-
-                tmp1 = tmp.strip().split('*')
-                if len(tmp1) == 21 or len(tmp1) == 22:
-                    item = [
-                     tmp]
-                    item.append(MultiContentEntryText(pos=(fhd(25), 0), size=(fhd(535), fhd(22)), font=0, text=tmp1[0]))
-                    stateItem = BP_ICO % 'red'
-                    if 'disabled' in tmp1[1]:
-                        stateItem = BP_ICO % 'blue'
-                    elif tmp1[1] != 'offline':
-                        stateItem = BP_ICO % 'green'
-                    pix = LoadPixmap(stateItem)
-                    item.append(MultiContentEntryPixmapAlphaTest(pos=(0, fhd(3)), size=(fhd(15), fhd(16)), png=pix))
-                    self.list.append(item)
-
-        else:
-            item = [
-             '*']
-            item.append(MultiContentEntryText(pos=(fhd(25), 0), size=(fhd(535), fhd(22)), font=0, text='***** ' + _('No User is defined') + ' *****'))
-            self.list.append(item)
-        self['list'].l.setList(self.list)
-        self.reactivate()
-        self.refreshTimer.start(8000, True)
-        return
+        _oscam_clients_ui.request(self, globals())
 
     def exit(self):
-        if self.refreshTimer.isActive():
-            self.refreshTimer.stop()
-        self.refreshTimer = None
-        self.close()
-        return
+        _oscam_clients_ui.close(self)
 
     def reactivate(self):
-        selection = self['list'].getCurrent()
-        if selection:
-            lineRq = selection[0]
-            if lineRq != '*':
-                tmp = lineRq.strip().split('*')
-                self['status_values_0'].setText(tmp[2] + '\n' + tmp[3] + '\n' + tmp[4] + '\n' + tmp[5] + '\n' + tmp[6])
-                self['status_values_1'].setText(tmp[7] + '\n' + tmp[8] + '\n' + tmp[9] + '\n' + tmp[10] + '\n' + tmp[11])
-                self['status_values_2'].setText(tmp[12] + '\n' + tmp[13] + '\n' + tmp[14] + '\n' + tmp[15] + '\n' + tmp[16])
-                if 'disabled' in tmp[1]:
-                    self['blue_button'].setText(_('Enable'))
-                else:
-                    self['blue_button'].setText(_('Disable'))
-        return
+        _oscam_clients_ui.details(self, globals())
 
     def chngState(self):
-        selection = self['list'].getCurrent()
-        if selection:
-            lineRq = selection[0]
-            if lineRq != '*':
-                tmp = lineRq.strip().split('*')
-                what = 'disable'
-                if 'disabled' in tmp[1]:
-                    what = 'enable'
-                data = getUrlData(self.url + 'userconfig.html?user=' + tmp[0] + '&action=' + what, self.login, self.passwd)
-                self.session.open(MessageBox, _('User action finished'), MessageBox.TYPE_INFO, 6)
-        return
+        _oscam_clients_ui.change_state(self, globals())
 
 
 class ECMInfo(Screen):

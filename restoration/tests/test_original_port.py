@@ -302,7 +302,7 @@ class OriginalPortTests(unittest.TestCase):
         removed.update(item['name'] for item in manifest['objects'] if item['name'].split('.')[0] in retired)
         self.assertTrue(removed.isdisjoint(actual))
         for item in manifest['objects']:
-            if '<' not in item['name'] and item['name'] != 'generatePS.chck' and item['name'] not in removed:
+            if '<' not in item['name'] and item['name'] not in ('generatePS.chck','oscam_Users.oscamUsers.cleanMe') and item['name'] not in removed:
                 self.assertTrue(item['name'] in actual,item['name'])
                 self.assertEqual(actual[item['name']],item['args'],item['name'])
         self.assertEqual(sum(isinstance(n,ast.ClassDef) for n in ast.walk(tree)),55)

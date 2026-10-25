@@ -16,6 +16,7 @@ from osd_layout_port import port_osd_layout
 from swap_port import port_swap
 from remove_channel_settings_port import remove_channel_settings
 from remove_autoinstall_cron_port import remove_autoinstall_cron
+from oscam_clients_port import port_oscam_clients
 
 
 def port(source):
@@ -405,6 +406,7 @@ def _gsu_helper(name):
     source=port_swap(source)
     source=remove_channel_settings(source)
     source=remove_autoinstall_cron(source)
+    source=port_oscam_clients(source)
     # Preserve original signatures; retired shortcut entry points are intentional no-ops.
     compile(source, 'plugin.py', 'exec')
     return source
