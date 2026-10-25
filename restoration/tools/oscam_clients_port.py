@@ -15,6 +15,8 @@ def port_oscam_clients(source):
         if method.name == '__init__':
             body = ast.get_source_segment(source, method)
             body = body.replace("        self['blue_button'] = Label('')", "        self['blue_button'] = Label('')\n        _oscam_clients_ui.initialize(self)")
+            body = body.replace('        self.onLayoutFinish.append(self.oscamUsers)',
+                '        self.onLayoutFinish.append(self.prepareClients)\n        self.onLayoutFinish.append(self.oscamUsers)')
             # All five rows have placeholders before the first response too.
             body = body.replace("self['status_values_2'] = Label('..........\\n..........\\n..........')", "self['status_values_2'] = Label('..........\\n..........\\n..........\\n..........\\n..........')")
         elif method.name in ('oscamUsers', 'reactivate', 'chngState', 'exit'):
@@ -24,6 +26,8 @@ def port_oscam_clients(source):
         else:
             continue
         changes.append((method.lineno - 1, method.end_lineno, '    ' + body + '\n'))
+    changes.append((cls.end_lineno, cls.end_lineno,
+        '\n    def prepareClients(self):\n        _oscam_clients_ui.prepare(self)\n'))
     for start, end, body in sorted(changes, reverse=True):
         lines[start:end] = [body]
     result = ''.join(lines)

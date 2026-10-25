@@ -7292,6 +7292,7 @@ class oscam_Users(Screen):
         except:
             self.refreshTimer.timeout.get().append(self.oscamUsers)
 
+        self.onLayoutFinish.append(self.prepareClients)
         self.onLayoutFinish.append(self.oscamUsers)
         self.onLayoutFinish.append(self.setTitlenew)
         return
@@ -7311,6 +7312,9 @@ class oscam_Users(Screen):
 
     def chngState(self):
         _oscam_clients_ui.change_state(self, globals())
+
+    def prepareClients(self):
+        _oscam_clients_ui.prepare(self)
 
 
 class ECMInfo(Screen):

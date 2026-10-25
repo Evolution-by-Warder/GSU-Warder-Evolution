@@ -353,3 +353,13 @@ Prešlo197 host testov naPython3.14.7 vrátane reálneho lokálnehoHTTPservera s
 Najbližšie: nainštalovaťr33, reštartGUI, OSCam informácie→Stav klientov. Overiť Gigablue/dvbapi a aktuálnykanál, rozumnéčítače, pohybvýberu ak je viacúčtov, obnovu a odchod bezpádu. Počas prvej skúšky netreba meniť účet modrým. Ak sú údaje stále prázdne, získať odpoveďAPIstatus/userstats s odfiltrovanými citlivýmiúdajmi; nezačať hádať modelnázov.
 
 Správca zariadení, Textovýeditor a Reset hesla zostávajú, lebo boli predmetom otázok/odporúčania, nie výslovného súhlasu s odstránením. Tri sekcie odsúhlasené v r32 sú odstránené aj v tejto verzii.
+
+## 2026-10-25 — r33 prijímač potvrdený; r34 zarovnanie detailov klienta
+
+Snímka120152 potvrdzuje opravené načítanie: Gigablue, zelený indikátor, dvbapi(client:Enigma2,protocolversion:3), stavOK. Viditeľné camd.socket, JOJ PLUS HD[M7Group], časové polia, OK539/NOK0/IGN0/TOUT0, CACHE0/TUN0/LTIME470ms/EOK12990/ENOK0. Nie je dokázané, či konkrétny prijímač využil XML alebo fallback; neprezentovať syntetické šablóny ako zachytené odpovede. Modré ovládanie účtu sa neskúšalo a pri tejto skúške ho netreba aktivovať.
+
+Na zábere sa dlhý protokol a kanál zalamujú v ľavom hodnotovom Labeli, preto sa ďalšie údaje zobrazujú pri nesprávnych názvoch a zasahujú do tlačidiel. r34 cez boundprepareClients v onLayoutFinish vypína setWrap(0) na všetkých6 labeloch názvov/hodnôt. Každé explicitné odriadkovanie označuje ďalšie pole; dlhý obsah sa oreže v rámci svojho riadka a neposúva polia nižšie. V úzkom poliProtocol je iba názovdvbapi; celý pôvodný popis zostáva v hornom zozname. Údaje zOSCamu sa nemenia ani nehardcodujú.
+
+Prešlo199 host testov: navyše presný dlhý protokol z prijímača, zachovaných5 polí v poradí adresa/protokol/kanál/čas na kanáli/idle a všetkých6 setWrap volaní cez boundlayoutcallback. Zdrojová transformácia reprodukuje runtime zo vstupu r32(c5c0812). Zachovaná pôvodná geometria a ostatné obrazovky.
+
+Najbližšie: inštalovaťr34 a reštartGUI, otvoriť OSCam informácie→Stav klientov a porovnať spodné riadky. Protokol musí byť jedným riadkom, kanál priChannel, čas priCh_Time a nečinnosť priIdle, bez presahu do tlačidiel. Potom overiť odchod z okna a opätovné otvorenie/obnovu.

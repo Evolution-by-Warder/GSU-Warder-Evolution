@@ -24,6 +24,15 @@ def initialize(screen):
     screen.onClose.append(lambda: stop(screen))
 
 
+def prepare(screen):
+    # Newlines separate fields. Wrapping any field shifts all subsequent values.
+    for index in range(3):
+        for kind in ('labels', 'values'):
+            widget = screen['status_' + kind + '_' + str(index)]
+            if widget.instance is not None:
+                widget.instance.setWrap(0)
+
+
 def stop(screen):
     screen.clientsClosed = True
     if screen.refreshTimer is not None:
@@ -118,6 +127,9 @@ def details(screen, api):
         clear_details(screen)
         return
     values = [record.get(key) or EMPTY for key in ('address', 'protocol', 'channel', 'channel_time', 'idle')]
+    # Keep the full negotiated-client description in the wide top list row.
+    # The narrow detail column needs the actual protocol name only.
+    values[1] = values[1].split(' (', 1)[0]
     stats = record.get('stats', {})
     counters = [stats.get(key) or EMPTY for key in COUNTERS]
     if counters[7] != EMPTY and not counters[7].lower().endswith('ms'):

@@ -233,6 +233,31 @@ class ClientScreenTests(unittest.TestCase):
         self.assertIn('492 ms', self.screen['status_values_2'].text)
         self.assertNotIn('ms ms', self.screen['status_values_2'].text)
 
+    def test_layout_preparation_is_bound_and_disables_wrapping_for_all_detail_columns(self):
+        import inspect
+        for index in range(3):
+            for kind in ('labels', 'values'):
+                self.screen['status_' + kind + '_' + str(index)].instance = MagicMock()
+        self.assertIs(self.screen.onLayoutFinish[0].__self__, self.screen)
+        self.assertEqual(self.screen.onLayoutFinish[0].__name__, 'prepareClients')
+        for callback in self.screen.onLayoutFinish:
+            self.assertTrue(inspect.ismethod(callback))
+        self.screen.prepareClients()
+        for index in range(3):
+            for kind in ('labels', 'values'):
+                self.screen['status_' + kind + '_' + str(index)].instance.setWrap.assert_called_once_with(0)
+
+    def test_receiver_long_protocol_keeps_five_detail_lines_and_full_description_in_list(self):
+        self.records[0]['protocol'] = 'dvbapi (client: Enigma2, protocol version: 3)'
+        self.ui.render(self.screen, vars(self.plugin), self.records)
+        values = self.screen['status_values_0'].text.split('\n')
+        self.assertEqual(len(values), 5)
+        self.assertEqual(values[1], 'dvbapi')
+        self.assertEqual(values[2], 'JOJ PLUS HD [M7 Group]')
+        self.assertEqual(values[3:], ['0:01:02', '0:00:01'])
+        self.assertEqual(self.screen.clientRecords['client:0x10']['protocol'],
+                         'dvbapi (client: Enigma2, protocol version: 3)')
+
     def test_actual_authenticated_http_fetch_reads_both_api_endpoints(self):
         import base64
         from http.server import BaseHTTPRequestHandler, HTTPServer
