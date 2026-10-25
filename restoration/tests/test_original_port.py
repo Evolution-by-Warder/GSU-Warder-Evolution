@@ -195,21 +195,24 @@ class OriginalPortTests(unittest.TestCase):
     def test_cam_manager_lists_native_softcam_and_routes_buttons(self):
         from unittest.mock import MagicMock
         module=self.plugin
-        adapter=MagicMock();adapter.selected.return_value='oscam-uni';adapter.running.return_value=True
+        adapter=MagicMock();adapter.selected.return_value='oscam-uni';adapter.running.return_value=True;adapter.available.return_value=['oscam-master','oscam-uni'];adapter.active_name.return_value='oscam-uni'
         with patch.object(module,'NativeSoftcam',return_value=adapter),patch.object(module,'listDir',return_value=[]):
             screen=module.univCamMng(types.SimpleNamespace())
             screen.CamSrvList()
-        self.assertEqual(screen.numCam,1)
+        self.assertEqual(screen.numCam,2)
         self.assertEqual(screen.numSrv,0)
         self.assertEqual(screen.getCamName(),'oscam-uni')
         self.assertEqual(screen.Cam_list['oscam-uni'],'@native-softcam')
+        self.assertEqual(screen.Cam_list['oscam-master'],'@native-softcam')
+        self.assertEqual(screen['config'].list[0][1].value,'oscam-uni')
+        self.assertEqual(screen['activCam'].text,'Active CAM: oscam-uni')
         screen.CamSrvMsg=MagicMock()
         self.assertTrue(screen.checkStatCam())
         screen.CamSrvMsg.assert_called_with('CAM/SRV Running')
         with patch.object(module,'_native_softcam_action',return_value=True) as action:
             screen.start();screen.stop()
             self.assertEqual([call.args[1] for call in action.call_args_list],['start','stop'])
-        adapter.running.return_value=False
+        adapter.running.return_value=False;adapter.active_name.return_value=None
         with patch('builtins.open',side_effect=FileNotFoundError):
             self.assertEqual(screen.getCamName(),'None')
         self.assertTrue(screen.checkStatCam())

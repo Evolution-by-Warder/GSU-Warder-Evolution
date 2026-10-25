@@ -4,8 +4,9 @@
 # Embedded file name: /usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/plugin.py
 # Compiled at: 2021-03-28 16:56:23
 from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox
+from Plugins.Extensions.GlassSysUtil.cam_package_actions import controls as _cam_package_controls, update as _cam_package_update, remove as _cam_package_remove, is_cam_package as _is_cam_package
 from Plugins.Extensions.GlassSysUtil.cam_feed_ui import initialize as _cam_feed_initialize, load as _cam_feed_load, select as _cam_feed_select
-from Plugins.Extensions.GlassSysUtil.native_softcam import NativeSoftcam, handle_action as _native_softcam_action
+from Plugins.Extensions.GlassSysUtil.native_softcam import NativeSoftcam, handle_action as _native_softcam_action, refresh_state as _native_softcam_refresh
 from Plugins.Extensions.GlassSysUtil.cccam_transport import open_text as _cccam_open
 from Plugins.Extensions.GlassSysUtil.oscam_readers_parser import parse_readers as _oscam_readers
 from Components.Console import Console as CompConsole
@@ -4483,6 +4484,9 @@ class univCamMng(Screen):
 
     def chckOscam(self):
         self.chckOscamTimer.stop()
+        if _cam_package_controls(self):
+            self.chckOscamTimer.start(500)
+            return
         tmp = str(self['config'].getCurrent()[1].getText()).lower()
         if self['config'].getCurrentIndex() == 1 and 'oscam' in tmp and (not ('emu' in tmp or 'dos' in tmp) or ' emu' in tmp):
             self['txt3'].color1()
@@ -4496,6 +4500,8 @@ class univCamMng(Screen):
         return
 
     def setLatestOscam(self):
+        if _cam_package_update(self, globals()):
+            return
         if self.enCommand == False:
             self.statcommPics('comm', 'red')
             self['statCamSrvcmd'].setText(_('Try later ... working'))
@@ -4844,8 +4850,8 @@ class univCamMng(Screen):
         return
 
     def checkStatCam(self):
-        if self.nativeSoftcam.selected():
-            self.CamSrvMsg(_('CAM/SRV Running') if self.nativeSoftcam.running() else _('No Running CAM/SRV'))
+        if self.nativeSoftcam.available():
+            self.CamSrvMsg(_('CAM/SRV Running') if self.nativeSoftcam.active_name() else _('No Running CAM/SRV'))
             return True
         stat = False
         if generatePS():
@@ -5307,11 +5313,12 @@ class univCamMng(Screen):
                         Srv.append(SrvName)
                         self.Srv_list[SrvName] = x[:-7]
 
-        native = self.nativeSoftcam.selected()
-        if native:
-            Cam.append(native)
+        self.nativeSoftcam.package_cache.clear()
+        for native in self.nativeSoftcam.available():
+            if native not in Cam:
+                Cam.append(native)
             self.Cam_list[native] = '@native-softcam'
-        selCam = ConfigSelection(default=self.getCamName(), choices=Cam)
+        selCam = ConfigSelection(default=self.nativeSoftcam.selected() or self.getCamName(), choices=Cam)
         selSrv = ConfigSelection(default=self.getSrvName(), choices=Srv)
         self.numCam = len(Cam) - 1
         self.numSrv = len(Srv) - 1
@@ -5320,6 +5327,8 @@ class univCamMng(Screen):
         self.list.append(getConfigListEntry(_('SRVs') + ' (%s): ' % str(self.numSrv), selSrv))
         self['config'].list = self.list
         self['config'].l.setList(self.list)
+        if self.nativeSoftcam.available():
+            _native_softcam_refresh(self, _)
         self.CamSrvMsgErr += '                    '
         return
 
@@ -5423,8 +5432,9 @@ class univCamMng(Screen):
         return
 
     def getCamName(self):
-        if self.nativeSoftcam.running():
-            return self.nativeSoftcam.selected()
+        active = self.nativeSoftcam.active_name()
+        if active:
+            return active
         try:
             f = open('/tmp/ucm_cam.info', 'r')
             content = f.read()
@@ -6062,6 +6072,8 @@ class ipk_uninstall_center(Screen):
         return
 
     def uninstallIpk(self, answer):
+        if answer and _cam_package_remove(self, globals()):
+            return
         if answer:
             if self.what != '':
                 msg = ''
@@ -6116,7 +6128,7 @@ class ipk_uninstall_center(Screen):
         contentInfo = chckPckgList()
         for line in contentInfo:
             if self.what != '':
-                if line.startswith('glasssysutil-'):
+                if line.startswith('glasssysutil-') or _is_cam_package(line.split(' - ', 1)[0]):
                     item = [
                      line]
                     item.append(MultiContentEntryText(pos=(fhd(25), 0), size=(fhd(860), fhd(25)), font=0, text=line))

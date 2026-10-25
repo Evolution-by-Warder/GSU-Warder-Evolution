@@ -54,12 +54,71 @@ class NativeSoftcamTests(unittest.TestCase):
         self.link.symlink_to(none);self.assertIsNone(self.cam.selected())
         self.link.unlink();self.link.symlink_to(self.script);self.exe.unlink();self.assertIsNone(self.cam.selected())
 
-    def test_command_is_bounded_to_selected_script_and_supported_actions(self):
+    def test_command_is_bounded_to_installed_scripts_and_supported_actions(self):
         self.assertTrue(self.cam.command('oscam-uni','restart').endswith('softcam.oscam-uni restart'))
         for name,action in [('oscam-uni','reload'),('other','start'),('oscam-uni','stop; reboot')]:
             with self.assertRaises(ValueError):self.cam.command(name,action)
         self.link.unlink()
-        with self.assertRaises(ValueError):self.cam.command('oscam-uni','start')
+        self.assertIn('--switch oscam-uni',self.cam.command('oscam-uni','start'))
+
+    def add_master(self):
+        script=self.init/'softcam.oscam-master';script.write_text('#!/bin/sh\nexit 0\n');script.chmod(0o755)
+        binary=self.binary/'oscam-master';binary.write_text('master');binary.chmod(0o755)
+
+    def test_all_installed_cams_remain_available_when_selected_cam_is_stopped(self):
+        self.add_master()
+        self.assertEqual(self.cam.available(),['oscam-master','oscam-uni'])
+        self.assertEqual(self.cam.selected(),'oscam-uni')
+        self.assertIsNone(self.cam.active_name())
+        self.assertIn('--switch oscam-master',self.cam.command('oscam-master','start'))
+
+    def test_registered_package_ownership_is_distinct_from_manual_binary(self):
+        self.add_master();info=self.root/'info';info.mkdir()
+        package='enigma2-plugin-softcams-oscam-master'
+        (info/(package+'.list')).write_text(str(self.binary/'oscam-master')+'\n')
+        self.cam.info_dirs=[info]
+        self.assertEqual(self.cam.package_for('oscam-master'),package)
+        self.assertIsNone(self.cam.package_for('oscam-uni'))
+
+    def test_switch_stops_old_cam_before_selecting_and_starting_new_one(self):
+        self.add_master();state={'oscam-uni':True,'oscam-master':False};calls=[]
+        def run(name,action):
+            calls.append((name,action,self.cam.selected()))
+            if action=='start':self.assertFalse(any(state.values()))
+            state[name]=action=='start';return 0
+        with patch.object(self.cam,'running',side_effect=lambda name=None:state[name or self.cam.selected()]),patch.object(self.cam,'_run_script',side_effect=run):
+            self.assertEqual(self.cam.switch_to('oscam-master','oscam-uni'),0)
+        self.assertEqual(calls,[('oscam-uni','stop','oscam-uni'),('oscam-master','start','oscam-master')])
+        self.assertEqual(self.cam.selected(),'oscam-master')
+        self.assertEqual(state,{'oscam-uni':False,'oscam-master':True})
+
+    def test_failed_start_restores_previous_selection_and_running_cam(self):
+        self.add_master();state={'oscam-uni':True,'oscam-master':False};calls=[]
+        def run(name,action):
+            calls.append((name,action))
+            if name=='oscam-master' and action=='start':return 1
+            state[name]=action=='start';return 0
+        with patch.object(self.cam,'running',side_effect=lambda name=None:state[name or self.cam.selected()]),patch.object(self.cam,'_run_script',side_effect=run):
+            with self.assertRaises(OSError):self.cam.switch_to('oscam-master','oscam-uni')
+        self.assertEqual(self.cam.selected(),'oscam-uni')
+        self.assertTrue(state['oscam-uni']);self.assertFalse(state['oscam-master'])
+        self.assertEqual(calls[-1],('oscam-uni','start'))
+
+    def test_failed_stop_never_starts_second_cam_or_changes_selection(self):
+        self.add_master()
+        with patch.object(self.cam,'running',side_effect=lambda name=None:(name or self.cam.selected())=='oscam-uni'),patch.object(self.cam,'_run_script',return_value=1) as run:
+            with self.assertRaises(OSError):self.cam.switch_to('oscam-master','oscam-uni')
+        run.assert_called_once_with('oscam-uni','stop')
+        self.assertEqual(self.cam.selected(),'oscam-uni')
+
+    def test_stale_selection_and_regular_selection_file_are_not_overwritten(self):
+        self.add_master()
+        with patch.object(self.cam,'_run_script') as run:
+            with self.assertRaises(OSError):self.cam.switch_to('oscam-master','wrong')
+        run.assert_not_called()
+        self.link.unlink();self.link.write_text('custom startup')
+        with self.assertRaises(OSError):self.cam.switch_to('oscam-master','')
+        self.assertEqual(self.link.read_text(),'custom startup')
 
     def screen(self,index=0,choice='oscam-uni'):
         class Screen(dict):pass

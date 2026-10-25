@@ -5,6 +5,7 @@ import pathlib
 import sys
 from native_softcam_port import port_native_softcam
 from cam_feed_port import port_cam_feed
+from cam_management_port import port_cam_management
 
 
 def port(source):
@@ -375,7 +376,7 @@ def _gsu_helper(name):
     # Legacy parser still applies when column-class markup is absent.
     body=body.replace("            self['list'].l.setList(self.list)\n            self.reactivate()\n        return", "        self['list'].l.setList(self.list)\n        self.reactivate()\n        return",1)
     source=source[:start]+body+source[end:]
-    source=port_cam_feed(port_native_softcam(source))
+    source=port_cam_management(port_cam_feed(port_native_softcam(source)))
     # Preserve class and method signatures; no placeholder function bodies.
     compile(source, 'plugin.py', 'exec')
     return source
