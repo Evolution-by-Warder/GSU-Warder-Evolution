@@ -1,30 +1,31 @@
-"""Two focused Warder utilities in the original GSU screen style."""
+"""Diagnostic bundle and plugin information in the original GSU screen style."""
+from pathlib import Path
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.ScrollLabel import ScrollLabel
 from Screens.Screen import Screen
 from twisted.internet.threads import deferToThread
-from .warder_tools import run_task,summary
+from .warder_tools import run_task
 
 _SK={
     'Tools':'Nástroje',
-    'System health check':'Kontrola stavu',
+    'About plugin':'O plugine',
+    'Version':'Verzia',
+    'Original project: Glass System Utility 13.20':'Pôvodný projekt: Glass System Utility 13.20',
+    'Development and maintenance: Warder Evolution':'Vývoj a úpravy: Warder Evolution',
+    'Thanks to the original Glass System Utility authors.':'Poďakovanie pôvodným autorom Glass System Utility.',
+    'Receiver information, CAM/ECM management and diagnostics.':'Informácie o prijímači, správa CAM/ECM a diagnostika.',
+    'Changes in this version':'Zmeny v tejto verzii',
+    'Release notes are unavailable.':'Informácie o zmenách nie sú dostupné.',
+    'Plugin version, authors and changes in the installed release.':'Verzia pluginu, autori a zmeny nainštalovaného vydania.',
     'Create diagnostic bundle':'Vytvoriť diagnostický balík',
-    'System overview and a diagnostic file for support.':'Prehľad stavu systému a diagnostický súbor pre riešenie problémov.',
-    'Overview of memory, storage, network, temperature, Enigma2 and CAM.':'Prehľad pamäte, diskov, siete, teplôt, Enigmy2 a CAM.',
+    'Diagnostic bundle and plugin information.':'Diagnostický balík a informácie o plugine.',
     'Create one archive with system information and GSU logs.':'Vytvorenie jedného archívu s údajmi o systéme a logmi GSU.',
-    'Collecting information…':'Načítavam údaje…',
     'Creating diagnostic bundle…':'Vytváram diagnostický balík…',
     'Diagnostic collection failed.':'Zber diagnostiky sa nepodaril.',
     'Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.':'Diagnostický balík bol vytvorený:\n%s\n\nVeľkosť: %s KiB\n\nSúbor nájdeš v prijímači na uvedenej ceste.',
     'Back':'Naspäť',
-    'Warning':'Pozor','Info':'Info','Available memory':'Dostupná pamäť','Storage':'Úložisko',
-    'free':'voľné','read-only':'iba na čítanie','Unavailable':'Nedostupné','Not exposed':'Údaj nie je dostupný',
-    'Network link':'Sieťové spojenie','No active link detected':'Aktívne spojenie nezistené',
-    'Default gateway':'Predvolená brána','DNS configuration':'Nastavenie DNS',
-    'Running':'Spustená','Not detected':'Nezistená','No known CAM process detected':'Bežiaci CAM nebol zistený',
-    'Temperature':'Teplota','Network mounts':'Sieťové pripojenia diskov','Tuner interfaces':'Rozhrania tunerov','Detected':'Zistené',
-    'This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.':'Kontrola iba číta údaje. Netestuje prístup na internet, integritu diskov ani dekódovanie CAM.',
+    'Unavailable':'Nedostupné',
 }
 
 
@@ -37,13 +38,32 @@ def text(api,value):
 def open_tools(session,api):session.open(ToolsScreen,api)
 
 
+def about_text(api,root=None):
+    root=Path(root) if root is not None else Path(__file__).parent
+    def read_local(name,limit):
+        try:
+            with (root/name).open(encoding='utf-8',errors='replace') as stream:return stream.read(limit).strip()
+        except OSError:return ''
+    version=read_local('version',128) or text(api,'Unavailable')
+    notes=read_local('release-notes.txt',16384).splitlines()
+    changes='\n'.join(notes[1:]).strip() if notes and notes[0]=='GSU '+version else ''
+    return '\n'.join(['Glass System Utility — Warder Evolution',
+        text(api,'Version')+': '+version,'',
+        text(api,'Receiver information, CAM/ECM management and diagnostics.'),'',
+        text(api,'Original project: Glass System Utility 13.20'),
+        text(api,'Development and maintenance: Warder Evolution'),
+        text(api,'Thanks to the original Glass System Utility authors.'),'',
+        text(api,'Changes in this version'),changes or text(api,'Release notes are unavailable.'),'',
+        'https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution'])
+
+
 class ToolsScreen(Screen):
     def __init__(self,session,api):
         self.skin=api['ipkScript_center']
         Screen.__init__(self,session)
         self.api=api
-        self.entries=[('health','System health check','Overview of memory, storage, network, temperature, Enigma2 and CAM.'),
-                      ('bundle','Create diagnostic bundle','Create one archive with system information and GSU logs.')]
+        self.entries=[('bundle','Create diagnostic bundle','Create one archive with system information and GSU logs.'),
+                      ('about','About plugin','Plugin version, authors and changes in the installed release.')]
         self['list']=api['ListboxSys2']([])
         self['list'].onSelectionChanged.append(self.describe)
         self['descriptions']=Label('')
@@ -67,16 +87,19 @@ class ToolsScreen(Screen):
 
     def select(self):
         row=self['list'].getCurrent()
-        if row and row[0] in ('health','bundle'):self.session.open(DiagnosticScreen,row[0],self.api)
+        if not row:return
+        if row[0]=='bundle':self.session.open(DiagnosticScreen,'bundle',self.api)
+        elif row[0]=='about':self.session.open(AboutScreen,self.api)
 
 
 class DiagnosticScreen(Screen):
     def __init__(self,session,kind,api):
+        if kind!='bundle':raise ValueError('Only diagnostic bundle creation is available here')
         self.skin=api['oscam_Files_scr2']
         Screen.__init__(self,session)
         self.kind,self.api=kind,api
         self.started,self.closed=False,False
-        self['file_info']=ScrollLabel(text(api,'Collecting information…' if kind=='health' else 'Creating diagnostic bundle…'))
+        self['file_info']=ScrollLabel(text(api,'Creating diagnostic bundle…'))
         self['red']=Label(text(api,'Back'))
         self['actions']=ActionMap(['ColorActions','SetupActions','DirectionActions'],{'red':self.close,'cancel':self.close,'up':self['file_info'].pageUp,'down':self['file_info'].pageDown,'left':self['file_info'].pageUp,'right':self['file_info'].pageDown},-2)
         self.onLayoutFinish.append(self.start)
@@ -85,15 +108,14 @@ class DiagnosticScreen(Screen):
     def start(self):
         if self.started or self.closed:return
         self.started=True
-        self.setTitle(text(self.api,'System health check' if self.kind=='health' else 'Create diagnostic bundle'))
+        self.setTitle(text(self.api,'Create diagnostic bundle'))
         self.request=deferToThread(run_task,self.kind)
         self.request.addCallback(self.done)
         self.request.addErrback(self.failed)
 
     def done(self,result):
         if self.closed:return
-        if self.kind=='health':value=summary(result,lambda value:text(self.api,value))
-        else:value=text(self.api,'Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.') % (result['path'],max(1,(result['bytes']+1023)//1024))
+        value=text(self.api,'Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.') % (result['path'],max(1,(result['bytes']+1023)//1024))
         self['file_info'].setText(value)
 
     def failed(self,failure):
@@ -101,3 +123,18 @@ class DiagnosticScreen(Screen):
         return None
 
     def cleanup(self):self.closed=True
+
+
+class AboutScreen(Screen):
+    def __init__(self,session,api):
+        self.skin=api['oscam_Files_scr2']
+        Screen.__init__(self,session)
+        self.api=api
+        self['file_info']=ScrollLabel('')
+        self['red']=Label(text(api,'Back'))
+        self['actions']=ActionMap(['ColorActions','SetupActions','DirectionActions'],{'red':self.close,'cancel':self.close,'up':self['file_info'].pageUp,'down':self['file_info'].pageDown,'left':self['file_info'].pageUp,'right':self['file_info'].pageDown},-2)
+        self.onLayoutFinish.append(self.prepare)
+
+    def prepare(self):
+        self.setTitle(text(self.api,'About plugin'))
+        self['file_info'].setText(about_text(self.api))

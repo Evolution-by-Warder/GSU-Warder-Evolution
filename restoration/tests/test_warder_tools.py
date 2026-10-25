@@ -151,15 +151,40 @@ class WarderToolsUITests(unittest.TestCase):
         screen.status={'17':True};screen['list'].getCurrent=lambda:['17']
         screen.selectedmenuitem();session.open.assert_called_once_with(self.ui.ToolsScreen,vars(self.plugin))
         menu=self.ui.ToolsScreen(session,vars(self.plugin));menu.prepare()
-        self.assertEqual([row[0] for row in menu['list'].list],['health','bundle'])
-        self.assertIn('Prehľad',menu['descriptions'].text)
-        menu['list'].moveToIndex(1);menu.select()
+        self.assertEqual([row[0] for row in menu['list'].list],['bundle','about'])
+        self.assertIn('Vytvorenie',menu['descriptions'].text)
+        menu['list'].moveToIndex(0);menu.select()
         session.open.assert_called_with(self.ui.DiagnosticScreen,'bundle',vars(self.plugin))
+        menu['list'].moveToIndex(1);menu.select()
+        session.open.assert_called_with(self.ui.AboutScreen,vars(self.plugin))
+        with self.assertRaises(ValueError):self.ui.DiagnosticScreen(session,'health',vars(self.plugin))
+
+    def test_about_uses_installed_version_matching_local_notes_and_honest_attribution(self):
+        with tempfile.TemporaryDirectory() as folder:
+            (Path(folder)/'version').write_text('13.40-r40\n')
+            (Path(folder)/'release-notes.txt').write_text('GSU 13.40-r40\n\n- Nové O plugine.\n- Kontrola stavu odstránená.\n')
+            text=self.ui.about_text(vars(self.plugin),folder)
+        self.assertIn('Verzia: 13.40-r40',text)
+        self.assertIn('Pôvodný projekt: Glass System Utility 13.20',text)
+        self.assertIn('Vývoj a úpravy: Warder Evolution',text)
+        self.assertIn('Zmeny v tejto verzii',text)
+        self.assertIn('Nové O plugine.',text)
+        self.assertEqual(text.count('13.40-r40'),1)
+
+    def test_about_does_not_show_notes_for_a_different_version_or_fail_with_missing_files(self):
+        with tempfile.TemporaryDirectory() as folder:
+            (Path(folder)/'version').write_text('13.40-r40\n')
+            (Path(folder)/'release-notes.txt').write_text('GSU 13.40-r39\nOld changes must not appear')
+            text=self.ui.about_text(vars(self.plugin),folder)
+            self.assertNotIn('Old changes',text)
+            self.assertIn('Informácie o zmenách nie sú dostupné.',text)
+            (Path(folder)/'version').unlink()
+            self.assertIn('Verzia: Nedostupné',self.ui.about_text(vars(self.plugin),folder))
 
     def test_collection_is_deferred_once_and_late_callbacks_after_close_are_ignored(self):
-        screen=self.ui.DiagnosticScreen(MagicMock(),'health',vars(self.plugin));pending=MagicMock()
+        screen=self.ui.DiagnosticScreen(MagicMock(),'bundle',vars(self.plugin));pending=MagicMock()
         with patch.object(self.ui,'deferToThread',return_value=pending) as worker:
-            screen.start();screen.start();worker.assert_called_once_with(self.ui.run_task,'health')
+            screen.start();screen.start();worker.assert_called_once_with(self.ui.run_task,'bundle')
         screen.cleanup();previous=screen['file_info'].text
         pending.addCallback.call_args.args[0]({})
         pending.addErrback.call_args.args[0](object())
@@ -174,12 +199,13 @@ class WarderToolsUITests(unittest.TestCase):
         self.assertEqual(screen['file_info'].text,'Zber diagnostiky sa nepodaril.')
         session.open.assert_not_called()
 
-    def test_health_summary_is_slovak_and_navigation_scrolls(self):
-        with tempfile.TemporaryDirectory() as folder:report=tools.Probe(folder).collect()
+    def test_about_screen_has_slovak_title_and_scroll_navigation_without_background_work(self):
         scroll=self.ui.ScrollLabel('');scroll.pageDown=MagicMock();scroll.pageUp=MagicMock()
-        with patch.object(self.ui,'ScrollLabel',return_value=scroll):screen=self.ui.DiagnosticScreen(MagicMock(),'health',vars(self.plugin))
-        screen.done(report)
-        self.assertIn('Dostupná pamäť',screen['file_info'].text)
+        with patch.object(self.ui,'ScrollLabel',return_value=scroll),patch.object(self.ui,'about_text',return_value='Informácie o plugine'),patch.object(self.ui,'deferToThread') as worker:
+            screen=self.ui.AboutScreen(MagicMock(),vars(self.plugin));screen.prepare()
+            worker.assert_not_called()
+        self.assertEqual(screen.title,'O plugine')
+        self.assertEqual(screen['file_info'].text,'Informácie o plugine')
         self.assertEqual(screen['red'].text,'Naspäť')
         screen['actions'].actions['down']();scroll.pageDown.assert_called_once()
         screen['actions'].actions['up']();scroll.pageUp.assert_called_once()
@@ -190,8 +216,9 @@ class WarderToolsUITests(unittest.TestCase):
             skins=importlib.import_module('Plugins.Extensions.GlassSysUtil.GSU_skins'+suffix)
             api=dict(vars(self.plugin));api.update(ipkScript_center=skins.ipkScript_center,oscam_Files_scr2=skins.oscam_Files_scr2)
             menu=self.ui.ToolsScreen(MagicMock(),api)
-            diagnostic=self.ui.DiagnosticScreen(MagicMock(),'health',api)
-            for screen,required in ((menu,{'list','descriptions','red','green'}),(diagnostic,{'file_info','red'})):
+            diagnostic=self.ui.DiagnosticScreen(MagicMock(),'bundle',api)
+            about=self.ui.AboutScreen(MagicMock(),api)
+            for screen,required in ((menu,{'list','descriptions','red','green'}),(diagnostic,{'file_info','red'}),(about,{'file_info','red'})):
                 widgets={node.get('name') for node in ElementTree.fromstring(screen.skin).iter('widget')}
                 self.assertTrue(required.issubset(widgets))
                 self.assertTrue(all(getattr(callback,'__self__',None) is screen for callback in screen.onLayoutFinish))

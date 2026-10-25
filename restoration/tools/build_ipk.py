@@ -53,6 +53,9 @@ def build(destination):
         compile(path.read_text(),str(path),'exec')
         entries.append((PLUGIN+'/'+path.name,path.read_bytes(),0o644))
     entries.append((PLUGIN+'/version',(version+'\n').encode(),0o644))
+    notes=(BASE/'update/RELEASE-NOTES.md').read_text()
+    assert notes.splitlines()[0]=='GSU '+version,'Release notes do not match runtime version'
+    entries.append((PLUGIN+'/release-notes.txt',notes.encode('utf-8'),0o644))
     for path in sorted((BASE/'converters').glob('*.py')):
         compile(path.read_text(),str(path),'exec')
         entries.append(('usr/lib/enigma2/python/Components/Converter/'+path.name,path.read_bytes(),0o644))
