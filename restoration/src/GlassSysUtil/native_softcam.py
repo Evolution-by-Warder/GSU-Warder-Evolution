@@ -274,13 +274,17 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser()
     operation=parser.add_mutually_exclusive_group(required=True)
     operation.add_argument('--switch')
+    operation.add_argument('--autostart')
     operation.add_argument('--action',choices=('start','stop','restart'))
     parser.add_argument('--name')
     parser.add_argument('--expected')
     args=parser.parse_args()
     controller=NativeSoftcam()
     try:
-        if args.switch:
+        if args.autostart:
+            from native_autostart import start_if_needed
+            result=start_if_needed(controller,args.autostart)
+        elif args.switch:
             if args.expected is None:parser.error('--expected is required with --switch')
             result=controller.switch_to(args.switch,args.expected)
         else:

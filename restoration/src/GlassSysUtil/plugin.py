@@ -4,6 +4,7 @@
 # Embedded file name: /usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/plugin.py
 # Compiled at: 2021-03-28 16:56:23
 from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox
+from Plugins.Extensions.GlassSysUtil.native_autostart import begin as _native_autostart_begin
 from Plugins.Extensions.GlassSysUtil.cam_package_actions import controls as _cam_package_controls, update as _cam_package_update, remove as _cam_package_remove, is_cam_package as _is_cam_package, refresh_registry as _cam_package_registry, start_config as _cam_start_config
 from Plugins.Extensions.GlassSysUtil.cam_feed_ui import initialize as _cam_feed_initialize, load as _cam_feed_load, select as _cam_feed_select
 from Plugins.Extensions.GlassSysUtil.native_softcam import NativeSoftcam, handle_action as _native_softcam_action, refresh_state as _native_softcam_refresh
@@ -412,6 +413,10 @@ def startViaMenu(menuid, **kwargs):
 
 
 def sessionAutostart(reason, **kwargs):
+    if reason != 0:
+        delayed = getattr(autocams, 'nativeDelayedStart', None)
+        if delayed:
+            delayed.cancel()
     if reason == 0:
         autocams.autoStartCheck(kwargs['session'])
         OnScreenEcm.startShowOSD(kwargs['session'])
@@ -5546,6 +5551,8 @@ class AutoCams():
 
     def autoStartCheck(self, session):
         self.session = session
+        if _native_autostart_begin(self, globals()):
+            return
         if not fileExists(PYTHONPATH + 'Plugins/Extensions/GlassBluePanel/plugin.pyo'):
             self.firstautostart = False
             self.startCamSrvTimer_UCM = eTimer()

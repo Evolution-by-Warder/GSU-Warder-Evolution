@@ -208,3 +208,14 @@ Najbližšie na prijímači: r21 inštalácia + reštartGUI, Správca CAM/SRV �
 - r22 mení titulok na bound metódu set_title. Súčasne odstraňuje kolíziu self.values(): Screen.values musí vracať GUI komponenty pri execBegin/show/hide, nie slovník hodnôt nastavení. Zber nastavení teraz collect_values.
 - Dva nové regresné testy reprodukujú presné rozlišovanie boundmethod/exec aj iteráciu komponentov. 104 testov na Python3.14.7 úspešných; kompilácia a deterministický build tiež. Skutočné otvorenie editora na prijímači zatiaľ nepotvrdené.
 - Najbližšie iba r22 inštalácia + reštartGUI → Správca CAM/SRV → oscam-master → OScam štart konfigurácia žltým → snímka pred uložením. Zostávame výhradne v CAM/SRV.
+
+
+## 2026-10-25 — r22 prijímač a r23 oneskorený natívny štart
+
+- Snímka074434: natívny editor oscam-master sa správne otvoril, zobrazuje cesty /etc/tuxbox/config/oscam-master, /tmp/.oscam a /var/tmp/oscam-master.pid. Snímky074823(1–3): potvrdenie uloženia, následný reštart, aktívny oscam-master a obnovené ECM údaje. Ukladané pôvodné hodnoty; zmenená voľba v /proc cmdline ani Cancel zatiaľ nedoložené.
+- Pri kontrole par48 zistené, že pôvodný AutoCams časovač štartuje iba v else vetve pri úspešnom timeout.connect, fallback ho nespustí. Navyše pôvodný startCamSrv obsahuje nedosiahnuteľnú vetvu a používa len legacy UCM skripty. Natívny CAM túto hodnotu nepoužíval.
+- r23 pridáva samostatný jednorazový časovač pre vybraný natívny CAM po sessionstart. Používa par48, podporuje connect aj zoznamové signály; zrušenie pri ukončení GUI. Worker po čase znova overí pôvodný výber a aktuálne procesy. Bežiaci CAM (aj iný) nepreštartuje. Chýbajúci vybraný CAM spustí overenou natívnou službou. Priečinky ani boot služby image nemení. Preto nejde o vynútené oneskorenie služby, ktorú už pred Enigmou spustilo OpenATV.
+- /tmp/gsu-softcam-autostart.log má monotónne časové značky; scheduled, skipped alebo starting/started, worker finished. Log je obmedzený, neobsahuje heslá, nesleduje symlinky. Mount checker zostáva samostatný. Autokontrola a samostatný SRV sú stále ďalšie úlohy; legacy UCM vetva zostáva neoverená.
+- 112 testov na Python3.14.7: časovač bez GUI blokovania, spustenie až v callbacku, len raz, oba signálovéAPI, cancel, zmenený výber, už bežiaci/ iný CAM, chyba štartu, session hook a zachovanie mount checkeru. r23 na prijímači zatiaľ neoverené.
+
+Najbližšie: inštalácia r23, reštartGUI, počkať aspoň nastavený čas a `cat /tmp/gsu-softcam-autostart.log`. Pri už bežiacom OSCam očakávať skipped: already running a žiadny výpadok. Potom kontrolovaná skúška: zastaviť CAM v GSU, reštartovať iba GUI, sledovať záznam a či sa chýbajúci CAM spustí po nastavenom čase. Ak image spustí CAM skôr, záznam má ukázať skipped, nie predstierať potvrdenie oneskoreného štartu. Zostať v CAM/SRV.
