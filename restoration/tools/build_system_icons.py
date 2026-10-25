@@ -1,12 +1,9 @@
-"""Build retained transparent Warder arrows and status icons; no receiver-side graphics dependency."""
+"""Build retained transparent Warder status icons; no receiver-side graphics dependency."""
 from pathlib import Path
 import cairosvg
 
 BASE=Path(__file__).resolve().parents[1]
-SHAPES={
-'lr':'<path d="m24 15-17 17 17 17m16-34 17 17-17 17M8 32h48"/>',
-'updown':'<path d="M15 24 32 7l17 17M15 40l17 17 17-17M32 8v48"/>',
-}
+SHAPES={}
 
 
 def build():

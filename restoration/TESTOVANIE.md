@@ -1,16 +1,16 @@
-# Aktuálny checkpoint — 25. 10. 2026, r43 pripravené
+# Aktuálny checkpoint —25.10.2026, r49 pripravené
 
-Pracovať výhradne v `original-python314`, runtime `restoration/src/GlassSysUtil`; produkčná vetva zostáva nedotknutá. Prijímač má r42; používateľ potvrdil vstavanú aktualizáciu z r36, čítačkové potvrdenie/Nie aj skutočný zákaz a povolenie v oboch smeroch. Autokontrola configFalse/guardFalse pri vypnutí a guardTrue pri predvolenomTrue po zapnutí je potvrdená. Štart GUI bez vybraného CAM zostáva hostiteľsky testovaný. Prijímač diagnosticky uvádza Python3.14.9, host tests3.14.7. Staršie odseky nižšie sú história.
+Pracovať výhradne v original-python314, runtime restoration/src/GlassSysUtil. Produkčná warder-master-production sa nemení, bez force/rebase. GSU Warder Evolution je spoločný neprekladaný názov. Hlavná obrazovka má spoločný banner, živé hodiny,11 položiek, liveTV vpravo a popis pod ním,4 farebné akcie vrátane modrého O plugine. Nadpis Hlavná ponuka a spodný purpose riadok sú odstránené; panely využívajú miesto. LiveTV a návrat do normálu potvrdené používateľom.
 
-Používateľ výslovne vyradil celú sekciu IPK/DEB a používateľské skripty vrátane TAR. Rozpracované opravy a testovací balík boli zahodené pred publikáciou; neposielať ich ani nežiadať ich skúšku. r38 odstraňuje položku5 a štyri implementačné triedy, predvolené skripty zo zdroja/balíka aj ich kopírovanie pri inštalácii. Zdieľané ipk_uninstall_center zostáva iba pre CAM/SRV a vždy filtruje CAM; samostatná Aktualizácia GSU zostáva.
+Informácie o systéme: r45 zle prekrývalo pôvodné texty; r46 má pozadie/rám/panel vo vrstvách-3/-2/-1 a transparentné texty. Snímka1(20261025-164108).jpg potvrdzuje ľavé popisky aj pravé procesy/Dmesg a používateľ potvrdil všetky4 šípky. Funkčnú opravu neotvárať znova bez dôvodu.
 
-Prijímač r40: snímka 1(20261025-145743).jpg potvrdzuje otvorené O plugine, verziu13.40-r40, pôvodný projekt13.20, Warder Evolution, poďakovanie, zmeny r40 aj odkaz na repozitár. Text je čitateľný a neprekrýva červené Naspäť. Snímka sama nepotvrdzuje stlačenie tlačidla ani posúvanie; obsah sa na nej zmestí. Odstránenie Kontroly stavu zo zoznamu nie je na tejto snímke viditeľné. Diagnostický balík bol už na r39 vytvorený a jeho reálny archív overený; neopakovať skúšku bez dôvodu.
+Používateľ odmietol schematické hardvérové ikony r47, ale výslovne schválil ponechanie šípok. r48 mení11 hardvérových ikon na farebné plastické RAM/disky/USB/karty/CPU/teplomery/Linux, podobné pôvodným, so skutočne priehľadným okolím bez čiernych dlaždíc a odrazov. V r48 boli šípky a stavové bodky bajtovo nezmenené. Následne používateľ žiada zmeniť aj šípky, takže r49 má nové plastické strieborno-tyrkysové šípky; stavové bodky zostávajú nezmenené. Väčšie512px výrobné podklady a prompty sú v artwork/system-raster; do IPK idú iba pripravené120px PNG. Pôvodné odmietnuté hardvérové SVG sú odstránené, generátor ponecháva iba schválené šípky/bodky.
 
-Snímky 1(20261025-153234).jpg a 2(20261025-153233).jpg potvrdzujú hlavné menu r40 s11 položkami a Nástroje s dvoma položkami Diagnostický balík/O plugine; samostatná Kontrola stavu je odstránená. Používateľ tým uzavrel funkčný priechod a výslovne „začni“ autorizoval spoločný Warder vzhľad. CCcam/Mbox a samostatný legacy SRV bez príslušnej služby zostávajú bez hardvérového overenia.
+260 testov Python3.14.7 úspešných; dva zhodné buildy, CI40215452598 úspešné vrátane publikácie a overenia vzdialených bajtov. Zdroj2f3e0b6022f74ca42b46097d894e75b5307d37cb. Feed overený: r48,3633030B,SHA2564a0fa9047f56f643f8cba9ec8cff2d9f2274d9547132195f5a56c67986ee7383.
 
-r42: používateľ výslovne potvrdil „Live tv je ok aj navrat do normalu“. Snímky1(20261025-160150).jpg a2(20261025-160149).jpg ukazujú živéTV v pravom paneli r42 a následný bežný celoplošný obraz. Snímka1(20261025-155910).jpg potvrdzuje novú ikonu Glass/Utility v prehliadači pluginov. Tieto skúšky neopakovať bez dôvodu.
+Najbližšie: aktualizovať cez GSU na r49 a posúdiť nové ikonky priamo v Informáciách o systéme. Nový vzhľad zatiaľ nie je schválený na prijímači. Anglické popisky zostávajú ďalšia kozmetika, neboli týmto vydaním preložené. Opakované skúšky CAM, swapu, diagnostického archívu a už potvrdených šípok nežiadať. CCcam/Mbox a samostatný SRV bez príslušnej služby stále nie sú hardvérovo overené; celý plugin neoznačovať za úplne overený.
 
-Používateľ schválil presun O plugine z Nástrojov pod modré hlavného menu a premenovanie projektu v prehliadači na Glass System Utility Warder Evolution bez prekladu značky. r43 podľa ďalšej požiadavky odstraňuje aj spodný purpose riadok Informácie o prijímači/CAM/ECM/diagnostika. Oba panely sa predlžujú o45FHD pixelov nadol do uvoľneného miesta, pravý popis získava rovnakú výšku. Odstránený aj nadpis Hlavná ponuka; panely sú posunuté55FHD pixelov nahor pod banner, video/názov s nimi, popis má265px výšky. Má4 rovnaké centrované farebné sloty; Nástroje obsahujú iba diagnostický balík. Najbližšie: aktualizovať na r43, overiť názov v prehliadači, modré O plugine, zobrazenie verzie/zmeny r43 a návrat červeným, potom jedinú položku v Nástrojoch a odstránený spodný riadok. Diagnostický balík, CAM ani swap znovu netestovať.
+Staršie odseky nižšie sú história; aktuálne kroky vyššie majú prednosť.
 
 ## OSCam klienti — uzavretie skúšky r35
 
@@ -503,3 +503,7 @@ Používateľ potvrdil zobrazené popisky a oba výpisy aj šípky všetkými sm
 ### r48 grafika hardvéru
 
 Používateľ výslovne odmietol schematické hardvérové ikony r47, ale schválil a požaduje ponechať šípky. Chce farebné plastické a jasne rozpoznateľné predmety podobné pôvodným, bez čiernych podkladov/odrazov. r48 nahrádza11 hardvérových symbolov; šípky a stavové bodky sú bajtovo zachované. Zber údajov ani rozloženie sa nemení. Najbližšie: posúdiť reálne ikonky v Informáciách o systéme po aktualizácii, funkčnú skúšku šípok z r46 bez dôvodu neopakovať.
+
+### r49 zmena požiadavky na šípky
+
+Po publikácii r48 používateľ výslovne požiadal zmeniť aj šípky, aby mali spoločný dizajn. Predchádzajúca požiadavka zachovať ich grafiku je tým prekonaná. r49 nahrádza iba grafiku oboch smerových šípok, ponecháva význam, klávesové väzby a stavové bodky. Najbližšie posúdiť hardvérové ikonky aj šípky spolu v prijímači; ovládanie už bolo potvrdené v r46.

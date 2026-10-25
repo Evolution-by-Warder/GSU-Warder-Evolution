@@ -7,7 +7,7 @@ from pathlib import Path
 import subprocess
 
 BASE=Path(__file__).resolve().parents[1]
-NAMES=('mem','swap','summ','root','hdd','usb','cf','sd','hdd_temp','cpu','sensor')
+NAMES=('mem','swap','summ','root','hdd','usb','cf','sd','hdd_temp','cpu','sensor','lr','updown')
 
 
 def prepare():

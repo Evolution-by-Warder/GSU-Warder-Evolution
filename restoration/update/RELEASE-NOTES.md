@@ -1,6 +1,6 @@
-GSU 13.40-r48
+GSU 13.40-r49
 
-- Farebné plastické ikonky hardvéru namiesto schematických symbolov.
-- Názorné RAM moduly, disky, USB, pamäťové karty, čipy a teplomery so skutočne priehľadným okolím.
-- Bez čiernych dlaždíc, podkladov a odrazov.
-- Schválené šípky aj zelené a červené stavové bodky zostávajú nezmenené.
+- Nové farebné plastické ikonky hardvéru so skutočne priehľadným okolím, podobné pôvodným predmetom.
+- Plastické strieborno-tyrkysové šípky vľavo/vpravo a hore/dole v rovnakom dizajne.
+- Bez čiernych dlaždíc a odrazov; zachované významy a ovládanie.
+- Zelené a červené stavové bodky zostávajú nezmenené.

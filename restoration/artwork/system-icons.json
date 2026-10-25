@@ -1,5 +1,5 @@
 {
-  "style": "Colorful dimensional hardware with genuine alpha; retained Warder vector arrows and status dots",
+  "style": "Colorful dimensional hardware and matching silver/cyan navigation arrows, genuine alpha, no background or reflections; original status dots retained",
   "size": [
     120,
     120
@@ -9,7 +9,7 @@
     "system-cpu.png": "06abcc6d43ec033df1a0f98039caab704dcab14d28d47752e5ad3d6c4b3e8d18",
     "system-hdd.png": "95a336680ca902ed3e8d383c927b48dfd76ad8a90d9b3bd83e98f0c7e97c1721",
     "system-hdd_temp.png": "749abbac074ed7dcea2e59c9608dd662fb026e1a72328a64c7787b28f0e24195",
-    "system-lr.png": "f5de505d326a8954c6d1b2c98218414b574a8146ee6a7445c01fd2dfb635bfc3",
+    "system-lr.png": "580ba16eae25ed86be3d088478c51aad322cc08ca5bbee0e6de14b6302ee9b3c",
     "system-mem.png": "9bdd6b0d914894e95617c56f12898ae3813e2d4c49fb3b7ae11bdfb0a96b4a30",
     "system-root.png": "e0a99fa4ee9c58d0714ef2fb70d5c48f3c7570e0b04e1366d6cf0fce014c2356",
     "system-sd.png": "a8af739e7c787e84ef975947d88f4e8fb13bfc47b2984233d02308d34ad3f4be",
@@ -18,7 +18,7 @@
     "system-status-red.png": "a428de7ec9d2d338d286dd2c5ea419e197e8f9a74729dc6d20628bdac4bc1443",
     "system-summ.png": "7d54ab832e57d4ed198e25392e0a4447226da93db1d460452a6311357fc9c707",
     "system-swap.png": "f054f577e05b32aee1140ccc59bce9e6ca6537967290c3efa1caa6427f7ce462",
-    "system-updown.png": "a54f80ce5c977993f42770990c0712cd5268989b2ff4b3295b81c1e8c09ae1d7",
+    "system-updown.png": "3b6e03b3dfca6fa0ce8cb6e8ef33776b9c4e6d487826a8b0f61ac6c26987b7f9",
     "system-usb.png": "0fb94cb36280572b8d631422ae80a31ef436d2c3cafda516dc377183c8755951"
   }
 }

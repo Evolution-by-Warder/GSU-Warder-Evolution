@@ -67,6 +67,20 @@
       "source_sha256": "c4b033df209b87df2ea6e9da46047fffe0e53841ce8a1f6e3207f37201fb4c20",
       "master_sha256": "97aee2e55cd4c3f52fe98c0668cdc04930d011dd848b25a9ed4b2e2ffc8f24aa",
       "master": "sensor.png"
+    },
+    "lr": {
+      "prompt": "A single horizontal left-right double-headed arrow, thick solid cyan-blue body with polished silver/chrome beveled edges. Strong clear left and right arrowheads joined by a short horizontal shaft, centered, readable at60px.",
+      "source_sha256": "3cf9ecf637731874f1c220be59971e7e2e986c4402c0960c62a249271e69f1a6",
+      "master_sha256": "da2196074c62c358b76de7bce9f32fcc0f4a8b84a57f29fcb9abb7aea52010ae",
+      "master": "lr.png",
+      "method": "Built-in imagegen, new dimensional silver/cyan directional icon with genuine transparent alpha"
+    },
+    "updown": {
+      "prompt": "A single vertical up-down double-headed arrow, thick solid cyan-blue body with polished silver/chrome beveled edges. Strong clear up and down arrowheads joined by a short vertical shaft, centered, readable at60px.",
+      "source_sha256": "ad8ed3df3fa8d8580e30d03a6c64fe8869e77c5d39bcca57d1e93f2f9433d846",
+      "master_sha256": "46f0d3bd17dc7dcfea2c743ddabf22da707f60ef09d9489133e9649d3cf74fa0",
+      "master": "updown.png",
+      "method": "Built-in imagegen, new dimensional silver/cyan directional icon with genuine transparent alpha"
     }
   }
 }
