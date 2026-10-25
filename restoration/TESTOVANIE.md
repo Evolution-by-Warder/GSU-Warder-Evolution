@@ -1,4 +1,4 @@
-# Aktuálny checkpoint —25.10.2026, r49 pripravené
+# Aktuálny checkpoint —25.10.2026, r49 publikované
 
 Pracovať výhradne v original-python314, runtime restoration/src/GlassSysUtil. Produkčná warder-master-production sa nemení, bez force/rebase. GSU Warder Evolution je spoločný neprekladaný názov. Hlavná obrazovka má spoločný banner, živé hodiny,11 položiek, liveTV vpravo a popis pod ním,4 farebné akcie vrátane modrého O plugine. Nadpis Hlavná ponuka a spodný purpose riadok sú odstránené; panely využívajú miesto. LiveTV a návrat do normálu potvrdené používateľom.
 
@@ -6,7 +6,7 @@ Informácie o systéme: r45 zle prekrývalo pôvodné texty; r46 má pozadie/rá
 
 Používateľ odmietol schematické hardvérové ikony r47, ale výslovne schválil ponechanie šípok. r48 mení11 hardvérových ikon na farebné plastické RAM/disky/USB/karty/CPU/teplomery/Linux, podobné pôvodným, so skutočne priehľadným okolím bez čiernych dlaždíc a odrazov. V r48 boli šípky a stavové bodky bajtovo nezmenené. Následne používateľ žiada zmeniť aj šípky, takže r49 má nové plastické strieborno-tyrkysové šípky; stavové bodky zostávajú nezmenené. Väčšie512px výrobné podklady a prompty sú v artwork/system-raster; do IPK idú iba pripravené120px PNG. Pôvodné odmietnuté hardvérové SVG sú odstránené, generátor ponecháva iba schválené šípky/bodky.
 
-260 testov Python3.14.7 úspešných; dva zhodné buildy, CI40215452598 úspešné vrátane publikácie a overenia vzdialených bajtov. Zdroj2f3e0b6022f74ca42b46097d894e75b5307d37cb. Feed overený: r48,3633030B,SHA2564a0fa9047f56f643f8cba9ec8cff2d9f2274d9547132195f5a56c67986ee7383.
+260 testov Python3.14.7 úspešných; dva zhodné buildy, CI40215979311 úspešné vrátane publikácie a overenia vzdialených bajtov. Zdroj a28e602a61b624ccec9970446d09843e6db65924. Feed overený: r49,3639402B,SHA25680432461c90e190acc7be3b345b1c304aff9ef3b41b89bd7476ab9ba233d72c4.
 
 Najbližšie: aktualizovať cez GSU na r49 a posúdiť nové ikonky priamo v Informáciách o systéme. Nový vzhľad zatiaľ nie je schválený na prijímači. Anglické popisky zostávajú ďalšia kozmetika, neboli týmto vydaním preložené. Opakované skúšky CAM, swapu, diagnostického archívu a už potvrdených šípok nežiadať. CCcam/Mbox a samostatný SRV bez príslušnej služby stále nie sú hardvérovo overené; celý plugin neoznačovať za úplne overený.
 
