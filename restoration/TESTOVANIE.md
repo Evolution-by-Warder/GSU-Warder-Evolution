@@ -283,3 +283,14 @@ Najbližšie: inštalácia r27, reštart GUI a snímka Správcu CAM bez Pripravi
 - Prešlo149 testov Python3.14.7 vrátane oboch OSD režimov/API, zmeneného a nezmeneného ECM, prahu času, chýbajúceho súboru, FTA, vypnutia, polohy, skrytých nastavení a async farieb/stale výsledkov. Zdrojové transformácie reprodukujú runtime. OSD ani farby na prijímači r28 ešte nie sú potvrdené.
 
 Najbližšie: inštalovať r28 a reštartovať GUI. OSD ECM informácie → Povoliť Áno, ponechať Rolované info, zelené Uložiť, zavrieť GSU a prepnúť na kódovanú stanicu. Po krátkom štarte má ísť posúvaný text cez TV obraz; vyžiadať skutočnú snímku a spätnú väzbu. Potom skúsiť Statické info a potvrdiť požadovaný GUI restart. Overiť polohu a vypnutie bez pretrvávajúceho overlay. Súčasne v Správcovi CAM overiť zelenú/červenú pred stavovým riadkom vrátane automatickej obnovy. Zostať pri OSD až do dokončenia sekcie.
+
+
+## 2026-10-25 — r28 rolované OSD potvrdené; r29 širší riadok
+
+- Snímky100013(1–3) ukazujú povolené OSD, Rolované info, prah500ms, obnovu4s a rýchlosť150ms. Posúvaný text je viditeľný nad nastaveniami, nad Správcom CAM aj počas samotného sledovania TV. Rôzne úseky textu a používateľov popis potvrdzujú rolovanie. Zelená kontrolka pri CAM spustené je potvrdená. Červená a statický panel ešte nemajú receiver dôkaz.
+- Používateľ oprávnene uviedol, že pôvodný krátky riadok ukazuje len útržok údaja a neplní účel. r29 preto rozširuje iba rolované OSD na polovicu šírky obrazovky:640/960/1920px pri1280/1920/3840px. Písmo, výška, rýchlosť a obsah zostávajú zachované.
+- osd_layout.rolling_skin je spoločný pre skutočný overlay aj SelectPosition. Pôvodné bitmapové orámovanie sa za behu nahradí dvoma natívnymi farebnými obdĺžnikmi s tenkým modrým okrajom; žiadne zmeny či nové kópie obrázkov. Statický skin ostáva pôvodný.
+- place zobrazenie obmedzí na reálne hranice okna a desktopu bez automatického uloženia starých súradníc. Pri nastavovaní polohy súradnice zodpovedajú viditeľnej pozícii, aby sa šípkami dalo hneď pohybovať. OK a späť ďalej riadia uloženie/zrušenie polohy.
+- Prešlo152 testov Python3.14.7 vrátane šírky/písma/okraja pri troch rozlíšeniach, zhody overlay/preview a obmedzenia polohy bez zápisu. Zdrojová transformácia reprodukuje runtime; kompilácia a deterministický build sú kontrolované. Nová šírka ani statické OSD ešte nie sú overené na prijímači.
+
+Najbližšie: inštalácia r29 a reštart GUI; OSD môže zostať povolené z r28. Prepnúť na kódovanú stanicu a poslať snímku širšieho rolovaného riadka. Ak poloha nevyhovuje, OSD nastavenia → Nastaviť pozíciu → OK a šípky. Potom dokončiť test statického typu, jeho prepnutia s GUI restartom, polohy a vypnutia. Nepreskakovať do ďalšej sekcie.

@@ -4,6 +4,7 @@
 # Embedded file name: /usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/plugin.py
 # Compiled at: 2021-03-28 16:56:23
 from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox
+from Plugins.Extensions.GlassSysUtil.osd_layout import rolling_skin as _wide_osd_skin, place as _place_osd
 from Plugins.Extensions.GlassSysUtil.native_status import request as _native_status_request
 from Plugins.Extensions.GlassSysUtil.srv_visibility import apply as _srv_visibility, prepare_skin as _srv_skin, binary_status as _srv_binary_status, menu_text as _cam_menu_text
 from Plugins.Extensions.GlassSysUtil.native_autostart import begin as _native_autostart_begin, configure as _native_autostart_configure, autocheck_help as _native_autocheck_help
@@ -7697,7 +7698,7 @@ class OnScreenEcmScreen(Screen):
             self['ecm_items'] = Label(self.e)
             self['OSD_Ecm_info'] = Label('..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............')
         else:
-            self.skin = onScreenEcm_scr
+            self.skin = _wide_osd_skin(onScreenEcm_scr, getDesktop(0).size().width())
             try:
                 self.rollTimerText_conn = self.rollTimerText.timeout.connect(self.rollText)
             except:
@@ -7721,8 +7722,7 @@ class OnScreenEcmScreen(Screen):
         return
 
     def firstRun(self):
-        if self.instance:
-            self.instance.move(ePoint(config.plugins.GlassSysUtil.par1.value, config.plugins.GlassSysUtil.par2.value))
+        _place_osd(self, globals())
         self.__startSearchInfo()
         return
 
@@ -8134,7 +8134,7 @@ class SelectPosition(Screen):
             self['ecm_items'] = Label('CAID:\nProvID:\nPID:\nSID:\nUsing:\nTime:\nSystem:\nCAM:')
             self['OSD_Ecm_info'] = Label('..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............')
         else:
-            self.skin = onScreenEcm_scr
+            self.skin = _wide_osd_skin(onScreenEcm_scr, getDesktop(0).size().width())
             self['OSD_Ecm_info'] = Label('         *** ' + _('Ready') + ' ***')
         self['actions'] = ActionMap(['WizardActions'], {'left': (self.left), 
            'up': (self.up), 
@@ -8152,7 +8152,7 @@ class SelectPosition(Screen):
         return
 
     def setNewPosition(self):
-        self.instance.move(ePoint(config.plugins.GlassSysUtil.par1.value, config.plugins.GlassSysUtil.par2.value))
+        _place_osd(self, globals(), editing=True)
         self.moveTimer.start(80)
         return
 
