@@ -315,3 +315,11 @@ Najbližšie: r30 inštalácia a reštart GUI, potvrdiť viditeľný pravý rám
 - swap_ui.py: pôvodné obrazovky a ovládanie, deferredworker na objavenie diskov aj mutácie, viditeľný stav cez titulok, ochrana opakovania a zavretia počas operácie, neskorý callback po zavretí ignorovaný. Chyba ponechá editor otvorený, úspech až po overení a konfigurácii. swap_port.py reprodukuje zmeny a zachováva pôvodné signatúry.
 
 Najbližšie: nainštalovaťr31 a reštartGUI. V Správe swapu najprv na oddiele skúsiť žlté: má iba vysvetliť, že oddiel sa tu nemaže. Potom Pridať→32MB, /media/hdd, názovgsu_test; vytvoriť a sledovať odozvu a výsledok. Overiť tretí aktívny riadok a presnýfstabzáznam; potom zmazať iba/media/hdd/swapfile_gsu_test, overiť návrat k pôvodným dvomswapom a odstránenie iba testovacieho záznamu. Existujúce swapy zachovať. Nemeniť ďalšiu sekciu, kým sa tento postup nedokončí.
+
+## 2026-10-25 — r31 prijímač: správa swapu uzavretá v overenom rozsahu
+
+- 112039: žlté na /dev/mmcblk0p12 odmietlo mazanie hláškou „Swapové oddiely sa v tejto ponuke nemažú.“
+- 112255 snímky1/2: vytvorený /media/hdd/swapfile_gsu_test, 32MiB (32764KiB aktívnych), tretí aktívny riadok s prioritou-3; pôvodný oddiel a /media/hdd/swapfile zostali aktívne. Odozvu počas dlhého vytvárania nemožno dokázať zo statických snímok.
+- 112421/112422 snímky1–3: potvrdenie obsahuje presnú testovaciu cestu, úspešné zmazanie a návrat k dvom pôvodným aktívnym swapom.
+- Používateľ následne dodal ls: /media/hdd/swapfile_gsu_test neexistuje; grep -F swapfile_gsu_test /etc/fstab bez výstupu. Overené odstránenie súboru aj jeho konfiguračného záznamu. Sekcia swap uzavretá v rozsahu týchto úspešných skúšok; zlyhania a rollback sú host-testované, nie zámerne vyvolané na prijímači.
+- Ďalšia položka v hlavnom menu je Channel Settings (Nastavenia staníc), settings_satxml → settings_center: importZIP/RAR z/tmp s dvoma voľbami, s/bez aktualizácie satellites.xml. Najprv pozrieť úvodné okno a zoznam archívov. Pôvodná implementácia má blokujúci shell unzip/unrar, chybnú skladbu ZIPcesty, vyžaduje presne6 pomocných súborov, deštruktívne odstraňuje aktuálne settingy pred overeným kopírovaním a odstraňuje zdrojový archív. Pred importom reálneho zoznamu staníc treba opraviť spracovanie, validáciu a obnovu pri chybe. Nevykonávať starý import na používateľových staniciach počas prvotnej prehliadky.
