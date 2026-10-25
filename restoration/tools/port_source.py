@@ -6,6 +6,7 @@ import sys
 from native_softcam_port import port_native_softcam
 from cam_feed_port import port_cam_feed
 from cam_management_port import port_cam_management
+from shortcut_removal_port import port_shortcut_removal
 
 
 def port(source):
@@ -18,7 +19,7 @@ def port(source):
     def function(name, text):
         node = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == name)
         replace(node, text)
-    descriptor = "    ret.append(PluginDescriptor(name=_('GSU – ECM Info'), description=_('ECM Info'), where=PluginDescriptor.WHERE_EVENTINFO, fnc=_open_ecm_info))\n"
+    descriptor = "    ret.append(PluginDescriptor(name='(GSU) ' + _('ECM Info'), description=_('ECM Info'), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=_open_ecm_info))\n"
     plugins_node = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == 'Plugins')
     function('Plugins', ast.get_source_segment(source, plugins_node).replace('    return ret', descriptor+'    return ret', 1))
     # Python 3 uses unicode text and its standard networking modules directly.
@@ -385,7 +386,8 @@ def _gsu_helper(name):
     body=body.replace("            self['list'].l.setList(self.list)\n            self.reactivate()\n        return", "        self['list'].l.setList(self.list)\n        self.reactivate()\n        return",1)
     source=source[:start]+body+source[end:]
     source=port_cam_management(port_cam_feed(port_native_softcam(source)))
-    # Preserve class and method signatures; no placeholder function bodies.
+    source=port_shortcut_removal(source)
+    # Preserve original signatures; retired shortcut entry points are intentional no-ops.
     compile(source, 'plugin.py', 'exec')
     return source
 

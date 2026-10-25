@@ -322,7 +322,7 @@ class OriginalPortTests(unittest.TestCase):
             return io.StringIO(files[str(path)])
         return read
 
-    def test_ecm_registers_in_native_info_menu_independently_of_color_shortcuts(self):
+    def test_ecm_registers_in_extensions_menu_without_replacing_info_or_color_keys(self):
         class Descriptor:
             WHERE_PLUGINMENU=1;WHERE_SESSIONSTART=2;WHERE_EXTENSIONSMENU=3
             WHERE_MENU=4;WHERE_EVENTINFO=5
@@ -333,11 +333,40 @@ class OriginalPortTests(unittest.TestCase):
                 self.plugin.config.plugins.GlassSysUtil.par40.value=enabled
                 with patch.object(self.plugin,'PluginDescriptor',Descriptor):
                     entries=self.plugin.Plugins('/test')
-                found=[p for p in entries if p.where==Descriptor.WHERE_EVENTINFO]
+                found=[p for p in entries if getattr(p,'name',None)=='(GSU) ECM Info']
+                self.assertFalse(any(p.where==Descriptor.WHERE_EVENTINFO for p in entries))
                 self.assertEqual(len(found),1)
-                self.assertEqual(found[0].name,'GSU – ECM Info')
+                self.assertEqual(found[0].where,Descriptor.WHERE_EXTENSIONSMENU)
                 self.assertIs(found[0].fnc,self.plugin._open_ecm_info)
         finally:self.plugin.config.plugins.GlassSysUtil.par40.value=previous
+
+    def test_retired_shortcut_option_is_skipped_and_never_requests_gui_restart(self):
+        from unittest.mock import MagicMock
+        screen=self.plugin.univCamMng(types.SimpleNamespace(openWithCallback=MagicMock()))
+        self.assertNotIn(5,screen.aa)
+        point=types.SimpleNamespace(x=lambda:500,y=lambda:100)
+        for i in range(10):screen['txt%d'%i].instance=types.SimpleNamespace(position=lambda:point)
+        screen['select_pict'].move=MagicMock()
+        screen.idxAllFnc=0;visited=[]
+        for _ in range(9):
+            screen.selectFnc();visited.append(screen.idxAllFnc)
+        self.assertEqual(visited,[1,2,3,4,6,7,8,9,0])
+        screen.enCommand=True;screen.close=MagicMock()
+        screen.exit()
+        screen.close.assert_called_once_with()
+        screen.session.openWithCallback.assert_not_called()
+
+    def test_session_start_leaves_image_infobar_untouched_with_old_shortcut_flag(self):
+        from unittest.mock import MagicMock
+        import Screens.InfoBarGenerics as infobar
+        old_init=infobar.InfoBarPlugins.__init__
+        original=self.plugin.config.plugins.GlassSysUtil.par40.value
+        self.plugin.config.plugins.GlassSysUtil.par40.value=True
+        try:
+            with patch.object(self.plugin,'autocams',types.SimpleNamespace(autoStartCheck=MagicMock())),patch.object(self.plugin,'OnScreenEcm',types.SimpleNamespace(startShowOSD=MagicMock())),patch.object(self.plugin,'autoInstallMng',types.SimpleNamespace(autoInstallStart=MagicMock())):
+                self.plugin.sessionAutostart(0,session=object())
+            self.assertIs(infobar.InfoBarPlugins.__init__,old_init)
+        finally:self.plugin.config.plugins.GlassSysUtil.par40.value=original
 
     def test_native_info_menu_callback_opens_original_ecm_screen(self):
         from unittest.mock import MagicMock

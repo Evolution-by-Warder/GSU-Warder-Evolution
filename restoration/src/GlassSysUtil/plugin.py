@@ -228,7 +228,7 @@ import re
 from twisted.internet.protocol import Factory, DatagramProtocol
 from twisted.internet import reactor, defer
 from twisted.internet.error import CannotListenError
-from Screens.InfoBarGenerics import InfoBarPlugins
+from Plugins.Extensions.GlassSysUtil.cam_menu import compact_skin as _compact_cam_menu
 from Plugins.Extensions.GlassSysUtil.event_info import open_ecm as _open_ecm_info
 config.plugins.GlassSysUtil = ConfigSubsection()
 config.plugins.GlassSysUtil.par62 = ConfigYesNo(default=True)
@@ -274,7 +274,6 @@ def generatePS():
 
 
 ENA_PS = generatePS()
-ucmInfoBarPlugins__init__ = None
 GVIP = ''
 PWDV = None
 if os.path.isfile('/etc/version_act'):
@@ -324,7 +323,7 @@ config.plugins.GlassSysUtil.par36 = ConfigYesNo(default=False)
 config.plugins.GlassSysUtil.par37 = ConfigYesNo(default=False)
 config.plugins.GlassSysUtil.par38 = ConfigYesNo(default=False)
 config.plugins.GlassSysUtil.par39 = ConfigYesNo(default=False)
-config.plugins.GlassSysUtil.par40 = ConfigYesNo(default=False)
+config.plugins.GlassSysUtil.par40 = ConfigYesNo(default=False)  # Read old settings only; shortcuts are retired.
 config.plugins.GlassSysUtil.par41 = NoSave(ConfigInteger(0, (0, 59)))
 config.plugins.GlassSysUtil.par42 = NoSave(ConfigText(fixed_size=False))
 config.plugins.GlassSysUtil.par43 = NoSave(ConfigSelection(default='Daily', choices=[('Hourly', _('Hourly')), ('Daily', _('Daily')), ('Weekly', _('Weekly')), ('Monthly', _('Monthly')), ('0', _('Expert Setting'))]))
@@ -413,42 +412,25 @@ def startViaMenu(menuid, **kwargs):
 
 
 def sessionAutostart(reason, **kwargs):
-    global ucmInfoBarPlugins__init__
     if reason == 0:
         autocams.autoStartCheck(kwargs['session'])
         OnScreenEcm.startShowOSD(kwargs['session'])
         autoInstallMng.autoInstallStart(kwargs['session'])
-    if config.plugins.GlassSysUtil.par40.value:
-        if 'session' in kwargs:
-            session = kwargs['session']
-            if ucmInfoBarPlugins__init__ is None:
-                ucmInfoBarPlugins__init__ = InfoBarPlugins.__init__
-            InfoBarPlugins.__init__ = InfoBarPlugins__init__
-            InfoBarPlugins.keyStartGreen = keyStartGreen
-            InfoBarPlugins.keyStartRed = keyStartRed
     return
 
 
 def InfoBarPlugins__init__(self):
-    from Screens.InfoBarGenerics import InfoBarEPG
-    if isinstance(self, InfoBarEPG):
-        x = {'ucm_start_key': (self.keyStartGreen, 'UCM Start failed'), 'ecm_start_key': (self.keyStartRed, 'ECM Start failed')}
-        self['GSUmain'] = HelpableActionMap(self, 'GSUmain', x)
-    else:
-        InfoBarPlugins.__init__ = InfoBarPlugins.__init__
-        InfoBarPlugins.keyStartGreen = None
-        InfoBarPlugins.keyStartRed = None
-    ucmInfoBarPlugins__init__(self)
+    # Retired: use native Extensions/Event Info menus; never intercept keys.
     return
 
 
 def keyStartGreen(self):
-    self.session.open(univCamMng)
+    # Retired: use native Extensions/Event Info menus; never intercept keys.
     return
 
 
 def keyStartRed(self):
-    self.session.open(ECMInfo)
+    # Retired: use native Extensions/Event Info menus; never intercept keys.
     return
 
 
@@ -470,7 +452,7 @@ def Plugins(path, **kwargs):
         ret.append(PluginDescriptor(name='(GSU) ' + _('CAM/SRV Manager'), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main2))
     if config.plugins.GlassSysUtil.par60.value:
         ret.append(PluginDescriptor(name='(GSU) ' + _('OScam Information'), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main3))
-    ret.append(PluginDescriptor(name=_('GSU – ECM Info'), description=_('ECM Info'), where=PluginDescriptor.WHERE_EVENTINFO, fnc=_open_ecm_info))
+    ret.append(PluginDescriptor(name='(GSU) ' + _('ECM Info'), description=_('ECM Info'), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=_open_ecm_info))
     return ret
 
 
@@ -4267,6 +4249,7 @@ class univCamMng(Screen):
             self.skin = UCM.replace('<widget name="config" font="priveG;30"', '<widget name="config"').replace('<widget name="config" font="priveG;60"', '<widget name="config"')
         else:
             self.skin = UCM
+        self.skin = _compact_cam_menu(self.skin)
         self.session = session
         Screen.__init__(self, session)
         self.nativeSoftcam = NativeSoftcam()
@@ -4288,20 +4271,12 @@ class univCamMng(Screen):
         self['txt2'] = Label(_('Delete CAM/SRV'))
         self['txt3'] = ColorLabel(_('Update OScam'))
         self['txt4'] = ColorLabel(_('OScam Start cfg'))
-        self['txt5'] = ColorLabel(_('Keystart'))
+        self['txt5'] = Label('')
         self['txt6'] = ColorLabel(_('Delay'))
         self['txt7'] = ColorLabel(_('SRV Restart'))
         self['txt8'] = ColorLabel(_('Autocheck CAM/SRV'))
         self['txt9'] = ColorLabel(_('Prepare Exp. Image'))
-        self.aa = {0: (_('Exit CAM/SRV Manager')), 1: (_('Downloading CAM/SRV from server and installing to CAM/SRV Manager')), 
-           2: (_('Deleting CAM/SRV from CAM/SRV Manager')), 
-           3: (_('Update OScam to the highest available version')), 
-           4: (_('OScam starting with command line options like path to OScam cfg and more')), 
-           5: (_('Enabling or Disabling quick(direct) start CAM/SRV Manager(press Green button) and ECM Info(press Red button). This action have lowest priority so if Red/Green button have joined function in image no action will be taken')), 
-           6: (_('Delayed start in seconds of CAM/SRV after start E2')), 
-           7: (_('Enabling or Disabling Restart SRV if CAM is running')), 
-           8: (_('Enabling or Disabling Autocheck of running CAM/SRV every 10 min and try to start CAM/SRV if is not running')), 
-           9: (_('Preparing experimental image to use CAM/SRV and disabling dccamd'))}
+        self.aa = {0: _('Exit CAM/SRV Manager'), 1: _('Downloading CAM/SRV from server and installing to CAM/SRV Manager'), 2: _('Deleting CAM/SRV from CAM/SRV Manager'), 3: _('Update OScam to the highest available version'), 4: _('OScam starting with command line options like path to OScam cfg and more'), 6: _('Delayed start in seconds of CAM/SRV after start E2'), 7: _('Enabling or Disabling Restart SRV if CAM is running'), 8: _('Enabling or Disabling Autocheck of running CAM/SRV every 10 min and try to start CAM/SRV if is not running'), 9: _('Preparing experimental image to use CAM/SRV and disabling dccamd')}
         self['select_pict'] = Pixmap()
         self.idxAllFnc = 0
         self.list = []
@@ -4322,7 +4297,7 @@ class univCamMng(Screen):
            'yellow': (self.ActivateselectedFnc), 
            'blue': (self.selectFnc)}, -1)
         self.checkCam = self.enCommand = self.typecmd = self.enaBlue = False
-        self.keyState = config.plugins.GlassSysUtil.par40.value
+
         self.capic = 'None'
         self.enaYellow = True
         self.FirstInfoTimer = eTimer()
@@ -4372,8 +4347,6 @@ class univCamMng(Screen):
             self.setLatestOscam()
         elif self.idxAllFnc == 4:
             self.setOscam()
-        elif self.idxAllFnc == 5:
-            self.enaDisKeystart()
         elif self.idxAllFnc == 6:
             self.changeDelay()
         elif self.idxAllFnc == 7:
@@ -4386,6 +4359,8 @@ class univCamMng(Screen):
 
     def selectFnc(self):
         self.idxAllFnc += 1
+        if self.idxAllFnc == 5:
+            self.idxAllFnc += 1
         if self.idxAllFnc > 9:
             self.idxAllFnc = 0
         self['select_pict'].move(ePoint(self['txt%s' % self.idxAllFnc].instance.position().x() - fhd(30), self['txt%s' % self.idxAllFnc].instance.position().y()))
@@ -4455,22 +4430,11 @@ class univCamMng(Screen):
         return
 
     def enaDisKeystart(self):
-        if config.plugins.GlassSysUtil.par40.value:
-            config.plugins.GlassSysUtil.par40.value = False
-        else:
-            config.plugins.GlassSysUtil.par40.value = True
-        config.plugins.GlassSysUtil.par40.save()
-        configfile.save()
-        self.enaDisKeystartChck()
+        # Retired shortcut setting; retained entry point has no side effects.
         return
 
     def enaDisKeystartChck(self):
-        if config.plugins.GlassSysUtil.par40.value:
-            self['txt5'].setText(_('Disable CAM/SRV and ECM Start'))
-            self['txt5'].colorGreen()
-        else:
-            self['txt5'].setText(_('Enable CAM/SRV and ECM Start'))
-            self['txt5'].colorOrange()
+        # Retired shortcut setting; retained entry point has no side effects.
         return
 
     def lessCamSrv(self):
@@ -4992,7 +4956,7 @@ class univCamMng(Screen):
 
     def inicializeUCM(self, answer=True):
         self.showActDelay()
-        self.enaDisKeystartChck()
+
         self.enaSrvRestartChck()
         self.enaAutochckChck()
         self.CamSrvList()
@@ -5147,13 +5111,9 @@ class univCamMng(Screen):
                 self.chckOscamTimer.stop()
             self.chckOscamTimer = None
             self.FirstInfoTimer = None
-            if self.keyState != config.plugins.GlassSysUtil.par40.value:
-                restartbox = self.session.openWithCallback(self.rstAnswer, MessageBox, _('Do you want restart GUI to activate keystart change now?'), MessageBox.TYPE_YESNO)
-                restartbox.setTitle(_('Restart'))
-            else:
-                self.setCamSrvinfoTimer = None
-                self.refreshinfoTimer = None
-                self.close()
+            self.setCamSrvinfoTimer = None
+            self.refreshinfoTimer = None
+            self.close()
             return
 
     def rstAnswer(self, answer):

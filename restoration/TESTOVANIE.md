@@ -171,3 +171,16 @@ Potvrdené snímkami na prijímači:
 - Po otázke na INFO používateľ odsúhlasil doplnenie GSU – ECM Info do dlhej INFO ponuky. Rozpracovaný zásah do obsluhy červeného bol odstránený; r19 žiadne nové monkeypatch/keymap zmeny neobsahuje. Pridaný len WHERE_EVENTINFO descriptor, event_info.py callback a reprodukovateľná zmena port_source.py. 84 host testov úspešných na3.14.7.
 
 Ďalšia skúška: nainštalovať r19 + reštartGUI, počas TV podržať INFO → GSU – ECM Info → OK. Má otvoriť pôvodnú obrazovku ECMInfo. KrátkeINFO má naďalej otvárať reláciu a zelené pluginy. Potom zostávajú OScam štart konfigurácia (natívny editor stále sivý), native autostart/autocheck a zvyšné položky hlavného GSU menu. Pripraviť exp.image je sivé; nezačínať zásahy do image bez kontroly účelu. Produkčná vetva ani updater sa nemenia.
+
+
+## 2026-10-25 — r19 ECM overené, dohoda o jednom prístupe, r20
+
+- Snímka064453: r19 dlhéINFO → GSU ECM Info otvorilo pôvodné ECM Informácie, správne OSCam11968, Irdeto a ECM Time. Jedna snímka potvrdzuje načítanie, nie časovú aktualizáciu.
+- Snímky064719 a065148: v dlhom modrom je už päť GSU položiek (hlavnéGSU, kanál, systém, CAM/SRV, zariadenia). Používateľ výslovne nechce kombinovať prístupy a nové skratky. Schválené odstrániť starú zelenú/červenú voľbu a sústrediť aj ECMInfo do tohto menu.
+- r20: ECM descriptor presunutý z WHERE_EVENTINFO na WHERE_EXTENSIONSMENU, názov (GSU) ECM Info. MenuINFO sa už GSU položkou nerozširuje. Všetky ostatné rozšírenia zostávajú.
+- Odstránená registrácia monkeypatch InfoBarPlugins pri sessionstart. Pôvodné názvy shortcut funkcií sú ponechané len ako úmyselne neaktívne kompatibilné vstupy; par40 sa číta kvôli starým settings, ale nemá účinok.
+- Voľba Keystart/Enable CAM-SRV ECM Start odstránená z CAM správcu, modré ju pri prechádzaní preskočí. Riadky oneskorenia, reštartuSRV, autokontroly a exp.image presunuté po jednom do pôvodných pozícií predchodcu pre SD/FHD/UHD. Nerobí sa nový dizajn. Zatvorenie už nevyžaduje reštart kvôli vyradenej voľbe.
+- Build vynecháva iba GSUmain keymapcontext; UCMActions (ovládanie vo vnútri správcu) ponechané. Pôvodné zdrojové skiny a archív resources nemeníme.
+- 88 host testov na Python3.14.7 úspešných; AST zo zdrojovej transformácie sa zhoduje s runtime. Na prijímači r20 zatiaľ neoverené.
+
+Ďalšie kroky: inštalácia r20 + reštartGUI (odstráni aj už načítaný starý hook), dlhé modré → (GSU) ECM Info → OK, krátke/dlhéINFO pôvodné správanie a zelené pluginy. CAM správca nemá Keystart riadok ani medzeru, modré prechádza z OScam štart konfigurácia priamo na oneskorenie. Potom pokračovať položkami hlavnéhoGSU podľa používateľa, nevydávať úplné potvrdenie native autostartu/autocheck/SRV ani sivého native cfg editora.

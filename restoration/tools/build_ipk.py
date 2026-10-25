@@ -7,6 +7,7 @@ import io
 import json
 import pathlib
 import tarfile
+from xml.etree import ElementTree
 
 BASE=pathlib.Path(__file__).resolve().parents[1]
 PLUGIN='usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil'
@@ -41,6 +42,11 @@ def build(destination):
             assert str(name) not in seen
             raw=tar.extractfile(member).read()
             assert hashlib.sha256(raw).hexdigest()==manifest['files'][str(name)]
+            if str(name)=='keymap.xml':
+                keymap=ElementTree.fromstring(raw)
+                for context in list(keymap):
+                    if context.get('context')=='GSUmain':keymap.remove(context)
+                raw=ElementTree.tostring(keymap,encoding='utf-8')
             entries.append((PLUGIN+'/'+str(name),raw,0o755 if str(name).startswith('bin/') or str(name).endswith('.sh') else 0o644));seen.add(str(name))
     assert seen==set(manifest['files'])
     for path in sorted(runtime.glob('*.py')):

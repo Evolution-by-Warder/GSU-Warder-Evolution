@@ -1,4 +1,4 @@
-"""Open ECM information through the receiver's existing Event Info menu."""
+"""Open ECM information through the receiver's existing Extensions menu."""
 
 
 def open_ecm(session, servicelist=None, **kwargs):
