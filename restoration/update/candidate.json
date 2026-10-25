@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r37",
-    "tag": "v13.40-r37",
-    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r37/enigma2-plugin-glasssysutil_13.40-r37_all.ipk",
-    "sha256": "5e8775f69fffadb6480ca3556069aabc457d6db38de3fecaa3400900e14c609e",
-    "bytes": 2186370,
-    "notes": "GSU 13.40-r37\n\n- Načítanie a obnova zoznamu čítačiek/proxy OSCam bežia na pozadí bez blokovania menu.\n- Zakázať/Povoliť čítačku vyžaduje potvrdenie s jej názvom; predvolená odpoveď je Nie.\n- Po zmene sa znovu načíta a overí skutočný stav. Pri chybe sa nezobrazí falošné potvrdenie úspechu.\n- Zachované rozloženie okna, EMM čítače a vybraná čítačka pri obnove zoznamu.\n- Opravené odovzdanie názvov čítačiek so špeciálnymi znakmi pre akcie a entitlements.\n- Ovládanie klientov OSCam zostáva bez zmeny.\n"
+    "version": "13.40-r38",
+    "tag": "v13.40-r38",
+    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r38/enigma2-plugin-glasssysutil_13.40-r38_all.ipk",
+    "sha256": "78fd19347a24a207c2bbe575c0515a2a9159147bd6426bed003fe19fb1bfc717",
+    "bytes": 2184164,
+    "notes": "GSU 13.40-r38\n\n- Odstránená celá ponuka IPK/DEB a používateľské skripty z hlavného menu.\n- Vyradené všeobecné inštalovanie a odinštalovanie balíkov, TAR archívov aj spúšťanie používateľských skriptov.\n- Plugin už nepribaľuje a neinštaluje predvolené používateľské skripty.\n- Hlavné menu má desať položiek.\n- Aktualizácia GSU a správa balíkov CAM/SRV zostávajú zachované.\n"
   }
 }
