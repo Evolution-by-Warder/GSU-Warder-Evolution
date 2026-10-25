@@ -39,3 +39,39 @@ class SystemLayoutTests(unittest.TestCase):
                 self.assertEqual(n.get('backgroundColor'),'#00102136')
 
 if __name__=='__main__':unittest.main()
+
+class TransparentSystemIconTests(unittest.TestCase):
+    def test_all_new_icons_are_rgba_with_empty_top_margin_and_small_native_size(self):
+        import struct,zlib
+        files=list((ROOT/'images').glob('system-*.png'))
+        self.assertEqual(len(files),15)
+        for file in files:
+            raw=file.read_bytes();self.assertEqual(raw[:8],b'\x89PNG\r\n\x1a\n')
+            self.assertEqual(struct.unpack('>II',raw[16:24]),(120,120))
+            self.assertEqual(raw[25],6)
+            chunks=[];offset=8
+            while offset<len(raw):
+                size=struct.unpack('>I',raw[offset:offset+4])[0]
+                if raw[offset+4:offset+8]==b'IDAT':chunks.append(raw[offset+8:offset+8+size])
+                offset+=12+size
+            first=zlib.decompress(b''.join(chunks))[:481]
+            self.assertEqual(set(first[1:]),{0},file.name)
+            self.assertLess(len(raw),20000)
+
+    def test_every_system_picture_is_mapped_to_a_shipped_asset_without_distortion(self):
+        plugin=load(ROOT)
+        for suffix,w,h in (('',1280,720),('_FHD',1920,1080),('_UHD',3840,2160)):
+            old=importlib.import_module('Plugins.Extensions.GlassSysUtil.GSU_skins'+suffix).GlassSysInfo
+            root=ET.fromstring(plugin._warder_system.system_skin(old,w,h))
+            found=0
+            for n in root:
+                path=n.get('pixmap','')
+                self.assertNotIn('/devices/',path)
+                self.assertNotIn('/bp_icons/',path)
+                if '/system-' not in path:continue
+                self.assertTrue((ROOT/'images'/Path(path).name).is_file())
+                self.assertEqual(n.get('scale'),'1')
+                if n.tag=='ePixmap' and 'status' not in path:
+                    iw,ih=map(int,n.get('size').split(','));self.assertEqual(iw,ih)
+                found+=1
+            self.assertGreaterEqual(found,20)

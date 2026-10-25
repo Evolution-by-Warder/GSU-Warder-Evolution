@@ -1,0 +1,25 @@
+{
+  "style": "Warder silver/cyan native vector symbols, no background or reflections",
+  "renderer": "CairoSVG 2.9.1",
+  "size": [
+    120,
+    120
+  ],
+  "files": {
+    "system-cf.png": "791b90ae71349c67ccd8ee294a9d50761ce9f5c563a378f87c9d266bb8548f18",
+    "system-cpu.png": "0b3afd6014a0de423e4c69629ee0892f5b1fe31fad6e85b15ad63e19977677e9",
+    "system-hdd.png": "890f42c65a60ed8b4fbb245c8510ef3867412e36cc90a1528458612836990272",
+    "system-hdd_temp.png": "07b8d71a6e8468cfd06b701b9fc246dbcf03ac59bd4d2ce8c7b9c2fe25fc17e6",
+    "system-lr.png": "f5de505d326a8954c6d1b2c98218414b574a8146ee6a7445c01fd2dfb635bfc3",
+    "system-mem.png": "fb0e7cadfeb862e7fe83226e8fa8903cd3a5ecfda8211f560e3400121a983fd1",
+    "system-root.png": "0494e23e2d607d2c84b66e5f2f4a389c09e76569d9a224ce605ce36889d241a7",
+    "system-sd.png": "9317ae4643aabd57fc9167f7dba9c8dada6d61847e613e22c080f88139e4f410",
+    "system-sensor.png": "9beee880e1ed620c467a9c8ad92a01cd9d4a2f11b64cb2827a8de51b9439c964",
+    "system-status-green.png": "3295bdbd000c309b6fc8da1c4af8433fa7d730b8cb3c95319f5b374f65404477",
+    "system-status-red.png": "a428de7ec9d2d338d286dd2c5ea419e197e8f9a74729dc6d20628bdac4bc1443",
+    "system-summ.png": "3b175cecd41c99e6351d0733d1126f3c99f4b094b21d05a974f4f4e068e0a990",
+    "system-swap.png": "e7acdeff9a6006f69cae8ebbb89f4d23881b1b0b44c1d52711ba2b363c715852",
+    "system-updown.png": "a54f80ce5c977993f42770990c0712cd5268989b2ff4b3295b81c1e8c09ae1d7",
+    "system-usb.png": "d0624519ed6e3073a48e91b53a4fe73b30ca5073d923622fa0610294202e4274"
+  }
+}

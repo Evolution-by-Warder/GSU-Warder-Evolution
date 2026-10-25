@@ -495,3 +495,7 @@ Snímka1(20261025-162230).jpg potvrdzuje r44 hlavné menu, väčšie panely bez 
 ### r46 oprava vrstiev
 
 Snímka1(20261025-163228).jpg ukazuje chýbajúce ľavé popisky a oba pravé výpisy v r45. OpenATV ScrollLabel.py smeruje zPosition na vnútorné labely, parent eWidget zostáva0; nové pozadie0 ho preto prekrývalo. r46 má backdrop-3, rám-2 a panel-1. Texty ostávajú transparentné nad nepriehľadným panelom, takže sa neprekrývajú pôvodné presahujúce rozsahy. Pôvodné PNG majú alpha204–255; zapnutý blend namiesto off ich zjemní, čierny obsah tým nie je úplne odstránený. Overiť na prijímači pred pokračovaním inej sekcie.
+
+### r47 ikonky
+
+Používateľ potvrdil zobrazené popisky a oba výpisy aj šípky všetkými smermi v r46, snímka1(20261025-164108).jpg. Funkčnú opravu neopakovať. Výslovne žiada nové ikonky bez čiernych podkladov. r47 nahrádza15 symbolov transparentnými PNG z vlastných SVG predlôh, zachováva význam aj natívne ovládanie. Najbližšie overiť vizuálny výsledok Informácií o systéme po aktualizácii.

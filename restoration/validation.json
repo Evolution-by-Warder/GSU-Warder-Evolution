@@ -1,6 +1,6 @@
 {
   "python": "3.14.7",
-  "host_checks": 257,
+  "host_checks": 259,
   "host_checks_passed": true,
   "receiver_tested": false,
   "source_sha256": "9666759cfb6a9dd8d2b6df52aef20c6bab1b1dfd1a389ea51a6a33ee9cd676a7",
@@ -55,11 +55,11 @@
   "plugin_update_sha256": "1f712eefde223d4cd796e4c88cea3f166061ddbbdc52fc3468cfbf346415d37d",
   "plugin_update_ui_sha256": "7775e311991a71e77abf08e054c4474c229477cb97074fe06e65df8e7f155897",
   "latest_candidate": {
-    "version": "13.40-r46",
+    "version": "13.40-r47",
     "published": false,
     "receiver_verified": false,
-    "bytes": 3468348,
-    "sha256": "93ac687d6a33ea3fb9e44e2594ba9fffc3cd5514252ff70329013d36c2d62e1e",
+    "bytes": 3545214,
+    "sha256": "611572487ab75115815e673964a58a2edeb84ab93c41f63269bc5f72d9e46865",
     "feed_advanced": false
   },
   "oscam_readers_ui_sha256": "d0d39fc4462e7c5f46031461cba25e8fd9d4bef82da54ef364384c35d6678753",
@@ -68,15 +68,15 @@
   "notes": " Receiver r40 screenshot145743 confirms About content and layout only; not close/scroll interaction or standalone health menu removal. Full receiver validation remains incomplete.",
   "warder_main_sha256": "1ab968a114ca698dd3a0119e6abe549671a07a5d9e86c79711549b2f97d0c3a7",
   "previous_candidate": {
-    "version": "13.40-r45",
+    "version": "13.40-r46",
     "published": true,
     "receiver_verified": false,
-    "bytes": 3468256,
-    "sha256": "aebd183a5287ec3816187c45c2114d371e2f7641c1d475a802bcb1181dfde371",
+    "bytes": 3468348,
+    "sha256": "93ac687d6a33ea3fb9e44e2594ba9fffc3cd5514252ff70329013d36c2d62e1e",
     "feed_advanced": true,
-    "ci_run": 40211669564,
+    "ci_run": 40212501299,
     "ci_conclusion": "success",
-    "receiver_evidence": "Screenshot163228 shows missing labels/process/dmesg; system presentation requires correction"
+    "receiver_evidence": "Screenshot164108 confirms restored text and both scroll panels; user confirms all four arrows"
   },
-  "warder_system_sha256": "948e2db34e33fb46d65363e04bdb71de28faf6eefdd3dcfafdf10fea0301106b"
+  "warder_system_sha256": "af49b8243328e8510ce0061bfab6ab9a0072197f96935050df495ac4441c21e4"
 }

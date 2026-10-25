@@ -38,6 +38,19 @@ def system_skin(original,width,height):
             node.set('transparent','1')
             if node.get('foregroundColor') in (None,'#666666'):
                 node.set('foregroundColor','#00d1e3f3')
+        pixmap=node.get('pixmap','')
+        basename=Path(pixmap).stem
+        if '/devices/' in pixmap or basename in ('lr','updown'):
+            node.set('pixmap',main.BACKGROUND.rsplit('/',1)[0]+'/system-'+basename+'.png')
+            px,py=map(int,node.get('position').split(','))
+            pw,ph=map(int,node.get('size').split(','))
+            side=min(pw,ph)
+            node.set('position','%d,%d'%(px+(pw-side)//2,py+(ph-side)//2))
+            node.set('size','%d,%d'%(side,side))
+            node.set('scale','1')
+        elif '/bp_icons/' in pixmap and basename in ('red','green'):
+            node.set('pixmap',main.BACKGROUND.rsplit('/',1)[0]+'/system-status-'+basename+'.png')
+            node.set('scale','1')
         if node.tag=='ePixmap':node.set('alphatest','blend')
         root.append(node)
     for index,(name,color) in enumerate((('red','#00ff526a'),('green','#0039ff59'),('yellow','#00ffdb52'))):
