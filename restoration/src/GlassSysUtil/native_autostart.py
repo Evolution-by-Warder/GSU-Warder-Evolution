@@ -10,6 +10,17 @@ from pathlib import Path
 
 GUARD=Path('/run/gsu-softcam-session.json')
 _ACTIVE=None
+CHECK_INTERVAL=15
+MAX_RETRY_INTERVAL=300
+
+
+def autocheck_help(api):
+    text='Checks the selected native CAM every 15 seconds and restores it if stopped unexpectedly. Manual GSU stop pauses recovery.'
+    translated=api['_'](text)
+    language=getattr(getattr(getattr(api.get('config'),'osd',None),'language',None),'value','')
+    if translated==text and language.startswith('sk'):
+        return 'Kontrola vybraného CAM-u každých 15 sekúnd a obnova pri výpadku. Ručné zastavenie v GSU pozastaví obnovu.'
+    return translated
 
 
 def publish_guard(token,enabled):
@@ -72,6 +83,8 @@ class DelayedNativeStart:
         self.fired=False
         self.inflight=False
         self.busy=0
+        self.failures=0
+        self.failure_name=None
         self.paused=set()
         self.token=os.urandom(16).hex()
         self.guard_ready=False
@@ -95,13 +108,15 @@ class DelayedNativeStart:
             log_event('automatic control unavailable: '+str(error))
 
     def configure(self):
+        self.failures=0
         self.publish()
-        log_event('autocheck '+('enabled interval=600s' if self.enabled() else 'disabled'))
+        log_event('autocheck '+('enabled interval=15s' if self.enabled() else 'disabled'))
         self.arm_check()
 
     def arm_check(self):
         self.checkTimer.stop()
-        if not self.cancelled and self.enabled():self.checkTimer.startLongTimer(600)
+        interval=min(MAX_RETRY_INTERVAL,CHECK_INTERVAL*2**self.failures)
+        if self.fired and not self.cancelled and self.enabled():self.checkTimer.startLongTimer(interval)
 
     def schedule(self):
         if not self.name:return False
@@ -118,7 +133,7 @@ class DelayedNativeStart:
 
     def check(self):
         self.checkTimer.stop()
-        if self.cancelled or not self.enabled():return
+        if self.cancelled or not self.fired or not self.enabled():return
         name=self.native.selected()
         if not name:
             log_event('autocheck skipped: no selected CAM');self.arm_check();return
@@ -131,14 +146,18 @@ class DelayedNativeStart:
             self.arm_check();return
         if not self.guard_ready:
             self.arm_check();return
+        if name!=self.failure_name:
+            self.failure_name=name
+            self.failures=0
         self.inflight=True
         self.worker_reason='autocheck' if periodic else 'autostart'
         log_event(self.worker_reason+' checking '+name)
         try:
             self.container=self.container_factory()
             container=self.container
+            request_token=self.token
             def completed(code):
-                if self.container is container:self.finished(code)
+                if self.container is container:self.finished(code,request_token)
             signal=self.container.appClosed
             try:self.finished_connection=signal.connect(completed)
             except AttributeError:(signal.get() if hasattr(signal,'get') else signal).append(completed)
@@ -149,10 +168,13 @@ class DelayedNativeStart:
             log_event('worker error: '+str(error))
             self.finished(-1)
 
-    def finished(self,code):
+    def finished(self,code,request_token=None):
         if not self.inflight:return
         self.inflight=False
         log_event('worker finished code='+str(code))
+        if request_token is None or request_token==self.token:
+            self.failures=min(5,self.failures+1) if code else 0
+            if code:log_event('autocheck retry in=%ss failures=%s' % (min(MAX_RETRY_INTERVAL,CHECK_INTERVAL*2**self.failures),self.failures))
         self.arm_check()
 
     def cancel(self):
@@ -162,6 +184,7 @@ class DelayedNativeStart:
         self.publish(new_token=True)
 
     def manual_begin(self,name,operation):
+        self.failures=0
         was_paused=name in self.paused
         self.busy+=1
         if operation=='stop':self.paused.add(name)

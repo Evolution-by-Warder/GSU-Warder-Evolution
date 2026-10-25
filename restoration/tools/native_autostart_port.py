@@ -3,10 +3,13 @@ import ast
 
 
 def port_native_autostart(source):
-    source=source.replace('from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox','from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox\nfrom Plugins.Extensions.GlassSysUtil.native_autostart import begin as _native_autostart_begin, configure as _native_autostart_configure',1)
+    source=source.replace('from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox','from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox\nfrom Plugins.Extensions.GlassSysUtil.native_autostart import begin as _native_autostart_begin, configure as _native_autostart_configure, autocheck_help as _native_autocheck_help',1)
     tree=ast.parse(source);lines=source.splitlines(keepends=True);changes=[]
     for node in tree.body:
         if isinstance(node,ast.ClassDef) and node.name=='univCamMng':
+            init=next(m for m in node.body if isinstance(m,ast.FunctionDef) and m.name=='__init__')
+            help_assignment=next(n for n in init.body if isinstance(n,ast.Assign) and any(ast.unparse(t)=='self.aa' for t in n.targets))
+            changes.append((help_assignment.end_lineno,"        if self.nativeSoftcam.selected():\n            self.aa[8] = _native_autocheck_help(globals())\n"))
             method=next(m for m in node.body if isinstance(m,ast.FunctionDef) and m.name=='enaAutochck')
             changes.append((method.body[-1].lineno-1,"        _native_autostart_configure(autocams)\n"))
         if isinstance(node,ast.ClassDef) and node.name=='AutoCams':

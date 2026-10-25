@@ -91,18 +91,18 @@ class NativeAutostartTests(unittest.TestCase):
         self.container=MagicMock();self.container.execute.return_value=0
         self.factory=MagicMock(return_value=self.container)
         controller=boot.DelayedNativeStart(self.native,iter(self.timers).__next__,self.factory,10,lambda:self.setting.value)
-        controller.schedule();controller.configure()
+        controller.schedule();controller.fired=True;controller.configure()
         return controller
 
-    def test_autocheck_schedules_600_seconds_and_rearms_only_after_worker(self):
+    def test_autocheck_schedules_15_seconds_and_rearms_only_after_worker(self):
         controller=self.controller()
-        self.timers[1].startLongTimer.assert_called_with(600)
+        self.timers[1].startLongTimer.assert_called_with(15)
         self.factory.assert_not_called()
         controller.check()
         self.assertIn('--autocheck oscam-master --guard ',self.container.execute.call_args.args[0])
         controller.check();self.factory.assert_called_once()
         controller.finished(0)
-        self.timers[1].startLongTimer.assert_called_with(600)
+        self.timers[1].startLongTimer.assert_called_with(15)
         controller.check();self.assertEqual(self.factory.call_count,2)
 
     def test_disabled_control_has_no_periodic_worker_and_toggle_is_live(self):
@@ -110,7 +110,7 @@ class NativeAutostartTests(unittest.TestCase):
         self.timers[1].startLongTimer.assert_not_called()
         controller.check();self.factory.assert_not_called()
         self.setting.value=True;controller.configure()
-        self.timers[1].startLongTimer.assert_called_once_with(600)
+        self.timers[1].startLongTimer.assert_called_once_with(15)
         self.setting.value=False;controller.configure();controller.check()
         self.factory.assert_not_called()
 
@@ -139,12 +139,49 @@ class NativeAutostartTests(unittest.TestCase):
         self.native.selected.return_value='oscam-uni';controller.check()
         self.assertIn('--autocheck oscam-uni ',self.container.execute.call_args.args[0])
 
-    def test_spawn_failure_releases_inflight_and_retries_at_normal_interval(self):
+    def test_spawn_failure_releases_inflight_and_delays_retry(self):
         controller=self.controller();self.container.execute.side_effect=OSError('spawn failed')
         controller.check();self.assertFalse(controller.inflight)
-        self.timers[1].startLongTimer.assert_called_with(600)
+        self.timers[1].startLongTimer.assert_called_with(30)
         self.container.execute.side_effect=None;controller.check()
         self.assertEqual(self.factory.call_count,2)
+
+    def test_repeated_failure_backoff_is_bounded_and_success_resets_it(self):
+        controller=self.controller()
+        for interval in (30,60,120,240,300,300,300):
+            controller.check();controller.finished(1)
+            self.timers[1].startLongTimer.assert_called_with(interval)
+        controller.check();controller.finished(0)
+        self.timers[1].startLongTimer.assert_called_with(15)
+
+    def test_manual_action_and_new_selection_clear_previous_failure_delay(self):
+        controller=self.controller();controller.check();controller.finished(1)
+        ticket=controller.manual_begin('oscam-master','start');controller.manual_end(ticket,True)
+        self.timers[1].startLongTimer.assert_called_with(15)
+        controller.check();controller.finished(1)
+        self.native.selected.return_value='oscam-uni'
+        controller.check();controller.finished(1)
+        self.timers[1].startLongTimer.assert_called_with(30)
+
+    def test_cancelled_worker_failure_does_not_extend_current_session_retry(self):
+        controller=self.controller();controller.check();old=controller.token
+        ticket=controller.manual_begin('oscam-master','start')
+        controller.finished(1,old);controller.manual_end(ticket,True)
+        self.timers[1].startLongTimer.assert_called_with(15)
+
+    def test_periodic_timer_cannot_bypass_initial_30_second_startup_delay(self):
+        timers=[MagicMock(),MagicMock()];factory=MagicMock()
+        factory.return_value.execute.return_value=0
+        controller=boot.DelayedNativeStart(self.native,iter(timers).__next__,factory,30,lambda:True)
+        controller.schedule();controller.configure();controller.check()
+        timers[0].startLongTimer.assert_called_once_with(30)
+        timers[1].startLongTimer.assert_not_called();factory.assert_not_called()
+        controller.fire();controller.finished(0)
+        timers[1].startLongTimer.assert_called_once_with(15)
+
+    def test_native_autocheck_help_has_new_interval_and_slovak_text(self):
+        api={'_':lambda text:text,'config':types.SimpleNamespace(osd=types.SimpleNamespace(language=types.SimpleNamespace(value='sk_SK')))}
+        self.assertIn('15 sekúnd',boot.autocheck_help(api))
 
     def test_stale_guard_or_disabled_recovery_cannot_start_cam(self):
         with tempfile.TemporaryDirectory() as folder,patch.object(boot,'GUARD',Path(folder)/'guard.json'):

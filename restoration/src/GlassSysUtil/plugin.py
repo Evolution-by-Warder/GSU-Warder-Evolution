@@ -4,7 +4,7 @@
 # Embedded file name: /usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/plugin.py
 # Compiled at: 2021-03-28 16:56:23
 from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox
-from Plugins.Extensions.GlassSysUtil.native_autostart import begin as _native_autostart_begin, configure as _native_autostart_configure
+from Plugins.Extensions.GlassSysUtil.native_autostart import begin as _native_autostart_begin, configure as _native_autostart_configure, autocheck_help as _native_autocheck_help
 from Plugins.Extensions.GlassSysUtil.cam_package_actions import controls as _cam_package_controls, update as _cam_package_update, remove as _cam_package_remove, is_cam_package as _is_cam_package, refresh_registry as _cam_package_registry, start_config as _cam_start_config
 from Plugins.Extensions.GlassSysUtil.cam_feed_ui import initialize as _cam_feed_initialize, load as _cam_feed_load, select as _cam_feed_select
 from Plugins.Extensions.GlassSysUtil.native_softcam import NativeSoftcam, handle_action as _native_softcam_action, refresh_state as _native_softcam_refresh
@@ -4282,6 +4282,8 @@ class univCamMng(Screen):
         self['txt8'] = ColorLabel(_('Autocheck CAM/SRV'))
         self['txt9'] = ColorLabel(_('Prepare Exp. Image'))
         self.aa = {0: _('Exit CAM/SRV Manager'), 1: _('Downloading CAM/SRV from server and installing to CAM/SRV Manager'), 2: _('Deleting CAM/SRV from CAM/SRV Manager'), 3: _('Update OScam to the highest available version'), 4: _('OScam starting with command line options like path to OScam cfg and more'), 6: _('Delayed start in seconds of CAM/SRV after start E2'), 7: _('Enabling or Disabling Restart SRV if CAM is running'), 8: _('Enabling or Disabling Autocheck of running CAM/SRV every 10 min and try to start CAM/SRV if is not running'), 9: _('Preparing experimental image to use CAM/SRV and disabling dccamd')}
+        if self.nativeSoftcam.selected():
+            self.aa[8] = _native_autocheck_help(globals())
         self['select_pict'] = Pixmap()
         self.idxAllFnc = 0
         self.list = []
