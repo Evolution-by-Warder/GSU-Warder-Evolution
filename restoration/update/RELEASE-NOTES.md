@@ -1,7 +1,8 @@
-GSU 13.40-r38
+GSU 13.40-r39
 
-- Odstránená celá ponuka IPK/DEB a používateľské skripty z hlavného menu.
-- Vyradené všeobecné inštalovanie a odinštalovanie balíkov, TAR archívov aj spúšťanie používateľských skriptov.
-- Plugin už nepribaľuje a neinštaluje predvolené používateľské skripty.
-- Hlavné menu má desať položiek.
-- Aktualizácia GSU a správa balíkov CAM/SRV zostávajú zachované.
+- Nová položka Nástroje v hlavnom menu.
+- Kontrola stavu: dostupná pamäť, miesto na diskoch, sieť, Enigma2, CAM, teploty a tunery.
+- Vytvorenie diagnostického balíka s údajmi o systéme a logmi GSU do /tmp.
+- Zber údajov beží na pozadí a nemení systémové nastavenia.
+- Konfiguračné súbory s účtami a heslami sa do archívu nekopírujú.
+- Zachovaný pôvodný vzhľad GSU a ovládanie posúvania textu šípkami.

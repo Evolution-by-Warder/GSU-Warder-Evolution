@@ -20,6 +20,7 @@ from oscam_clients_port import port_oscam_clients
 from plugin_update_port import port_plugin_update
 from oscam_readers_ui_port import port_oscam_readers_ui
 from remove_local_packages_port import remove_local_packages
+from warder_tools_port import port_warder_tools
 
 
 def port(source):
@@ -413,6 +414,7 @@ def _gsu_helper(name):
     source=port_plugin_update(source)
     source=port_oscam_readers_ui(source)
     source=remove_local_packages(source)
+    source=port_warder_tools(source)
     # Preserve original signatures; retired shortcut entry points are intentional no-ops.
     compile(source, 'plugin.py', 'exec')
     return source

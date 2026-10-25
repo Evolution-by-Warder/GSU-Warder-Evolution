@@ -307,14 +307,14 @@ class OriginalPortTests(unittest.TestCase):
                 self.assertEqual(actual[item['name']],item['args'],item['name'])
         self.assertEqual(sum(isinstance(n,ast.ClassDef) for n in ast.walk(tree)),51)
 
-    def test_main_menu_keeps_ten_entries_with_one_update_and_real_contexts(self):
+    def test_main_menu_keeps_eleven_entries_with_tools_update_and_real_contexts(self):
         module=self.plugin
         screen=module.SysUtilMngMain(types.SimpleNamespace())
-        self.assertEqual(len(screen.menuListAll),10)
+        self.assertEqual(len(screen.menuListAll),11)
         self.assertTrue({'5','10','11','12','13','14','15'}.isdisjoint(item[0] for item in screen.menuListAll))
         self.assertEqual(screen['actions'].contexts,['SetupActions','ColorActions','GlobalActions','WizardActions','MenuActions'])
         screen.updatemenulist()
-        self.assertEqual(len(screen['list'].list),10)
+        self.assertEqual(len(screen['list'].list),11)
 
     def test_main_menu_help_and_dispatch_follow_ids_after_importer_removal(self):
         from unittest.mock import MagicMock

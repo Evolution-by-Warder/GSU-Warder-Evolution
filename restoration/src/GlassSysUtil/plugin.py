@@ -1,3 +1,4 @@
+from Plugins.Extensions.GlassSysUtil import warder_tools_ui as _warder_tools_ui
 from Plugins.Extensions.GlassSysUtil.plugin_update_ui import StartupUpdateCheck as _StartupUpdateCheck, text as _plugin_update_text
 # uncompyle6 version 3.9.3
 # Python bytecode version base 2.6 (62161)
@@ -1512,6 +1513,7 @@ class SysUtilMngMain(Screen):
             ('7', _('CAM/SRV Manager'), _('Start, stop, restart, download, unistall CAM/SRV or set start cfg of OScam')),
             ('8', _('OSD ECM Information'), _('Enable/Disable OSD ECM Info, will be showed in top - right (default) of TV screen, show changes in ECM info only')),
             ('9', _('Swap Management'), _('Create,remove and show single/multi swap on mapped devices on your hw')),
+            ('17', _warder_tools_ui.text(globals(), 'Tools'), _warder_tools_ui.text(globals(), 'System overview and a diagnostic file for support.')),
             ('16', _plugin_update_text(globals(), 'Update'), _plugin_update_text(globals(), 'Check for a new version of Glass System Utility Warder Evolution'))]
         self.status = {}
         self['list'] = ListboxSys2(self.list)
@@ -1563,6 +1565,8 @@ class SysUtilMngMain(Screen):
                 self.session.open(OSD_ECM_Menu)
             elif selectedItem == '9':
                 self.session.open(swap_manager)
+            elif selectedItem == '17':
+                _warder_tools_ui.open_tools(self.session, globals())
             elif selectedItem == '16':
                 self.updatechckact()
         return

@@ -1,10 +1,10 @@
-# Aktuálny checkpoint — 25. 10. 2026, r38
+# Aktuálny checkpoint — 25. 10. 2026, r39
 
 Pracovať výhradne v `original-python314`, runtime `restoration/src/GlassSysUtil`; produkčná vetva zostáva nedotknutá. Prijímač má r37; používateľ potvrdil vstavanú aktualizáciu z r36, čítačkové potvrdenie/Nie aj skutočný zákaz a povolenie v oboch smeroch. Autokontrola configFalse/guardFalse pri vypnutí a guardTrue pri predvolenomTrue po zapnutí je potvrdená. Štart GUI bez vybraného CAM zostáva hostiteľsky testovaný. Prijímač diagnosticky uvádza Python3.14.9, host tests3.14.7. Staršie odseky nižšie sú história.
 
 Používateľ výslovne vyradil celú sekciu IPK/DEB a používateľské skripty vrátane TAR. Rozpracované opravy a testovací balík boli zahodené pred publikáciou; neposielať ich ani nežiadať ich skúšku. r38 odstraňuje položku5 a štyri implementačné triedy, predvolené skripty zo zdroja/balíka aj ich kopírovanie pri inštalácii. Zdieľané ipk_uninstall_center zostáva iba pre CAM/SRV a vždy filtruje CAM; samostatná Aktualizácia GSU zostáva.
 
-Najbližšie po zverejnení: aktualizovať GSU na r38 cez vstavanú ponuku, overiť desať položiek a neprítomnosť IPK/DEB a používateľských skriptov. Netestovať vyradenú sekciu ani znovu už potvrdené čítačky. CAM správa, aktualizátor a predchádzajúce sekcie zostávajú. CCcam a Mbox bez bežiaceho príslušného servera nemožno označiť za hardvérovo overené. Moderný spoločný dizajn riešiť až po ukončení funkčnej obnovy podľa rozhodnutia používateľa.
+Najbližšie: aktualizovať na r39 cez GSU. Otvoriť Nástroje → Kontrola stavu a overiť načítané údaje, šípky a návrat; potom Vytvoriť diagnostický balík a overiť zobrazenú cestu /tmp/gsu-diagnostics-...tar.gz. Súbor používateľ môže poslať na kontrolu. Nežiadať znovu desiatky konzolových výpisov, keď je dostupný tento balík. Nové nástroje zatiaľ nie sú prijímačom potvrdené. Hlavné menu má11 položiek vrátane Nástrojov a Aktualizácie; všeobecné IPK/DEB/TAR/skripty zostávajú vyradené. r38 samotná nemá samostatné potvrdenie menu od používateľa; r39 možno aktualizovať priamo z jeho poslednej potvrdenej r37. CCcam/Mbox bez príslušného servera a scenár GUI štartu bez CAM stále nevyhlasovať za hardvérovo overené. Moderný spoločný dizajn neskôr podľa rozhodnutia používateľa.
 
 ## OSCam klienti — uzavretie skúšky r35
 
@@ -433,3 +433,11 @@ Po začatí kontroly všeobecného inštalátora používateľ označil celú se
 ## 2026-10-25 — finálna r38 s odstránenou sekciou zverejnená
 
 Zdroj baf7de36cea55f138b21b6052b00417e2f3f3b25, CI40200701330 úspešné vrátane229 testov, porovnania dvoch buildov a publikácie. IPK2 184 164B, SHA25678fd19347a24a207c2bbe575c0515a2a9159147bd6426bed003fe19fb1bfc717. Verejný v13.40-r38 a izolovaný feed už obsahujú finálne odstránenie celej všeobecnej sekcie, žiadnu z rozpracovaných opráv inštalátora. Kontrola skutočného IPK potvrdila neprítomnosť default-scripts/* a *_user.sh, postinst sa nedotýka /usr/script. Nasleduje iba vstavaná aktualizácia používateľa a potvrdenie desaťpoložkového menu.
+
+## 2026-10-25 — vybrané Warder utility z balíka w19
+
+Používateľ priložil enigma2-plugin-glasssysutil_13.38-w19_all.ipk (SHA256a1ec935c35ebb2bc7c320067a1aff30ed7dab565494571a891d8709cbbb83d6c). Iba staticky rozbalený/prečítaný; neinštaloval sa. Modré v tomto starom balíku otváralo GSUWarderTools so16 položkami. Po odporúčaní preniesť iba súhrnnú kontrolu stavu a diagnostický balík používateľ schválil novú položku Nástroje/Utility a výber užitočných funkcií.
+
+r39 pridáva práve tieto2 nástroje. Kontrola používa izolovaný worker s20s timeoutom, bez externých sieťových testov a bez statvfs NFS/CIFS; menu neblokuje. Neprístupné úložisko sa neoznačí OK. Nástroje aj výsledok majú pôvodný štýl, bound layout callbacks a šípky/červené naspäť. Pri archíve ide o0600 unikátny súbor v /tmp; report.json/health.txt/README + prípadne2 obmedzené logy GSU. Konfiguračné súbory účtov a hesiel, kompletné settings, worker token a celé crashlogy sa nezbierajú. Vybrané4 GSU nastavenia, enabled guard, názov selectedCAM, procesy, hardvér a gateway/DNS sú diagnostické údaje. Text sa filtruje; JSON zostáva platný. Žiadne automatické nahrávanie súboru a žiadna zmena systému. Staré široké dashboardy a ostatné utility sa nekopírovali.
+
+243 host testov prešlo vrátane reálneho podprocesu, archívu a regresie natívnych callbackov; AST reprodukcia súhlasí. Nasleduje zverejnenie a prvá skúška na prijímači. Bez potvrdenia používateľa neoznačiť nové obrazovky za receiver-verified.
