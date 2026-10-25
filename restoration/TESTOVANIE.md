@@ -12,7 +12,7 @@ Referenčný upstream OpenVisionE2/oscam module-webif.c: disable nastaví disabl
 
 Dodaná gsu-cam-diagnostika.txt zachytáva monotónne časy 25121–25207: počas troch fáz rovnaký softcam symlink, hash init skriptu a živé PIDy 20965/20966. par50=False, pomocný guard enabled=true, autostart log nedostupný. Nesúlad môže byť starý súbor a nedokazuje bežiaci časovač. Diagnostika nezachytila pôvodnú stratu výberu CAM, jej príčina zostáva nepreukázaná. Predošlý log končil pri uptime17303, zatiaľ čo aktuálny uptime bol24725; preto ho nemožno pripísať poslednému zákazu/povoleniu klienta.
 
-r36 opravuje konkrétne reprodukovateľnú medzeru: pri GUI štarte bez native výberu sa pôvodne nevytvoril controller. Teraz existuje aj pre neskorší výber, rešpektuje živý prepínač a ručný GSU stop; bez živého controlleru sa zneplatní starý guard. 215 hostiteľských testov prešlo. Nový IPK a hash sú v aktuálnom dist výstupe a zázname vydania.
+r36 opravuje konkrétne reprodukovateľnú medzeru: pri GUI štarte bez native výberu sa pôvodne nevytvoril controller. Teraz existuje aj pre neskorší výber, rešpektuje živý prepínač a ručný GSU stop; bez živého controlleru sa zneplatní starý guard. 215 hostiteľských testov prešlo. Nový IPK: 2 185 256 B, SHA256 `304b774a32ac9b6620ce02ebfff5fd5943d97dcd431629d02e06d7ec2fd4bd0a`. Zdrojový commit `31afb4fa1b2d07d72aee87b446946c65d9eb89b0`, CI40196871017 úspešné vrátane publikácie a overenia stiahnutých verejných bajtov. Release `v13.40-r36` je verejný prerelease a izolovaný feed už ukazuje na r36. Parser aktuálneho feedu ponúkne r36 pre r35, pri r36 neponúka nič. Library IPK `libfile_12ee11432f548191917ef456efa8ee58`. Prijímač vyžaduje jednorazovú ručnú inštaláciu r36 a GUI reštart; následné novšie vydania už ponúkne vstavaný updater.
 
 ---
 

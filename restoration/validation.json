@@ -49,5 +49,16 @@
   "oscam_clients_sha256": "46a6c5c1dadedfe51584fec8c1dfd1b0b204092d672ca11420bfb0e0f25be679",
   "oscam_clients_ui_sha256": "d5811ad69a4a0abba694b82daf8d1b63e6c5fc7ea970774534894c057f3b3eda",
   "plugin_update_sha256": "1f712eefde223d4cd796e4c88cea3f166061ddbbdc52fc3468cfbf346415d37d",
-  "plugin_update_ui_sha256": "7775e311991a71e77abf08e054c4474c229477cb97074fe06e65df8e7f155897"
+  "plugin_update_ui_sha256": "7775e311991a71e77abf08e054c4474c229477cb97074fe06e65df8e7f155897",
+  "latest_candidate": {
+    "version": "13.40-r36",
+    "bytes": 2185256,
+    "sha256": "304b774a32ac9b6620ce02ebfff5fd5943d97dcd431629d02e06d7ec2fd4bd0a",
+    "source_commit": "31afb4fa1b2d07d72aee87b446946c65d9eb89b0",
+    "ci_run": 40196871017,
+    "ci_conclusion": "success",
+    "published": true,
+    "feed_advanced": true,
+    "receiver_verified": false
+  }
 }
