@@ -91,6 +91,7 @@ def handle_action(screen, action, container_factory, translate):
         running=native.running()
         success=code == 0 and running == (operation != 'stop')
         screen['activCam'].setText(translate('Active')+' CAM: '+(name if running else translate('None')))
+        screen['statCamSrvbin'].setText(translate('CAM/SRV Running') if running else translate('No Running CAM/SRV'))
         screen.statcommPics('piccam','green' if running else 'blue')
         screen.statcommPics('comm','green' if success else 'red')
         screen['statCamSrvcmd'].setText(translate({'start':'Start Script Executed','restart':'Restart Script Executed','stop':'Stop Script Executed'}[operation]) if success else name+' '+translate('Error'))

@@ -1,18 +1,20 @@
 {
   "python": "3.14.7",
-  "host_checks": 37,
+  "host_checks": 47,
   "host_checks_passed": true,
   "receiver_tested": false,
-  "source_sha256": "3751e94d09f676f9265ccb2152a47c131b1671eaab5d1d82c03d2c79eb2fa946",
+  "source_sha256": "454e7bba7269841b8f5b23ceddd47555861b45e73d3b7d18fb7a1b55e4f0f5df",
   "original_named_classes": 62,
   "original_named_functions": 510,
   "compatibility_replaced_internal_closures": [
     "generatePS.chck"
   ],
   "note": "Native API doubles validate import and menu construction, not hardware functionality.",
-  "receiver_evidence": "Partial validation detailed in TESTOVANIE.md. r11 standalone ECM screenshots confirm full revision 11968 and live ECM Time changes 0.110/0.108/0.107. CAM/SRV screenshot shows legacy-only discovery and repeated CAIDs. Receiver shell listing and supplied init script confirm /etc/init.d/softcam -> softcam.oscam-uni, /usr/bin/$CAM, and start/stop/restart commands. r12 adds image-selected SoftCAM discovery and asynchronous controls plus unique CAIDs. Native lifecycle behavior is host-tested only; new r12 receiver confirmation pending.",
+  "receiver_evidence": "r12 receiver validation confirms native oscam-uni discovery, unique CAIDs, successful restart with later ECM recovery, independent stop and start with correct Active CAM and ECM restoration. Right menu Exit + yellow confirmed. Download CAM/SRV freezes during the legacy FTP attempt. User reports web redirect to ww17 and an adware warning. DNS investigation supports parking infrastructure, but owner/malware and actual FTP contents remain unverified; direct port21 test was blocked by execution-environment routing. r13 removes the untrusted endpoint and bundled credentials from runtime, returns a disabled-source explanation without network I/O, and refreshes the stale secondary native CAM status. New r13 receiver confirmation pending. User could not connect to old FTP either and authorized replacement with the OpenATV SoftCAM feed. r13 CAM download now delegates to existing opkg configuration, refreshes and lists asynchronously, and requires package-install confirmation without force flags. No source URL is added. 47 host tests pass; actual receiver catalogue and installation unverified.",
   "bitrate_worker_sha256": "b44d016d9900242a98e1afb753abe36225a9cfdcfa50bfc21be677fc6536fcdd",
   "oscam_readers_parser_sha256": "dfac5fba47e8181bd3d4f2cb55f026c06d107e73307b9401c0deea229c8d3a85",
   "receiver_validation_scope": "partial; receiver_tested=false means the complete plugin is not yet validated",
-  "native_softcam_sha256": "c2f5f2030617d6f0ae245bdafba097d717afe13dfc243cbb7ffdc1f695d70e94"
+  "native_softcam_sha256": "37233f7296585a02cc6ceaea362817524a7fea7fd78e8ed56c8da9c88b337b0a",
+  "cam_feed_sha256": "4c7799d239cd81021bd498f62556103a02c8f69b4c9660c1b412fd38f3c785a3",
+  "cam_feed_ui_sha256": "139590ad548922905caaf438ccfef848ef4ec407c49b8d54b0f160e0ffcd49dd"
 }

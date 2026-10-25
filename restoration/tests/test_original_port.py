@@ -173,6 +173,25 @@ class OriginalPortTests(unittest.TestCase):
                 self.assertEqual(timer.stop.call_count,3)
                 self.assertIsNone(screen.runECMTimer)
 
+    def test_retired_ftp_gate_never_connects_or_sends_credentials(self):
+        module=self.plugin
+        with patch.object(module.ftplib,'FTP') as ftp:
+            message,server=module.chckFtp()
+        ftp.assert_not_called()
+        self.assertIsNone(server)
+        self.assertIn('Downloads disabled',message)
+
+    def test_cam_download_action_opens_native_catalogue_without_ftp(self):
+        from unittest.mock import MagicMock
+        module=self.plugin
+        session=types.SimpleNamespace(open=MagicMock(),openWithCallback=MagicMock())
+        screen=module.univCamMng(session);screen.enCommand=True
+        with patch.object(module.ftplib,'FTP') as ftp:
+            screen.moreCamSrv()
+        ftp.assert_not_called()
+        session.open.assert_not_called()
+        session.openWithCallback.assert_called_once_with(screen.inicializeUCM,module.ftp_center,None)
+
     def test_cam_manager_lists_native_softcam_and_routes_buttons(self):
         from unittest.mock import MagicMock
         module=self.plugin

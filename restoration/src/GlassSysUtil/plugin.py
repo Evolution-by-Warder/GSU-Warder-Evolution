@@ -4,6 +4,7 @@
 # Embedded file name: /usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/plugin.py
 # Compiled at: 2021-03-28 16:56:23
 from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox
+from Plugins.Extensions.GlassSysUtil.cam_feed_ui import initialize as _cam_feed_initialize, load as _cam_feed_load, select as _cam_feed_select
 from Plugins.Extensions.GlassSysUtil.native_softcam import NativeSoftcam, handle_action as _native_softcam_action
 from Plugins.Extensions.GlassSysUtil.cccam_transport import open_text as _cccam_open
 from Plugins.Extensions.GlassSysUtil.oscam_readers_parser import parse_readers as _oscam_readers
@@ -78,7 +79,7 @@ except:
 
 from urllib import request as urllibXX
 from urllib import request as urllibXX2
-FTP_ALL = [(base64.b64decode('cGljb25zLnRlY2huZXRldXdlYi5ldQ==').decode('ascii'), base64.b64decode('ZnRwMTA4MTA0').decode('ascii'), base64.b64decode('UGljb25pQ3M1OQ==').decode('ascii'))]
+FTP_ALL = ()  # Legacy download source disabled after receiver redirect/adware report.
 DG = '°'
 EACC = False
 try:
@@ -794,21 +795,8 @@ def findPicon(piconName, path1):
 
 
 def chckFtp():
-    ena = _('"FTP server" is unavailable yet, check your internet connection or firewall settings')
-    for x in FTP_ALL:
-        try:
-            ftp = ftplib.FTP(x[0])
-            ftp.login(x[1], x[2])
-            ftp.quit()
-            ena = ''
-        except:
-            pass
-
-        if ena == '':
-            break
-
-    return (
-     ena, x)
+    # Do not contact the historical host or send its old bundled credentials.
+    return (_('Downloads disabled: the original server is no longer a trusted source.'), None)
 
 
 def readURL():
@@ -1346,6 +1334,7 @@ class ftp_center(Screen):
         Screen.__init__(self, session)
         self.list = []
         self.wFtp = wFtp
+        _cam_feed_initialize(self)
         dev = 'x'
         try:
             for x in ('boxtype', 'vumodel', 'model'):
@@ -1403,6 +1392,9 @@ class ftp_center(Screen):
         return
 
     def updatemenulist(self):
+        if self.feedMode:
+            _cam_feed_load(self, globals())
+            return
         filenames = []
         try:
             tt = True
@@ -1457,6 +1449,9 @@ class ftp_center(Screen):
         return
 
     def doSelection(self):
+        if self.feedMode:
+            _cam_feed_select(self, globals())
+            return
         selectedItem = self['list'].getCurrent()[0]
         filename = str(selectedItem)
         if filename == '*':
@@ -4481,14 +4476,9 @@ class univCamMng(Screen):
 
     def moreCamSrv(self):
         if self.enCommand == False:
-            self.statcommPics('comm', 'red')
             self['statCamSrvcmd'].setText(_('Try later ... working'))
             return
-        (tt, self.wFtp) = chckFtp()
-        if tt != '':
-            self.session.open(MessageBox, tt, MessageBox.TYPE_ERROR, 6)
-            return
-        self.session.openWithCallback(self.inicializeUCM, ftp_center, self.wFtp)
+        self.session.openWithCallback(self.inicializeUCM, ftp_center, None)
         return
 
     def chckOscam(self):

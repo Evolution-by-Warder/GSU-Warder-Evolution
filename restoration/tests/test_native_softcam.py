@@ -66,7 +66,7 @@ class NativeSoftcamTests(unittest.TestCase):
         screen=Screen();screen.nativeSoftcam=self.cam;screen.enCommand=True
         screen.statcommPics=MagicMock()
         screen['config']=types.SimpleNamespace(getCurrent=lambda:('CAM',types.SimpleNamespace(getText=lambda:choice)),getCurrentIndex=lambda:index)
-        for key in ('statCamSrvcmd','activCam'):
+        for key in ('statCamSrvcmd','statCamSrvbin','activCam'):
             screen[key]=types.SimpleNamespace(setText=MagicMock())
         return screen
 
@@ -85,6 +85,7 @@ class NativeSoftcamTests(unittest.TestCase):
                         state.return_value=operation!='stop'
                         callbacks[0](0)
                         self.assertTrue(screen.enCommand)
+                        screen['statCamSrvbin'].setText.assert_called_with('CAM/SRV Running' if operation != 'stop' else 'No Running CAM/SRV')
                         screen.statcommPics.assert_any_call('comm','green')
 
     def test_failed_execution_and_failed_start_never_report_success(self):

@@ -4,6 +4,7 @@ import ast
 import pathlib
 import sys
 from native_softcam_port import port_native_softcam
+from cam_feed_port import port_cam_feed
 
 
 def port(source):
@@ -19,10 +20,11 @@ def port(source):
     for node in tree.body:
         if isinstance(node, ast.If) and isinstance(node.test, ast.Name) and node.test.id == 'ISP38':
             assign = next(n for n in node.body if isinstance(n, ast.Assign))
-            ftp = ''.join(lines[assign.lineno-1:assign.end_lineno]).strip()
+            ftp = 'FTP_ALL = ()  # Legacy download source disabled after receiver redirect/adware report.'
             replace(node, 'from urllib import request as urllibXX\nfrom urllib import request as urllibXX2\n'+ftp+"\nDG = '\u00b0'")
         if isinstance(node, ast.If) and isinstance(node.test, ast.Call) and any(isinstance(n,ast.Constant) and n.value=='/usr/bin/about1.png' for n in ast.walk(node.test)):
             replace(node, '# Architecture-specific helpers stay private; no mutation of /usr/bin on import.')
+    function('chckFtp', "def chckFtp():\n    # Do not contact the historical host or send its old bundled credentials.\n    return (_('Downloads disabled: the original server is no longer a trusted source.'), None)")
     # libc / libcrypto SONAMEs are ABI boundaries, never copies of another ABI.
     function('cpLibCr', 'def cpLibCr():\n    return False')
     function('chckPckg', '''def chckPckg():
@@ -373,7 +375,7 @@ def _gsu_helper(name):
     # Legacy parser still applies when column-class markup is absent.
     body=body.replace("            self['list'].l.setList(self.list)\n            self.reactivate()\n        return", "        self['list'].l.setList(self.list)\n        self.reactivate()\n        return",1)
     source=source[:start]+body+source[end:]
-    source=port_native_softcam(source)
+    source=port_cam_feed(port_native_softcam(source))
     # Preserve class and method signatures; no placeholder function bodies.
     compile(source, 'plugin.py', 'exec')
     return source
