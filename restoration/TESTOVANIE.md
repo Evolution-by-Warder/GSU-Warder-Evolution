@@ -8,7 +8,16 @@ Používateľ odmietol schematické hardvérové ikony r47, ale výslovne schvá
 
 260 testov Python3.14.7 úspešných; dva zhodné buildy, CI40215979311 úspešné vrátane publikácie a overenia vzdialených bajtov. Zdroj a28e602a61b624ccec9970446d09843e6db65924. Feed overený: r49,3639402B,SHA25680432461c90e190acc7be3b345b1c304aff9ef3b41b89bd7476ab9ba233d72c4.
 
-Najbližšie: aktualizovať cez GSU na r49 a posúdiť nové ikonky priamo v Informáciách o systéme. Nový vzhľad zatiaľ nie je schválený na prijímači. Anglické popisky zostávajú ďalšia kozmetika, neboli týmto vydaním preložené. Opakované skúšky CAM, swapu, diagnostického archívu a už potvrdených šípok nežiadať. CCcam/Mbox a samostatný SRV bez príslušnej služby stále nie sú hardvérovo overené; celý plugin neoznačovať za úplne overený.
+## Otvorené požiadavky — pokračovanie po r49 (25. 10. 2026)
+
+1. Informácie o systéme: hardvérové ikonky mierne zväčšiť, iba ak sa zmestia bez prekrytia textov. Používateľ výslovne dovolil ponechať veľkosť, ak nie je dosť miesta. Existujúce farebné plastické PNG ponechať, negenerovať nové.
+2. Spodné vertikálne bargrafy pri spodných ikonkách sú privysoko: zarovnať ich spodky so spodkami príslušných ikoniek. Presunúť spolu živý bargraf aj jeho podklad. Skontrolovať HD/FHD/UHD, zachovať pomery strán a funkcie. Úpravy patria do restoration/src/GlassSysUtil/warder_system.py a zmysluplných geometrických testov.
+3. Referenčná snímka k bodom 1–2: 1(20261025-172724).jpg, pôvodná lokálna cesta /workspace/scratch/53fa7d0977c8/upload/1(20261025-172724).jpg. Snímka ešte nebola vyhodnotená pre výpadok prostredia; nezamieňať to za schválenie celej grafiky.
+4. Následne zabudovať jazykovú podporu celého GSU podľa jazyka systému, vrátane dní a mesiacov v hlavičke. Dohodnutý rozsah: slovenčina, čeština, angličtina, nemčina, poľština, maďarčina, ruština, francúzština, taliančina a španielčina; pri chýbajúcom preklade angličtina. Spoločný názov GSU Warder Evolution neprekladať. Skontrolovať aj dlhšie preklady, zarovnanie hlavičky a texty tlačidiel.
+
+Tieto úpravy zatiaľ NIE SÚ implementované ani vydané. r49 zostáva posledná vydaná verzia; r50 nebolo vytvorené. Pracovné prostredie počas zadávania nebolo dostupné, pri zápise tohto checkpointu už opäť fungovalo. Najprv dokončiť vyššie uvedenú geometriu v aktuálnej sekcii, potom pokračovať lokalizáciou; nepreskakovať medzi sekciami.
+
+Pred vydaním primerané testy Python3.14.7, kompilácia, dva zhodné buildy a CI; novú verziu sprístupniť cez existujúci GSU updater. Opakované skúšky CAM, swapu, diagnostického archívu a už potvrdených šípok nežiadať. CCcam/Mbox a samostatný SRV bez príslušnej služby stále nie sú hardvérovo overené; celý plugin neoznačovať za úplne overený.
 
 Staršie odseky nižšie sú história; aktuálne kroky vyššie majú prednosť.
 
