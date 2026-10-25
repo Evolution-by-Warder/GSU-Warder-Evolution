@@ -56,11 +56,14 @@
   "plugin_update_ui_sha256": "176c289f60774144f82b20ea4a0038b7751f9067aec796215e3717d91ec27f93",
   "latest_candidate": {
     "version": "13.40-r53",
-    "published": false,
-    "feed_advanced": false,
+    "published": true,
+    "feed_advanced": true,
     "receiver_verified": false,
     "bytes": 3656708,
-    "sha256": "79d8ab669d8c546e919bf95d4b972874dffad3fd341221e3a46049370d969cba"
+    "sha256": "79d8ab669d8c546e919bf95d4b972874dffad3fd341221e3a46049370d969cba",
+    "source_commit": "0b2baaeddb16268253b0c025529372700b68bcad",
+    "ci_run": 40221037539,
+    "ci_conclusion": "success"
   },
   "oscam_readers_ui_sha256": "88f2da2c4eba5a05db9b333b3d8de003ca4f6e6ad82d6e2c6eed41b6feb40865",
   "warder_tools_sha256": "ef23dab03508f12e73cc5c8196f04ebaa44fd1bf7bf0d357881acc49ac341563",
@@ -69,5 +72,13 @@
   "warder_main_sha256": "36e397f76cf5a94623a96d6bce593e5df975a65a5ad59b0e6c159e3233062fbe",
   "warder_system_sha256": "b19d79dca45962a37fca2eae3bc98445f73974399bde405d275e611fc0c880d1",
   "i18n_sha256": "85a45d5f6cf6d05674eb88f60996f12b2c90484eb1c3cc7aa1fe9386e31631ba",
-  "warder_channel_sha256": "130a41b4de7fcc4de4481b4abf2488f989cfd67d3ffe52f0e2aaf7087ec0222e"
+  "warder_channel_sha256": "130a41b4de7fcc4de4481b4abf2488f989cfd67d3ffe52f0e2aaf7087ec0222e",
+  "release_cleanup": {
+    "kept": "v13.40-r53",
+    "removed": 29,
+    "first_run": 40220658958,
+    "final_run": 40221152719,
+    "verified_release_count": 1,
+    "tags_unchanged": true
+  }
 }
