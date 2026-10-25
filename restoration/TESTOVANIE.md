@@ -397,3 +397,7 @@ Prešlo199existujúcichtestov Python3.14.7, transformácia reprodukuje runtime. 
 Používateľ dodal snímku121510 a potvrdil „teraz to je OK“. Celý JOJ PLUS HD[M7Group] s medzerami je viditeľný, stredný a pravý stĺpec sú oddelené a riadky hodnôt sedia pri názvoch. Rozloženie ponechať. Záber potvrdzuje Gigablue/dvbapi/OK a aktuálne čítače; nepreukazuje samotné modré ovládanie účtu.
 
 Pokračovať v tej istej sekcii: najprv modré Zakázať musí otvoriť otázku s názvom Gigablue a voľbou Nie sa zrušiť bez zmeny účtu. Potom červeným odísť a znovu otvoriť Stav klientov; overiť opätovné načítanie bez pádu. Reálne vypnutie/zapnutie účtu stále neoverené, neoznačiť za receiver-tested iba podľa dialógu. Neskákať do ďalšej sekcie počas tejto skúšky. Táto aktualizácia je iba záznam prijímača, bez nového IPK a bez zmien runtime.
+
+## 2026-10-25 — r36 prijímač: menu a ručná kontrola aktualizácie
+
+Snímky 1/2(20261025-132307).jpg ukazujú GSU13.40-r36, jedenásť položiek hlavného menu a jednu spodnú Aktualizáciu; Správca zariadení, Textový editor a Reset hesla nie sú v zozname. Druhá snímka zobrazuje slovenskú odpoveď „Plugin je aktuálny.“ To potvrdzuje otvorenie r36 a úspešnú kontrolu rovnakej verzie. Samotné snímky nepotvrdzujú tichú kontrolu pri otvorení, kontrolu vypnutej autokontroly, aktualizáciu novším IPK ani reštart za tri sekundy. Neskúšať ďalšiu inštaláciu rovnakej verzie len na opakovanie tejto kontroly. Ďalšie funkčné overenie zostáva autokontrola CAM; novšiu aktualizáciu overiť pri ďalšom potrebnom vydaní.
