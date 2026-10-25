@@ -445,3 +445,11 @@ r39 pridáva práve tieto2 nástroje. Kontrola používa izolovaný worker s20s 
 ## 2026-10-25 — r39 Nástroje zverejnené
 
 Zdroj6652510126317d97ff223ef067ae27ef96d7fe89, CI40202236358 úspešné vrátane243 testov, dvojitého deterministického zostavenia a publikácie. IPK2 191 722B, SHA256a99d16593137b08ea881c01690b358ee61580256ebba784cb3caf3088d395920. Verejný v13.40-r39 a izolovaný feed už ukazujú na tento zhodný balík. Nasleduje iba aktualizácia používateľa priamo z GSU, Nástroje→Kontrola stavu a prvý diagnostický archív. Nové obrazovky zatiaľ nie sú receiver-verified; nesľubovať, že sú na konkrétnom prijímači overené iba podľa host testov.
+
+## 2026-10-25 — r39 prijímač: Kontrola stavu a skutočný diagnostický archív
+
+Snímka1(20261025-143227).jpg potvrdzuje načítanú slovenskú Kontrolu stavu s pamäťou, tromi lokálnymi úložiskami, sieťou, Enigmou, oscam-uni, teplotou a tunermi bez presahu do červeného Naspäť. Samotná snímka nedokazuje reakcie ovládača počas zberu ani posúvanie dlhého výstupu.
+
+Používateľ následne dodal skutočný gsu-diagnostics-20261025-153329-j54ju0dp.tar.gz,3464B. Archív bol prečítaný priamo z lokálnej prílohy, nič sa nerozbaľovalo/spúšťalo. Obsahuje4 pravidelné súbory: README.txt158B,health.txt534B,report.json15024B,softcam-autostart.log1411B. JSON je platný, verzia13.40-r39, čas2026-10-25 15:33:29+0100, prijímač OpenATV8.0.1/OE6.0/Python3.14.9/Gigablue gbquad4kpro. Zistený aj vybraný CAMoscam-uni, par50True a guardTrue. Log37riadkov ukazuje opakované kontroly, skipped:already running a code0. Kontrola nenašla konfigurácie s účtami/heslami ani credential-marker riadky; log nevyžadoval redakciu. Bitrate log nie je priložený, čo je podľa dostupnosti správne. Kompletná súkromná príloha ani LAN údaje sa do verejného repozitára nekopírujú.
+
+Tvorba a čitateľnosť archívu sú týmto overené na prijímači. Používateľ upozornil, že samostatná Kontrola stavu duplikuje Informácie o systéme. Asistent súhlasil a odporučil odstrániť iba túto samostatnú obrazovku a ponechať tvorbu balíka. Táto ďalšia úprava ešte nebola vykonaná ani vydaná; neoznačovať r39 za verziu bez Kontroly stavu.
