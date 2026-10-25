@@ -14,6 +14,8 @@ from osd_restore_port import restore_osd
 from cam_status_port import port_cam_status
 from osd_layout_port import port_osd_layout
 from swap_port import port_swap
+from remove_channel_settings_port import remove_channel_settings
+from remove_autoinstall_cron_port import remove_autoinstall_cron
 
 
 def port(source):
@@ -401,6 +403,8 @@ def _gsu_helper(name):
     source=port_cam_status(source)
     source=port_osd_layout(source)
     source=port_swap(source)
+    source=remove_channel_settings(source)
+    source=remove_autoinstall_cron(source)
     # Preserve original signatures; retired shortcut entry points are intentional no-ops.
     compile(source, 'plugin.py', 'exec')
     return source

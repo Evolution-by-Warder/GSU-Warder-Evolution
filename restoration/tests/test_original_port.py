@@ -284,7 +284,7 @@ class OriginalPortTests(unittest.TestCase):
         with patch.object(module.MessageBox,'TYPE_INFO',0,create=True):screen.entitlements()
         self.assertIs(session.open.call_args.args[0],module.MessageBox)
 
-    def test_original_signatures_retained_except_explicitly_removed_image_preparation(self):
+    def test_original_signatures_retained_except_explicitly_retired_features(self):
         tree=ast.parse(SOURCE.read_text());actual={}
         def walk(nodes,prefix=''):
             for node in nodes:
@@ -297,20 +297,45 @@ class OriginalPortTests(unittest.TestCase):
         walk(tree.body)
         manifest=json.loads((BASE/'original-inventory.json').read_text())
         removed={'univCamMng.killDccamd','univCamMng.doLnk','univCamMng.chckDccamd'}
+        removed.add('fill')
+        retired=('settings_satxml','settings_center','autoInstallMain','autoInstallMngMain','autoInstStatus','cronMng','SetupCronConf')
+        removed.update(item['name'] for item in manifest['objects'] if item['name'].split('.')[0] in retired)
         self.assertTrue(removed.isdisjoint(actual))
         for item in manifest['objects']:
             if '<' not in item['name'] and item['name'] != 'generatePS.chck' and item['name'] not in removed:
                 self.assertTrue(item['name'] in actual,item['name'])
                 self.assertEqual(actual[item['name']],item['args'],item['name'])
-        self.assertEqual(sum(isinstance(n,ast.ClassDef) for n in ast.walk(tree)),62)
+        self.assertEqual(sum(isinstance(n,ast.ClassDef) for n in ast.walk(tree)),55)
 
-    def test_main_menu_keeps_all_sixteen_original_entries_and_real_contexts(self):
+    def test_main_menu_keeps_remaining_thirteen_entries_and_real_contexts(self):
         module=self.plugin
         screen=module.SysUtilMngMain(types.SimpleNamespace())
-        self.assertEqual(len(screen.menuListAll),16)
+        self.assertEqual(len(screen.menuListAll),13)
+        self.assertTrue({'10','12','13'}.isdisjoint(item[0] for item in screen.menuListAll))
         self.assertEqual(screen['actions'].contexts,['SetupActions','ColorActions','GlobalActions','WizardActions','MenuActions'])
         screen.updatemenulist()
-        self.assertEqual(len(screen['list'].list),16)
+        self.assertEqual(len(screen['list'].list),13)
+
+    def test_main_menu_help_and_dispatch_follow_ids_after_importer_removal(self):
+        from unittest.mock import MagicMock
+        module=self.plugin;session=MagicMock()
+        screen=module.SysUtilMngMain(session)
+        for entry in screen.menuListAll:
+            screen['list'].getCurrent=lambda entry=entry:[entry[0]]
+            screen.reactivate()
+            self.assertEqual(screen['info'].text,entry[2])
+        screen.status={'11':True,'14':True}
+        for identifier,expected in [('11',module.devMngMain)]:
+            screen['list'].getCurrent=lambda identifier=identifier:[identifier]
+            screen.selectedmenuitem()
+            session.open.assert_called_with(expected)
+        self.assertFalse(hasattr(module,'settings_satxml'))
+        self.assertFalse(hasattr(module,'settings_center'))
+        for name in ('autoInstallMain','autoInstallMngMain','autoInstStatus','autoInstallMng','cronMng','SetupCronConf','fill'):
+            self.assertFalse(hasattr(module,name),name)
+        screen['list'].getCurrent=lambda:['14']
+        screen.selectedmenuitem()
+        session.open.assert_called_with(module.dirBrowser,'/',True)
 
     def _cam_process_files(self, processes):
         import io
@@ -366,10 +391,24 @@ class OriginalPortTests(unittest.TestCase):
         original=self.plugin.config.plugins.GlassSysUtil.par40.value
         self.plugin.config.plugins.GlassSysUtil.par40.value=True
         try:
-            with patch.object(self.plugin,'autocams',types.SimpleNamespace(autoStartCheck=MagicMock())),patch.object(self.plugin,'OnScreenEcm',types.SimpleNamespace(startShowOSD=MagicMock())),patch.object(self.plugin,'autoInstallMng',types.SimpleNamespace(autoInstallStart=MagicMock())):
+            with patch.object(self.plugin,'autocams',types.SimpleNamespace(autoStartCheck=MagicMock())),patch.object(self.plugin,'OnScreenEcm',types.SimpleNamespace(startShowOSD=MagicMock())):
                 self.plugin.sessionAutostart(0,session=object())
             self.assertIs(infobar.InfoBarPlugins.__init__,old_init)
         finally:self.plugin.config.plugins.GlassSysUtil.par40.value=original
+
+    def test_retired_autoinstall_flag_cannot_schedule_installation_at_session_start(self):
+        from unittest.mock import MagicMock
+        original=self.plugin.config.plugins.GlassSysUtil.par15.value
+        self.plugin.config.plugins.GlassSysUtil.par15.value=True
+        cams=types.SimpleNamespace(autoStartCheck=MagicMock())
+        osd=types.SimpleNamespace(startShowOSD=MagicMock())
+        try:
+            with patch.object(self.plugin,'autocams',cams),patch.object(self.plugin,'OnScreenEcm',osd),patch.object(self.plugin,'eTimer') as timer,patch.object(self.plugin,'system') as command:
+                session=object();self.plugin.sessionAutostart(0,session=session)
+            cams.autoStartCheck.assert_called_once_with(session)
+            osd.startShowOSD.assert_called_once_with(session)
+            timer.assert_not_called();command.assert_not_called()
+        finally:self.plugin.config.plugins.GlassSysUtil.par15.value=original
 
     def test_native_info_menu_callback_opens_original_ecm_screen(self):
         from unittest.mock import MagicMock

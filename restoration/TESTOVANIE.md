@@ -323,3 +323,15 @@ Najbližšie: nainštalovaťr31 a reštartGUI. V Správe swapu najprv na oddiele
 - 112421/112422 snímky1–3: potvrdenie obsahuje presnú testovaciu cestu, úspešné zmazanie a návrat k dvom pôvodným aktívnym swapom.
 - Používateľ následne dodal ls: /media/hdd/swapfile_gsu_test neexistuje; grep -F swapfile_gsu_test /etc/fstab bez výstupu. Overené odstránenie súboru aj jeho konfiguračného záznamu. Sekcia swap uzavretá v rozsahu týchto úspešných skúšok; zlyhania a rollback sú host-testované, nie zámerne vyvolané na prijímači.
 - Ďalšia položka v hlavnom menu je Channel Settings (Nastavenia staníc), settings_satxml → settings_center: importZIP/RAR z/tmp s dvoma voľbami, s/bez aktualizácie satellites.xml. Najprv pozrieť úvodné okno a zoznam archívov. Pôvodná implementácia má blokujúci shell unzip/unrar, chybnú skladbu ZIPcesty, vyžaduje presne6 pomocných súborov, deštruktívne odstraňuje aktuálne settingy pred overeným kopírovaním a odstraňuje zdrojový archív. Pred importom reálneho zoznamu staníc treba opraviť spracovanie, validáciu a obnovu pri chybe. Nevykonávať starý import na používateľových staniciach počas prvotnej prehliadky.
+
+## 2026-10-25 — r32: vyradenie troch nepotrebných sekcií
+
+Používateľ výslovne rozhodol odstrániť import zoznamov staníc („vyhodit“), následne Automatické inštalácie a Správu cron-u („urcite von a myslim aj to pod nim -spravovanie crond-u“). Správca zariadení bol len predmetom otázky na užitočnosť; v tomto balíku zostáva zachovaný.
+
+Odstránené triedy: settings_satxml, settings_center, autoInstallMain, autoInstallMngMain, autoInstStatus, cronMng a SetupCronConf. Odstránené tri riadky menu s ID10/12/13, spúšťacie vetvy, globálna inštancia autoInstallMng, volanie autoInstallStart zo sessionAutostart, samostatný pomocník fill používaný iba cronom a import CompConsole používaný iba jeho správcom. Odstránená aj kontrola dostupnosti cron-u z hlavného menu. Teda žiadne skryté spúšťanie AutoInstall po štarte, ani keď bol historický par15 zapnutý. Staré konfiguračné kľúče zostávajú čitateľné pre kompatibilitu, bez vykonávacieho kódu.
+
+Odstránenie nemení skutočné zoznamy staníc, archívy, systémový cron, jeho úlohy ani autostart image. CAM autostart/obnova a OSD session hooky sú zachované. Pôvodný inventár zostáva historický; test výslovne povoľuje týchto7 odstránených tried a ich metódy a globálnyfill. Runtime má55tried a13položiek menu.
+
+ID ďalších položiek zachované. SysUtilMngMain.reactivate vyhľadáva popis podľa ID, nie podľa indexu v skrátenom zozname. 177 host testov zahŕňa popisy všetkých zostávajúcich riadkov, spustenie Správcu zariadení/Textového editora a session štart s par15=True, kde sa nevytvorí žiadny inštalačný timer ani príkaz. Transformácie reprodukujú runtime; zostavenie a syntax overené pred vydaním.
+
+Najbližšie: nainštalovať r32, reštart GUI a overiť hlavné menu bez troch vyradených sekcií a správne pomocné texty. Správca zariadení zostáva, kým nebude jednoznačne odsúhlasené jeho odstránenie. Nepovažovať otázku na účel za súhlas so zmazaním.
