@@ -1,10 +1,10 @@
-# Aktuálny checkpoint — 25. 10. 2026, r54 publikované
+# Aktuálny checkpoint — 25. 10. 2026, r55 publikované
 
 ## Projekt a vydávanie
 
 Repozitár Evolution-by-Warder/GSU-Warder-Evolution. Jediné jadro: plugin/src/GlassSysUtil, všetky testy/build/grafické podklady/update sú v plugin/. main obsahuje aktuálny vyčistený projekt; original-python314 je pracovná a vydávacia vetva. Historická warder-master-production sa nemení. Bez force push/rebase; pred zápisom čítať aktuálny SHA a posúvať ref s expected_sha. Inštalačná identita/cesta zostáva enigma2-plugin-glasssysutil, Plugins/Extensions/GlassSysUtil; zobrazovaný názov GSU Warder Evolution sa neprekladá.
 
-r54 zdrojb3656444b026a46e39837f2276c5f593bbd59b99, CI40221611839 úspešné vrátane kontroly skutočných vydaných bajtov.277 testov Python3.14.7 a dva identické buildy z čistého checkoutu. IPK3656746 B,SHA2562e456424a946b6cf76ae685be382cbc3e4bdd3cdccd3bb5b8570e02f4ec580b9. Oba feedy overené na r54. Celý plugin nie je označený ako kompletne hardvérovo overený.
+r55 zdrojf936e7e3b4c6c0953b9df865f44b76d4afb0945d, CI40222366028 úspešné vrátane kontroly skutočných vydaných bajtov.278 testov Python3.14.7 a dva identické buildy z čistého checkoutu. IPK3656778 B,SHA256cff650e7d526a4db388aa3a55a06d8e8598919182ee68340fa86feb37ae53ff4. Oba feedy overené na r55. Celý plugin nie je označený ako kompletne hardvérovo overený.
 
 Nový updater číta plugin/update/candidate.json cez nový krátky názov repozitára. Existujúce r49 a staršie používajú restoration/update/candidate.json a presne overujú starý download URL; kompatibilný feed musí preto obsahovať pôvodný názov repository, ktorý GitHub presmeruje. Oba feedy musia zdieľať verziu/hash/veľkosť; nikdy ich nezmazať. Publisher ich aktualizuje až po kontrole vydaného IPK. Starý raw aj download URL bol po premenovaní overený ako HTTP200. Nová release title je GSU Warder Evolution.
 
@@ -28,7 +28,7 @@ Na výslovný pokyn používateľa odstránených28 starých Releases workflow40
 
 ## Zachovať potvrdené správanie a postup
 
-Postupovať obrazovku po obrazovke. Teraz posúdiť posun protokolov v r54; Informácie o kanáli sú schválené. Ďalej postupovať sekciu po sekcii. Hlavné menu:11 stabilných ID, spoločný banner, biele živé sekundy, dvojriadková verzia, liveTV vpravo s popisom,4 centrované farebné akcie, modré O plugine. Používateľ potvrdil liveTV aj návrat celého TV obrazu. Nadpis Hlavná ponuka a spodný purpose riadok sú odstránené.
+Postupovať obrazovku po obrazovke. Systémové rozloženie r54 je schválené. Kanálový vzhľad tiež, s jedinou výhradou skráteného označenia CAM; r55 opravuje iba toto. Na prijímači teraz posúdiť iba celé označenie CAM, neopakovať už schválené vizuálne/funkčné skúšky. Ďalej postupovať sekciu po sekcii. Hlavné menu:11 stabilných ID, spoločný banner, biele živé sekundy, dvojriadková verzia, liveTV vpravo s popisom,4 centrované farebné akcie, modré O plugine. Používateľ potvrdil liveTV aj návrat celého TV obrazu. Nadpis Hlavná ponuka a spodný purpose riadok sú odstránené.
 
 Systémové vrstvy pozadie/rám/panel sú-3/-2/-1; transparentné texty musia zostať viditeľné vrátane natívneho ScrollLabel parentu na nule. Používateľ potvrdil texty a všetky4 šípky. Schematické r47 ikonky odmietol; zachovať farebné plastické r48/r49 PNG s alpha bez čiernych dlaždíc/odrazov. Grafické masters v artwork sa neinštalujú.
 
@@ -45,3 +45,7 @@ Po vydaní r54 odstránené aj nahradené r53, cleanup workflow40221709652 succe
 ## r55 — celé označenie CAM
 
 Používateľ potvrdil systémovú obrazovku r54 snímkou1(20261025-183534).jpg a textom1 beriem. Druhú kanálovú obrazovku tiež schvaľuje s jedinou opravou: zobraziť celý CAM názov/verziu. Snímka2(20261025-183534).jpg prezretá, viditeľné OScam (2.26.09-11968-8..). Príčinou je predčasné cutMe nad oscVersion v ECMparser(cl=24), nie chýbajúce dáta z OSCamu. Pre kanálový readEcmInfo sa pridáva keyword-only full_cam=True; pôvodný positional interface a limity ostatných polí aj správanie ostatných volaní zostávajú. Reálny parser test číta ecm.info a version a kontroluje celú2.26.09-11968-802 aj zhodu ostatných polí s pôvodným výsledkom. Rozloženie, fonty a ostatné obrazovky sa nemenia.
+
+R55 vydané:278 testov Python3.14.7 z čistého checkoutu, dva zhodné IPK3656778 B,SHA256cff650e7d526a4db388aa3a55a06d8e8598919182ee68340fa86feb37ae53ff4, zdrojf936e7e3b4c6c0953b9df865f44b76d4afb0945d, CI40222366028 success. Oba feedy overené na r55. Test overuje skutočné čítanie plnej verzie; nejde iba o mockovaný výstup. Pôvodný positional signature ECMparser(cl) je zachovaný, nový prepínač je keyword-only. Celý parserov výsledok okrem CAM verzie je zhodný s pôvodným režimom. Prvá systémová fotografia bola tiež prezretá a jej schválenie je zapísané; kanálová obsahuje aj video/audio bitrate hodnoty. R55 CAM text ešte treba vidieť na prijímači.
+
+Nahradené r54 odstránené workflow40222445982 success; API overilo iba v13.40-r55. Spolu odstránených31 starých vydaní. Spotrebovaný request zmazaný, Git tagy a história zachované.
