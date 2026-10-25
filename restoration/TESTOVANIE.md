@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 25. 10. 2026, r42 pripravené
+# Aktuálny checkpoint — 25. 10. 2026, r42 publikované
 
 Pracovať výhradne v `original-python314`, runtime `restoration/src/GlassSysUtil`; produkčná vetva zostáva nedotknutá. Prijímač má r41; používateľ potvrdil vstavanú aktualizáciu z r36, čítačkové potvrdenie/Nie aj skutočný zákaz a povolenie v oboch smeroch. Autokontrola configFalse/guardFalse pri vypnutí a guardTrue pri predvolenomTrue po zapnutí je potvrdená. Štart GUI bez vybraného CAM zostáva hostiteľsky testovaný. Prijímač diagnosticky uvádza Python3.14.9, host tests3.14.7. Staršie odseky nižšie sú história.
 
@@ -478,4 +478,4 @@ Snímka1(20261025-155109).jpg potvrdzuje hlavné menu r41: všetkých11 položie
 
 r42 pridáva iba natívny Pig source=session.VideoPicture,16:9 viewport a presun existujúceho názvu/popisu podň. Bez volania playService/stopService, bez vlastného PiP a bez ďalšieho tunera. Skúška: aktualizovať cez GSU na r42, otvoriť hlavné menu na TV stanici, overiť obraz/zvuk, šípkami meniaci sa názov a popis pod videom. Otvoriť bežnú sekciu a vrátiť sa; po zatvorení GSU sa musí obnoviť obraz na celú plochu. Neprepínať ani nereštartovať CAM na túto grafickú skúšku. r42 živé video a návrat celej plochy zatiaľ neoverené na prijímači.
 
-r42 hostiteľské overenie:254 testov Python3.14.7, kompilácia a dva zhodné buildy úspešné. IPK3467340B, SHA25699442409d2da1286deb76cefcb9aac3048ec52b9aa6211cd56479c7b434f5ba4. Publikácia a CI zatiaľ čakajú.
+r42 hostiteľské overenie:254 testov Python3.14.7, kompilácia a dva zhodné buildy úspešné. IPK3467340B, SHA25699442409d2da1286deb76cefcb9aac3048ec52b9aa6211cd56479c7b434f5ba4. Zdroj0702263a78e21ce420fcfc90a5f23ea277f5498e; CI40209272337 úspešné vrátane publikácie a overenia vzdialených bajtov. Verejný prereleasev13.40-r42 a aktualizačný feed overené: veľkosť aj SHA zhodné s lokálnym balíkom. Feedcommit4b19601ab49ebca283fbab8f7353e1b73ffd1faa. Na prijímači živé video a jeho obnovenie zatiaľ čakajú na skúšku.
