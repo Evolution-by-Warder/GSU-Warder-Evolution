@@ -11,7 +11,7 @@ Runtime changes are explicit: normal Python source instead of version-selected b
 
 The original SD/FHD/UHD skin definitions and original graphics/font/translations are retained. `resources.tar.gz` is a deterministic archive of the actual runtime assets, individually pinned by `resources.json`. Legacy Python cores, `/usr/bin/ftplib.py` and the old bytecode-selecting installer are not installed. Original default scripts and configuration templates are supplied only where the receiver has no existing file.
 
-Build: `python3 restoration/tools/build_ipk.py`. The output is one deterministic `enigma2-plugin-glasssysutil_13.40-r10_all.ipk`. All runtime Python files compile under 3.14.7. Host tests exercise imports with native API doubles, all original signatures and main-menu contexts, and local OSCam configuration/authentication. They cannot validate real tuners, mounts, CAM restart, package operations or other receiver changes. Those remain unverified until tested on hardware. Original FTP services and legacy native helper ABI availability are external compatibility limits, not functionality verified by source recovery. This candidate is not published to automatic production updates.
+Build: `python3 restoration/tools/build_ipk.py`. The output is one deterministic `enigma2-plugin-glasssysutil_13.40-r11_all.ipk`. All runtime Python files compile under 3.14.7. Host tests exercise imports with native API doubles, all original signatures and main-menu contexts, and local OSCam configuration/authentication. They cannot validate real tuners, mounts, CAM restart, package operations or other receiver changes. Those remain unverified until tested on hardware. Original FTP services and legacy native helper ABI availability are external compatibility limits, not functionality verified by source recovery. This candidate is not published to automatic production updates.
 
 The original AGC converter is retained under the unique `GSUAgcConv` name to avoid replacing another skin’s converter. Its progress value is an integer for the current native GUI API. Skin-file hashes verify that the converter reference is the only change to the original SD/FHD/UHD skin definitions.
 
@@ -54,3 +54,7 @@ The supplied receiver HTML establishes that status/address is readercol20, proto
 ## Receiver checkpoint — 2026-10-24 evening
 
 The r10 Readers screen is now confirmed on the receiver. Detailed partial validation, remaining limits and the exact next step are recorded in [TESTOVANIE.md](TESTOVANIE.md). Resume at standalone ECM Information: confirm live ECM Time refresh, fix its still-truncated five-digit CAM revision, then continue with CAM/SRV. This documentation checkpoint does not change the runtime or issue another IPK.
+
+## 13.40-r11: standalone ECM full CAM revision
+
+Use the same 24-character parser limit as Channel Information in the standalone ECM Information screen, retaining the full five-digit CAM build in its existing value column. No skin geometry or artwork changes. A regression covers both native timer APIs, initial encrypted-service population, thirteen rows, a changed ECM Time on the next callback, five-second timer rearming and stopping on close. 28 host tests pass; live refresh and the revised display still require receiver confirmation.

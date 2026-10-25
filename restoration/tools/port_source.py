@@ -322,6 +322,10 @@ def _gsu_helper(name):
     body=body.replace('self.skin = channelInfo_Center', r"""self.skin = sub(r'(<widget name="ecmValues"[^>]*size=")(\d+),(\d+)(")', lambda match: match[1] + '%d,%s' % (int(match[2]) * 340 // 292, match[3]) + match[4], channelInfo_Center)""", 1)
     body=body.replace('= ECMparser()', '= ECMparser(cl=24)', 1)
     source=source[:start]+body+source[end:]
+    # The standalone ECM panel has enough width for the full CAM build too.
+    start=source.index('class ECMInfo(');end=source.index('\nclass ',start+1)
+    body=source[start:end].replace('= ECMparser()', '= ECMparser(cl=24)', 1)
+    source=source[:start]+body+source[end:]
     source=source.replace('from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox', 'from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox\nfrom Plugins.Extensions.GlassSysUtil.cccam_transport import open_text as _cccam_open',1)
     source=source.replace('urllibXX.urlopen(', '_cccam_open(')
     # Keep unreachable configured servers visible as unavailable entries.

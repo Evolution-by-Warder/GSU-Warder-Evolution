@@ -7782,7 +7782,7 @@ class ECMInfo(Screen):
 
     def readEcmInfo(self):
         self.runECMTimer.stop()
-        (oscVer, typecam, system, caid, provider, provid, pid, using, adress, hops, share, ecmTime, coding, dcw0, dcw1) = ECMparser()
+        (oscVer, typecam, system, caid, provider, provid, pid, using, adress, hops, share, ecmTime, coding, dcw0, dcw1) = ECMparser(cl=24)
         if using == 'unsupported CAs\n':
             self['ecmlabels'].setText(self.e)
             self['ecmValues'].setText('..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............\n')

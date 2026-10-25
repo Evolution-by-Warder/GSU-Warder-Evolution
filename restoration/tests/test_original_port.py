@@ -136,6 +136,43 @@ class OriginalPortTests(unittest.TestCase):
         self.assertEqual(rows[1:4],['Irdeto','0668','000000'])
         self.assertEqual(rows[-1],'0.126')
 
+    def test_standalone_ecm_full_revision_refresh_and_close_with_both_timer_apis(self):
+        from unittest.mock import MagicMock
+        from contextlib import ExitStack
+        module=self.plugin
+        info=types.SimpleNamespace(getInfo=lambda key:1)
+        service=types.SimpleNamespace(info=lambda:info)
+        session=types.SimpleNamespace(nav=types.SimpleNamespace(getCurrentService=lambda:service))
+        for modern in (False,True):
+            with self.subTest(modern=modern),ExitStack() as stack:
+                callbacks=[]
+                signal=types.SimpleNamespace(get=lambda:callbacks)
+                if modern:signal.connect=lambda cb:callbacks.append(cb)
+                timer=MagicMock();timer.timeout=signal
+                stack.enter_context(patch.object(module,'eTimer',return_value=timer))
+                stack.enter_context(patch.object(module,'iServiceInformation',types.SimpleNamespace(sIsCrypted=1)))
+                stack.enter_context(patch.object(module,'findPicon',return_value='test-Irdeto.png'))
+                ecm=(' (2.26.09-11968-802)\n','OScam\n','','0668\n','000000\n','000000\n','0C0A\n','server\n','local\n','0\n','0\n','0.126\n','Irdeto','test-cw0\n','test-cw1\n')
+                next_ecm=ecm[:11]+('0.134\n',)+ecm[12:]
+                parser=stack.enter_context(patch.object(module,'ECMparser',side_effect=[ecm,next_ecm]))
+                screen=module.ECMInfo(session)
+                screen['piccode'].instance.setPixmapFromFile=MagicMock()
+                screen.startSearchInfo()
+                parser.assert_called_once_with(cl=24)
+                self.assertEqual(screen['ecmValues'].text.splitlines()[0],'OScam (2.26.09-11968-802)')
+                self.assertEqual(len(screen['ecmValues'].text.splitlines()),13)
+                self.assertEqual(screen['ecmValues'].text.splitlines()[-1],'0.126')
+                self.assertEqual(callbacks,[screen.readEcmInfo])
+                timer.start.assert_called_with(5000,True)
+                callbacks[0]()
+                self.assertEqual(screen['ecmValues'].text.splitlines()[-1],'0.134')
+                self.assertEqual(parser.call_count,2)
+                self.assertEqual(timer.start.call_count,2)
+                screen['piccode'].instance.setPixmapFromFile.assert_called_with('test-Irdeto.png')
+                screen.exit()
+                self.assertEqual(timer.stop.call_count,3)
+                self.assertIsNone(screen.runECMTimer)
+
     def test_channel_bitrate_output_handles_partial_and_combined_reads(self):
         module=self.plugin
         screen=module.channelInfoCenter(types.SimpleNamespace())
