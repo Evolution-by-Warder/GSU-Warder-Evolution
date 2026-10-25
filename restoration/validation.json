@@ -63,9 +63,15 @@
     "feed_advanced": true,
     "source_commit": "9efd7b2389ae876b40a17f61f2399fd61b6b5ea6",
     "ci_run": 40203765977,
-    "ci_conclusion": "success"
+    "ci_conclusion": "success",
+    "receiver_evidence": {
+      "about_rendering": "confirmed by screenshot 1(20261025-145743).jpg: r40 version, project credits, matching notes, readable layout and visible Back footer",
+      "scroll_and_close": "not established by still screenshot",
+      "tools_menu_removal": "not visible in supplied screenshot"
+    }
   },
   "oscam_readers_ui_sha256": "d0d39fc4462e7c5f46031461cba25e8fd9d4bef82da54ef364384c35d6678753",
   "warder_tools_sha256": "ef23dab03508f12e73cc5c8196f04ebaa44fd1bf7bf0d357881acc49ac341563",
-  "warder_tools_ui_sha256": "b34db1f90b7a16d657d805ca06e9f672bb9fddd83de28b2e68cbc1ff3347710c"
+  "warder_tools_ui_sha256": "b34db1f90b7a16d657d805ca06e9f672bb9fddd83de28b2e68cbc1ff3347710c",
+  "notes": " Receiver r40 screenshot145743 confirms About content and layout only; not close/scroll interaction or standalone health menu removal. Full receiver validation remains incomplete."
 }
