@@ -41,12 +41,12 @@ class CamPackageActionTests(unittest.TestCase):
         done(set())
         self.assertEqual(screen.nativeSoftcam.registered_packages,packages)
 
-    def test_update_control_enables_only_package_managed_oscam_and_keeps_legacy_editor_off(self):
+    def test_native_start_editor_accepts_manual_oscam_but_package_update_needs_ownership(self):
         for package in ('enigma2-plugin-softcams-oscam-master',None):
             screen=self.make_screen(package)
             self.assertTrue(self.actions.controls(screen))
-            self.assertFalse(screen.enaBlue)
-            screen['txt4'].color2.assert_called_once()
+            self.assertTrue(screen.enaBlue)
+            screen['txt4'].color1.assert_called_once()
             if package:screen['txt3'].color1.assert_called_once()
             else:screen['txt3'].color2.assert_called_once()
 

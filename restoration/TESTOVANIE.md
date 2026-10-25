@@ -184,3 +184,18 @@ Potvrdené snímkami na prijímači:
 - 88 host testov na Python3.14.7 úspešných; AST zo zdrojovej transformácie sa zhoduje s runtime. Na prijímači r20 zatiaľ neoverené.
 
 Ďalšie kroky: inštalácia r20 + reštartGUI (odstráni aj už načítaný starý hook), dlhé modré → (GSU) ECM Info → OK, krátke/dlhéINFO pôvodné správanie a zelené pluginy. CAM správca nemá Keystart riadok ani medzeru, modré prechádza z OScam štart konfigurácia priamo na oneskorenie. Potom pokračovať položkami hlavnéhoGSU podľa používateľa, nevydávať úplné potvrdenie native autostartu/autocheck/SRV ani sivého native cfg editora.
+
+
+## 2026-10-25 — ďalšia práca iba v CAM/SRV, r21 natívna štart konfigurácia
+
+- Používateľ zrušil drobnú požiadavku na celý CAM riadok v ECM okne: neimplementovať, počká na redesign. Výslovný postup: dokončiť jednu sekciu úplne a až potom ďalšiu; neodbočovať na OSD ECM.
+- Zostávajúce poradie: OScam štart konfigurácia → odložený štart → autokontrola → samostatný SRV → preverenie Pripraviť exp.image. Otvorenie ECM v r20 je doložené snímkou065742; cestu cez dlhé modré posledná odpoveď označuje podmienečne, keďže snímka zachytáva až samotné ECM okno.
+- Používateľ dodal skutočné --help z oscam-master 2.26.09-11968@39e78a46. ConfigDir /etc/tuxbox/config/oscam-master, temp /tmp/.oscam. Podporuje -c,-t,-b,-B,-r0/1/2,-w,-I,-S,-d,-p(max4096,default32),-a,-s,-g1/2. UTF8 vo výstupe nie je, preto ho natívny editor neponúka. Pôvodný editor zapisoval do Oscam_Srv.sh a pre native nefungoval.
+- Vysvetlený účel štart konfigurácie: pokročilé parametre spustenia, nie konfigurácia kariet/reader/server. Používateľ chápe rozdiely image a prikázal pokračovať.
+- r21 natívny editor otvorí pôvodný oscam_start skin, ale lokálne položky pre vybraný CAM. Read actual --help/init v deferToThread; ukladanie tiež mimo GUI. Zrušenie nič nemení v globálnych GSU nastaveniach ani na disku. Názov CAM v titulku.
+- Nastavenia per CAM: /etc/enigma2/gsu-softcam-start/NAME.json, prvý originálny init backup NAME.init-backup. Uloženie nemení bežiaci CAM. Prefix iba na rozpoznanej jedinej daemon invocation; zachová shellpipeline, PIDFILE, daemon a neznáme originálne argumenty. Konfigy OSCam sa neprepisujú. Chýbajúca cesta, neznámy skript či zmena skriptu počas editácie zastavia zápis.
+- GSU start/restart/switch používajú worker a pred startom reaplikujú uložený adaptér po prepísaní package init skriptu. Externý package postup môže do tejto reaplikácie použiť pôvodné parametre. Pri odstránení GSU prerm --restore-all vracia aktuálny init príkaz (nie starý celý backup), aby nezmazal iné admin/package úpravy.
+- Natívne spúšťanie na pozadí a PID súbor sú v editore pevné hodnoty podľa služby, ostatné podporované voľby editovateľné. Ladenie je maska0–65535, pending1–4096. Pôvodný UCM editor pre legacy vetvu zostáva.
+- 102 testov na Python3.14.7 úspešných. Reálny neškodný shellový init → Python adaptér → argv recorder overuje medzery a shellové znaky v cestách bez vykonávania ako shell. Testy rušenia, rollbacku, chyby, stale script, oddeleniaCAM, aktualizovaného initu a odinštalovania. Nový native editor a štart s jeho hodnotami zatiaľ len host overenie.
+
+Najbližšie na prijímači: r21 inštalácia + reštartGUI, Správca CAM/SRV → vybrať oscam-master → pravá OScam štart konfigurácia → žlté. Najprv snímka hodnôt a overiť načítané cesty. Potom skúška Cancel bez zápisu; následne uložiť napríklad debug128 alebo restart1, overiť uloženie a zelený reštart, podľa /proc cmdline skutočné parametre, následne vrátiť pôvodné hodnoty. Neoznačiť native štart editor za receiver-potvrdený bez týchto dôkazov. Žiadny presun do druhej hlavnej sekcie.

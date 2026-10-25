@@ -82,7 +82,16 @@ done
 printf '%s\\n' 'Original GSU runtime for Python 3.14 installed. Restart the GUI.'
 exit 0
 '''.encode()
-    sections=[('debian-binary',b'2.0\n'),('control.tar.gz',archive([('control',control,0o644),('postinst',postinst,0o755)])),('data.tar.gz',archive(entries))]
+    prerm=b"""#!/bin/sh
+set -e
+[ -z "$D" ] || exit 0
+if [ "$1" = remove ]; then
+    helper=/usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/native_start_config.py
+    if [ -f "$helper" ]; then /usr/bin/python3 "$helper" --restore-all; fi
+fi
+exit 0
+"""
+    sections=[('debian-binary',b'2.0\n'),('control.tar.gz',archive([('control',control,0o644),('postinst',postinst,0o755),('prerm',prerm,0o755)])),('data.tar.gz',archive(entries))]
     result=bytearray(b'!<arch>\n')
     for name,data in sections:
         result.extend(('%-16s%-12s%-6s%-6s%-8s%-10s`\n'%(name+'/',0,0,0,'100644',len(data))).encode());result.extend(data)

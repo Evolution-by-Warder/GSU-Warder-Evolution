@@ -103,6 +103,15 @@ class NativeSoftcam:
         if not self._wait_stopped(name,1):raise OSError('SoftCAM could not be stopped')
         return 0
 
+    def start_verified(self,name):
+        if not self.valid(name) or self.selected()!=name:raise OSError('SoftCAM selection changed')
+        active=self.active_name()
+        if active and (self.bin_dir/active).resolve()!=(self.bin_dir/name).resolve():
+            raise OSError('Another SoftCAM is already running')
+        result=self._run_script(name,'start')
+        if result or not self.running(name):raise OSError('SoftCAM did not start')
+        return 0
+
     def restart_verified(self,name):
         self.stop_verified(name)
         result=self._run_script(name,'start')
@@ -143,15 +152,12 @@ class NativeSoftcam:
     def command(self,name,action):
         if action not in ('start','stop','restart') or not self.valid(name):
             raise ValueError('Invalid SoftCAM or command')
-        if action in ('stop','restart') and (action=='stop' or name==self.selected()):
-            python=shutil.which('python3') or '/usr/bin/python3'
-            args=[python,str(Path(__file__).resolve()),'--action',action,'--name',name]
-            return ' '.join(shlex.quote(value) for value in args)
+        python=shutil.which('python3') or '/usr/bin/python3'
         if action!='stop' and name!=self.selected():
-            python=shutil.which('python3') or '/usr/bin/python3'
             args=[python,str(Path(__file__).resolve()),'--switch',name,'--expected',self.selected() or '']
-            return ' '.join(shlex.quote(value) for value in args)
-        return shlex.quote(str(self.init_dir/('softcam.'+name)))+' '+action
+        else:
+            args=[python,str(Path(__file__).resolve()),'--action',action,'--name',name]
+        return ' '.join(shlex.quote(value) for value in args)
 
     def _set_link(self,target):
         link=self.init_dir/'softcam'
@@ -165,6 +171,12 @@ class NativeSoftcam:
             os.replace(temporary,link)
 
     def _run_script(self,name,action):
+        if action=='start' and 'oscam' in name.lower():
+            if __package__:
+                from .native_start_config import StartConfigStore
+            else:
+                from native_start_config import StartConfigStore
+            StartConfigStore(init_dir=self.init_dir,bin_dir=self.bin_dir).ensure_adapter(name)
         return subprocess.run([str(self.init_dir/('softcam.'+name)),action],timeout=20,check=False).returncode
 
     def switch_to(self,name,expected):
@@ -262,7 +274,7 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser()
     operation=parser.add_mutually_exclusive_group(required=True)
     operation.add_argument('--switch')
-    operation.add_argument('--action',choices=('stop','restart'))
+    operation.add_argument('--action',choices=('start','stop','restart'))
     parser.add_argument('--name')
     parser.add_argument('--expected')
     args=parser.parse_args()
@@ -273,9 +285,9 @@ if __name__=='__main__':
             result=controller.switch_to(args.switch,args.expected)
         else:
             if not args.name:parser.error('--name is required with --action')
-            if args.action=='restart' and controller.selected()!=args.name:
+            if args.action in ('start','restart') and controller.selected()!=args.name:
                 raise OSError('SoftCAM selection changed')
-            result=controller.stop_verified(args.name) if args.action=='stop' else controller.restart_verified(args.name)
+            result={'start':controller.start_verified,'stop':controller.stop_verified,'restart':controller.restart_verified}[args.action](args.name)
         raise SystemExit(result)
     except (OSError,ValueError,subprocess.SubprocessError) as error:
         print('SoftCAM command failed: '+str(error),flush=True)

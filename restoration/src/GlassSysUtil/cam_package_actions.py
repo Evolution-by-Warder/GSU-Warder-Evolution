@@ -37,10 +37,21 @@ def controls(screen):
     selected=context(screen)
     if selected is None:return False
     name,package=selected
-    screen.enaBlue=False # The old UCM command-line editor is not a native editor.
-    screen['txt4'].color2()
+    screen.enaBlue='oscam' in name.lower()
+    if screen.enaBlue:screen['txt4'].color1()
+    else:screen['txt4'].color2()
     if 'oscam' in name.lower() and package:screen['txt3'].color1()
     else:screen['txt3'].color2()
+    return True
+
+
+def start_config(screen,api):
+    selected=context(screen)
+    if selected is None:return False
+    name,package=selected
+    if 'oscam' in name.lower():
+        from .native_start_config_ui import open_start_config
+        return open_start_config(screen,api,name)
     return True
 
 
