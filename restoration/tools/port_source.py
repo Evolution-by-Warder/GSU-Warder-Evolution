@@ -18,6 +18,7 @@ from remove_channel_settings_port import remove_channel_settings
 from remove_autoinstall_cron_port import remove_autoinstall_cron
 from oscam_clients_port import port_oscam_clients
 from plugin_update_port import port_plugin_update
+from oscam_readers_ui_port import port_oscam_readers_ui
 
 
 def port(source):
@@ -409,6 +410,7 @@ def _gsu_helper(name):
     source=remove_autoinstall_cron(source)
     source=port_oscam_clients(source)
     source=port_plugin_update(source)
+    source=port_oscam_readers_ui(source)
     # Preserve original signatures; retired shortcut entry points are intentional no-ops.
     compile(source, 'plugin.py', 'exec')
     return source

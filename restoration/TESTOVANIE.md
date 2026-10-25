@@ -1,8 +1,8 @@
-# Aktuálny checkpoint — 25. 10. 2026, r36
+# Aktuálny checkpoint — 25. 10. 2026, r37
 
-Pracovať výhradne v `original-python314`, runtime `restoration/src/GlassSysUtil`; produkčná vetva zostáva nedotknutá. Prijímač má zatiaľ potvrdenú r35, nová r36 čaká na inštaláciu a reštart GUI. Aktuálna diagnostika prijímača uvádza Python 3.14.9; hostiteľské testy bežia na 3.14.7. Staršie záznamy nižšie sú chronologická história, nie aktuálny nasledujúci krok.
+Pracovať výhradne v `original-python314`, runtime `restoration/src/GlassSysUtil`; produkčná vetva zostáva nedotknutá. Prijímač má nainštalovanú r36; menu, ručná kontrola rovnakej verzie a prepínač autokontroly sú potvrdené. Nová r37 čaká na aktualizáciu priamo z GSU. Aktuálna diagnostika prijímača uvádza Python 3.14.9; hostiteľské testy bežia na 3.14.7. Staršie záznamy nižšie sú chronologická história, nie aktuálny nasledujúci krok.
 
-Najbližšie po r36: overiť jedenásť položiek menu s Aktualizáciou namiesto Správcu zariadení, Textového editora a Resetu hesla. Ručná Aktualizácia má oznámiť aktuálnu verziu, automatická kontrola rovnakej verzie nemá rušiť. Vo Správcovi CAM vypnúť autokontrolu a overiť zodpovedajúci pomocný stav; následne znovu zapnúť, ak ju používateľ chce používať. Scenár GUI štart bez vybraného CAM a dodatočný výber je zatiaľ hostiteľsky testovaný. Reálnu inštaláciu novšej verzie a reštart po troch sekundách bude možné overiť až pri ďalšom vydaní; nevyhlasovať ich za prijímačom potvrdené.
+Najbližšie: otvoriť GSU r36, prijať ponúknutú r37 a overiť inštaláciu bez pádu, jediný úspešný oznam a GUI reštart po troch sekundách. Ak sa ponuka neobjaví automaticky, použiť položku Aktualizácia. Po návrate skontrolovať verziu r37. Potom pokračovať v OSCam informácie → Stav serverov/čítačiek: načítanie, obnovovanie a výber; modré tlačidlo má najprv otvoriť otázku s názvom vybranej čítačky a Nie nesmie nič zmeniť. Reálne vypnutie čítačky môže prerušiť obraz; skúšať najprv vhodnú nepoužívanú čítačku až po tomto potvrdení. Neoznačiť nový enabled flag za dôkaz funkčnej karty či upstream spojenia. Scenár GUI štart bez native výberu a dodatočný výber je stále iba hostiteľsky testovaný.
 
 ## OSCam klienti — uzavretie skúšky r35
 
@@ -401,3 +401,11 @@ Pokračovať v tej istej sekcii: najprv modré Zakázať musí otvoriť otázku 
 ## 2026-10-25 — r36 prijímač: menu a ručná kontrola aktualizácie
 
 Snímky 1/2(20261025-132307).jpg ukazujú GSU13.40-r36, jedenásť položiek hlavného menu a jednu spodnú Aktualizáciu; Správca zariadení, Textový editor a Reset hesla nie sú v zozname. Druhá snímka zobrazuje slovenskú odpoveď „Plugin je aktuálny.“ To potvrdzuje otvorenie r36 a úspešnú kontrolu rovnakej verzie. Samotné snímky nepotvrdzujú tichú kontrolu pri otvorení, kontrolu vypnutej autokontroly, aktualizáciu novším IPK ani reštart za tri sekundy. Neskúšať ďalšiu inštaláciu rovnakej verzie len na opakovanie tejto kontroly. Ďalšie funkčné overenie zostáva autokontrola CAM; novšiu aktualizáciu overiť pri ďalšom potrebnom vydaní.
+
+## 2026-10-25 — r36 prepínač autokontroly potvrdený; r37 čítačky/proxy
+
+Používateľský konzolový výstup po vypnutí: Nastavenie False a Pomocný stav enabled False. Po zapnutí: iba Pomocný stav enabled True. Zdroj config.plugins.GlassSysUtil.par50 je ConfigYesNo(default=True), preto Enigma2 predvolenú True do settings neukladá. Overené oba smery synchronizácie prepínača; nie nové meranie obnovy po páde procesu alebo štartu GUI bez vybraného CAM.
+
+Pri kontrole zostávajúcej OSCam sekcie nájdené oscam_readers.chngState: synchronný getUrlData a bezpodmienečná hláška Reader/Proxies action finished. r37 presúva načítanie/obnovu/akciu do workerov, pridáva potvrdenie Nie ako default, presný URL-encoded názov a nový kontrolný read po zmene. Chybný/nepotvrdený výsledok už nehlási úspech. Zachované pôvodné renderery, geometria, čítače a protokolové obmedzenia entitlements; opravené escapovanie názvu pri entitlements. Kontrola výsledného stavu starého neparsovateľného HTML môže skončiť neoverené aj pri skutočne vykonanej akcii; netvrdiť úspech naslepo.
+
+Prešlo228 testov Python3.14.7 a AST reprodukcia transformácie. Prvý reálny receiver test r37 má zároveň overiť novú aktualizáciu z r36. Nevydávať zbytočnú falošnú verziu iba na test aktualizátora. Zakázať/Povoliť klienta zostáva podľa rozhodnutia používateľa bez zmeny.

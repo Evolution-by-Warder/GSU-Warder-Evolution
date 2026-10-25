@@ -5,6 +5,7 @@ from Plugins.Extensions.GlassSysUtil.plugin_update_ui import StartupUpdateCheck 
 # Embedded file name: /usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/plugin.py
 # Compiled at: 2021-03-28 16:56:23
 from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox
+from Plugins.Extensions.GlassSysUtil import oscam_readers_ui as _oscam_readers_ui
 from Plugins.Extensions.GlassSysUtil import oscam_clients_ui as _oscam_clients_ui
 from Plugins.Extensions.GlassSysUtil import swap_ui as _swap_ui
 from Plugins.Extensions.GlassSysUtil.osd_layout import rolling_skin as _wide_osd_skin, place as _place_osd, right_limit as _osd_right_limit
@@ -6643,6 +6644,7 @@ class oscam_readers(Screen):
         self['status_labels_1'] = Label('EMM skipped (UK / G / S / UQ) :\nEMM blocked (UK / G / S / UQ):')
         self['status_values_1'] = Label('')
         self['blue_button'] = Label('')
+        _oscam_readers_ui.initialize(self)
         self['red'] = Label(_('Exit'))
         self['green'] = Label(_('Entitlements'))
         self['actions'] = ActionMap(['ColorActions', 'SetupActions', 'DirectionActions'], {'green': (self.entitlements), 
@@ -6666,30 +6668,21 @@ class oscam_readers(Screen):
         return
 
     def exit(self):
-        if self.refreshTimer.isActive():
-            self.refreshTimer.stop()
-        self.refreshTimer = None
-        self.close()
-        return
+        _oscam_readers_ui.close(self)
 
     def entitlements(self):
-        selection = self['list'].getCurrent()
-        if selection:
-            lineRq = selection[0]
-            tmp = lineRq.split('*')
-            if not tmp[2].__contains__('newcamd') and not tmp[2].__contains__('camd3') and not tmp[2].__contains__('cs3'):
-                tmp[1] = tmp[1].replace('+', '%2b').replace(' ', '+')
-                self.session.open(oscam_entitlements, self.url, tmp[1], self.login, self.passwd)
-            else:
-                self.session.open(MessageBox, _('Protocol not allowed for entitlements'), MessageBox.TYPE_INFO, 4)
-        return
+        _oscam_readers_ui.entitlements(self, globals())
 
     def oscamreaders(self):
-        self.refreshTimer.stop()
-        data = getUrlData(self.url + 'readers.html', self.login, self.passwd)
-        if not isinstance(data, list):
-            self.close()
-            return
+        _oscam_readers_ui.request(self, globals())
+
+    def reactivate(self):
+        _oscam_readers_ui.details(self, globals())
+
+    def chngState(self):
+        _oscam_readers_ui.change_state(self, globals())
+
+    def renderReaders(self, data):
         records = _oscam_readers(data)
         if records:
             self.list = []
@@ -6797,7 +6790,7 @@ class oscam_readers(Screen):
         self.reactivate()
         return
 
-    def reactivate(self):
+    def renderReaderDetails(self):
         selection = self['list'].getCurrent()
         if selection:
             lineRq = selection[0]
@@ -6808,19 +6801,6 @@ class oscam_readers(Screen):
                 self['blue_button'].setText(_('Disable'))
             else:
                 self['blue_button'].setText(_('Enable'))
-        return
-
-    def chngState(self):
-        selection = self['list'].getCurrent()
-        if selection:
-            lineRq = selection[0]
-            tmp = lineRq.split('*')
-            what = 'enable'
-            if tmp[7] == 'green':
-                what = 'disable'
-            data = getUrlData(self.url + 'readers.html?label=' + tmp[1] + '&action=' + what, self.login, self.passwd)
-            self.session.open(MessageBox, _('Reader/Proxies action finished'), MessageBox.TYPE_INFO, 6)
-            self.refreshTimer.start(4000, True)
         return
 
 

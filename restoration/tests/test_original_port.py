@@ -274,7 +274,7 @@ class OriginalPortTests(unittest.TestCase):
         from unittest.mock import MagicMock
         module=self.plugin;session=types.SimpleNamespace(open=MagicMock())
         screen=module.oscam_readers(session,'http://127.0.0.1:8888/','','')
-        with patch.object(module,'getUrlData',return_value=fixture()):screen.oscamreaders()
+        module._oscam_readers_ui.render(screen,vars(module),fixture())
         row=screen['list'].getCurrent()
         self.assertIn('cs378x',row[1]['text'])
         self.assertIn('online 192.168.10.6',row[1]['text'])
