@@ -1,8 +1,10 @@
-# Aktuálny checkpoint — 25. 10. 2026, r37
+# Aktuálny checkpoint — 25. 10. 2026, r38
 
-Pracovať výhradne v `original-python314`, runtime `restoration/src/GlassSysUtil`; produkčná vetva zostáva nedotknutá. Prijímač má nainštalovanú r36; menu, ručná kontrola rovnakej verzie a prepínač autokontroly sú potvrdené. Nová r37 čaká na aktualizáciu priamo z GSU. Aktuálna diagnostika prijímača uvádza Python 3.14.9; hostiteľské testy bežia na 3.14.7. Staršie záznamy nižšie sú chronologická história, nie aktuálny nasledujúci krok.
+Pracovať výhradne v `original-python314`, runtime `restoration/src/GlassSysUtil`; produkčná vetva zostáva nedotknutá. Prijímač má r37; používateľ potvrdil vstavanú aktualizáciu z r36, čítačkové potvrdenie/Nie aj skutočný zákaz a povolenie v oboch smeroch. Autokontrola configFalse/guardFalse pri vypnutí a guardTrue pri predvolenomTrue po zapnutí je potvrdená. Štart GUI bez vybraného CAM zostáva hostiteľsky testovaný. Prijímač diagnosticky uvádza Python3.14.9, host tests3.14.7. Staršie odseky nižšie sú história.
 
-Najbližšie: otvoriť GSU r36, prijať ponúknutú r37 a overiť inštaláciu bez pádu, jediný úspešný oznam a GUI reštart po troch sekundách. Ak sa ponuka neobjaví automaticky, použiť položku Aktualizácia. Po návrate skontrolovať verziu r37. Potom pokračovať v OSCam informácie → Stav serverov/čítačiek: načítanie, obnovovanie a výber; modré tlačidlo má najprv otvoriť otázku s názvom vybranej čítačky a Nie nesmie nič zmeniť. Reálne vypnutie čítačky môže prerušiť obraz; skúšať najprv vhodnú nepoužívanú čítačku až po tomto potvrdení. Neoznačiť nový enabled flag za dôkaz funkčnej karty či upstream spojenia. Scenár GUI štart bez native výberu a dodatočný výber je stále iba hostiteľsky testovaný.
+Používateľ výslovne vyradil celú sekciu IPK/DEB a používateľské skripty vrátane TAR. Rozpracované opravy a testovací balík boli zahodené pred publikáciou; neposielať ich ani nežiadať ich skúšku. r38 odstraňuje položku5 a štyri implementačné triedy, predvolené skripty zo zdroja/balíka aj ich kopírovanie pri inštalácii. Zdieľané ipk_uninstall_center zostáva iba pre CAM/SRV a vždy filtruje CAM; samostatná Aktualizácia GSU zostáva.
+
+Najbližšie po zverejnení: aktualizovať GSU na r38 cez vstavanú ponuku, overiť desať položiek a neprítomnosť IPK/DEB a používateľských skriptov. Netestovať vyradenú sekciu ani znovu už potvrdené čítačky. CAM správa, aktualizátor a predchádzajúce sekcie zostávajú. CCcam a Mbox bez bežiaceho príslušného servera nemožno označiť za hardvérovo overené. Moderný spoločný dizajn riešiť až po ukončení funkčnej obnovy podľa rozhodnutia používateľa.
 
 ## OSCam klienti — uzavretie skúšky r35
 
@@ -419,3 +421,11 @@ Zdrojový commit38a05f400b0de1b9363e9683afa5a02dfb114589, CI40198250001 úspešn
 Po pokynoch otvoriť r36, potvrdiť r37, nechať dokončiť inštaláciu a GUI reštart používateľ uviedol „aktualizacia OK“. Celý postup je používateľom potvrdený ako úspešný; nejde o nezávislé meranie presného trojsekundového intervalu. Nový IPK nie je potrebný.
 
 Nasledujúci krok v tej istej OSCam sekcii: OSCam informácie → Stav serverov/čítačiek, vybrať čítačku a stlačiť modré. Otázka musí obsahovať jej presný názov a predvolené Nie; zvoliť Nie a skontrolovať návrat bez zmeny stavu a bez pádu. Reálne vypnutie/zapnutie skúšať až potom na vhodnej nepoužívanej čítačke. Neopakovať už potvrdenú aktualizáciu ani klientské ovládanie.
+
+## 2026-10-25 — čítačky potvrdené; všeobecné balíky a skripty výslovne vyradené
+
+Používateľ potvrdil čítačkovú otázku s menom/defaultNie a návrat po Nie. Po reálnej skúške uviedol „obe smery funguju“. Túto časť OSCam uzavrieť v danom rozsahu.
+
+Po začatí kontroly všeobecného inštalátora používateľ označil celú sekciu za zbytočnú a výslovne uviedol „ja by som to cele vyrazil“. Finálna r38 preto žiadny opravený všeobecný inštalátor ani testovací IPK neobsahuje. Odstránené triedy ipk_script_center, script_center, ipk_center a tar_center, položkaID5 a dispatch. Hlavné menu10 položiek. Zdieľaná odinštalovacia trieda sa používa v CAM/SRV, preto je ponechaná iba s CAM filtrom aj pri default argumente. Predvolené skripty sa už nepribaľujú/nekopírujú; existujúce používateľské súbory na prijímači sa nemažú. Skupina siedmich skriptových zdrojov v restoration/scripts bola odstránená.
+
+229 host testov a AST reprodukcia prešli; nasleduje aktualizácia a overenie zjednodušeného menu na prijímači. Žiadny nový dizajn a žiadna zmena klientského Zakázať/Povoliť.

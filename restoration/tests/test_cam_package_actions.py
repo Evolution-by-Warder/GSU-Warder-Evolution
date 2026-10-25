@@ -96,5 +96,13 @@ class CamPackageActionTests(unittest.TestCase):
         with patch.object(module,'chckPckgList',return_value=lines):screen.updateList()
         self.assertEqual([row[0] for row in screen.list],[lines[0],lines[3]])
 
+    def test_shared_removal_screen_defaults_to_cam_only_after_general_installer_retirement(self):
+        module=self.plugin
+        screen=module.ipk_uninstall_center(types.SimpleNamespace())
+        lines=['enigma2-plugin-softcams-oscam-master - 11968-r4','enigma2 - 8.0','enigma2-plugin-glasssysutil - 13.40-r38']
+        with patch.object(module,'chckPckgList',return_value=lines):screen.updateList()
+        self.assertEqual(screen.what,'ucm')
+        self.assertEqual([row[0] for row in screen.list],[lines[0]])
+
 
 if __name__=='__main__':unittest.main()

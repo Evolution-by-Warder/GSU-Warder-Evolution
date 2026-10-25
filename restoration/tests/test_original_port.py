@@ -298,23 +298,23 @@ class OriginalPortTests(unittest.TestCase):
         manifest=json.loads((BASE/'original-inventory.json').read_text())
         removed={'univCamMng.killDccamd','univCamMng.doLnk','univCamMng.chckDccamd'}
         removed.add('fill')
-        retired=('settings_satxml','settings_center','autoInstallMain','autoInstallMngMain','autoInstStatus','cronMng','SetupCronConf')
+        retired=('settings_satxml','settings_center','autoInstallMain','autoInstallMngMain','autoInstStatus','cronMng','SetupCronConf','ipk_script_center','script_center','ipk_center','tar_center')
         removed.update(item['name'] for item in manifest['objects'] if item['name'].split('.')[0] in retired)
         self.assertTrue(removed.isdisjoint(actual))
         for item in manifest['objects']:
             if '<' not in item['name'] and item['name'] not in ('generatePS.chck','oscam_Users.oscamUsers.cleanMe') and item['name'] not in removed:
                 self.assertTrue(item['name'] in actual,item['name'])
                 self.assertEqual(actual[item['name']],item['args'],item['name'])
-        self.assertEqual(sum(isinstance(n,ast.ClassDef) for n in ast.walk(tree)),55)
+        self.assertEqual(sum(isinstance(n,ast.ClassDef) for n in ast.walk(tree)),51)
 
-    def test_main_menu_keeps_eleven_entries_with_one_update_and_real_contexts(self):
+    def test_main_menu_keeps_ten_entries_with_one_update_and_real_contexts(self):
         module=self.plugin
         screen=module.SysUtilMngMain(types.SimpleNamespace())
-        self.assertEqual(len(screen.menuListAll),11)
-        self.assertTrue({'10','11','12','13','14','15'}.isdisjoint(item[0] for item in screen.menuListAll))
+        self.assertEqual(len(screen.menuListAll),10)
+        self.assertTrue({'5','10','11','12','13','14','15'}.isdisjoint(item[0] for item in screen.menuListAll))
         self.assertEqual(screen['actions'].contexts,['SetupActions','ColorActions','GlobalActions','WizardActions','MenuActions'])
         screen.updatemenulist()
-        self.assertEqual(len(screen['list'].list),11)
+        self.assertEqual(len(screen['list'].list),10)
 
     def test_main_menu_help_and_dispatch_follow_ids_after_importer_removal(self):
         from unittest.mock import MagicMock

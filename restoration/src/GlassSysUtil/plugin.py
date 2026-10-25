@@ -1508,7 +1508,6 @@ class SysUtilMngMain(Screen):
             ('2', _('CCcam Information'), _('Management remote servers or local CCcam server. This item is enabled if CCcam is running or min 1 remote servers defined in /etc/remote_servers.cfg')),
             ('3', _('OScam Information'), _('Management remote servers or local OScam server. This item is enabled if OScam is running or min 1 remote servers defined in /etc/remote_servers.cfg')),
             ('4', _('Mbox Information'), _('Displaying Mbox info, local Cam only')),
-            ('5', _('IPK/DEB and User Scripts'), _('Install or uninstall IPK, DEB, GZ, BZ2 files placed in /tmp or start user scripts')),
             ('6', _('ECM Information'), _('All about ECM info - will be available only if ecm.info file is generated')),
             ('7', _('CAM/SRV Manager'), _('Start, stop, restart, download, unistall CAM/SRV or set start cfg of OScam')),
             ('8', _('OSD ECM Information'), _('Enable/Disable OSD ECM Info, will be showed in top - right (default) of TV screen, show changes in ECM info only')),
@@ -1556,8 +1555,6 @@ class SysUtilMngMain(Screen):
                     self.session.open(oscamInfoChoiceServer)
             elif selectedItem == '4':
                 self.session.open(mboxInfo)
-            elif selectedItem == '5':
-                self.session.open(ipk_script_center)
             elif selectedItem == '7':
                 self.session.open(univCamMng)
             elif selectedItem == '6':
@@ -5354,251 +5351,10 @@ class AutoCams():
 
 autocams = AutoCams()
 
-class ipk_script_center(Screen):
-
-    def __init__(self, session):
-        self.skin = ipkScript_center
-        self.session = session
-        Screen.__init__(self, session)
-        self.list = []
-        self.menuListAll = [('0', _('User scripts'), _('Starting user script, but have to be named: xxxx_user.sh and have to be placed in /usr/script')),
-         (
-          '1', _('IPK package install'), _('Installing ipk file, have to be placed in /tmp')),
-         (
-          '2', _('IPK package uninstall'), _('Uninstalling IPK package listed after autoscan all IPK packages')),
-         (
-          '3', _('TAR package install'), _('Installing GZ, BZ2 package, have to be placed in /tmp')),
-         (
-          '4', _('DEB package install'), _('Installing DEB file, have to be placed in /tmp')),
-         (
-          '5', _('DEB package uninstall'), _('Uninstalling DEB package listed after autoscan all DEB packages'))]
-        self.status = {}
-        self['list'] = ListboxSys2(self.list)
-        self['list'].onSelectionChanged.append(self.reactivate)
-        self['descriptions'] = Label()
-        self['red'] = Label(_('Exit'))
-        self['green'] = Label(_('Select'))
-        self['actions'] = ActionMap(['WizardActions', 'ColorActions'], {'green': (self.selectedmenuitem), 
-           'ok': (self.selectedmenuitem), 
-           'red': (self.exit), 
-           'yellow': (self.exit), 
-           'blue': (self.exit), 
-           'back': (self.exit)})
-        self.onLayoutFinish.append(self.updatemenulist)
-        return
-
-    def selectedmenuitem(self):
-        selectedItem = self['list'].getCurrent()[0]
-        enabledItem = self.status.get(selectedItem)
-        if enabledItem:
-            if selectedItem == '0':
-                self.session.open(script_center)
-            elif selectedItem == '1':
-                self.session.open(ipk_center)
-            elif selectedItem in ('2', '5'):
-                self.session.open(ipk_uninstall_center)
-            elif selectedItem == '3':
-                self.session.open(tar_center)
-            elif selectedItem == '4':
-                self.session.open(ipk_center, 'deb')
-        return
-
-    def updatemenulist(self):
-        self.list = []
-        icon_path = GSU_PATH + {3: 'uhd/icons/', 1.5: 'fhd/icons/', 1: 'icons/'}[FHD]
-        for x in self.menuListAll:
-            item = [
-             x[0]]
-            self.status[x[0]] = True
-            if x[0] in ('4', '5') and not ENA_D or x[0] in ('1', '2') and ENA_D:
-                self.status[x[0]] = False
-            item = [
-             x[0]]
-            item.append(MultiContentEntryText(pos=(fhd(25), 0), size=(fhd(535), fhd(22)), font=0, text=x[1], color_sel=int({True: '0x00d100', False: '0xd10000'}[self.status.get(x[0])], 16), color=int({True: '0xffffff', False: '0x666666'}[self.status.get(x[0])], 16)))
-            pix = LoadPixmap({True: (BP_ICO % 'green'), False: (BP_ICO % 'red')}[self.status.get(x[0])])
-            item.append(MultiContentEntryPixmapAlphaTest(pos=(0, fhd(3)), size=(fhd(20), fhd(16)), png=pix))
-            self.list.append(item)
-
-        self['list'].l.setList(self.list)
-        self.setTitle(_('IPK/DEB and User Scripts'))
-        return
-
-    def exit(self):
-        self.close()
-        return
-
-    def reactivate(self):
-        selection = self['list'].getCurrent()
-        if selection:
-            tmp2 = int(selection[0])
-            tmp = str(self.menuListAll[tmp2][2])
-            self['descriptions'].setText(tmp)
-        return
 
 
-class script_center(Screen):
-
-    def __init__(self, session):
-        self.skin = Script_center_scr
-        Screen.__init__(self, session)
-        self.list = []
-        self['list'] = ListboxSys2(self.list)
-        self['list'].onSelectionChanged.append(self.reactivate)
-        self['descriptions'] = Label()
-        self['red'] = Label(_('Exit'))
-        self['green'] = Label(_('Select'))
-        self['actions'] = ActionMap(['WizardActions', 'ColorActions'], {'green': (self.selectedmenuitem), 
-           'ok': (self.selectedmenuitem), 
-           'red': (self.close), 
-           'yellow': (self.close), 
-           'blue': (self.close), 
-           'back': (self.close)})
-        self.onLayoutFinish.append(self.updateList)
-        return
-
-    def selectedmenuitem(self):
-        cmd = self['list'].getCurrent()[0]
-        try:
-            if cmd[0] != 'None':
-                self.runCmd('/usr/script/' + cmd[0] + '_user.sh')
-        except:
-            pass
-
-        return
-
-    def updateList(self):
-        del self.list[:]
-        self.desc = {}
-        f = listDir('/usr/script')
-        if f:
-            for x in f:
-                if '_user.sh' in x:
-                    (scriptName, description) = self.scriptNameDesc(x[:-8])
-                    self.desc[scriptName] = (x[:-8], description)
-
-            if len(self.desc) != 0:
-                k = list(self.desc.keys())
-                k.sort()
-                for x in k:
-                    item = [
-                     (
-                      self.desc[x][0], x)]
-                    item.append(MultiContentEntryText(pos=(0, 0), size=(fhd(860), fhd(25)), font=0, text=x))
-                    self.list.append(item)
-
-        if len(self.list) == 0:
-            self.desc['None'] = ('None', ' ')
-            item = [('None', 'None')]
-            item.append(MultiContentEntryText(pos=(0, 0), size=(fhd(860), fhd(25)), font=0, text=_('No Users Script Found')))
-            self.list.append(item)
-        self['list'].l.setList(self.list)
-        self.setTitle(_('User scripts'))
-        return
-
-    def runCmd(self, cmd):
-        if cmd is not None:
-            self.session.open(Console, title=_('Executing script: ') + cmd, cmdlist=[cmd])
-        return
-
-    def scriptNameDesc(self, name):
-        ll = {'Netstate': (_('Netstate')), 'Show Active Internet connections and Active UNIX domain sockets': (_('Show Active Internet connections and Active UNIX domain sockets')), 'Restore SD card': (_('Restore SD card')), 'Restore SD card /media/cf from /media/hdd/cf-backup.tar': (_('Restore SD card /media/cf from /media/hdd/cf-backup.tar')), 
-           'Network Interfaces': (_('Network Interfaces')), 
-           'Show Network Interfaces': (_('Show Network Interfaces')), 
-           'Uptime': (_('Uptime')), 
-           'Show Uptime your box': (_('Show Uptime your box')), 
-           'Backup SD card': (_('Backup SD card')), 
-           'Backup SD card /media/cf to /media/hdd/cf-backup.tar': (_('Backup SD card /media/cf to /media/hdd/cf-backup.tar')), 
-           'Backup dir DATA': (_('Backup dir DATA')), 
-           'Backup dir /data to /media/hdd/data-backup.tar': (_('Backup dir /data to /media/hdd/data-backup.tar')), 
-           'Restore dir DATA': (_('Restore dir DATA')), 
-           'Restore dir /data from /media/hdd/data-backup.tar': (_('Restore dir /data from /media/hdd/data-backup.tar'))}
-        desc = '............................'
-        try:
-            f = open('/usr/script/' + name + '_user.sh', 'r')
-            for line in f.readlines():
-                if line.find('#scriptname=') >= 0 or line.find('#ScriptName=') >= 0:
-                    name = line.split('=')[1].replace('\n', '').strip()
-                if line.find('#description=') >= 0 or line.find('#DESCRIPTION=') >= 0:
-                    desc = line.split('=')[1].replace('\n', '').strip()
-
-            f.close()
-            return (ll.get(name, name), ll.get(desc, desc))
-        except:
-            return (
-             name, desc)
-
-        return
-
-    def reactivate(self):
-        s = self['list'].getCurrent()[0]
-        if s:
-            self['descriptions'].setText(self.desc[s[1]][1])
-        return
 
 
-class ipk_center(Screen):
-
-    def __init__(self, session, pkg_type='ipk'):
-        self.skin = ipk_center_scr
-        self.pkg_type = pkg_type
-        Screen.__init__(self, session)
-        self.list = []
-        self['list'] = ListboxSys2(self.list)
-        self['red'] = Label(_('Exit'))
-        self['green'] = Label(_('Select'))
-        self['actions'] = ActionMap(['WizardActions', 'ColorActions'], {'green': (self.selectedmenuitem), 
-           'ok': (self.selectedmenuitem), 
-           'red': (self.exit), 
-           'yellow': (self.exit), 
-           'blue': (self.exit), 
-           'back': (self.exit)})
-        self.onLayoutFinish.append(self.updateList)
-        return
-
-    def selectedmenuitem(self):
-        self.cmd = self['list'].getCurrent()[0]
-        if self.cmd != 'None':
-            msg = _('Do you want install package?') + '\n\n%s' % self.cmd
-            self.session.openWithCallback(self.installIpk, MessageBox, msg, MessageBox.TYPE_YESNO)
-        return
-
-    def installIpk(self, answer):
-        if answer:
-            if ENA_D:
-                cmd = 'dpkg -i --force-overwrite /tmp/%s.deb' % self.cmd
-            else:
-                cmd = 'opkg install --force-overwrite --force-downgrade /tmp/%s.ipk' % self.cmd
-            self.session.openWithCallback(self.removeIpk, Console, title=_('Installing package'), cmdlist=[cmd])
-        return
-
-    def updateList(self):
-        del self.list[:]
-        f = listDir('/tmp')
-        if f:
-            for x in f:
-                if '.' + self.pkg_type in x:
-                    item = [
-                     x[:-4]]
-                    item.append(MultiContentEntryText(pos=(0, 0), size=(fhd(860), fhd(25)), font=0, text=x[:-4]))
-                    self.list.append(item)
-
-        if len(self.list) == 0:
-            item = [
-             'None']
-            item.append(MultiContentEntryText(pos=(0, 0), size=(fhd(860), fhd(25)), font=0, text=_('No Files Found')))
-            self.list.append(item)
-        self['list'].l.setList(self.list)
-        self.setTitle(_('Installing package'))
-        return
-
-    def exit(self):
-        self.close()
-        return
-
-    def removeIpk(self):
-        system('rm -rf /tmp/' + self.cmd + '.' + self.pkg_type)
-        self.updateList()
-        return
 
 
 class ipk_uninstall_center(Screen):
@@ -5606,7 +5362,7 @@ class ipk_uninstall_center(Screen):
     def __init__(self, session, what=''):
         self.skin = ipk_uninstall_scr
         Screen.__init__(self, session)
-        self.what = what
+        self.what = what or 'ucm'
         self.list = []
         self['list'] = ListboxSys2(self.list)
         self['red'] = Label(_('Exit'))
@@ -5677,113 +5433,25 @@ class ipk_uninstall_center(Screen):
         return
 
     def updateList(self):
-        if self.what != '':
-            self.setWindowTitle(_('Uninstall CAM/SRV menu'))
-        else:
-            self.setWindowTitle(_('Uninstalling package'))
-        del self.list[:]
-        contentInfo = chckPckgList()
-        for line in contentInfo:
-            if self.what != '':
-                if line.startswith('glasssysutil-') or _is_cam_package(line.split(' - ', 1)[0]):
-                    item = [
-                     line]
-                    item.append(MultiContentEntryText(pos=(fhd(25), 0), size=(fhd(860), fhd(25)), font=0, text=line))
-                    led = 'yellow'
-                    if '-srv.' in line:
-                        led = 'blue'
-                    pix = LoadPixmap(BP_ICO % led)
-                    item.append(MultiContentEntryPixmapAlphaTest(pos=(0, fhd(3)), size=(fhd(15), fhd(16)), png=pix))
-                    self.list.append(item)
-            else:
-                item = [
-                 line]
-                item.append(MultiContentEntryText(pos=(0, 0), size=(fhd(860), fhd(25)), font=0, text=line))
+        self.setWindowTitle(_('Uninstall CAM/SRV menu'))
+        self.list = []
+        for line in chckPckgList():
+            if line.startswith('glasssysutil-') or _is_cam_package(line.split(' - ', 1)[0]):
+                item = [line]
+                item.append(MultiContentEntryText(pos=(fhd(25), 0), size=(fhd(860), fhd(25)), font=0, text=line))
+                led = 'blue' if '-srv.' in line else 'yellow'
+                item.append(MultiContentEntryPixmapAlphaTest(pos=(0, fhd(3)), size=(fhd(15), fhd(16)), png=LoadPixmap(BP_ICO % led)))
                 self.list.append(item)
-
-        if len(self.list) == 0:
-            item = [
-             'None']
-            if self.what != '':
-                txt = _('No CAM/SRV installed')
-            else:
-                txt = _('No Files Found')
-            item.append(MultiContentEntryText(pos=(0, 0), size=(fhd(860), fhd(25)), font=0, text=txt))
-            self.list.append(item)
+        if not self.list:
+            self.list = [['None', MultiContentEntryText(pos=(0, 0), size=(fhd(860), fhd(25)), font=0, text=_('No CAM/SRV installed'))]]
         self['list'].l.setList(self.list)
-        return
+
 
     def exit(self):
         self.close('1')
         return
 
 
-class tar_center(Screen):
-
-    def __init__(self, session):
-        self.skin = tar_center_scr
-        Screen.__init__(self, session)
-        self.list = []
-        self['list'] = ListboxSys2(self.list)
-        self['red'] = Label(_('Exit'))
-        self['green'] = Label(_('Select'))
-        self['actions'] = ActionMap(['WizardActions', 'ColorActions'], {'green': (self.selectedmenuitem), 
-           'ok': (self.selectedmenuitem), 
-           'red': (self.exit), 
-           'yellow': (self.exit), 
-           'blue': (self.exit), 
-           'back': (self.exit)})
-        self.onLayoutFinish.append(self.updateList)
-        return
-
-    def selectedmenuitem(self):
-        self.cmd = self['list'].getCurrent()[0]
-        if self.cmd != 'None':
-            msg = _('Do you want install package?') + '\n\n%s' % self.cmd
-            self.session.openWithCallback(self.installTar, MessageBox, msg, MessageBox.TYPE_YESNO)
-        return
-
-    def installTar(self, answer):
-        if answer:
-            if self.cmd.__contains__('gz'):
-                self.runCmd('tar -xzf /tmp/' + self.cmd)
-            else:
-                self.runCmd('tar -xjf /tmp/' + self.cmd)
-        return
-
-    def updateList(self):
-        del self.list[:]
-        f = listDir('/tmp')
-        if f:
-            for x in f:
-                if '.gz' in x or '.bz2' in x:
-                    item = [
-                     x]
-                    item.append(MultiContentEntryText(pos=(0, 0), size=(fhd(860), fhd(25)), font=0, text=x))
-                    self.list.append(item)
-
-        if len(self.list) == 0:
-            item = [
-             'None']
-            item.append(MultiContentEntryText(pos=(0, 0), size=(fhd(860), fhd(25)), font=0, text=_('No Files Found')))
-            self.list.append(item)
-        self['list'].l.setList(self.list)
-        self.setTitle(_('TAR package install'))
-        return
-
-    def runCmd(self, cmd):
-        if cmd is not None:
-            self.session.openWithCallback(self.removeTar, Console, title=_('Installing package'), cmdlist=[cmd])
-        return
-
-    def exit(self):
-        self.close()
-        return
-
-    def removeTar(self):
-        system('rm -rf /tmp/' + self.cmd)
-        self.updateList()
-        return
 
 
 class oscamInfoChoiceServer(Screen):

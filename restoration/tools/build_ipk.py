@@ -60,25 +60,18 @@ def build(destination):
     # Existing receiver configuration and custom scripts are never overwritten.
     for path in sorted((BASE/'defaults').iterdir()):
         entries.append((PLUGIN+'/defaults/'+path.name,path.read_bytes(),0o644))
-    for path in sorted((BASE/'scripts').glob('*.sh')):
-        entries.append((PLUGIN+'/default-scripts/'+path.name,path.read_bytes(),0o755))
     control=('Package: '+PACKAGE+'\nVersion: '+version+'\nArchitecture: all\nSection: extra\nPriority: optional\nMaintainer: Warder Evolution\nDepends: enigma2, python3-core, python3-xml, python3-netclient, python3-compression, python3-fcntl, python3-json, python3-threading, ca-certificates\nDescription: Original GSU 13.20 runtime recovered for Python 3.14; receiver validation candidate\n').encode()
     postinst='''#!/bin/sh
 set -e
 [ -z "$D" ] || exit 0
 p=/usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil
 rm -rf "$p/__pycache__"
-mkdir -p /usr/script
 for name in remote_servers nfs_cifs; do
     [ -e "/etc/$name.cfg" ] || cp "$p/defaults/$name-def.cfg" "/etc/$name.cfg"
 done
 [ -e /etc/piconPaths.conf ] || cp "$p/defaults/piconPaths-def.conf" /etc/piconPaths.conf
 [ -e /etc/hddtemp.db ] || cp "$p/defaults/hddtemp-def.db" /etc/hddtemp.db
 [ -e /etc/oscam_version ] || cp "$p/defaults/oscam_version" /etc/oscam_version
-for source in "$p"/default-scripts/*.sh; do
-    target="/usr/script/${source##*/}"
-    if [ ! -e "$target" ]; then cp "$source" "$target"; chmod 755 "$target"; fi
-done
 printf '%s\\n' 'Original GSU runtime for Python 3.14 installed. Restart the GUI.'
 exit 0
 '''.encode()
