@@ -62,7 +62,11 @@ def port(source):
                     with open('/proc/%s/comm' % pid) as handle:
                         name = handle.read().strip().lower()
                     if (osemu and name.startswith('osemu')) or (not osemu and name.startswith('oscam')):
-                        return True
+                        with open('/proc/%s/status' % pid) as handle:
+                            state = next((line.split()[1] for line in handle if line.startswith('State:')), None)
+                        # A zombie retains its comm name but cannot run CAM code.
+                        if state and state not in ('Z', 'X', 'x'):
+                            return True
                 except OSError:
                     continue
     except OSError:

@@ -310,11 +310,39 @@ class OriginalPortTests(unittest.TestCase):
         screen.updatemenulist()
         self.assertEqual(len(screen['list'].list),16)
 
+    def _cam_process_files(self, processes):
+        import io
+        files={}
+        for pid,name,state in processes:
+            files['/proc/%s/comm'%pid]=name+'\n'
+            if state is not None:
+                files['/proc/%s/status'%pid]='Name:\t%s\nState:\t%s\n'%(name,state)
+        def read(path,*args,**kwargs):
+            if str(path) not in files:raise FileNotFoundError(path)
+            return io.StringIO(files[str(path)])
+        return read
+
     def test_oscam_detects_openatv_binary_outside_legacy_directory(self):
-        module=self.plugin
-        with patch.object(module.os,'listdir',return_value=['3013']),patch('builtins.open',unittest.mock.mock_open(read_data='oscam-stable\n')):
-            self.assertTrue(module.oscamRunning())
-            self.assertFalse(module.oscamRunning(True))
+        with patch.object(self.plugin.os,'listdir',return_value=['3013']),patch('builtins.open',self._cam_process_files([('3013','oscam-stable','S (sleeping)')])):
+            self.assertTrue(self.plugin.oscamRunning())
+            self.assertFalse(self.plugin.oscamRunning(True))
+
+    def test_dead_oscam_and_osemu_do_not_block_updates(self):
+        for name in ('oscam-master','osemu'):
+            for state in ('Z (zombie)','X (dead)','x (dead)'):
+                with self.subTest(name=name,state=state),patch.object(self.plugin.os,'listdir',return_value=['22044']),patch('builtins.open',self._cam_process_files([('22044',name,state)])):
+                    self.assertFalse(self.plugin.oscamRunning(name=='osemu'))
+
+    def test_live_cam_still_blocks_update_alongside_zombie(self):
+        processes=[('22044','oscam-master','Z (zombie)'),('22042','oscam-master','S (sleeping)')]
+        with patch.object(self.plugin.os,'listdir',return_value=['22044','22042']),patch('builtins.open',self._cam_process_files(processes)):
+            self.assertTrue(self.plugin.oscamRunning())
+        with patch.object(self.plugin.os,'listdir',return_value=['77']),patch('builtins.open',self._cam_process_files([('77','osemu','R (running)')])):
+            self.assertTrue(self.plugin.oscamRunning(True))
+
+    def test_cam_exiting_during_detection_is_tolerated(self):
+        with patch.object(self.plugin.os,'listdir',return_value=['22044']),patch('builtins.open',self._cam_process_files([('22044','oscam-master',None)])):
+            self.assertFalse(self.plugin.oscamRunning())
 
     def test_oscam_version_file_discovers_real_config_and_auth_stays_local(self):
         module=self.plugin

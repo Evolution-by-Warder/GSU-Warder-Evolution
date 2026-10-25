@@ -137,3 +137,12 @@ R16 pri známom providerovi porovná aj EXISTUJÚCI zdroj s metadátami prijíma
 Oprava balíkovej evidencie: opkg list-installed beží raz pri obnove správcu v pracovnom vlákne (timeout 8 s), výsledok sa prenesie do cache v GUI. Tlačidlá už nemusia hádať cestu k opkg .list databáze. Guard odinštalovania bežiaceho CAM funguje aj bez týchto súborov. 73 testov úspešných.
 
 **Ďalší krok:** používateľ má r15. Nainštalovať r16 a reštart GUI. Otvoriť Stiahnuť CAM/SRV; tým sa starý zdroj opraví a obnoví katalóg pre OE6.0. Vybrať už inštalovaný oscam-master a potvrdiť Áno — má sa cez opkg nahradiť r3 za r4 (alebo novší balík danej správnej vetvy). Zatiaľ neštartovať stále pôvodný r3 bez jeho aktualizácie. Po úspešnej aktualizácii skúsiť zelené na master a overiť aktívny proces. Sledovať aj sprístupnenie pravej Aktualizácie OSCam. Ručný oscam-uni a jeho konfigurácia zachované. OScam štart konfigurácia pre natívne CAMy je stále nedokončená; pokračovať celou pravou ponukou.
+
+
+## 2026-10-25 — r16 prijímač a oprava r17
+
+- Prijímač potvrdil prechod feedu OE5.6 → OE6.0, aktualizáciu OSCam r3 → r4 a úspešné spustenie oscam-master.
+- Zastavenie cez init skript hlási FAILED; PID súbor /var/tmp/oscam-master.pid chýba. /proc ukázal živý rodičovský proces 22042 (S, PPid1, /usr/bin/oscam-master) a zombie potomka 22044 (Z, PPid22042).
+- Po odporúčanom cielenom ukončení rodiča správca ukazuje Žiadny spustený CAM/SRV, ale aktualizácia stále hlási potrebu zastaviť OSCam. Kontrola oscamRunning doteraz čítala len comm, preto blokovala aj zombie záznamy.
+- r17 kontroluje aj State: Z/X/x neblokujú; živý proces vedľa zombie stále blokuje. Ošetrený zánik procesu počas čítania. Zmena je aj v port_source.py. 76 host testov úspešných na Python3.14.7.
+- Nasleduje nainštalovať r17 + reštart GUI a overiť Aktualizácia OSCam pri zastavenom CAM. Samostatne zostáva vyriešiť spoľahlivé zastavenie oscam-master s chýbajúcim PID súborom. Neoznačovať celé CAM/SRV menu za hotové.
