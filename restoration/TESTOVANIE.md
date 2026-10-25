@@ -156,3 +156,18 @@ Oprava balíkovej evidencie: opkg list-installed beží raz pri obnove správcu 
 - Host testy: 82 úspešných na Python3.14.7. Skutočné neškodné procesy sleep bez PID súboru: bežný končí TERM, ignorujúci TERM končí KILL; iný executable zostáva bežať. Test aj opätovného použitia PID, zombie, staršieho kernelu a odmietnutia štartu po neúspešnom zastavení.
 - Po návrate používateľa: nainštalovať r18, reštart GUI, pri oscam-master skúsiť červené Zastaviť → žiadny aktívny CAM, zelené Štart → aktívny CAM, znova zelené Reštart → aktívny CAM. Bez ručných kill príkazov. Potom pokračovať pravou ponukou (Zmazať CAM/SRV, štart konfigurácia a ďalšie), nepreskočiť zvyšok menu.
 - Stav r18 zatiaľ potvrdený iba host testami; plná validácia pluginu stále nie. Produkčná vetva a automatická produkčná aktualizácia sa nemenia.
+
+
+## 2026-10-25 — prijímač r18 overený, r19 ponuka INFO
+
+Potvrdené snímkami na prijímači:
+- 053948/1: Script zastavenia vykonaný + Žiadny spustený CAM/SRV + Aktívny CAM Žiadne. /2: štart úspešný, master aktívny. /3 priebeh reštartu a /4 Script reštartu vykonaný + master aktívny.
+- 055133: odinštalačný zoznam obsahuje len balík master/r4; ručný uni sa správne neponúka. 055228 je iba potvrdzovací dialóg; ochrana sa vykonáva až po Áno. 055405: bežiaci master zablokovaný hláškou používa sa, nemôže byť odinštalovaný.
+- 055521: po zastavení odstránenie balíka dokončené; package skript volí softcam None; upravené konfigurácie ponechané. FAILED je opakované stop z package skriptu pri už zastavenom CAM-e, nie zlyhanie odstránenia.
+- 055656: opätovná inštalácia OE6.0/r4 dokončená, master štartuje OK. Používateľské konfigy zachované; package vzory zapísané ako -opkg.
+- 055902: zapnutie farebných skratiek; 060110/060111: zadané 010 a riadok ukazuje10s; 060215: reštart SRV zapnutý; 060310: autokontrola vypnutá. Overené prepnutie nastavení, nie natívny odložený štart ani automatická obnova/SRV.
+- 061613: GSU vyžiadalo reštartGUI kvôli nastaveniam; používateľ reštartoval. 062133/1 zelené otvára OpenATV pluginy, /2 červené bez ECM okna. Skratka červeného nepotvrdená funkčná.
+- Overený aktuálny zdroj OpenATV: ButtonSetupActions má prioritu-10; červené HbbTV má0 a activateRedButton vraciaNone aj pri bezčinnej vetve. Short INFO je InfoPressed, long INFO showEventInfoPlugins. 063818/063817 používateľ potvrdzuje eventview a natívnu ponuku rozšírení.
+- Po otázke na INFO používateľ odsúhlasil doplnenie GSU – ECM Info do dlhej INFO ponuky. Rozpracovaný zásah do obsluhy červeného bol odstránený; r19 žiadne nové monkeypatch/keymap zmeny neobsahuje. Pridaný len WHERE_EVENTINFO descriptor, event_info.py callback a reprodukovateľná zmena port_source.py. 84 host testov úspešných na3.14.7.
+
+Ďalšia skúška: nainštalovať r19 + reštartGUI, počas TV podržať INFO → GSU – ECM Info → OK. Má otvoriť pôvodnú obrazovku ECMInfo. KrátkeINFO má naďalej otvárať reláciu a zelené pluginy. Potom zostávajú OScam štart konfigurácia (natívny editor stále sivý), native autostart/autocheck a zvyšné položky hlavného GSU menu. Pripraviť exp.image je sivé; nezačínať zásahy do image bez kontroly účelu. Produkčná vetva ani updater sa nemenia.

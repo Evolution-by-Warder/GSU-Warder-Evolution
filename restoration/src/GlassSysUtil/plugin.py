@@ -229,6 +229,7 @@ from twisted.internet.protocol import Factory, DatagramProtocol
 from twisted.internet import reactor, defer
 from twisted.internet.error import CannotListenError
 from Screens.InfoBarGenerics import InfoBarPlugins
+from Plugins.Extensions.GlassSysUtil.event_info import open_ecm as _open_ecm_info
 config.plugins.GlassSysUtil = ConfigSubsection()
 config.plugins.GlassSysUtil.par62 = ConfigYesNo(default=True)
 DSC = '/tmp/.doscam/doscam.version'
@@ -469,6 +470,7 @@ def Plugins(path, **kwargs):
         ret.append(PluginDescriptor(name='(GSU) ' + _('CAM/SRV Manager'), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main2))
     if config.plugins.GlassSysUtil.par60.value:
         ret.append(PluginDescriptor(name='(GSU) ' + _('OScam Information'), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main3))
+    ret.append(PluginDescriptor(name=_('GSU – ECM Info'), description=_('ECM Info'), where=PluginDescriptor.WHERE_EVENTINFO, fnc=_open_ecm_info))
     return ret
 
 

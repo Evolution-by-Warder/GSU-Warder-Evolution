@@ -322,6 +322,29 @@ class OriginalPortTests(unittest.TestCase):
             return io.StringIO(files[str(path)])
         return read
 
+    def test_ecm_registers_in_native_info_menu_independently_of_color_shortcuts(self):
+        class Descriptor:
+            WHERE_PLUGINMENU=1;WHERE_SESSIONSTART=2;WHERE_EXTENSIONSMENU=3
+            WHERE_MENU=4;WHERE_EVENTINFO=5
+            def __init__(self,**kwargs):self.__dict__.update(kwargs)
+        previous=self.plugin.config.plugins.GlassSysUtil.par40.value
+        try:
+            for enabled in (False,True):
+                self.plugin.config.plugins.GlassSysUtil.par40.value=enabled
+                with patch.object(self.plugin,'PluginDescriptor',Descriptor):
+                    entries=self.plugin.Plugins('/test')
+                found=[p for p in entries if p.where==Descriptor.WHERE_EVENTINFO]
+                self.assertEqual(len(found),1)
+                self.assertEqual(found[0].name,'GSU – ECM Info')
+                self.assertIs(found[0].fnc,self.plugin._open_ecm_info)
+        finally:self.plugin.config.plugins.GlassSysUtil.par40.value=previous
+
+    def test_native_info_menu_callback_opens_original_ecm_screen(self):
+        from unittest.mock import MagicMock
+        session=types.SimpleNamespace(open=MagicMock())
+        self.plugin._open_ecm_info(session=session,servicelist=object(),event=object())
+        session.open.assert_called_once_with(self.plugin.ECMInfo)
+
     def test_oscam_detects_openatv_binary_outside_legacy_directory(self):
         with patch.object(self.plugin.os,'listdir',return_value=['3013']),patch('builtins.open',self._cam_process_files([('3013','oscam-stable','S (sleeping)')])):
             self.assertTrue(self.plugin.oscamRunning())

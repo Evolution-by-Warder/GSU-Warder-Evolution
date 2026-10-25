@@ -9,6 +9,7 @@ from cam_management_port import port_cam_management
 
 
 def port(source):
+    source=source.replace('from Screens.InfoBarGenerics import InfoBarPlugins', 'from Screens.InfoBarGenerics import InfoBarPlugins\nfrom Plugins.Extensions.GlassSysUtil.event_info import open_ecm as _open_ecm_info', 1)
     replacements = []
     tree = ast.parse(source)
     lines = source.splitlines(keepends=True)
@@ -17,6 +18,9 @@ def port(source):
     def function(name, text):
         node = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == name)
         replace(node, text)
+    descriptor = "    ret.append(PluginDescriptor(name=_('GSU – ECM Info'), description=_('ECM Info'), where=PluginDescriptor.WHERE_EVENTINFO, fnc=_open_ecm_info))\n"
+    plugins_node = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == 'Plugins')
+    function('Plugins', ast.get_source_segment(source, plugins_node).replace('    return ret', descriptor+'    return ret', 1))
     # Python 3 uses unicode text and its standard networking modules directly.
     for node in tree.body:
         if isinstance(node, ast.If) and isinstance(node.test, ast.Name) and node.test.id == 'ISP38':
