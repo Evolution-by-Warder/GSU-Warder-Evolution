@@ -1,0 +1,26 @@
+name: Clean obsolete GSU releases
+on:
+  push:
+    branches: [original-python314]
+    paths: ['.github/release-cleanup.json', '.github/workflows/cleanup-releases.yml', 'plugin/tools/cleanup_releases.py', 'plugin/tests/test_release_cleanup.py']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: gsu-release-cleanup
+  cancel-in-progress: false
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14.7'
+      - name: Verify cleanup guards
+        run: python -m unittest discover -s plugin/tests -p test_release_cleanup.py -v
+      - name: Execute explicit cleanup request
+        if: hashFiles('.github/release-cleanup.json') != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python plugin/tools/cleanup_releases.py --request .github/release-cleanup.json
