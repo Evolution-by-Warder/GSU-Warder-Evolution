@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 25. 10. 2026, r41 pripravené
+# Aktuálny checkpoint — 25. 10. 2026, r41 publikované
 
 Pracovať výhradne v `original-python314`, runtime `restoration/src/GlassSysUtil`; produkčná vetva zostáva nedotknutá. Prijímač má r40; používateľ potvrdil vstavanú aktualizáciu z r36, čítačkové potvrdenie/Nie aj skutočný zákaz a povolenie v oboch smeroch. Autokontrola configFalse/guardFalse pri vypnutí a guardTrue pri predvolenomTrue po zapnutí je potvrdená. Štart GUI bez vybraného CAM zostáva hostiteľsky testovaný. Prijímač diagnosticky uvádza Python3.14.9, host tests3.14.7. Staršie odseky nižšie sú história.
 
@@ -470,4 +470,4 @@ Zdroj9efd7b2389ae876b40a17f61f2399fd61b6b5ea6, CI40203765977 úspešné vrátane
 
 ### r41 hostiteľské overenie
 
-253 testov Python3.14.7 úspešných; kompilácia a dva bajtovo rovnaké buildy. IPK3467430B, SHA256cf8363c622ef84b607465a65260e6cbdf920e669352a67f9a2d558793e5675f3. Testy pokrývajú11 riadkov aj pri zaokrúhlení HD, všetky dynamické widgety, nepriehľadné panely, zarovnanie dátumu/verzie, jazykové dátumy, oba timer signály/stop/neskorý callback, nemenné menuID/stavy/dispatch a priehľadnú160x96 ikonu. Transformácia r40→r41 reprodukovala runtime presne. Publikácia/CI zatiaľ čaká.
+253 testov Python3.14.7 úspešných; kompilácia a dva bajtovo rovnaké buildy. IPK3467430B, SHA256cf8363c622ef84b607465a65260e6cbdf920e669352a67f9a2d558793e5675f3. Testy pokrývajú11 riadkov aj pri zaokrúhlení HD, všetky dynamické widgety, nepriehľadné panely, zarovnanie dátumu/verzie, jazykové dátumy, oba timer signály/stop/neskorý callback, nemenné menuID/stavy/dispatch a priehľadnú160x96 ikonu. Transformácia r40→r41 reprodukovala runtime presne. Zdroj d06226a62b2f8645450616852b273b41655d0612; CI40208512135 úspešné vrátane publikácie a overenia vzdialených bajtov. Verejný prerelease v13.40-r41 a candidate.json overené: veľkosť aj SHA zodpovedajú lokálnemu testovanému balíku. Feed commit6f1577c80679fbbfc1b6ee72c253d9f8a1541b76. Na prijímači nový vzhľad a ikona zatiaľ čakajú na posúdenie.
