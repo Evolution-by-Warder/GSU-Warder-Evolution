@@ -429,3 +429,7 @@ Používateľ potvrdil čítačkovú otázku s menom/defaultNie a návrat po Nie
 Po začatí kontroly všeobecného inštalátora používateľ označil celú sekciu za zbytočnú a výslovne uviedol „ja by som to cele vyrazil“. Finálna r38 preto žiadny opravený všeobecný inštalátor ani testovací IPK neobsahuje. Odstránené triedy ipk_script_center, script_center, ipk_center a tar_center, položkaID5 a dispatch. Hlavné menu10 položiek. Zdieľaná odinštalovacia trieda sa používa v CAM/SRV, preto je ponechaná iba s CAM filtrom aj pri default argumente. Predvolené skripty sa už nepribaľujú/nekopírujú; existujúce používateľské súbory na prijímači sa nemažú. Skupina siedmich skriptových zdrojov v restoration/scripts bola odstránená.
 
 229 host testov a AST reprodukcia prešli; nasleduje aktualizácia a overenie zjednodušeného menu na prijímači. Žiadny nový dizajn a žiadna zmena klientského Zakázať/Povoliť.
+
+## 2026-10-25 — finálna r38 s odstránenou sekciou zverejnená
+
+Zdroj baf7de36cea55f138b21b6052b00417e2f3f3b25, CI40200701330 úspešné vrátane229 testov, porovnania dvoch buildov a publikácie. IPK2 184 164B, SHA25678fd19347a24a207c2bbe575c0515a2a9159147bd6426bed003fe19fb1bfc717. Verejný v13.40-r38 a izolovaný feed už obsahujú finálne odstránenie celej všeobecnej sekcie, žiadnu z rozpracovaných opráv inštalátora. Kontrola skutočného IPK potvrdila neprítomnosť default-scripts/* a *_user.sh, postinst sa nedotýka /usr/script. Nasleduje iba vstavaná aktualizácia používateľa a potvrdenie desaťpoložkového menu.

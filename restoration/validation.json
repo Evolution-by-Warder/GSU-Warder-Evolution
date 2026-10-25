@@ -56,10 +56,14 @@
   "plugin_update_ui_sha256": "7775e311991a71e77abf08e054c4474c229477cb97074fe06e65df8e7f155897",
   "latest_candidate": {
     "version": "13.40-r38",
-    "published": false,
+    "published": true,
     "receiver_verified": false,
     "bytes": 2184164,
-    "sha256": "78fd19347a24a207c2bbe575c0515a2a9159147bd6426bed003fe19fb1bfc717"
+    "sha256": "78fd19347a24a207c2bbe575c0515a2a9159147bd6426bed003fe19fb1bfc717",
+    "feed_advanced": true,
+    "source_commit": "baf7de36cea55f138b21b6052b00417e2f3f3b25",
+    "ci_run": 40200701330,
+    "ci_conclusion": "success"
   },
   "oscam_readers_ui_sha256": "d0d39fc4462e7c5f46031461cba25e8fd9d4bef82da54ef364384c35d6678753"
 }
