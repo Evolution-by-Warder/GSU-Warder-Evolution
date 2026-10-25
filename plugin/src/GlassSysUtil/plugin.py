@@ -869,7 +869,7 @@ def parseEcmInfoLine(line, what=':'):
     return
 
 
-def ECMparser(cl=21):
+def ECMparser(cl=21, *, full_cam=False):
 
     def chckIdx(what):
         if 'X' in what:
@@ -1273,7 +1273,8 @@ def ECMparser(cl=21):
                         break
 
                 f.close()
-                oscVersion = cutMe('xxxxxxx' + oscVersion).replace('xxxxxxx', '')
+                if not full_cam:
+                    oscVersion = cutMe('xxxxxxx' + oscVersion).replace('xxxxxxx', '')
             except:
                 pass
 
@@ -2489,7 +2490,7 @@ class channelInfoCenter(Screen):
 
     def readEcmInfo(self):
         self.runECMTimer1.stop()
-        (oscVer, typecam, system, caid, provider, provid, pid, using, adress, hops, share, ecmTime, coding, dcw0, dcw1) = ECMparser(cl=24)
+        (oscVer, typecam, system, caid, provider, provid, pid, using, adress, hops, share, ecmTime, coding, dcw0, dcw1) = ECMparser(cl=24, full_cam=True)
         if using == 'unsupported CAs\n':
             self['ecmValues'].setText('..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............\n..............\n')
             coding = 'Unknown'
