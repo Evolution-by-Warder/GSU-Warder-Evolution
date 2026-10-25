@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 25. 10. 2026, r51 publikované
+# Aktuálny checkpoint — 25. 10. 2026, r52 publikované
 
 ## Repozitár a zostavenie
 
@@ -14,9 +14,9 @@ Nový updater používa nový názov a plugin/update/candidate.json. Existujúce
 
 Systémové ikonky sú zväčšené o20%, zachovávajú pomery strán, stredy a vyhradený zvislý priestor. Spodné hddtempbar, hddstate, cpubar a tempDBbar aj ich podklady sú presunuté tak, aby ich spodky boli zarovnané so spodkami príslušných ikoniek. Test kontroluje HD/FHD/UHD, medzeru medzi ikonou a bargrafom, vycentrovanie a spoločnú hranu podkladu. Šípky a stavové bodky sa nemenia. Snímka1(20261025-172724).jpg bola prezretá ako podklad; nový r51 vzhľad ešte nie je overený na prijímači. Používateľ dovolil nezväčšiť ikonky, ak by nebol priestor; v terajšom rozložení sa zmestia.
 
-## Ďalšia úloha — jazyky
+## Požiadavky na jazyky — realizované v r52 v rozsahu LOCALIZATION.md
 
-Používateľ žiada jazykovú podporu podľa jazyka systému vrátane dní/mesiacov v hlavičke: slovenčina, čeština, angličtina, nemčina, poľština, maďarčina, ruština, francúzština, taliančina a španielčina. Chýbajúci preklad má používať angličtinu. Názov GSU Warder Evolution neprekladať. Overiť aj dlhé texty, zarovnanie hlavičky a tlačidlá. Toto NIE JE implementované vydaním r51.
+Používateľ žiada jazykovú podporu podľa jazyka systému vrátane dní/mesiacov v hlavičke: slovenčina, čeština, angličtina, nemčina, poľština, maďarčina, ruština, francúzština, taliančina a španielčina. Chýbajúci preklad má používať angličtinu. Názov GSU Warder Evolution neprekladať. Overiť aj dlhé texty, zarovnanie hlavičky a tlačidlá. r51 jazyky nemenilo; r52 implementuje spoločné katalógy s anglickým fallbackom. Podrobný aktuálny rozsah je v LOCALIZATION.md.
 
 Súčasný stav lokalizácie: v resources.tar.gz sú pôvodné gsu.po/mo pre cs/sk; plugin.py priraďuje gettext pri importe podľa config.osd.language/par62. Nové UI moduly majú miestne slovenské fallback slovníky. warder_main.py už má dni a mesiace pre všetkých10 jazykov, ale ostatné texty ešte nie. Niektoré popisky pôvodných skinov sú statické anglické XML texty. Zjednotiť mechanizmus, preklady pribaliť bez novej python3-gettext závislosti, nezmeniť globálne locale procesu.
 
@@ -35,3 +35,11 @@ Používateľ potvrdil r51 vzhľad na prijímači správou „teraz to je OK“,
 Nový i18n.py má cachované katalógy10 jazykov,129 spoločných kľúčov a rozšírený SK fallback; pôvodné cs/sk gettext zostávajú. UI používa spoločný mechanizmus, rešpektuje par62, neznáme/chýbajúce texty sú anglické. Dni/mesiace bez globálnej zmeny locale. Nie všetky staré dialógy sú kompletne preložené; presný rozsah je v LOCALIZATION.md.
 
 Informácie o kanáli prevedené do spoločného Warder rámu: banner/header, názov služby, oddelené ECM/bitrate, logá/signal a transpondér, široká referencia dole, centrované červené ukončenie s krátkou čiarou. Zachované všetky pôvodné pomenované komponenty a natívne source/convert väzby, päť piconov, čítanie ECM/bitrate, stop/close a klávesy. Samostatný header timer sa zastaví pri zatvorení. Pôvodný funkčný timer test izoluje nový header, nové testy overujú jeho lifecycle a rozloženie HD/FHD/UHD. Nový vzhľad a jazyky treba posúdiť na prijímači.
+
+## Overené vydanie r52 a čistenie Releases
+
+r52 publikované zo zdroja8982fbbe4247317f3b6704b3f2fdd2996ab26b90, CI40220231733 úspešné.271 testov a dva identické buildy z čistého checkoutu,3656492 B,SHA2568e3f6a115b9cc7d20a79f51a3cc43d86f3241f60b24288b2e3a642a897d00adc. Oba feedy overené na r52. R52 jazykové/kanálové rozloženie čaká na prijímač; r51 systémové ikonky sú schválené.
+
+Používateľ výslovne žiada odstrániť staré nepotrebné Releases. Pripravený explicitný zoznam28 starších release ID, ponechať v13.40-r52. Git tagy ani história kódu sa nemažú. cleanup_releases.py overuje zhodu oboch feedov, identitu každého starého release ID a skutočný aktuálny IPK (veľkosť,hash,control) pred prvým DELETE. Nemaže žiadne nevyžiadané ani aktuálne/novšie vydanie. Zoznam sa spustí cez samostatný workflow s contents:write; výsledok treba overiť API a po dokončení spotrebovaný request odstrániť. Päť testov ochrany, nesúladu feedov, zlých bajtov, idempotencie a presného zoznamu; spolu276 hostiteľských testov.
+
+Ďalší krok: posúdenie Informácií o kanáli a jazykov na prijímači. Neprerábať ďalšiu funkčnú sekciu pred týmto potvrdením, pokračovať obrazovku po obrazovke.
