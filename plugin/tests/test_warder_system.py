@@ -38,7 +38,7 @@ class SystemLayoutTests(unittest.TestCase):
                 self.assertEqual(n.get('transparent'),'1')
                 self.assertEqual(n.get('backgroundColor'),'#00102136')
 
-    def test_larger_device_icons_fit_reserved_slots_and_lower_meters_share_bottoms(self):
+    def test_device_icons_precede_their_data_and_lower_meters_share_bottoms(self):
         for suffix,w,h in (('',1280,720),('_FHD',1920,1080),('_UHD',3840,2160)):
             source=importlib.import_module('Plugins.Extensions.GlassSysUtil.GSU_skins'+suffix).GlassSysInfo
             old=ET.fromstring(source);root=ET.fromstring(self.ui.system_skin(source,w,h))
@@ -46,16 +46,18 @@ class SystemLayoutTests(unittest.TestCase):
             devices=[n for n in pictures if not n.get('pixmap').endswith(('system-lr.png','system-updown.png'))]
             originals=[n for n in old if '/devices/' in n.get('pixmap','')]
             self.assertEqual(len(devices),len(originals))
-            for before,after in zip(originals,devices):
+            fields=('ram','swap','mem_tot','root','hdd','usb','cf','sd','HDDTemperature','hdddev','cpu','sensors')
+            for before,after,name in zip(originals,devices,fields):
                 x,y=map(int,before.get('position').split(','));iw,ih=map(int,before.get('size').split(','))
                 nx,ny=map(int,after.get('position').split(','));nw,nh=map(int,after.get('size').split(','))
-                slot_y=round((190+(y/(h/1080)-75)*.84)*(h/1080))
+                field=root.find("widget[@name='%s']"%name)
+                data_y=int(field.get('position').split(',')[1])
                 self.assertEqual(nw,nh)
                 self.assertGreater(nw,iw)
                 self.assertLessEqual(abs((nx+nw/2)-(x+iw/2)),1)
-                self.assertGreaterEqual(ny,slot_y)
-                self.assertLessEqual(ny+nh,slot_y+round(ih*.84))
-            lower=[n for n in devices if int(n.get('position').split(',')[1])>700*h/1080]
+                self.assertGreaterEqual(ny,round(180*h/1080))
+                self.assertLessEqual(ny+nh+round(12*h/1080),data_y)
+            lower=[n for n in devices if int(n.get('position').split(',')[1])>=round(700*h/1080)]
             for name in ('hddtempbar','hddstate','cpubar','tempDBbar'):
                 meter=root.find("widget[@name='%s']"%name)
                 mx,my=map(int,meter.get('position').split(','));mw,mh=map(int,meter.get('size').split(','))
@@ -66,6 +68,24 @@ class SystemLayoutTests(unittest.TestCase):
                 backing=[n for n in root if n.get('pixmap','').endswith('/barm_back.png') and n.get('position')==meter.get('position')]
                 self.assertEqual(len(backing),1)
                 self.assertEqual(backing[0].get('size'),meter.get('size'))
+
+    def test_data_rows_and_upper_meter_backings_move_together_without_colliding(self):
+        for suffix,w,h in (('',1280,720),('_FHD',1920,1080),('_UHD',3840,2160)):
+            source=importlib.import_module('Plugins.Extensions.GlassSysUtil.GSU_skins'+suffix).GlassSysInfo
+            root=ET.fromstring(self.ui.system_skin(source,w,h))
+            for names,next_row in ((('mem_labels','ram','swap','mem_tot','root'),445),
+                                   (('space_labels','hdd','usb','cf','sd'),700),
+                                   (('HDDCPULabels','HDDTemperature','hdddev','cpu','sensors'),858)):
+                tops=set()
+                for name in names:
+                    field=root.find("widget[@name='%s']"%name)
+                    y=int(field.get('position').split(',')[1]);height=int(field.get('size').split(',')[1]);tops.add(y)
+                    self.assertLess(y+height,round(next_row*h/1080))
+                self.assertEqual(len(tops),1)
+            for name in ('membar','swapbar','memtotalbar','rootbar','hddbar','usbbar','cfbar','sdbar'):
+                meter=root.find("widget[@name='%s']"%name)
+                matches=[n for n in root if n.get('pixmap','').endswith('/bar_back.png') and n.get('position')==meter.get('position') and n.get('size')==meter.get('size')]
+                self.assertEqual(len(matches),1,name)
 
 if __name__=='__main__':unittest.main()
 

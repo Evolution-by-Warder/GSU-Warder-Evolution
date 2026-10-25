@@ -40,7 +40,7 @@ def publish():
     existing=next((item for page in releases for item in page if item['tag_name']==tag),None)
     if existing is None:
         run('gh','release','create',tag,str(path),str(path)+'.sha256','--repo',REPOSITORY,'--target',os.environ['GITHUB_SHA'],
-            '--prerelease','--title','GSU original runtime '+version,'--notes-file',str(BASE/'update/RELEASE-NOTES.md'))
+            '--prerelease','--title','GSU Warder Evolution '+version,'--notes-file',str(BASE/'update/RELEASE-NOTES.md'))
     elif existing.get('draft') or not existing.get('prerelease'):
         raise RuntimeError('Restoration release must be a public prerelease')
     with tempfile.TemporaryDirectory(prefix='gsu-published-') as folder:
