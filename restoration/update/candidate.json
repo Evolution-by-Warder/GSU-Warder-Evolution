@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r36",
-    "tag": "v13.40-r36",
-    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r36/enigma2-plugin-glasssysutil_13.40-r36_all.ipk",
-    "sha256": "304b774a32ac9b6620ce02ebfff5fd5943d97dcd431629d02e06d7ec2fd4bd0a",
-    "bytes": 2185256,
-    "notes": "GSU 13.40-r36\n\n- Opravená autokontrola CAM pri dodatočnom výbere CAM-u po štarte GUI.\n- Vypnutá autokontrola zneplatní staré automatické požiadavky.\n- Zo spodku hlavného menu odstránený Správca zariadení, Textový editor a Reset hesla root.\n- Jedna položka Aktualizácia a kontrola novej verzie pri každom otvorení GSU.\n- Overenie veľkosti, SHA256 a identity IPK pred inštaláciou; po úspechu reštart GUI za 3 sekundy.\n- Ovládanie Zakázať/Povoliť klienta OSCam zostáva zachované.\n"
+    "version": "13.40-r37",
+    "tag": "v13.40-r37",
+    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r37/enigma2-plugin-glasssysutil_13.40-r37_all.ipk",
+    "sha256": "5e8775f69fffadb6480ca3556069aabc457d6db38de3fecaa3400900e14c609e",
+    "bytes": 2186370,
+    "notes": "GSU 13.40-r37\n\n- Načítanie a obnova zoznamu čítačiek/proxy OSCam bežia na pozadí bez blokovania menu.\n- Zakázať/Povoliť čítačku vyžaduje potvrdenie s jej názvom; predvolená odpoveď je Nie.\n- Po zmene sa znovu načíta a overí skutočný stav. Pri chybe sa nezobrazí falošné potvrdenie úspechu.\n- Zachované rozloženie okna, EMM čítače a vybraná čítačka pri obnove zoznamu.\n- Opravené odovzdanie názvov čítačiek so špeciálnymi znakmi pre akcie a entitlements.\n- Ovládanie klientov OSCam zostáva bez zmeny.\n"
   }
 }
