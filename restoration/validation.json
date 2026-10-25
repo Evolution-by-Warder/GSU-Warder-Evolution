@@ -55,31 +55,27 @@
   "plugin_update_sha256": "1f712eefde223d4cd796e4c88cea3f166061ddbbdc52fc3468cfbf346415d37d",
   "plugin_update_ui_sha256": "7775e311991a71e77abf08e054c4474c229477cb97074fe06e65df8e7f155897",
   "latest_candidate": {
-    "version": "13.40-r43",
+    "version": "13.40-r44",
     "published": false,
     "receiver_verified": false,
-    "bytes": 3467474,
-    "sha256": "1a94d8d3871671c77377cbecb220cdddae137a628ea14951cd8c610a485d6f57",
+    "bytes": 3467256,
+    "sha256": "dcbb07c61e799a4849f33aeeced0f7a3f758c0b7acbe89c8bf54332c38e52dc4",
     "feed_advanced": false
   },
   "oscam_readers_ui_sha256": "d0d39fc4462e7c5f46031461cba25e8fd9d4bef82da54ef364384c35d6678753",
   "warder_tools_sha256": "ef23dab03508f12e73cc5c8196f04ebaa44fd1bf7bf0d357881acc49ac341563",
   "warder_tools_ui_sha256": "4c9b1d1d6471def5878a3aea264fa0087cd3c7ce00415ca584c2282c69dd919c",
   "notes": " Receiver r40 screenshot145743 confirms About content and layout only; not close/scroll interaction or standalone health menu removal. Full receiver validation remains incomplete.",
-  "warder_main_sha256": "ac2b070a352718d0b87cfb670805bc3cc27ee1874f268ef1433e557b373ac69f",
+  "warder_main_sha256": "1ab968a114ca698dd3a0119e6abe549671a07a5d9e86c79711549b2f97d0c3a7",
   "previous_candidate": {
-    "version": "13.40-r42",
+    "version": "13.40-r43",
     "published": true,
     "receiver_verified": false,
-    "bytes": 3467340,
-    "sha256": "99442409d2da1286deb76cefcb9aac3048ec52b9aa6211cd56479c7b434f5ba4",
+    "bytes": 3467474,
+    "sha256": "1a94d8d3871671c77377cbecb220cdddae137a628ea14951cd8c610a485d6f57",
     "feed_advanced": true,
-    "source_commit": "0702263a78e21ce420fcfc90a5f23ea277f5498e",
-    "ci_run": 40209272337,
-    "ci_conclusion": "success",
-    "receiver_evidence": {
-      "live_tv_and_restore": "User explicitly confirms live TV and full-size restoration; screenshots1(20261025-160150).jpg and2(20261025-160149).jpg support this",
-      "shared_plugin_icon": "Screenshot1(20261025-155910).jpg confirms installed Glass/Utility icon"
-    }
+    "source_commit": "21899ea5c4a567850ac1f2bd4920c2b5ef7dc670",
+    "ci_run": 40210792043,
+    "ci_conclusion": "success"
   }
 }

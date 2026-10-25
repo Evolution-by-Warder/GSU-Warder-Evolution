@@ -483,3 +483,7 @@ r42 pridáva iba natívny Pig source=session.VideoPicture,16:9 viewport a presun
 r42 hostiteľské overenie:254 testov Python3.14.7, kompilácia a dva zhodné buildy úspešné. IPK3467340B, SHA25699442409d2da1286deb76cefcb9aac3048ec52b9aa6211cd56479c7b434f5ba4. Zdroj0702263a78e21ce420fcfc90a5f23ea277f5498e; CI40209272337 úspešné vrátane publikácie a overenia vzdialených bajtov. Verejný prereleasev13.40-r42 a aktualizačný feed overené: veľkosť aj SHA zhodné s lokálnym balíkom. Feedcommit4b19601ab49ebca283fbab8f7353e1b73ffd1faa. Na prijímači živé video a jeho obnovenie zatiaľ čakajú na skúšku.
 
 r43 hostiteľské overenie:256 testov Python3.14.7 úspešných po odstránení purpose riadka, kompilácia a dva zhodné buildy. IPK3467474B, SHA2561a94d8d3871671c77377cbecb220cdddae137a628ea14951cd8c610a485d6f57. Publikácia/CI zatiaľ čakajú.
+
+### r44
+
+Používateľ výslovne schválil kratší názov GSU Warder Evolution. r44 mení spoločnú konštantu názvu; najbližšie overiť názov v prehliadači pluginov. r43 bol publikovaný cez CI40210792043; feed aj SHA zhodné s lokálnym testovaným balíkom.

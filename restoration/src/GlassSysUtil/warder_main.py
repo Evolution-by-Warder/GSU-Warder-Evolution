@@ -2,7 +2,7 @@
 from datetime import datetime
 from xml.sax.saxutils import escape
 
-PLUGIN_NAME = 'Glass System Utility Warder Evolution'
+PLUGIN_NAME = 'GSU Warder Evolution'
 BACKGROUND = '/usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/images/warder-main.png'
 BASE = '#00071627'
 PANEL = '#00102136'
