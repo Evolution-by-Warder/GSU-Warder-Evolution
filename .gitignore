@@ -12,3 +12,8 @@ build/
 *.egg-info/
 .DS_Store
 Thumbs.db
+
+# Runtime artwork is an intentional part of the receiver package.
+!plugin/src/GlassSysUtil/images/*.png
+!plugin/artwork/**/*.png
+!plugin/resources.tar.gz

@@ -116,7 +116,14 @@ class PublishUpdateTests(unittest.TestCase):
                     if valid:
                         publish_update.publish()
                         self.assertEqual(json.loads((root/'update/candidate.json').read_text())['release']['sha256'],hashlib.sha256(ipk()).hexdigest())
-                        self.assertEqual((root.parent/'restoration/update/candidate.json').read_bytes(),(root/'update/candidate.json').read_bytes())
+                        legacy=json.loads((root.parent/'restoration/update/candidate.json').read_text())
+                        canonical=json.loads((root/'update/candidate.json').read_text())
+                        old_repository='Evolution-by-Warder/Glass-System-Utility-Warder-Evolution'
+                        self.assertIn(old_repository,legacy['release']['url'])
+                        with patch.object(update,'REPOSITORY',old_repository):
+                            self.assertEqual(update.parse_release(json.dumps(legacy),'13.40-r36').version,'13.40-r37')
+                        legacy['release']['url']=legacy['release']['url'].replace(old_repository,update.REPOSITORY,1)
+                        self.assertEqual(legacy,canonical)
                         self.assertEqual(commands[-1],('git','push','origin','HEAD:original-python314'))
                         before=len(commands)
                         publish_update.publish()
