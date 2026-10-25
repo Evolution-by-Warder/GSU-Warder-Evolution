@@ -22,6 +22,7 @@ def system_skin(original,width,height):
         ET.SubElement(root,'eLabel',position='%d,%d'%(round(x*sx),round(y*sy)),size='%d,%d'%(round(w*sx),round(h*sy)),backgroundColor=color,zPosition='-2' if color==main.CYAN else '-1')
     fill(55,180,1810,800,main.CYAN)
     fill(57,182,1806,796,main.PANEL)
+    lower_icons=[]
     for original_node in old:
         node=deepcopy(original_node)
         if node.get('name') in ('red','green','yellow'):continue
@@ -44,15 +45,40 @@ def system_skin(original,width,height):
             node.set('pixmap',main.BACKGROUND.rsplit('/',1)[0]+'/system-'+basename+'.png')
             px,py=map(int,node.get('position').split(','))
             pw,ph=map(int,node.get('size').split(','))
-            side=min(pw,ph)
+            # Device slots have spare horizontal room; retain their centers and
+            # vertical bounds. Navigation arrows keep their approved size.
+            side=min(round(pw*1.2),ph) if '/devices/' in pixmap else min(pw,ph)
             node.set('position','%d,%d'%(px+(pw-side)//2,py+(ph-side)//2))
             node.set('size','%d,%d'%(side,side))
             node.set('scale','1')
+            if '/devices/' in pixmap and y>=round(700*sy):
+                lower_icons.append(node)
         elif '/bp_icons/' in pixmap and basename in ('red','green'):
             node.set('pixmap',main.BACKGROUND.rsplit('/',1)[0]+'/system-status-'+basename+'.png')
             node.set('scale','1')
         if node.tag=='ePixmap':node.set('alphatest','blend')
         root.append(node)
+    # Move each lower meter and its backing together to its adjacent icon.
+    # Do this after collecting pictures so XML ordering cannot affect alignment.
+    for name in ('hddtempbar','hddstate','cpubar','tempDBbar'):
+        meter=root.find("widget[@name='%s']"%name)
+        if meter is None or not lower_icons:continue
+        mx,my=map(int,meter.get('position').split(','))
+        mw,mh=map(int,meter.get('size').split(','))
+        adjacent=[n for n in lower_icons if int(n.get('position').split(',')[0])>mx]
+        if not adjacent:continue
+        icon=min(adjacent,key=lambda n:int(n.get('position').split(',')[0])-mx)
+        iy=int(icon.get('position').split(',')[1])
+        ih=int(icon.get('size').split(',')[1])
+        # Match the backing by its original geometry before moving the meter.
+        original_position=meter.get('position')
+        for node in root:
+            if node is meter or (node.tag=='ePixmap' and
+                    Path(node.get('pixmap','')).name=='barm_back.png' and
+                    node.get('position')==original_position and
+                    node.get('size')==meter.get('size')):
+                node.set('position','%d,%d'%(mx,iy+ih-mh))
+        meter.set('position','%d,%d'%(mx,iy+ih-mh))
     for index,(name,color) in enumerate((('red','#00ff526a'),('green','#0039ff59'),('yellow','#00ffdb52'))):
         x=55+index*610
         fill(x+195,996,200,2,color)
