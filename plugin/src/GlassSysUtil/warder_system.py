@@ -5,7 +5,7 @@ from xml.etree import ElementTree as ET
 from . import warder_main as main
 
 
-def system_skin(original,width,height):
+def system_skin(original,width,height,translator=lambda value:value):
     old=ET.fromstring(original)
     sx,sy=width/1920.0,height/1080.0
     root=ET.fromstring(main.main_skin(width,height))
@@ -31,6 +31,7 @@ def system_skin(original,width,height):
         if y/sy>=975:continue  # Old footer and its full-width color lines.
         node.set('position','%d,%d'%(x,round((190+(y/sy-75)*0.84)*sy)))
         node.set('size','%d,%d'%(w,max(1,min(round(h*0.84),round(978*sy)-int(node.get('position').split(',')[1])))))
+        if node.get('text'):node.set('text',translator(node.get('text')))
         if node.get('font'):
             family,size=node.get('font').rsplit(';',1)
             node.set('font','Regular;%d'%max(12,round(int(size)*0.84)))

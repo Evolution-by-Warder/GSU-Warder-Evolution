@@ -1,4 +1,5 @@
 """Nonblocking reader-table refresh and confirmed, verified account actions."""
+from .i18n import for_api as _i18n_text
 from urllib.parse import urlencode, quote
 from twisted.internet.threads import deferToThread
 from .oscam_readers_parser import parse_readers
@@ -11,9 +12,7 @@ _SK={
 
 
 def tr(api,value):
-    result=api['_'](value)
-    language=api['config'].osd.language.value
-    return _SK.get(value,result) if result==value and language.startswith('sk') else result
+    return _i18n_text(api,value,_SK)
 
 
 def fetch(url,login,passwd,transport):

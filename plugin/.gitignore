@@ -2,5 +2,7 @@
 /src/GlassSysUtil/*
 !/src/GlassSysUtil/*.py
 !/src/GlassSysUtil/version
+!/src/GlassSysUtil/images/
+!/src/GlassSysUtil/locale/
 __pycache__/
 !/resources.tar.gz

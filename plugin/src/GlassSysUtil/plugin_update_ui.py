@@ -1,4 +1,5 @@
 """Shared automatic/manual update flow, with all network/package work off GUI."""
+from .i18n import for_api as _i18n_text
 import queue
 import threading
 
@@ -26,10 +27,8 @@ _SK = {
 }
 
 
-def text(api, value):
-    translated=api['_'](value)
-    language=api['config'].osd.language.value
-    return _SK.get(value,value) if translated==value and language.startswith('sk') else translated
+def text(api,value):
+    return _i18n_text(api,value,_SK)
 
 
 def connect(timer, callback):

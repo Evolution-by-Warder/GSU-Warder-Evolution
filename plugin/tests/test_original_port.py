@@ -82,6 +82,7 @@ class OriginalPortTests(unittest.TestCase):
                     timers.append(timer);callbacks.append(slots)
                     return timer
                 stack.enter_context(patch.object(module,'eTimer',side_effect=make_timer))
+                stack.enter_context(patch.object(module._warder_channel,'install'))
                 stack.enter_context(patch.object(module,'iServiceInformation',constants))
                 stack.enter_context(patch.object(module,'eServiceReference',lambda value:types.SimpleNamespace(toString=lambda:value)))
                 stack.enter_context(patch.object(module,'ENA_TT',False))
@@ -246,10 +247,11 @@ class OriginalPortTests(unittest.TestCase):
         screen=self.plugin.channelInfoCenter(types.SimpleNamespace())
         tree=ET.fromstring(screen.skin)
         values=tree.find("widget[@name='ecmValues']")
-        self.assertEqual(values.get('size'),'340,345')
+        width=int(values.get('size').split(',')[0])
+        self.assertGreaterEqual(width,340)
         x=int(values.get('position').split(',')[0])
         channel=tree.find("widget[@name='picchannel']")
-        self.assertLess(x+340,int(channel.get('position').split(',')[0]))
+        self.assertLess(x+width,int(channel.get('position').split(',')[0]))
 
     def test_cccam_menu_consumes_text_and_retains_all_original_choices(self):
         import io

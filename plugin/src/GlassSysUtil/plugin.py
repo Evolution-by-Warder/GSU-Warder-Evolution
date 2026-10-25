@@ -1,3 +1,4 @@
+from Plugins.Extensions.GlassSysUtil import warder_channel as _warder_channel
 from Plugins.Extensions.GlassSysUtil import warder_system as _warder_system
 from Plugins.Extensions.GlassSysUtil import warder_main as _warder_main
 from Plugins.Extensions.GlassSysUtil import warder_tools_ui as _warder_tools_ui
@@ -39,11 +40,16 @@ from Components.config import *
 from Components.ScrollLabel import ScrollLabel
 from Components.ProgressBar import ProgressBar
 from time import sleep
-import gettext
+from Plugins.Extensions.GlassSysUtil.i18n import translate as _translate
 import builtins
 import platform
 import shutil
-_ = getattr(builtins, "_", lambda value: value)
+def _(value):
+    try:
+        locale=config.osd.language.value
+        if not config.plugins.GlassSysUtil.par62.value:locale='en'
+    except AttributeError:locale='en'
+    return _translate(value,locale,root=GSU_PATH)
 ENA_TT = False
 try:
     from enigma import iDVBFrontend
@@ -248,14 +254,6 @@ GCM = '/tmp/.gcam/gcam.version'
 BP_ICO = GSU_PATH + {3: 'uhd/', 1.5: 'fhd/', 1: ''}[FHD] + 'bp_icons/' + '%s.png'
 A_TM = '/tmp/a.tmp'
 RM_A_TMP = 'rm -rf %s' % A_TM
-try:
-    if config.plugins.GlassSysUtil.par62.value:
-        gsu_language = []
-        gsu_language = config.osd.language.value.split('_')
-        if os.path.exists(GSU_PATH + 'locale/%s' % gsu_language[0]):
-            _ = gettext.translation('gsu', GSU_PATH + 'locale', languages=gsu_language, fallback=True).gettext
-except:
-    pass
 
 def fhd(t):
     return int(t * FHD)
@@ -1687,15 +1685,15 @@ class GlassSysInfoBrowser(Screen):
 
     def __init__(self, session):
         desktop = getDesktop(0).size()
-        self.skin = _warder_system.system_skin(GlassSysInfo, desktop.width(), desktop.height())
+        self.skin = _warder_system.system_skin(GlassSysInfo, desktop.width(), desktop.height(), translator=_)
         self.session = session
         Screen.__init__(self, session)
-        self['mem_labels'] = Label('\nTotal:\nFree:\nUsed:\nUsed(%):')
+        self['mem_labels'] = Label('\n'+'\n'.join(_(key) for key in ('Total:','Free:','Used:','Used(%):')))
         self['ram'] = Label('')
         self['root'] = Label('')
         self['swap'] = Label('')
         self['mem_tot'] = Label('')
-        self['space_labels'] = Label('\nTotal:\nFree:\nUsed:\nUsed(%):')
+        self['space_labels'] = Label('\n'+'\n'.join(_(key) for key in ('Total:','Free:','Used:','Used(%):')))
         self['cf'] = Label('')
         self['sd'] = Label('')
         self['usb'] = Label('')
@@ -1704,7 +1702,7 @@ class GlassSysInfoBrowser(Screen):
         self['HDDTemperature'] = Label('')
         self['hdddev'] = Label('')
         self['sensors'] = Label('')
-        self['HDDCPULabels'] = Label('What:\nValue:')
+        self['HDDCPULabels'] = Label(_('What:')+'\n'+_('Value:'))
         self['ProccessInfo'] = ScrollLabel('')
         self['DmesgInfo'] = ScrollLabel('')
         self['cfbar'] = ProgressBar()
@@ -1838,14 +1836,14 @@ class GlassSysInfoBrowser(Screen):
 
         self['ram'].setText('RAM:\n' + setUnits(ramtot) + '\n' + setUnits(ramfree) + '\n' + setUnits(ramused) + '\n' + str(ramperc) + '%')
         self['swap'].setText('Swap:\n' + setUnits(swaptot) + '\n' + setUnits(swapfree) + '\n' + setUnits(swapused) + '\n' + str(swapperc) + '%')
-        self['mem_tot'].setText('Total:\n' + setUnits(ramtot + swaptot) + '\n' + setUnits(ramfree + swapfree) + '\n' + setUnits(ramused + swapused) + '\n' + str(totalperc) + '%')
+        self['mem_tot'].setText(_('Total:')+'\n' + setUnits(ramtot + swaptot) + '\n' + setUnits(ramfree + swapfree) + '\n' + setUnits(ramused + swapused) + '\n' + str(totalperc) + '%')
         self['memtotalbar'].setValue(int(totalperc))
         self['swapbar'].setValue(int(swapperc))
         self['membar'].setValue(int(ramperc))
         return
 
     def getSpaceInfo(self):
-        temperature = 'Temp. HDD:\nN/A'
+        temperature = (_('Temp. %s:') % 'HDD')+'\nN/A'
         tmp1 = 0
         isHdd = 'N/A'
         tt = 'HDD'
@@ -1882,7 +1880,7 @@ class GlassSysInfoBrowser(Screen):
         self['hddtempbar'].setValue(tmp1)
         self['hddstate'].setRange((0, 100))
         if tmp1 != 0:
-            temperature = 'Temp. %s:\n' % tt + str(tmp1) + DG + 'C'
+            temperature = (_('Temp. %s:') % tt)+'\n' + str(tmp1) + DG + 'C'
             self['hddstate'].setValue(100)
         self['hdddev'].setText(tt + ':\n' + isHdd)
         self['HDDTemperature'].setText(temperature)
@@ -1995,7 +1993,7 @@ class GlassSysInfoBrowser(Screen):
                 tmp = 'N/A'
 
         self['cpubar'].setValue(zataz)
-        self['cpu'].setText('CPU using:\n' + tmp)
+        self['cpu'].setText(_('CPU using:')+'\n' + tmp)
         self.cpuTimer.start(3500)
         return
 
@@ -2037,7 +2035,7 @@ class GlassSysInfoBrowser(Screen):
         return res
 
     def getTempSensorsInfo(self):
-        temperature = 'Temp. DB:\nN/A'
+        temperature = (_('Temp. %s:') % 'DB')+'\nN/A'
         self['tempDBbar'].setRange((0, 100))
         temp = 0
         try:
@@ -2054,12 +2052,12 @@ class GlassSysInfoBrowser(Screen):
 
         if temp > 0:
             self['tempDBbar'].setValue(int(temp))
-            temperature = 'Temp. DB:\n' + str(temp) + DG + 'C'
+            temperature = (_('Temp. %s:') % 'DB')+'\n' + str(temp) + DG + 'C'
         elif fileExists('/sys/devices/virtual/thermal/thermal_zone0/temp'):
             try:
                 temp = open('/sys/devices/virtual/thermal/thermal_zone0/temp').read()[:2]
                 temp = temp.replace('\n', '')
-                temperature = 'CPU Temp.: ' + temp + DG + 'C'
+                temperature = _('CPU Temp.:')+' ' + temp + DG + 'C'
                 self['tempDBbar'].setValue(int(temp))
             except:
                 pass
@@ -2072,13 +2070,14 @@ class GlassSysInfoBrowser(Screen):
 class channelInfoCenter(Screen):
 
     def __init__(self, session):
-        self.skin = sub(r'(<widget name="ecmValues"[^>]*size=")(\d+),(\d+)(")', lambda match: match[1] + '%d,%s' % (int(match[2]) * 340 // 292, match[3]) + match[4], channelInfo_Center)
+        desktop=getDesktop(0).size()
+        self.skin=_warder_channel.channel_skin(channelInfo_Center,desktop.width(),desktop.height(),translator=_)
         self.session = session
         Screen.__init__(self, session)
         self['ecmValues'] = Label()
-        self.e = 'CAM:\nSystem:\nCAID:\nProvider:\nProvID:\nPID:\nUsing:\nAddress:\nHops:\nShare:\nECM Time:'
+        self.e = '\n'.join(_(key) for key in ('CAM:', 'System:', 'CAID:', 'Provider:', 'ProvID:', 'PID:', 'Using:', 'Address:', 'Hops:', 'Share:', 'ECM Time:'))
         self['ecmlabels'] = Label(self.e)
-        self['bit_labels'] = Label('\nVideo:\nAudio:\nStream:')
+        self['bit_labels'] = Label('\n'+'\n'.join(_(key) for key in ('Video:', 'Audio:', 'Stream:')))
         self['bit_min'] = Label()
         self['bit_max'] = Label()
         self['bit_avg'] = Label()
@@ -2089,9 +2088,9 @@ class channelInfoCenter(Screen):
         self['piccode'] = Pixmap()
         self['piccam'] = Pixmap()
         self['stream_btr'] = Label('....')
-        self['tp_lab'] = Label('System:\nModulation:\nFrequency:\nPolarisation:\nSymbol Rate:\nFEC:\nVideo PID:\nAudio PID:\nPCR PID:\nPMT PID:\nTXT PID:\nTSID:\nONID:\nSID:\nVideo Size:\nVideo Format:\nAudio Type:\nAudio Tracks:\nCAIDs:')
-        self['tp_lab_sat'] = Label('Satellite:')
-        self['tp_lab_ref'] = Label('Reference:')
+        self['tp_lab'] = Label('\n'.join(_(key) for key in ('System:', 'Modulation:', 'Frequency:', 'Polarisation:', 'Symbol Rate:', 'FEC:', 'Video PID:', 'Audio PID:', 'PCR PID:', 'PMT PID:', 'TXT PID:', 'TSID:', 'ONID:', 'SID:', 'Video Size:', 'Video Format:', 'Audio Type:', 'Audio Tracks:', 'CAIDs:')))
+        self['tp_lab_sat'] = Label(_('Satellite:'))
+        self['tp_lab_ref'] = Label(_('Reference:'))
         self['tp_values'] = Label('')
         self['tp_ref'] = Label('')
         self['tp_sat'] = Label('')
@@ -2107,6 +2106,7 @@ class channelInfoCenter(Screen):
         self.dataA = 0
         self.runECMTimer1 = None
         self.runBitTimer1 = None
+        _warder_channel.install(self,globals())
         self.onLayoutFinish.append(self.startInfo)
         return
 
@@ -2467,7 +2467,7 @@ class channelInfoCenter(Screen):
                 if len(pending) == 2:
                     video, audio = pending
                     for index, name in enumerate(('min', 'max', 'avg', 'act')):
-                        self['bit_' + name].setText(name.capitalize() + ':\n' + video[index] + '\n' + audio[index])
+                        self['bit_' + name].setText(_(name.capitalize()+':')+'\n' + video[index] + '\n' + audio[index])
                     pending = []
         self._bitrate_rows = pending
         return

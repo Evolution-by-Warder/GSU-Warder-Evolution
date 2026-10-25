@@ -1,4 +1,5 @@
 """Keep the original swap screens responsive while worker operations run."""
+from .i18n import for_api as _i18n_text
 from twisted.internet.threads import deferToThread
 from .swap_ops import SwapStore, places, swaps
 
@@ -13,10 +14,8 @@ _SK = {
 }
 
 
-def tr(api, text):
-    result = api['_'](text)
-    language = getattr(getattr(getattr(api['config'], 'osd', None), 'language', None), 'value', '')
-    return _SK.get(text, result) if result == text and language.startswith('sk') else result
+def tr(api,text):
+    return _i18n_text(api,text,_SK)
 
 
 def init(screen):

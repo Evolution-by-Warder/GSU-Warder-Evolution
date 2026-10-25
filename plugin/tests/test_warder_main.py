@@ -14,7 +14,8 @@ from receiver_stubs import load
 BASE=Path(__file__).resolve().parents[1]
 ROOT=BASE/'src/GlassSysUtil'
 sys.path.insert(0,str(ROOT))
-import warder_main as ui
+load(ROOT)
+ui=importlib.import_module('Plugins.Extensions.GlassSysUtil.warder_main')
 
 
 class WarderMainTests(unittest.TestCase):

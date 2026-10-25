@@ -1,4 +1,5 @@
 """Original-style native OSCam start settings, with isolated per-CAM values."""
+from .i18n import for_api as _i18n_text
 from Components.ActionMap import ActionMap
 from Components.ConfigList import ConfigListScreen
 from Components.Label import Label
@@ -22,10 +23,7 @@ _SK={
 }
 
 def translate(api,text):
-    result=api['_'](text)
-    settings=api.get('config')
-    language=getattr(getattr(getattr(settings,'osd',None),'language',None),'value','')
-    return _SK.get(text,result) if result==text and language.startswith('sk') else result
+    return _i18n_text(api,text,_SK)
 
 
 class NativeStartConfigScreen(Screen,ConfigListScreen):
