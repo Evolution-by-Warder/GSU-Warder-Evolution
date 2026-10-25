@@ -9,7 +9,7 @@ def port_warder_tools(source):
     for node in ast.walk(cls):
         if isinstance(node,ast.Assign) and any(ast.unparse(t)=='self.menuListAll' for t in node.targets):
             last=node.value.elts[-1]
-            changes.append((last.lineno-1,last.lineno-1,"            ('17', _warder_tools_ui.text(globals(), 'Tools'), _warder_tools_ui.text(globals(), 'Diagnostic bundle and plugin information.')),\n"))
+            changes.append((last.lineno-1,last.lineno-1,"            ('17', _warder_tools_ui.text(globals(), 'Tools'), _warder_tools_ui.text(globals(), 'Create one archive with system information and GSU logs.')),\n"))
         if isinstance(node,ast.If) and ast.unparse(node.test)=="selectedItem == '16'":
             changes.append((node.lineno-1,node.lineno-1,"            elif selectedItem == '17':\n                _warder_tools_ui.open_tools(self.session, globals())\n"))
     for start,end,value in sorted(changes,reverse=True):lines[start:end]=[value]

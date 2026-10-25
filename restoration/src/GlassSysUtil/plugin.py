@@ -414,7 +414,7 @@ def main5(session, **kwargs):
 
 def startViaMenu(menuid, **kwargs):
     if menuid == 'setup':
-        return [(_('Glass System Utility'), main, 'glass_sys_utils', None)]
+        return [(_warder_main.PLUGIN_NAME, main, 'glass_sys_utils', None)]
     else:
         return []
 
@@ -447,16 +447,16 @@ def keyStartRed(self):
 
 def Plugins(path, **kwargs):
     ret = [
-     PluginDescriptor(name=_('Glass System Utility'), description=_('Glass System Utility'), where=PluginDescriptor.WHERE_PLUGINMENU, icon='images/warder-plugin.png', fnc=main),
+     PluginDescriptor(name=_warder_main.PLUGIN_NAME, description=_warder_main.text(globals(), 'Receiver information, CAM/ECM and diagnostics'), where=PluginDescriptor.WHERE_PLUGINMENU, icon='images/warder-plugin.png', fnc=main),
      PluginDescriptor(where=[PluginDescriptor.WHERE_SESSIONSTART], fnc=sessionAutostart)]
     if config.plugins.GlassSysUtil.par52.value:
-        ret.append(PluginDescriptor(name='(GSU) ' + _('Glass System Utility'), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main))
+        ret.append(PluginDescriptor(name='(GSU) ' + _warder_main.PLUGIN_NAME, where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main))
     if config.plugins.GlassSysUtil.par53.value:
         ret.append(PluginDescriptor(name='(GSU) ' + _('System Information'), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main1))
     if config.plugins.GlassSysUtil.par54.value:
         ret.append(PluginDescriptor(name='(GSU) ' + _('Channel Information'), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main4))
     if config.plugins.GlassSysUtil.par51.value:
-        ret.append(PluginDescriptor(name=_('Glass System Utility'), where=PluginDescriptor.WHERE_MENU, fnc=startViaMenu))
+        ret.append(PluginDescriptor(name=_warder_main.PLUGIN_NAME, where=PluginDescriptor.WHERE_MENU, fnc=startViaMenu))
     if ENA_PS and config.plugins.GlassSysUtil.par56.value:
         ret.append(PluginDescriptor(name='(GSU) ' + _('CAM/SRV Manager'), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main2))
     if config.plugins.GlassSysUtil.par60.value:
@@ -1515,7 +1515,7 @@ class SysUtilMngMain(Screen):
             ('7', _('CAM/SRV Manager'), _('Start, stop, restart, download, unistall CAM/SRV or set start cfg of OScam')),
             ('8', _('OSD ECM Information'), _('Enable/Disable OSD ECM Info, will be showed in top - right (default) of TV screen, show changes in ECM info only')),
             ('9', _('Swap Management'), _('Create,remove and show single/multi swap on mapped devices on your hw')),
-            ('17', _warder_tools_ui.text(globals(), 'Tools'), _warder_tools_ui.text(globals(), 'Diagnostic bundle and plugin information.')),
+            ('17', _warder_tools_ui.text(globals(), 'Tools'), _warder_tools_ui.text(globals(), 'Create one archive with system information and GSU logs.')),
             ('16', _plugin_update_text(globals(), 'Update'), _plugin_update_text(globals(), 'Check for a new version of Glass System Utility Warder Evolution'))]
         self.status = {}
         self['list'] = ListboxSys2(self.list)
@@ -1524,13 +1524,16 @@ class SysUtilMngMain(Screen):
         self['red'] = Label(_('Exit'))
         self['green'] = Label(_('Select'))
         self['yellow'] = Label(_('Menu'))
-        self['blue'] = Label('')
-        self['actions'] = ActionMap(['SetupActions', 'ColorActions', 'GlobalActions', 'WizardActions', 'MenuActions'], {'green': self.selectedmenuitem, 'ok': self.selectedmenuitem, 'red': self.close, 'yellow': self.cfgGsu, 'back': self.close, 'menu': self.cfgGsu})
+        self['blue'] = Label(_warder_tools_ui.text(globals(), 'About plugin'))
+        self['actions'] = ActionMap(['SetupActions', 'ColorActions', 'GlobalActions', 'WizardActions', 'MenuActions'], {'blue': self.aboutPlugin, 'green': self.selectedmenuitem, 'ok': self.selectedmenuitem, 'red': self.close, 'yellow': self.cfgGsu, 'back': self.close, 'menu': self.cfgGsu})
         self.size = getDesktop(0).size().width()
         _warder_main.install(self, globals())
         self.onLayoutFinish.append(self.updatemenulist)
         self._plugin_update = _StartupUpdateCheck(self, globals())
         return
+
+    def aboutPlugin(self):
+        self.session.open(_warder_tools_ui.AboutScreen, globals())
 
     def resetRootPass(self, a):
         return  # Retired legacy action.

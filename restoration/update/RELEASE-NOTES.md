@@ -1,6 +1,9 @@
-GSU 13.40-r42
+GSU 13.40-r43
 
-- Živé TV okno vpravo hore v hlavnej ponuke, v rovnakom štýle ako náš skin.
-- Aktuálne vysielanie vo formáte16:9; bez prepínania stanice a spúšťania druhého programu.
-- Názov a popis vybranej funkcie pod TV oknom, menu vľavo.
-- Zachovaný spoločný banner, živé hodiny, verzia a nová ikona Glass / Utility.
+- O plugine je dostupné priamo modrým tlačidlom hlavného menu.
+- Štyri rovnomerne rozmiestnené a centrované farebné tlačidlá.
+- Z Nástrojov odstránené O plugine; zostáva vytvorenie diagnostického balíka.
+- Názov v zozname pluginov je Glass System Utility Warder Evolution a neprekladá sa.
+- Popis pluginu stručne vysvetľuje jeho účel namiesto opakovania názvu.
+- Odstránený zbytočný spodný riadok; oba panely sú nižšie rozšírené a pravý popis má viac miesta.
+- Odstránený nadpis Hlavná ponuka; panely začínajú hneď pod bannerom a využívajú aj uvoľnenú hornú plochu.

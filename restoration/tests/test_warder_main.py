@@ -22,14 +22,15 @@ class WarderMainTests(unittest.TestCase):
     def setUpClass(cls):cls.plugin=load(ROOT)
 
     def test_scaled_opaque_layout_fits_eleven_rows_and_contains_all_dynamic_widgets(self):
-        required={'list','info','selection','day','date','clock','seconds','version_title','version','menu_title','purpose','red','green','yellow'}
+        required={'list','info','selection','day','date','clock','seconds','version_title','version','red','green','yellow','blue'}
         for width,height in ((1280,720),(1920,1080),(3840,2160)):
             root=ET.fromstring(ui.main_skin(width,height))
             self.assertEqual(root.get('backgroundColor'),ui.BASE)
             self.assertEqual(root.get('flags'),'wfNoBorder')
             widgets={n.get('name'):n for n in root.findall('widget') if n.get('name')}
             self.assertEqual(set(widgets),required)
-            self.assertNotIn('blue',widgets)
+            self.assertNotIn('purpose',widgets)
+            self.assertNotIn('menu_title',widgets)
             for n in root:
                 x,y=map(int,n.get('position').split(','));w,h=map(int,n.get('size').split(','))
                 self.assertGreaterEqual(min(x,y),0)
@@ -60,7 +61,7 @@ class WarderMainTests(unittest.TestCase):
                 self.assertGreater(dy,y+h)
                 self.assertGreaterEqual(dx,round(1137*width/1920))
                 self.assertLessEqual(dx+dw,round(1863*width/1920))
-                self.assertLessEqual(dy+dh,round(933*height/1080))
+                self.assertLessEqual(dy+dh,round(978*height/1080))
             # No opaque, higher-layer widget can paint over the video cut-out.
             for other in root:
                 if other is video or int(other.get('zPosition','0'))<2:continue
@@ -159,5 +160,31 @@ class WarderMainTests(unittest.TestCase):
         self.assertIn(raw[25],(4,6))  # PNG grayscale-alpha or RGBA, no opaque matte.
         self.assertIn("icon='images/warder-plugin.png'",(ROOT/'plugin.py').read_text())
         self.assertLess(len(raw),30000)
+
+    def test_four_footer_actions_fit_centered_in_equal_slots_at_every_resolution(self):
+        for width,height in ((1280,720),(1920,1080),(3840,2160)):
+            root=ET.fromstring(ui.main_skin(width,height))
+            previous=0;widths=[]
+            for name in ('red','green','yellow','blue'):
+                node=root.find("widget[@name='%s']" % name)
+                x,y=map(int,node.get('position').split(','));w,h=map(int,node.get('size').split(','))
+                self.assertGreater(x,previous);self.assertLessEqual(x+w,width)
+                self.assertEqual(node.get('halign'),'center')
+                self.assertEqual(node.get('noWrap'),'1')
+                previous=x+w;widths.append(w)
+            self.assertLessEqual(max(widths)-min(widths),1)
+
+    def test_project_name_stays_untranslated_in_plugin_and_setup_entries(self):
+        class Descriptor:
+            WHERE_PLUGINMENU=1;WHERE_SESSIONSTART=2;WHERE_EXTENSIONSMENU=3;WHERE_MENU=4
+            def __init__(self,**kwargs):self.__dict__.update(kwargs)
+        with patch.object(self.plugin,'_',return_value='preložený text'),patch.object(self.plugin,'PluginDescriptor',Descriptor):
+            entries=self.plugin.Plugins('/test')
+            browser=[p for p in entries if p.where==Descriptor.WHERE_PLUGINMENU]
+            self.assertEqual(len(browser),1)
+            self.assertEqual(browser[0].name,ui.PLUGIN_NAME)
+            self.assertEqual(browser[0].description,'preložený text')
+            self.assertEqual(browser[0].icon,'images/warder-plugin.png')
+            self.assertEqual(self.plugin.startViaMenu('setup')[0][0],ui.PLUGIN_NAME)
 
 if __name__=='__main__':unittest.main()

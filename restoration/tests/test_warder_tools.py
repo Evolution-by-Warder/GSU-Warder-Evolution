@@ -145,17 +145,18 @@ class WarderToolsUITests(unittest.TestCase):
         cls.plugin=load(ROOT)
         cls.ui=cls.plugin._warder_tools_ui
 
-    def test_main_menu_tools_dispatch_and_two_useful_entries(self):
+    def test_main_menu_tools_contains_only_bundle_and_blue_opens_about(self):
         session=MagicMock();screen=self.plugin.SysUtilMngMain(session)
         self.assertIn(('17','Nástroje'),[(item[0],item[1]) for item in screen.menuListAll])
         screen.status={'17':True};screen['list'].getCurrent=lambda:['17']
         screen.selectedmenuitem();session.open.assert_called_once_with(self.ui.ToolsScreen,vars(self.plugin))
         menu=self.ui.ToolsScreen(session,vars(self.plugin));menu.prepare()
-        self.assertEqual([row[0] for row in menu['list'].list],['bundle','about'])
+        self.assertEqual([row[0] for row in menu['list'].list],['bundle'])
         self.assertIn('Vytvorenie',menu['descriptions'].text)
         menu['list'].moveToIndex(0);menu.select()
         session.open.assert_called_with(self.ui.DiagnosticScreen,'bundle',vars(self.plugin))
-        menu['list'].moveToIndex(1);menu.select()
+        self.assertEqual(screen['blue'].text,'O plugine')
+        screen['actions'].actions['blue']()
         session.open.assert_called_with(self.ui.AboutScreen,vars(self.plugin))
         with self.assertRaises(ValueError):self.ui.DiagnosticScreen(session,'health',vars(self.plugin))
 

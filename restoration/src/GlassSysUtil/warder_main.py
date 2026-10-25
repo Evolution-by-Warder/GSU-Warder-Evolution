@@ -2,6 +2,7 @@
 from datetime import datetime
 from xml.sax.saxutils import escape
 
+PLUGIN_NAME = 'Glass System Utility Warder Evolution'
 BACKGROUND = '/usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/images/warder-main.png'
 BASE = '#00071627'
 PANEL = '#00102136'
@@ -77,18 +78,18 @@ def main_skin(width=1920, height=1080, api=None):
                  ('clock',1398,27,190,85,62,'#00ffffff','center'),('seconds',1590,52,66,54,38,'#00ffffff','left'),
                  ('version_title',1680,25,210,36,25,CYAN,'center'),('version',1680,70,210,36,24,CYAN,'center')]:
         out.append(label(*spec).replace('transparent="0"','transparent="1"'))
-    out += [fill(1392,25,2,84,CYAN),fill(1664,25,2,84,CYAN),label('menu_title',60,173,1100,46,30,CYAN)]
+    out += [fill(1392,25,2,84,CYAN),fill(1664,25,2,84,CYAN)]
     for x,w in ((55,1050),(1135,730)):
-        out += [fill(x,235,w,700,CYAN),fill(x+2,237,w-4,696,PANEL)]
-    out += ['<widget name="list" %s scrollbarMode="showOnDemand" backgroundColor="%s" foregroundColor="#00ffffff" foregroundColorSelected="#00ffffff" backgroundColorSelected="#002a70ad" transparent="0" zPosition="3" />' % (box(75,258,1010,660),PANEL),
-            fill(1178,258,644,364,CYAN),
-            '<widget source="session.VideoPicture" render="Pig" %s backgroundColor="#ff000000" zPosition="2" />' % box(1180,260,640,360),
-            label('selection',1170,645,660,80,30,CYAN,wrap=True),fill(1170,738,660,2,'#00314b65'),
-            label('info',1170,755,660,165,26,'#00d1e3f3',wrap=True),
-            label('purpose',60,942,1800,40,24,'#009cf0ff')]
-    for name,x,color in (('red',55,'#00ff526a'),('green',665,'#0039ff59'),('yellow',1275,'#00ffdb52')):
-        out += [fill(x+190,996,200,2,color),label(name,x,1006,590,50,28,color,'center')]
-    # The original object exists for compatibility; no unused blue footer slot.
+        out += [fill(x,180,w,800,CYAN),fill(x+2,182,w-4,796,PANEL)]
+    out += ['<widget name="list" %s scrollbarMode="showOnDemand" backgroundColor="%s" foregroundColor="#00ffffff" foregroundColorSelected="#00ffffff" backgroundColorSelected="#002a70ad" transparent="0" zPosition="3" />' % (box(75,203,1010,759),PANEL),
+            fill(1178,203,644,364,CYAN),
+            '<widget source="session.VideoPicture" render="Pig" %s backgroundColor="#ff000000" zPosition="2" />' % box(1180,205,640,360),
+            label('selection',1170,590,660,80,30,CYAN,wrap=True),fill(1170,683,660,2,'#00314b65'),
+            label('info',1170,700,660,265,26,'#00d1e3f3',wrap=True)]
+    slot = (1810-3*20)/4
+    for index,(name,color) in enumerate((('red','#00ff526a'),('green','#0039ff59'),('yellow','#00ffdb52'),('blue','#0045b9ff'))):
+        x = 55+index*(slot+20)
+        out += [fill(x+(slot-200)/2,996,200,2,color),label(name,x,1006,slot,50,28,color,'center')]
     return '\n'.join(out+['</screen>'])
 
 
@@ -123,8 +124,6 @@ class Header:
         screen,api=self.screen,self.api
         screen['version'].setText(screen.readVersion())
         screen['version_title'].setText(text(api,'Version:'))
-        screen['menu_title'].setText(text(api,'Main menu'))
-        screen['purpose'].setText(text(api,'Receiver information, CAM/ECM and diagnostics'))
         screen['yellow'].setText(text(api,'Settings'))
         screen['green'].setText(text(api,'Select with OK'))
         self.tick()
@@ -146,7 +145,7 @@ class Header:
 def install(screen,api):
     size=api['getDesktop'](0).size()
     if size.width()<1280:return
-    for name in ('day','date','clock','seconds','version_title','version','menu_title','purpose','selection'):
+    for name in ('day','date','clock','seconds','version_title','version','selection'):
         screen[name]=api['Label']('')
     screen['selection'].setText(text(api,'Select a menu item'))
     screen['list'].l.setFont(0,api['gFont']('Regular',round(30*size.height()/1080.0)))

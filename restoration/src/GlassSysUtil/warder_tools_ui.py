@@ -6,6 +6,7 @@ from Components.ScrollLabel import ScrollLabel
 from Screens.Screen import Screen
 from twisted.internet.threads import deferToThread
 from .warder_tools import run_task
+from .warder_main import PLUGIN_NAME
 
 _SK={
     'Tools':'Nástroje',
@@ -47,7 +48,7 @@ def about_text(api,root=None):
     version=read_local('version',128) or text(api,'Unavailable')
     notes=read_local('release-notes.txt',16384).splitlines()
     changes='\n'.join(notes[1:]).strip() if notes and notes[0]=='GSU '+version else ''
-    return '\n'.join(['Glass System Utility — Warder Evolution',
+    return '\n'.join([PLUGIN_NAME,
         text(api,'Version')+': '+version,'',
         text(api,'Receiver information, CAM/ECM management and diagnostics.'),'',
         text(api,'Original project: Glass System Utility 13.20'),
@@ -62,8 +63,7 @@ class ToolsScreen(Screen):
         self.skin=api['ipkScript_center']
         Screen.__init__(self,session)
         self.api=api
-        self.entries=[('bundle','Create diagnostic bundle','Create one archive with system information and GSU logs.'),
-                      ('about','About plugin','Plugin version, authors and changes in the installed release.')]
+        self.entries=[('bundle','Create diagnostic bundle','Create one archive with system information and GSU logs.')]
         self['list']=api['ListboxSys2']([])
         self['list'].onSelectionChanged.append(self.describe)
         self['descriptions']=Label('')
@@ -89,7 +89,6 @@ class ToolsScreen(Screen):
         row=self['list'].getCurrent()
         if not row:return
         if row[0]=='bundle':self.session.open(DiagnosticScreen,'bundle',self.api)
-        elif row[0]=='about':self.session.open(AboutScreen,self.api)
 
 
 class DiagnosticScreen(Screen):
