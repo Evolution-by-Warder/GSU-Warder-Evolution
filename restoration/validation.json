@@ -1,6 +1,6 @@
 {
   "python": "3.14.7",
-  "host_checks": 259,
+  "host_checks": 260,
   "host_checks_passed": true,
   "receiver_tested": false,
   "source_sha256": "9666759cfb6a9dd8d2b6df52aef20c6bab1b1dfd1a389ea51a6a33ee9cd676a7",
@@ -55,6 +55,19 @@
   "plugin_update_sha256": "1f712eefde223d4cd796e4c88cea3f166061ddbbdc52fc3468cfbf346415d37d",
   "plugin_update_ui_sha256": "7775e311991a71e77abf08e054c4474c229477cb97074fe06e65df8e7f155897",
   "latest_candidate": {
+    "version": "13.40-r48",
+    "published": false,
+    "receiver_verified": false,
+    "bytes": 3633030,
+    "sha256": "4a0fa9047f56f643f8cba9ec8cff2d9f2274d9547132195f5a56c67986ee7383",
+    "feed_advanced": false
+  },
+  "oscam_readers_ui_sha256": "d0d39fc4462e7c5f46031461cba25e8fd9d4bef82da54ef364384c35d6678753",
+  "warder_tools_sha256": "ef23dab03508f12e73cc5c8196f04ebaa44fd1bf7bf0d357881acc49ac341563",
+  "warder_tools_ui_sha256": "4c9b1d1d6471def5878a3aea264fa0087cd3c7ce00415ca584c2282c69dd919c",
+  "notes": " Receiver r40 screenshot145743 confirms About content and layout only; not close/scroll interaction or standalone health menu removal. Full receiver validation remains incomplete.",
+  "warder_main_sha256": "1ab968a114ca698dd3a0119e6abe549671a07a5d9e86c79711549b2f97d0c3a7",
+  "previous_candidate": {
     "version": "13.40-r47",
     "published": true,
     "receiver_verified": false,
@@ -63,23 +76,8 @@
     "feed_advanced": true,
     "source_commit": "2169d17b572c31fa275cdf5bd3db345b7a8facf6",
     "ci_run": 40213895559,
-    "ci_conclusion": "success"
-  },
-  "oscam_readers_ui_sha256": "d0d39fc4462e7c5f46031461cba25e8fd9d4bef82da54ef364384c35d6678753",
-  "warder_tools_sha256": "ef23dab03508f12e73cc5c8196f04ebaa44fd1bf7bf0d357881acc49ac341563",
-  "warder_tools_ui_sha256": "4c9b1d1d6471def5878a3aea264fa0087cd3c7ce00415ca584c2282c69dd919c",
-  "notes": " Receiver r40 screenshot145743 confirms About content and layout only; not close/scroll interaction or standalone health menu removal. Full receiver validation remains incomplete.",
-  "warder_main_sha256": "1ab968a114ca698dd3a0119e6abe549671a07a5d9e86c79711549b2f97d0c3a7",
-  "previous_candidate": {
-    "version": "13.40-r46",
-    "published": true,
-    "receiver_verified": false,
-    "bytes": 3468348,
-    "sha256": "93ac687d6a33ea3fb9e44e2594ba9fffc3cd5514252ff70329013d36c2d62e1e",
-    "feed_advanced": true,
-    "ci_run": 40212501299,
     "ci_conclusion": "success",
-    "receiver_evidence": "Screenshot164108 confirms restored text and both scroll panels; user confirms all four arrows"
+    "receiver_evidence": "User rejected schematic hardware icons; approved navigation arrows remain"
   },
   "warder_system_sha256": "af49b8243328e8510ce0061bfab6ab9a0072197f96935050df495ac4441c21e4"
 }

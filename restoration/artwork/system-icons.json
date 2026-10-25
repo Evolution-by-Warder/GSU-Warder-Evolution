@@ -1,25 +1,24 @@
 {
-  "style": "Warder silver/cyan native vector symbols, no background or reflections",
-  "renderer": "CairoSVG 2.9.1",
+  "style": "Colorful dimensional hardware with genuine alpha; retained Warder vector arrows and status dots",
   "size": [
     120,
     120
   ],
   "files": {
-    "system-cf.png": "791b90ae71349c67ccd8ee294a9d50761ce9f5c563a378f87c9d266bb8548f18",
-    "system-cpu.png": "0b3afd6014a0de423e4c69629ee0892f5b1fe31fad6e85b15ad63e19977677e9",
-    "system-hdd.png": "890f42c65a60ed8b4fbb245c8510ef3867412e36cc90a1528458612836990272",
-    "system-hdd_temp.png": "07b8d71a6e8468cfd06b701b9fc246dbcf03ac59bd4d2ce8c7b9c2fe25fc17e6",
+    "system-cf.png": "0c42316bdc740f7c0863e813ebb25c389f9377888d3158c40103452fb9b35099",
+    "system-cpu.png": "06abcc6d43ec033df1a0f98039caab704dcab14d28d47752e5ad3d6c4b3e8d18",
+    "system-hdd.png": "95a336680ca902ed3e8d383c927b48dfd76ad8a90d9b3bd83e98f0c7e97c1721",
+    "system-hdd_temp.png": "749abbac074ed7dcea2e59c9608dd662fb026e1a72328a64c7787b28f0e24195",
     "system-lr.png": "f5de505d326a8954c6d1b2c98218414b574a8146ee6a7445c01fd2dfb635bfc3",
-    "system-mem.png": "fb0e7cadfeb862e7fe83226e8fa8903cd3a5ecfda8211f560e3400121a983fd1",
-    "system-root.png": "0494e23e2d607d2c84b66e5f2f4a389c09e76569d9a224ce605ce36889d241a7",
-    "system-sd.png": "9317ae4643aabd57fc9167f7dba9c8dada6d61847e613e22c080f88139e4f410",
-    "system-sensor.png": "9beee880e1ed620c467a9c8ad92a01cd9d4a2f11b64cb2827a8de51b9439c964",
+    "system-mem.png": "9bdd6b0d914894e95617c56f12898ae3813e2d4c49fb3b7ae11bdfb0a96b4a30",
+    "system-root.png": "e0a99fa4ee9c58d0714ef2fb70d5c48f3c7570e0b04e1366d6cf0fce014c2356",
+    "system-sd.png": "a8af739e7c787e84ef975947d88f4e8fb13bfc47b2984233d02308d34ad3f4be",
+    "system-sensor.png": "5efb267f964be237bba8f8fa6f92513c5ab17e13f0eabf8acd07b9c698a4b2ab",
     "system-status-green.png": "3295bdbd000c309b6fc8da1c4af8433fa7d730b8cb3c95319f5b374f65404477",
     "system-status-red.png": "a428de7ec9d2d338d286dd2c5ea419e197e8f9a74729dc6d20628bdac4bc1443",
-    "system-summ.png": "3b175cecd41c99e6351d0733d1126f3c99f4b094b21d05a974f4f4e068e0a990",
-    "system-swap.png": "e7acdeff9a6006f69cae8ebbb89f4d23881b1b0b44c1d52711ba2b363c715852",
+    "system-summ.png": "7d54ab832e57d4ed198e25392e0a4447226da93db1d460452a6311357fc9c707",
+    "system-swap.png": "f054f577e05b32aee1140ccc59bce9e6ca6537967290c3efa1caa6427f7ce462",
     "system-updown.png": "a54f80ce5c977993f42770990c0712cd5268989b2ff4b3295b81c1e8c09ae1d7",
-    "system-usb.png": "d0624519ed6e3073a48e91b53a4fe73b30ca5073d923622fa0610294202e4274"
+    "system-usb.png": "0fb94cb36280572b8d631422ae80a31ef436d2c3cafda516dc377183c8755951"
   }
 }

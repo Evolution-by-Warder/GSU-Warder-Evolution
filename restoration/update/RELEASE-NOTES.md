@@ -1,6 +1,6 @@
-GSU 13.40-r47
+GSU 13.40-r48
 
-- Nové jednotné strieborno-tyrkysové ikonky v Informáciách o systéme.
-- Skutočne priehľadné pozadie bez čiernych obdĺžnikov a odrazov.
-- Zachovaný význam RAM, swapu, súhrnu, diskov, USB, kariet, CPU, teplôt a smerových šípok.
-- Ikony sa zobrazujú bez deformácie; jednotné zelené a červené stavové značky.
+- Farebné plastické ikonky hardvéru namiesto schematických symbolov.
+- Názorné RAM moduly, disky, USB, pamäťové karty, čipy a teplomery so skutočne priehľadným okolím.
+- Bez čiernych dlaždíc, podkladov a odrazov.
+- Schválené šípky aj zelené a červené stavové bodky zostávajú nezmenené.

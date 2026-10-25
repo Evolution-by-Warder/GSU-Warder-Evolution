@@ -499,3 +499,7 @@ Snímka1(20261025-163228).jpg ukazuje chýbajúce ľavé popisky a oba pravé v�
 ### r47 ikonky
 
 Používateľ potvrdil zobrazené popisky a oba výpisy aj šípky všetkými smermi v r46, snímka1(20261025-164108).jpg. Funkčnú opravu neopakovať. Výslovne žiada nové ikonky bez čiernych podkladov. r47 nahrádza15 symbolov transparentnými PNG z vlastných SVG predlôh, zachováva význam aj natívne ovládanie. Najbližšie overiť vizuálny výsledok Informácií o systéme po aktualizácii.
+
+### r48 grafika hardvéru
+
+Používateľ výslovne odmietol schematické hardvérové ikony r47, ale schválil a požaduje ponechať šípky. Chce farebné plastické a jasne rozpoznateľné predmety podobné pôvodným, bez čiernych podkladov/odrazov. r48 nahrádza11 hardvérových symbolov; šípky a stavové bodky sú bajtovo zachované. Zber údajov ani rozloženie sa nemení. Najbližšie: posúdiť reálne ikonky v Informáciách o systéme po aktualizácii, funkčnú skúšku šípok z r46 bez dôvodu neopakovať.

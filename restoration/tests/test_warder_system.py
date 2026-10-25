@@ -56,7 +56,7 @@ class TransparentSystemIconTests(unittest.TestCase):
                 offset+=12+size
             first=zlib.decompress(b''.join(chunks))[:481]
             self.assertEqual(set(first[1:]),{0},file.name)
-            self.assertLess(len(raw),20000)
+            self.assertLess(len(raw),40000)
 
     def test_every_system_picture_is_mapped_to_a_shipped_asset_without_distortion(self):
         plugin=load(ROOT)
@@ -75,3 +75,14 @@ class TransparentSystemIconTests(unittest.TestCase):
                     iw,ih=map(int,n.get('size').split(','));self.assertEqual(iw,ih)
                 found+=1
             self.assertGreaterEqual(found,20)
+
+    def test_user_approved_arrows_and_status_assets_are_unchanged(self):
+        import hashlib
+        expected={
+            'lr':'f5de505d326a8954c6d1b2c98218414b574a8146ee6a7445c01fd2dfb635bfc3',
+            'updown':'a54f80ce5c977993f42770990c0712cd5268989b2ff4b3295b81c1e8c09ae1d7',
+            'status-green':'3295bdbd000c309b6fc8da1c4af8433fa7d730b8cb3c95319f5b374f65404477',
+            'status-red':'a428de7ec9d2d338d286dd2c5ea419e197e8f9a74729dc6d20628bdac4bc1443',
+        }
+        for name,digest in expected.items():
+            self.assertEqual(hashlib.sha256((ROOT/'images'/('system-'+name+'.png')).read_bytes()).hexdigest(),digest)
