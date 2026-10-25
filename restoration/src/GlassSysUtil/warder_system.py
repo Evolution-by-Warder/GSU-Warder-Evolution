@@ -16,8 +16,10 @@ def system_skin(original,width,height):
         if not (node.tag=='ePixmap' and y==0) and node.get('name') not in header and y>=round(164*sy):
             root.remove(node)
     root.set('name','WarderGSUSystem')
+    for node in root.findall('ePixmap'):
+        node.set('zPosition','-3')
     def fill(x,y,w,h,color):
-        ET.SubElement(root,'eLabel',position='%d,%d'%(round(x*sx),round(y*sy)),size='%d,%d'%(round(w*sx),round(h*sy)),backgroundColor=color,zPosition='0')
+        ET.SubElement(root,'eLabel',position='%d,%d'%(round(x*sx),round(y*sy)),size='%d,%d'%(round(w*sx),round(h*sy)),backgroundColor=color,zPosition='-2' if color==main.CYAN else '-1')
     fill(55,180,1810,800,main.CYAN)
     fill(57,182,1806,796,main.PANEL)
     for original_node in old:
@@ -33,9 +35,10 @@ def system_skin(original,width,height):
             node.set('font','Regular;%d'%max(12,round(int(size)*0.84)))
         if node.tag in ('widget','eLabel'):
             node.set('backgroundColor',main.PANEL)
-            node.set('transparent','0')
+            node.set('transparent','1')
             if node.get('foregroundColor') in (None,'#666666'):
                 node.set('foregroundColor','#00d1e3f3')
+        if node.tag=='ePixmap':node.set('alphatest','blend')
         root.append(node)
     for index,(name,color) in enumerate((('red','#00ff526a'),('green','#0039ff59'),('yellow','#00ffdb52'))):
         x=55+index*610

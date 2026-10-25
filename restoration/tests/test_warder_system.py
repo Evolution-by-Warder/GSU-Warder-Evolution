@@ -22,6 +22,12 @@ class SystemLayoutTests(unittest.TestCase):
             self.assertEqual(after,before|header)
             self.assertEqual(root.get('backgroundColor'),'#00071627')
             self.assertFalse(root.findall("widget[@render='Pig']"))
+            # Native ScrollLabel applies zPosition to its labels, leaving its
+            # parent at zero. Every full-screen backing must stay below zero.
+            for backing in root:
+                if backing.tag=='eLabel' and int(backing.get('size','0,0').split(',')[1])>h//2:
+                    self.assertLess(int(backing.get('zPosition','0')),0)
+            self.assertEqual(root.find('ePixmap').get('zPosition'),'-3')
             for name in before-{'red','green','yellow'}:
                 n=root.find("widget[@name='%s']"%name)
                 y=int(n.get('position').split(',')[1]);height=int(n.get('size').split(',')[1])
@@ -29,7 +35,7 @@ class SystemLayoutTests(unittest.TestCase):
                 self.assertLessEqual(y+height,round(980*h/1080))
             for name in ('ProccessInfo','DmesgInfo'):
                 n=root.find("widget[@name='%s']"%name)
-                self.assertEqual(n.get('transparent'),'0')
+                self.assertEqual(n.get('transparent'),'1')
                 self.assertEqual(n.get('backgroundColor'),'#00102136')
 
 if __name__=='__main__':unittest.main()

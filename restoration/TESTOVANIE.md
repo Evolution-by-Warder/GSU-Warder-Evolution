@@ -491,3 +491,7 @@ Používateľ výslovne schválil kratší názov GSU Warder Evolution. r44 men�
 ### r45 ďalšia sekcia
 
 Snímka1(20261025-162230).jpg potvrdzuje r44 hlavné menu, väčšie panely bez nadpisu/spodného riadka, liveTV a4 farebné tlačidlá. Používateľ žiada pokračovať. r45 upravuje Informácie o systéme do spoločného rámu/hlavičky, zachováva všetky pôvodné komponenty a zber dát. Najbližšie: aktualizovať, otvoriť Informácie o systéme a poslať snímku; overiť ľavé údaje, dva pravé výpisy a šípky, návrat červeným. Celý CAM/swap znovu netestovať.
+
+### r46 oprava vrstiev
+
+Snímka1(20261025-163228).jpg ukazuje chýbajúce ľavé popisky a oba pravé výpisy v r45. OpenATV ScrollLabel.py smeruje zPosition na vnútorné labely, parent eWidget zostáva0; nové pozadie0 ho preto prekrývalo. r46 má backdrop-3, rám-2 a panel-1. Texty ostávajú transparentné nad nepriehľadným panelom, takže sa neprekrývajú pôvodné presahujúce rozsahy. Pôvodné PNG majú alpha204–255; zapnutý blend namiesto off ich zjemní, čierny obsah tým nie je úplne odstránený. Overiť na prijímači pred pokračovaním inej sekcie.
