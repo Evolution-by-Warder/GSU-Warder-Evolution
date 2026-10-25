@@ -5,9 +5,12 @@ import shutil
 import signal
 import subprocess
 import tempfile
+import select
+import sys
 import types
 import unittest
 from unittest.mock import MagicMock, patch
+from receiver_stubs import load
 
 ROOT=pathlib.Path(__file__).resolve().parents[1]/'src/GlassSysUtil'
 spec=importlib.util.spec_from_file_location('native_softcam_under_test',ROOT/'native_softcam.py')
@@ -15,6 +18,31 @@ native=importlib.util.module_from_spec(spec);spec.loader.exec_module(native)
 
 
 class NativeSoftcamTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # GUI action callbacks run inside the installed plugin package.
+        global native
+        load(ROOT)
+        native=__import__('Plugins.Extensions.GlassSysUtil.native_softcam',fromlist=['NativeSoftcam'])
+
+    def test_real_worker_lock_serializes_commands_without_holding_gui_thread(self):
+        with tempfile.TemporaryDirectory() as folder:
+            lock=str(pathlib.Path(folder)/'operation.lock')
+            code='''import importlib.util,sys
+spec=importlib.util.spec_from_file_location('cam',sys.argv[1])
+cam=importlib.util.module_from_spec(spec);spec.loader.exec_module(cam)
+print('ready',flush=True)
+with cam.command_lock(sys.argv[2]): print('acquired',flush=True)
+'''
+            with native.command_lock(lock):
+                worker=subprocess.Popen([sys.executable,'-u','-c',code,str(ROOT/'native_softcam.py'),lock],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+                self.addCleanup(lambda:worker.kill() if worker.poll() is None else None)
+                self.assertTrue(select.select([worker.stdout],[],[],5)[0])
+                self.assertEqual(worker.stdout.readline().strip(),'ready')
+                self.assertFalse(select.select([worker.stdout],[],[],0.15)[0])
+            out,error=worker.communicate(timeout=5)
+            self.assertEqual(worker.returncode,0,error);self.assertEqual(out.strip(),'acquired')
+
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
         self.root=pathlib.Path(self.temp.name)

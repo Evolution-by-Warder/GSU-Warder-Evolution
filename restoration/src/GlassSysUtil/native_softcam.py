@@ -12,7 +12,18 @@ import shlex
 import shutil
 import subprocess
 import tempfile
+import fcntl
+from contextlib import contextmanager
 from pathlib import Path
+
+
+@contextmanager
+def command_lock(path='/run/gsu-softcam-operation.lock'):
+    fd=os.open(path,os.O_RDWR|os.O_CREAT|os.O_NOFOLLOW,0o600)
+    try:
+        fcntl.flock(fd,fcntl.LOCK_EX)
+        yield
+    finally:os.close(fd)
 
 
 class NativeSoftcam:
@@ -242,12 +253,19 @@ def handle_action(screen, action, container_factory, translate):
     screen.statcommPics('comm','yellow')
     container=container_factory()
     screen.nativeCommand=container
+    from .native_autostart import manual_begin,manual_end
+    ticket=manual_begin(name,operation)
+    completed=False
 
     def finished(code):
+        nonlocal completed
+        if completed:return
+        completed=True
         screen.enCommand=True
         running=native.running(name)
         active=native.active_name()
         success=code == 0 and running == (operation != 'stop')
+        manual_end(ticket,success)
         screen['activCam'].setText(translate('Active')+' CAM: '+(active if active else translate('None')))
         screen['statCamSrvbin'].setText(translate('CAM/SRV Running') if active else translate('No Running CAM/SRV'))
         screen.statcommPics('piccam','green' if active else 'blue')
@@ -275,24 +293,31 @@ if __name__=='__main__':
     operation=parser.add_mutually_exclusive_group(required=True)
     operation.add_argument('--switch')
     operation.add_argument('--autostart')
+    operation.add_argument('--autocheck')
     operation.add_argument('--action',choices=('start','stop','restart'))
     parser.add_argument('--name')
     parser.add_argument('--expected')
+    parser.add_argument('--guard')
     args=parser.parse_args()
     controller=NativeSoftcam()
     try:
-        if args.autostart:
-            from native_autostart import start_if_needed
-            result=start_if_needed(controller,args.autostart)
-        elif args.switch:
-            if args.expected is None:parser.error('--expected is required with --switch')
-            result=controller.switch_to(args.switch,args.expected)
-        else:
-            if not args.name:parser.error('--name is required with --action')
-            if args.action in ('start','restart') and controller.selected()!=args.name:
-                raise OSError('SoftCAM selection changed')
-            result={'start':controller.start_verified,'stop':controller.stop_verified,'restart':controller.restart_verified}[args.action](args.name)
+        with command_lock():
+            if args.autostart or args.autocheck:
+                from native_autostart import start_if_needed
+                if args.autocheck and not args.guard:parser.error('--guard is required with --autocheck')
+                result=start_if_needed(controller,args.autostart or args.autocheck,args.guard,bool(args.autocheck))
+            elif args.switch:
+                if args.expected is None:parser.error('--expected is required with --switch')
+                result=controller.switch_to(args.switch,args.expected)
+            else:
+                if not args.name:parser.error('--name is required with --action')
+                if args.action in ('start','restart') and controller.selected()!=args.name:
+                    raise OSError('SoftCAM selection changed')
+                result={'start':controller.start_verified,'stop':controller.stop_verified,'restart':controller.restart_verified}[args.action](args.name)
         raise SystemExit(result)
     except (OSError,ValueError,subprocess.SubprocessError) as error:
+        if args.autostart or args.autocheck:
+            from native_autostart import log_event
+            log_event('automatic start failed: '+str(error))
         print('SoftCAM command failed: '+str(error),flush=True)
         raise SystemExit(1)

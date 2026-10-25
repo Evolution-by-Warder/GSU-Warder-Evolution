@@ -4,7 +4,7 @@
 # Embedded file name: /usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/plugin.py
 # Compiled at: 2021-03-28 16:56:23
 from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox
-from Plugins.Extensions.GlassSysUtil.native_autostart import begin as _native_autostart_begin
+from Plugins.Extensions.GlassSysUtil.native_autostart import begin as _native_autostart_begin, configure as _native_autostart_configure
 from Plugins.Extensions.GlassSysUtil.cam_package_actions import controls as _cam_package_controls, update as _cam_package_update, remove as _cam_package_remove, is_cam_package as _is_cam_package, refresh_registry as _cam_package_registry, start_config as _cam_start_config
 from Plugins.Extensions.GlassSysUtil.cam_feed_ui import initialize as _cam_feed_initialize, load as _cam_feed_load, select as _cam_feed_select
 from Plugins.Extensions.GlassSysUtil.native_softcam import NativeSoftcam, handle_action as _native_softcam_action, refresh_state as _native_softcam_refresh
@@ -4404,6 +4404,7 @@ class univCamMng(Screen):
         config.plugins.GlassSysUtil.par50.save()
         configfile.save()
         self.enaAutochckChck()
+        _native_autostart_configure(autocams)
         return
 
     def enaAutochckChck(self):
