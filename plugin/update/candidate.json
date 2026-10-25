@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r54",
-    "tag": "v13.40-r54",
-    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r54/enigma2-plugin-glasssysutil_13.40-r54_all.ipk",
-    "sha256": "2e456424a946b6cf76ae685be382cbc3e4bdd3cdccd3bb5b8570e02f4ec580b9",
-    "bytes": 3656746,
-    "notes": "GSU 13.40-r54\n\n- Moved protocol captions and status dots one text row lower in System Information.\n- Retained the approved hardware icon arrangement and Channel Information layout.\n"
+    "version": "13.40-r55",
+    "tag": "v13.40-r55",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r55/enigma2-plugin-glasssysutil_13.40-r55_all.ipk",
+    "sha256": "cff650e7d526a4db388aa3a55a06d8e8598919182ee68340fa86feb37ae53ff4",
+    "bytes": 3656778,
+    "notes": "GSU 13.40-r55\n\n- Channel Information now retains the complete CAM version instead of shortening it while reading ECM information.\n- Other ECM field limits and the approved screen layout remain unchanged.\n"
   }
 }
