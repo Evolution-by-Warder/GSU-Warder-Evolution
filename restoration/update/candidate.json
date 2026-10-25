@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r50",
-    "tag": "v13.40-r50",
-    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r50/enigma2-plugin-glasssysutil_13.40-r50_all.ipk",
-    "sha256": "e6a60d171304879592dc9ee727eb27cf59dcf11d11f17495a8ad41354eda637d",
-    "bytes": 3639378,
-    "notes": "GSU 13.40-r50\n\n- Projekt premenovaný na GSU-Warder-Evolution; aktualizátor a odkaz O plugine používajú nový repozitár.\n- Jednotná štruktúra plugin/ bez starého paralelného jadra a duplicitných zostavovacích postupov.\n- Zachovaný kompatibilný aktualizačný feed pre existujúce inštalácie.\n- Grafické a jazykové úpravy zapísané v pláne zostávajú ďalším krokom.\n"
+    "version": "13.40-r51",
+    "tag": "v13.40-r51",
+    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r51/enigma2-plugin-glasssysutil_13.40-r51_all.ipk",
+    "sha256": "8dee8f6830d88bbe165f6b751ce4f25281f56125d986e4bc152de6fff31604ef",
+    "bytes": 3639866,
+    "notes": "GSU 13.40-r51\n\n- Hardvérové ikonky v Informáciách o systéme zväčšené o 20 % pri zachovaní pomerov strán a priestoru pre texty.\n- Spodné vertikálne bargrafy aj ich podklady zarovnané so spodkami príslušných ikoniek.\n- Zachované šípky, ovládanie, zber údajov a obnovovanie; rozloženie overené v HD, Full HD a Ultra HD.\n"
   }
 }
