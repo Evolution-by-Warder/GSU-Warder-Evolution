@@ -1,0 +1,40 @@
+name: GSU Warder Evolution
+on:
+  push:
+    branches: [main, original-python314]
+    paths: ['plugin/**', 'restoration/update/**', '.github/workflows/original-python314.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: gsu-original-release
+  cancel-in-progress: false
+jobs:
+  original:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14.7'
+      - name: Verify plugin interfaces and compatibility
+        run: |
+          python --version
+          python -m compileall -q plugin/src
+          python -m unittest discover -s plugin/tests -v
+      - name: Build receiver candidate twice and compare
+        run: |
+          python plugin/tools/build_ipk.py --output plugin/dist
+          cp plugin/dist/*.ipk /tmp/first.ipk
+          python plugin/tools/build_ipk.py --output plugin/dist
+          cmp /tmp/first.ipk plugin/dist/*.ipk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GSU-Warder-Evolution-IPK
+          path: plugin/dist/*
+          retention-days: 90
+      - name: Publish verified IPK and synchronize update feeds
+        if: github.ref == 'refs/heads/original-python314'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python plugin/tools/publish_update.py

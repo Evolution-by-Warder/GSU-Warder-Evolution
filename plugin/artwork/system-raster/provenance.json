@@ -1,0 +1,86 @@
+{
+  "method": "Built-in imagegen; RAM used as visual rendering reference; true alpha transparent outputs. Mechanical contain resizing only.",
+  "shared_prompt": "Realistic colorful polished 3D hardware illustration; clear at60px; genuine transparent alpha; no background tile, black rectangle, floor, reflection, cast shadow, watermark or glow cloud.",
+  "icons": {
+    "mem": {
+      "prompt": "Use case: stylized-concept. Production Enigma2 system-information icon: one realistic green desktop RAM DIMM module with black memory chips and clearly visible gold contacts, angled slightly in 3D, large and recognizable even at 60 pixels. Premium polished hardware illustration, restrained silver/cyan highlights to fit a dark navy technical UI, natural green PCB and black chips. Centered single object with generous transparent margins. Genuine alpha transparent background. No tile, no black rectangle, no floor, no reflection, no drop shadow, no text, no watermark, no glow cloud. Square canvas.",
+      "source_sha256": "28ba1c97d74dcb1be69ad2839127ecc36672e82650c60dc7f2c733027f612454",
+      "master_sha256": "f8ebd273e66d82b3d834b33ef6049fea80ad49b0eee788b61c80cb4b1f4c5ce1",
+      "master": "mem.png"
+    },
+    "swap": {
+      "subject": "a silver solid-state drive and a small green RAM module, with two small curved cyan transfer arrows between them, representing swap memory",
+      "source_sha256": "56c98d62318aa30c4fdd826368fd14a55f08ff4029da8ac4dfeef4c3f75905e9",
+      "master_sha256": "2c53ba6f800f98b534ef135d4da8fde48c736007b6a092270f98507c77911d82",
+      "master": "swap.png"
+    },
+    "summ": {
+      "subject": "two overlapping green RAM memory modules and one small silver processor chip grouped together, representing total memory",
+      "source_sha256": "3003b8f3a87ea0e1a9ef5c1f90b4e785ef2c3b9085626b25d8daa825c218ac9b",
+      "master_sha256": "219b2a75e16fb3f5e9f18b75e8336a21c0fde913d263d3dba11e1b3a3883a3ff",
+      "master": "summ.png"
+    },
+    "root": {
+      "subject": "the recognizable friendly Linux Tux penguin mascot, glossy black body, white belly, yellow beak and feet, seated upright, representing Linux root filesystem",
+      "source_sha256": "fd029d968d4584843e300e442871a3b3e43a920ddc1b790b8bbf324bbc4c79a7",
+      "master_sha256": "e0b58d5bf4cffbc0911146dd54ff3c7bd2f68dc9880ec165e928f2a23908b46a",
+      "master": "root.png"
+    },
+    "hdd": {
+      "subject": "one silver internal hard disk drive, partly open to show a metallic circular platter and actuator arm",
+      "source_sha256": "67027dff8f8d2a4b494705721b8165ae6eaea0207e4f446f4913497db9771015",
+      "master_sha256": "7885e48afcb8e8f37eda011ceb9602801e50c310c7e076d54b19d8c33d559194",
+      "master": "hdd.png"
+    },
+    "usb": {
+      "subject": "one silver USB flash drive with a blue cap and clearly exposed USB connector, slightly angled",
+      "source_sha256": "46f140a51f629481054494c20a2846b91b3d0c9ac364ff735ca22156ef4e3e3d",
+      "master_sha256": "0cdee15079bb80bac716eecc8bfecaf099ba4e2122326528c29437e614e400f1",
+      "master": "usb.png"
+    },
+    "cf": {
+      "subject": "one CompactFlash memory card, dark gray metal body, small blue front label with only the letters CF, visible contact-edge details",
+      "source_sha256": "09340609562eb66b6e0460edae074d17dd4aa60d7c6ead3db86435234fc7c48e",
+      "master_sha256": "1af2d008f1f219b3712e5cffd3949daee8b16295a01e0a9efde74bd84968aaf2",
+      "master": "cf.png"
+    },
+    "sd": {
+      "subject": "one blue SD memory card with its characteristic diagonal corner notch and visible gold contacts, only a small SD marking",
+      "source_sha256": "8ee9368028ab35d48fe0c85ae4de5ec9934424b03647a9e6df8dbf2e949563c2",
+      "master_sha256": "9bfb9f646070d860cda6b6751a578396701f2839d2822607c8a8b2f0b41b32ed",
+      "master": "sd.png"
+    },
+    "hdd_temp": {
+      "subject": "one silver internal hard disk drive with a clear red-bulb thermometer standing next to it, representing disk temperature",
+      "source_sha256": "41c8752b3208fa3ce84e5d5c268e4fca6aa00d60766ece8e9d04e9f479cf348e",
+      "master_sha256": "fd176bcb892bb8e640ebbc54fbea06a27eac3546e913705c085b5f079f8cb1f8",
+      "master": "hdd_temp.png"
+    },
+    "cpu": {
+      "subject": "one realistic silver square processor chip with a gold contact/pin edge, angled slightly, only small CPU marking",
+      "source_sha256": "27f6b0269aeb952dd7c44d5da471edf8f36316a59d2d73cfa8d96a0910da5594",
+      "master_sha256": "45e74e361f72aaa359d3e8c96283e1c808c37d2aacdf1291cf647a61e1935d63",
+      "master": "cpu.png"
+    },
+    "sensor": {
+      "subject": "one silver processor chip with a clear red-bulb thermometer beside it, representing CPU temperature sensor",
+      "source_sha256": "c4b033df209b87df2ea6e9da46047fffe0e53841ce8a1f6e3207f37201fb4c20",
+      "master_sha256": "97aee2e55cd4c3f52fe98c0668cdc04930d011dd848b25a9ed4b2e2ffc8f24aa",
+      "master": "sensor.png"
+    },
+    "lr": {
+      "prompt": "A single horizontal left-right double-headed arrow, thick solid cyan-blue body with polished silver/chrome beveled edges. Strong clear left and right arrowheads joined by a short horizontal shaft, centered, readable at60px.",
+      "source_sha256": "3cf9ecf637731874f1c220be59971e7e2e986c4402c0960c62a249271e69f1a6",
+      "master_sha256": "da2196074c62c358b76de7bce9f32fcc0f4a8b84a57f29fcb9abb7aea52010ae",
+      "master": "lr.png",
+      "method": "Built-in imagegen, new dimensional silver/cyan directional icon with genuine transparent alpha"
+    },
+    "updown": {
+      "prompt": "A single vertical up-down double-headed arrow, thick solid cyan-blue body with polished silver/chrome beveled edges. Strong clear up and down arrowheads joined by a short vertical shaft, centered, readable at60px.",
+      "source_sha256": "ad8ed3df3fa8d8580e30d03a6c64fe8869e77c5d39bcca57d1e93f2f9433d846",
+      "master_sha256": "46f0d3bd17dc7dcfea2c743ddabf22da707f60ef09d9489133e9649d3cf74fa0",
+      "master": "updown.png",
+      "method": "Built-in imagegen, new dimensional silver/cyan directional icon with genuine transparent alpha"
+    }
+  }
+}

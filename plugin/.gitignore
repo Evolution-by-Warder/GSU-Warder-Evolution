@@ -1,0 +1,6 @@
+/dist/
+/src/GlassSysUtil/*
+!/src/GlassSysUtil/*.py
+!/src/GlassSysUtil/version
+__pycache__/
+!/resources.tar.gz
