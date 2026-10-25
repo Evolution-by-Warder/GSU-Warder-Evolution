@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r49",
-    "tag": "v13.40-r49",
-    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r49/enigma2-plugin-glasssysutil_13.40-r49_all.ipk",
-    "sha256": "80432461c90e190acc7be3b345b1c304aff9ef3b41b89bd7476ab9ba233d72c4",
-    "bytes": 3639402,
-    "notes": "GSU 13.40-r49\n\n- Nové farebné plastické ikonky hardvéru so skutočne priehľadným okolím, podobné pôvodným predmetom.\n- Plastické strieborno-tyrkysové šípky vľavo/vpravo a hore/dole v rovnakom dizajne.\n- Bez čiernych dlaždíc a odrazov; zachované významy a ovládanie.\n- Zelené a červené stavové bodky zostávajú nezmenené.\n"
+    "version": "13.40-r50",
+    "tag": "v13.40-r50",
+    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r50/enigma2-plugin-glasssysutil_13.40-r50_all.ipk",
+    "sha256": "e6a60d171304879592dc9ee727eb27cf59dcf11d11f17495a8ad41354eda637d",
+    "bytes": 3639378,
+    "notes": "GSU 13.40-r50\n\n- Projekt premenovaný na GSU-Warder-Evolution; aktualizátor a odkaz O plugine používajú nový repozitár.\n- Jednotná štruktúra plugin/ bez starého paralelného jadra a duplicitných zostavovacích postupov.\n- Zachovaný kompatibilný aktualizačný feed pre existujúce inštalácie.\n- Grafické a jazykové úpravy zapísané v pláne zostávajú ďalším krokom.\n"
   }
 }
