@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 25. 10. 2026, r40
+# Aktuálny checkpoint — 25. 10. 2026, r41 pripravené
 
 Pracovať výhradne v `original-python314`, runtime `restoration/src/GlassSysUtil`; produkčná vetva zostáva nedotknutá. Prijímač má r40; používateľ potvrdil vstavanú aktualizáciu z r36, čítačkové potvrdenie/Nie aj skutočný zákaz a povolenie v oboch smeroch. Autokontrola configFalse/guardFalse pri vypnutí a guardTrue pri predvolenomTrue po zapnutí je potvrdená. Štart GUI bez vybraného CAM zostáva hostiteľsky testovaný. Prijímač diagnosticky uvádza Python3.14.9, host tests3.14.7. Staršie odseky nižšie sú história.
 
@@ -6,7 +6,9 @@ Používateľ výslovne vyradil celú sekciu IPK/DEB a používateľské skripty
 
 Prijímač r40: snímka 1(20261025-145743).jpg potvrdzuje otvorené O plugine, verziu13.40-r40, pôvodný projekt13.20, Warder Evolution, poďakovanie, zmeny r40 aj odkaz na repozitár. Text je čitateľný a neprekrýva červené Naspäť. Snímka sama nepotvrdzuje stlačenie tlačidla ani posúvanie; obsah sa na nej zmestí. Odstránenie Kontroly stavu zo zoznamu nie je na tejto snímke viditeľné. Diagnostický balík bol už na r39 vytvorený a jeho reálny archív overený; neopakovať skúšku bez dôvodu.
 
-Pokračovanie: funkčné zmeny r40 sú publikované, nová oprava ani nový IPK nie sú potrebné iba kvôli zápisu dôkazu. Pred ďalšou úpravou uzavrieť zostávajúci rozsah: CCcam/Mbox vyžadujú skutočný server; samostatný legacy SRV a GUI štart bez vybraného CAM zostávajú bez hardvérového potvrdenia. Neoznačovať celý plugin za úplne overený. Ďalšie nástroje či zmena vzhľadu nie sú týmto checkpointom schválené. Hlavné menu má v zdroji11 položiek; všeobecné IPK/DEB/TAR/skripty zostávajú vyradené.
+Snímky 1(20261025-153234).jpg a 2(20261025-153233).jpg potvrdzujú hlavné menu r40 s11 položkami a Nástroje s dvoma položkami Diagnostický balík/O plugine; samostatná Kontrola stavu je odstránená. Používateľ tým uzavrel funkčný priechod a výslovne „začni“ autorizoval spoločný Warder vzhľad. CCcam/Mbox a samostatný legacy SRV bez príslušnej služby zostávajú bez hardvérového overenia.
+
+r41 mení prvú obrazovku — hlavné menu: plné nepriehľadné pozadie zo spoločnej šablóny, kompaktná hlavička s dátumom/živým časom/verziou,11 riadkov vľavo a existujúci popis vpravo, tri farebné centrované akcie. ID, dostupnosť aj dispatch sú zachované. Podmenu zatiaľ zostávajú pôvodné, aby sa dalo najprv posúdiť reálne nové hlavné menu. Najbližšie: aktualizovať cez GSU na r41; poslať snímku hlavného menu, overiť novú ikonu Glass/Utility v zozname pluginov, pohyb po položkách a zodpovedajúci názov/popis vpravo, bežiace sekundy a otvorenie bežnej funkcie/späť. Nerobiť nanovo funkčné testy CAM, swapu a diagnostického balíka.
 
 ## OSCam klienti — uzavretie skúšky r35
 
@@ -465,3 +467,7 @@ Samostatná Kontrola stavu bola odstránená z UI, ktorú používateľ označil
 ## 2026-10-25 — r40 O plugine zverejnené
 
 Zdroj9efd7b2389ae876b40a17f61f2399fd61b6b5ea6, CI40203765977 úspešné vrátane245 testov, dvoch totožných buildov a publikácie. IPK2 192 220B, SHA256301fed0916a080bac3b55bb5582115d941c817529d1acf14acf3c32022bb46f9. Verejný v13.40-r40 a izolovaný feed už ukazujú na tento balík. Kontrola skutočného IPK potvrdila release-notes.txt s headerom GSU13.40-r40 zhodným s nainštalovaným version. Používateľ má aktualizovať priamo z GSU a otvoriť Nástroje→O plugine. Nové okno ešte nie je prijímačom potvrdené; diagnostický archív bol overený v r39 a jeho zber sa nemenil.
+
+### r41 hostiteľské overenie
+
+253 testov Python3.14.7 úspešných; kompilácia a dva bajtovo rovnaké buildy. IPK3467430B, SHA256cf8363c622ef84b607465a65260e6cbdf920e669352a67f9a2d558793e5675f3. Testy pokrývajú11 riadkov aj pri zaokrúhlení HD, všetky dynamické widgety, nepriehľadné panely, zarovnanie dátumu/verzie, jazykové dátumy, oba timer signály/stop/neskorý callback, nemenné menuID/stavy/dispatch a priehľadnú160x96 ikonu. Transformácia r40→r41 reprodukovala runtime presne. Publikácia/CI zatiaľ čaká.

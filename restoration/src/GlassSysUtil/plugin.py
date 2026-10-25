@@ -1,3 +1,4 @@
+from Plugins.Extensions.GlassSysUtil import warder_main as _warder_main
 from Plugins.Extensions.GlassSysUtil import warder_tools_ui as _warder_tools_ui
 from Plugins.Extensions.GlassSysUtil.plugin_update_ui import StartupUpdateCheck as _StartupUpdateCheck, text as _plugin_update_text
 # uncompyle6 version 3.9.3
@@ -446,7 +447,7 @@ def keyStartRed(self):
 
 def Plugins(path, **kwargs):
     ret = [
-     PluginDescriptor(name=_('Glass System Utility'), description=_('Glass System Utility'), where=PluginDescriptor.WHERE_PLUGINMENU, icon='SysMgt.png', fnc=main),
+     PluginDescriptor(name=_('Glass System Utility'), description=_('Glass System Utility'), where=PluginDescriptor.WHERE_PLUGINMENU, icon='images/warder-plugin.png', fnc=main),
      PluginDescriptor(where=[PluginDescriptor.WHERE_SESSIONSTART], fnc=sessionAutostart)]
     if config.plugins.GlassSysUtil.par52.value:
         ret.append(PluginDescriptor(name='(GSU) ' + _('Glass System Utility'), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main))
@@ -1499,7 +1500,8 @@ class SysUtilMngMain(Screen):
         skin = no_plugin
 
     def __init__(self, session):
-        self.skin = SysUtilMngMain.skin
+        desktop = getDesktop(0).size()
+        self.skin = _warder_main.main_skin(desktop.width(), desktop.height()) if desktop.width() >= 1280 else SysUtilMngMain.skin
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -1525,6 +1527,7 @@ class SysUtilMngMain(Screen):
         self['blue'] = Label('')
         self['actions'] = ActionMap(['SetupActions', 'ColorActions', 'GlobalActions', 'WizardActions', 'MenuActions'], {'green': self.selectedmenuitem, 'ok': self.selectedmenuitem, 'red': self.close, 'yellow': self.cfgGsu, 'back': self.close, 'menu': self.cfgGsu})
         self.size = getDesktop(0).size().width()
+        _warder_main.install(self, globals())
         self.onLayoutFinish.append(self.updatemenulist)
         self._plugin_update = _StartupUpdateCheck(self, globals())
         return
@@ -1583,14 +1586,11 @@ class SysUtilMngMain(Screen):
             self.status[x[0]] = True
             if (not MNG_DEV and x[0] == '11') or (x[0] == '7' and (not ENA_PS)) or (x[0] == '4' and (not tmpMx)) or (x[0] == '2' and (not tmpCC) and self.enaNonLocal) or (x[0] == '3' and (not tmpOS) and self.enaNonLocalOscam) or (x[0] == '6' and (not fileExists('/tmp/ecm.info'))) or (x[0] == '7' and fileExists(PYTHONPATH + 'Plugins/Extensions/GlassBluePanel/plugin.pyo') and (not tmp)):
                 self.status[x[0]] = False
-            item = [
-             x[0]]
-            item.append(MultiContentEntryText(pos=(fhd(25), 0), size=(fhd(535), fhd(22)), font=0, text=x[1], color_sel=int({True: '0x00d100', False: '0xd10000'}[self.status.get(x[0])], 16), color=int({True: '0xffffff', False: '0x666666'}[self.status.get(x[0])], 16)))
-            pix = LoadPixmap({True: (BP_ICO % 'green'), False: (BP_ICO % 'red')}[self.status.get(x[0])])
-            item.append(MultiContentEntryPixmapAlphaTest(pos=(0, fhd(3)), size=(fhd(15), fhd(16)), png=pix))
-            self.list.append(item)
+            desktop = getDesktop(0).size()
+            self.list.append(_warder_main.menu_row(globals(), x[0], x[1], self.status[x[0]], desktop.width(), desktop.height()))
 
         self['list'].l.setList(self.list)
+        self.reactivate()
         return
 
     def cfgGsu(self):
@@ -1633,6 +1633,7 @@ class SysUtilMngMain(Screen):
         if selection:
             entry = next((entry for entry in self.menuListAll if entry[0] == selection[0]), None)
             self['info'].setText(str(entry[2]) if entry else '')
+            _warder_main.selection(self, entry)
 
     def checkCam(self):
         stat = False

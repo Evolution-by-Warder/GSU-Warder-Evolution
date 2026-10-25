@@ -1,0 +1,22 @@
+{
+  "source_project": "Evolution-by-Warder/FullHDGlass (approved settings-header template)",
+  "source_path": "usr/lib/enigma2/python/Plugins/Extensions/setupGlass17/images/warder-settings-background.png",
+  "source_sha256": "8dea19697e6f3d3e51d7cbcba0aadec1dbf3fd0ddd9609d8e0f1edfbea897dda",
+  "method": "Built-in imagegen edit; existing Warder template reused, heading changed to Glass System Utility / by Warder. Compact round skull, navy body and low globe horizon retained.",
+  "prompt": "Change ONLY the top-left FullHDGlass brand wording to Glass System Utility, metallic silver Glass System and cyan Utility; keep by Warder, the existing round skull, dark navy body, cyan divider and low Earth horizon; no clocks, versions, panels or controls.",
+  "sha256": "71d976b9b1d724f72ed6701661c32aec604b72d57481b90af128fbdc2bec775b",
+  "bytes": 1546343,
+  "width": 1671,
+  "height": 941,
+  "scope": "GSU main screen only; original skins and all functional sub-screens remain available.",
+  "plugin_icon": {
+    "path": "images/warder-plugin.png",
+    "sha256": "0067f529cb936997a4420af29fe6109cf604167d942c7d5e662a4bf5c7f31c7d",
+    "width": 160,
+    "height": 96,
+    "source_master_sha256": "6f9a92c81dff2108925048f4de83a03f94a0211630019033984842ba326217a4",
+    "source_template": "FullHDGlass approved fullhdglass-master.png",
+    "prompt": "Keep the approved round skull, replace only text with silver Glass / cyan Utility; transparent background, no vertical stretch.",
+    "packaging": "ImageMagick contain resize to160x96, transparent centered padding; same canvas size as the existing FullHDGlass plugin icon, aspect ratio preserved."
+  }
+}
