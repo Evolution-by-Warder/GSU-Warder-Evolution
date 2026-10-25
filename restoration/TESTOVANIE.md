@@ -373,3 +373,9 @@ Novýclients_skin v oscam_clients_ui upraví iba runtimeXMLtejto obrazovky: stre
 Jednorazová kontrola geometrieSD/FHD/UHD: rozsahy skupín SD(10,100,380)/(390,500,660)/(670,790,950), FHD(15,150,570)/(585,750,990)/(1005,1185,1425), UHD(30,300,1140)/(1170,1500,1980)/(2010,2370,2850), kde trojica znamenázačiatoknázvov/začiatokhodnôt/koniechodnôt. Žiadne prekrývanie ani vodorovnýpresah; zoznam a tlačidlá majú totožné atribúty. Skutočný pribalenýprivfont pri25px: JOJ PLUS HD[M7Group] s medzerami podľaOSCamu meria316.33px, novýpriestor420px.
 
 Prešlo199existujúcichtestov Python3.14.7, transformácia reprodukuje runtime. Najbližšie: r35inštalácia/GUIreštart a rovnaké OSCam→Stavklientov; overiť celý názovkanála s[M7Group] a čitateľné stredné/pravéčítače.
+
+## 2026-10-25 — r35 prijímač: rozloženie schválené
+
+Používateľ dodal snímku121510 a potvrdil „teraz to je OK“. Celý JOJ PLUS HD[M7Group] s medzerami je viditeľný, stredný a pravý stĺpec sú oddelené a riadky hodnôt sedia pri názvoch. Rozloženie ponechať. Záber potvrdzuje Gigablue/dvbapi/OK a aktuálne čítače; nepreukazuje samotné modré ovládanie účtu.
+
+Pokračovať v tej istej sekcii: najprv modré Zakázať musí otvoriť otázku s názvom Gigablue a voľbou Nie sa zrušiť bez zmeny účtu. Potom červeným odísť a znovu otvoriť Stav klientov; overiť opätovné načítanie bez pádu. Reálne vypnutie/zapnutie účtu stále neoverené, neoznačiť za receiver-tested iba podľa dialógu. Neskákať do ďalšej sekcie počas tejto skúšky. Táto aktualizácia je iba záznam prijímača, bez nového IPK a bez zmien runtime.
