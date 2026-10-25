@@ -113,12 +113,13 @@ class OsdEcmTests(unittest.TestCase):
         parser.assert_not_called()
 
     def test_position_window_stops_timer_and_stays_within_real_screen_bounds(self):
+        self.cfg.par3.value=False
         timer=MagicMock()
         with patch.object(self.plugin,'eTimer',return_value=timer):screen=self.plugin.SelectPosition(types.SimpleNamespace())
         screen.instance=types.SimpleNamespace(size=lambda:types.SimpleNamespace(width=lambda:306,height=lambda:261))
         self.cfg.par1.value=9999;self.cfg.par2.value=9999
         screen.right();screen.down()
-        self.assertEqual(self.cfg.par1.value,1920-306);self.assertEqual(self.cfg.par2.value,1080-261)
+        self.assertEqual(self.cfg.par1.value,1920-306-60);self.assertEqual(self.cfg.par2.value,1080-261)
         screen.ok();timer.stop.assert_called_once();self.assertIsNone(screen.moveTimer)
 
     def test_save_and_cancel_include_options_hidden_after_disabling_osd(self):

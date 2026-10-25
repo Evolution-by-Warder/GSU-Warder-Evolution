@@ -4,7 +4,7 @@
 # Embedded file name: /usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/plugin.py
 # Compiled at: 2021-03-28 16:56:23
 from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox
-from Plugins.Extensions.GlassSysUtil.osd_layout import rolling_skin as _wide_osd_skin, place as _place_osd
+from Plugins.Extensions.GlassSysUtil.osd_layout import rolling_skin as _wide_osd_skin, place as _place_osd, right_limit as _osd_right_limit
 from Plugins.Extensions.GlassSysUtil.native_status import request as _native_status_request
 from Plugins.Extensions.GlassSysUtil.srv_visibility import apply as _srv_visibility, prepare_skin as _srv_skin, binary_status as _srv_binary_status, menu_text as _cam_menu_text
 from Plugins.Extensions.GlassSysUtil.native_autostart import begin as _native_autostart_begin, configure as _native_autostart_configure, autocheck_help as _native_autocheck_help
@@ -8175,8 +8175,8 @@ class SelectPosition(Screen):
     def right(self):
         value = config.plugins.GlassSysUtil.par1.value
         value += 5
-        if value > max(0, getDesktop(0).size().width() - self.instance.size().width()):
-            value = max(0, getDesktop(0).size().width() - self.instance.size().width())
+        if value > _osd_right_limit(self, globals()):
+            value = _osd_right_limit(self, globals())
         config.plugins.GlassSysUtil.par1.value = value
         return
 

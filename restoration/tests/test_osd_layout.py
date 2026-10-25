@@ -12,13 +12,14 @@ layout=importlib.util.module_from_spec(spec);spec.loader.exec_module(layout)
 
 
 class OsdLayoutTests(unittest.TestCase):
-    def test_scrolling_strip_uses_half_screen_width_and_keeps_text_size_in_all_resolutions(self):
+    def test_scrolling_strip_keeps_right_inset_and_text_size_in_all_resolutions(self):
         for filename,width in (('GSU_skins.py',1280),('GSU_skins_FHD.py',1920),('GSU_skins_UHD.py',3840)):
             namespace={};exec(compile((ROOT/filename).read_text(),filename,'exec'),namespace)
             original=ElementTree.fromstring(namespace['onScreenEcm_scr'])
             result=ElementTree.fromstring(layout.rolling_skin(namespace['onScreenEcm_scr'],width))
-            self.assertEqual(int(result.get('size').split(',')[0]),width//2)
-            self.assertLessEqual(int(result.get('position').split(',')[0])+width//2,width)
+            strip_width=width//2-width//32
+            self.assertEqual(int(result.get('size').split(',')[0]),strip_width)
+            self.assertLessEqual(int(result.get('position').split(',')[0])+strip_width,width-width//32)
             before=next(n for n in original if n.get('name')=='OSD_Ecm_info')
             after=next(n for n in result if n.get('name')=='OSD_Ecm_info')
             self.assertEqual(after.get('font'),before.get('font'))
@@ -33,12 +34,12 @@ class OsdLayoutTests(unittest.TestCase):
                 overlay=plugin.OnScreenEcmScreen(types.SimpleNamespace())
                 preview=plugin.SelectPosition(types.SimpleNamespace())
             self.assertEqual(overlay.skin,preview.skin)
-            self.assertEqual(ElementTree.fromstring(overlay.skin).get('size').split(',')[0],'960')
+            self.assertEqual(ElementTree.fromstring(overlay.skin).get('size').split(',')[0],'900')
         finally:settings.par3.value=previous
 
     def test_display_clamps_without_saving_old_coordinates_and_editor_updates_them(self):
-        settings=types.SimpleNamespace(par1=types.SimpleNamespace(value=1030),par2=types.SimpleNamespace(value=2000))
-        screen=types.SimpleNamespace(instance=types.SimpleNamespace(size=lambda:types.SimpleNamespace(width=lambda:960,height=lambda:51),move=MagicMock()))
+        settings=types.SimpleNamespace(par1=types.SimpleNamespace(value=1030),par2=types.SimpleNamespace(value=2000),par3=types.SimpleNamespace(value=False))
+        screen=types.SimpleNamespace(instance=types.SimpleNamespace(size=lambda:types.SimpleNamespace(width=lambda:900,height=lambda:51),move=MagicMock()))
         api={'config':types.SimpleNamespace(plugins=types.SimpleNamespace(GlassSysUtil=settings)),
              'getDesktop':lambda i:types.SimpleNamespace(size=lambda:types.SimpleNamespace(width=lambda:1920,height=lambda:1080)),
              'ePoint':lambda x,y:(x,y)}

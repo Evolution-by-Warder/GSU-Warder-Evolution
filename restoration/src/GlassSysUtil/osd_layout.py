@@ -5,10 +5,11 @@ from xml.etree import ElementTree
 def rolling_skin(skin,desktop_width):
     root=ElementTree.fromstring(skin)
     _,height=map(int,root.get('size').split(','))
-    width=max(1,int(desktop_width)//2)
+    inset=max(1,int(desktop_width)//32)
+    width=max(1,int(desktop_width)//2-inset)
     root.set('size','%s,%s' % (width,height))
     x,y=map(int,root.get('position').split(','))
-    root.set('position','%s,%s' % (max(0,min(x,int(desktop_width)-width)),y))
+    root.set('position','%s,%s' % (max(0,min(x,int(desktop_width)-width-inset)),y))
     edge=max(1,height//17);margin=edge*2
     # Native rectangles keep the old blue frame thin at any strip width.
     for node in list(root):
@@ -25,11 +26,18 @@ def rolling_skin(skin,desktop_width):
     return ElementTree.tostring(root,encoding='unicode')
 
 
+def right_limit(screen,api):
+    width=api['getDesktop'](0).size().width()
+    static=api['config'].plugins.GlassSysUtil.par3.value
+    inset=0 if static else max(1,width//32)
+    return max(0,width-screen.instance.size().width()-inset)
+
+
 def place(screen,api,editing=False):
     if screen.instance is None:return
     desktop=api['getDesktop'](0).size();window=screen.instance.size()
     settings=api['config'].plugins.GlassSysUtil
-    x=max(0,min(settings.par1.value,max(0,desktop.width()-window.width())))
+    x=max(0,min(settings.par1.value,right_limit(screen,api)))
     y=max(0,min(settings.par2.value,max(0,desktop.height()-window.height())))
     if editing:
         settings.par1.value=x;settings.par2.value=y

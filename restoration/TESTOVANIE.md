@@ -294,3 +294,13 @@ Najbližšie: inštalovať r28 a reštartovať GUI. OSD ECM informácie → Povo
 - Prešlo152 testov Python3.14.7 vrátane šírky/písma/okraja pri troch rozlíšeniach, zhody overlay/preview a obmedzenia polohy bez zápisu. Zdrojová transformácia reprodukuje runtime; kompilácia a deterministický build sú kontrolované. Nová šírka ani statické OSD ešte nie sú overené na prijímači.
 
 Najbližšie: inštalácia r29 a reštart GUI; OSD môže zostať povolené z r28. Prepnúť na kódovanú stanicu a poslať snímku širšieho rolovaného riadka. Ak poloha nevyhovuje, OSD nastavenia → Nastaviť pozíciu → OK a šípky. Potom dokončiť test statického typu, jeho prepnutia s GUI restartom, polohy a vypnutia. Nepreskakovať do ďalšej sekcie.
+
+
+## 2026-10-25 — r29 širší riadok prijatý; r30 pravý odstup
+
+- Snímka101012 potvrdzuje širší rolovaný riadok r29. Končí však presne na pravej hrane, takže rámik vyzerá odstrihnutý. Používateľ chce skrátiť pravú stranu a výslovne uviedol, že inak je zobrazenie už OK.
+- r30 skracuje rolované okno o šírku desktopu/32:40px pri1280,60px pri1920 a120px pri3840. Pri Full HD má preto900px namiesto960 a pri aktuálnej obmedzenej polohe začína stále na960, končí na1860 a necháva60px odstup.
+- Pôvodný ľavý začiatok pri zobrazenej polohe sa nemení. right_limit je spoločný pre zobrazenie a pravú šípku polohovacieho dialógu. Aj pri pohybe doprava tak zostane odstup. Statické OSD používa pôvodné hranice; písmo, výška, obsah ani rýchlosť sa nemenia.
+- Prešlo152 testov Python3.14.7 s aktualizovanými kontrolami šírky, pravého odstupu, overlay/preview a polohy. Zdrojová transformácia reprodukuje runtime. r30 na prijímači zatiaľ nepotvrdené.
+
+Najbližšie: r30 inštalácia a reštart GUI, potvrdiť viditeľný pravý rámik s odstupom. Potom dokončiť statický typ OSD a vypnutie/polohu; nepresúvať sa do ďalšej sekcie bez dokončenia.
