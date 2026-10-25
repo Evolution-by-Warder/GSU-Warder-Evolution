@@ -50,7 +50,7 @@ def load(screen,api,refresh=True):
 
     def failed(failure):
         if not screen.feedClosed and screen.feedGeneration == generation:
-            screen.list=[row(api,'*',translate('Unable to read package feeds.'),'red')]
+            screen.list=[row(api,'*',translate('Unable to set up or read package feeds.'),'red')]
             screen['list'].l.setList(screen.list)
         return None
 

@@ -2,6 +2,7 @@
 import re
 import shutil
 import subprocess
+from .softcam_feed_setup import ensure_softcam_feed
 
 _NAME=re.compile(r'^[a-z0-9][a-z0-9+._-]*$')
 _CAM=re.compile(r'^(?:oscam|cccam|ncam|doscam|mgcamd|gbox|mbox|newcs|osemu)(?:$|[-_.0-9])')
@@ -32,6 +33,7 @@ def read_catalogue(refresh=True):
     if not opkg:raise OSError('opkg is unavailable')
     warning=False
     if refresh:
+        ensure_softcam_feed()
         try:
             update=subprocess.run([opkg,'update'],stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=45,check=False)
             warning=update.returncode != 0

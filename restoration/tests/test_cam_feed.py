@@ -8,8 +8,9 @@ from unittest.mock import MagicMock,patch
 from receiver_stubs import load
 
 ROOT=pathlib.Path(__file__).resolve().parents[1]/'src/GlassSysUtil'
-spec=importlib.util.spec_from_file_location('cam_feed_under_test',ROOT/'cam_feed.py')
-feed=importlib.util.module_from_spec(spec);spec.loader.exec_module(feed)
+# Load through the receiver package so the relative setup import is exercised.
+load(ROOT)
+feed=importlib.import_module('Plugins.Extensions.GlassSysUtil.cam_feed')
 CATALOGUE='''enigma2-plugin-softcams-oscam-uni - 11968 - OSCam current
 oscam-stable - 11966 - OSCam stable
 enigma2-plugin-softcams-cccam - 2.3.2 - CCcam
@@ -23,6 +24,10 @@ malicious;reboot - 1.0 - Exclude shell injection
 
 
 class CamFeedTests(unittest.TestCase):
+    def setUp(self):
+        self.setup_patch=patch.object(feed,'ensure_softcam_feed',return_value={'created':False})
+        self.setup_patch.start();self.addCleanup(self.setup_patch.stop)
+
     def test_catalogue_filters_names_and_preserves_distinct_versions(self):
         result=feed.parse_catalogue(CATALOGUE)
         self.assertEqual([p['name'] for p in result],['enigma2-plugin-softcams-cccam','enigma2-plugin-softcams-oscam-uni','oscam-stable','softcam-ncam'])
@@ -45,6 +50,11 @@ class CamFeedTests(unittest.TestCase):
             with self.subTest(failure=failure),patch.object(feed.shutil,'which',return_value='/usr/bin/opkg'),patch.object(feed.subprocess,'run',side_effect=[failure,result]):
                 catalogue=feed.read_catalogue()
             self.assertTrue(catalogue['warning']);self.assertEqual(len(catalogue['packages']),4)
+
+    def test_setup_failure_never_runs_package_manager_commands(self):
+        with patch.object(feed.shutil,'which',return_value='/usr/bin/opkg'),patch.object(feed,'ensure_softcam_feed',side_effect=OSError('Unknown architecture')),patch.object(feed.subprocess,'run') as run:
+            with self.assertRaises(OSError):feed.read_catalogue()
+        run.assert_not_called()
 
     def test_no_manager_or_bad_catalogue_has_clear_failure(self):
         with patch.object(feed.shutil,'which',return_value=None):

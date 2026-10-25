@@ -1,6 +1,6 @@
 {
   "python": "3.14.7",
-  "host_checks": 47,
+  "host_checks": 54,
   "host_checks_passed": true,
   "receiver_tested": false,
   "source_sha256": "454e7bba7269841b8f5b23ceddd47555861b45e73d3b7d18fb7a1b55e4f0f5df",
@@ -10,11 +10,12 @@
     "generatePS.chck"
   ],
   "note": "Native API doubles validate import and menu construction, not hardware functionality.",
-  "receiver_evidence": "r12 receiver validation confirms native oscam-uni discovery, unique CAIDs, successful restart with later ECM recovery, independent stop and start with correct Active CAM and ECM restoration. Right menu Exit + yellow confirmed. Download CAM/SRV freezes during the legacy FTP attempt. User reports web redirect to ww17 and an adware warning. DNS investigation supports parking infrastructure, but owner/malware and actual FTP contents remain unverified; direct port21 test was blocked by execution-environment routing. r13 removes the untrusted endpoint and bundled credentials from runtime, returns a disabled-source explanation without network I/O, and refreshes the stale secondary native CAM status. New r13 receiver confirmation pending. User could not connect to old FTP either and authorized replacement with the OpenATV SoftCAM feed. r13 CAM download now delegates to existing opkg configuration, refreshes and lists asynchronously, and requires package-install confirmation without force flags. No source URL is added. 47 host tests pass; actual receiver catalogue and installation unverified.",
+  "receiver_evidence": "r12 receiver validation confirms native oscam-uni discovery, unique CAIDs, successful restart with later ECM recovery, independent stop and start with correct Active CAM and ECM restoration. Right menu Exit + yellow confirmed. Download CAM/SRV freezes during the legacy FTP attempt. User reports web redirect to ww17 and an adware warning. DNS investigation supports parking infrastructure, but owner/malware and actual FTP contents remain unverified; direct port21 test was blocked by execution-environment routing. r13 removes the untrusted endpoint and bundled credentials from runtime, returns a disabled-source explanation without network I/O, and refreshes the stale secondary native CAM status. New r13 receiver confirmation pending. User could not connect to old FTP either and authorized replacement with the OpenATV SoftCAM feed. r13 CAM download now delegates to existing opkg configuration, refreshes and lists asynchronously, and requires package-install confirmation without force flags. No source URL is added. 47 host tests pass; actual receiver catalogue and installation unverified. r14 adds clean-image feed setup using receiver metadata, preserving configured feeds. Receiver reports distro=openatv, oe=OE-Alliance 6.0, architecture=cortexa15hf-neon-vfpv4. Multiple machine architectures are host-tested; no hardcoded receiver model or ARM default. Supplied feed IPK was inspected only. Clean-image setup and catalogue/install remain receiver-unverified.",
   "bitrate_worker_sha256": "b44d016d9900242a98e1afb753abe36225a9cfdcfa50bfc21be677fc6536fcdd",
   "oscam_readers_parser_sha256": "dfac5fba47e8181bd3d4f2cb55f026c06d107e73307b9401c0deea229c8d3a85",
   "receiver_validation_scope": "partial; receiver_tested=false means the complete plugin is not yet validated",
   "native_softcam_sha256": "37233f7296585a02cc6ceaea362817524a7fea7fd78e8ed56c8da9c88b337b0a",
-  "cam_feed_sha256": "4c7799d239cd81021bd498f62556103a02c8f69b4c9660c1b412fd38f3c785a3",
-  "cam_feed_ui_sha256": "139590ad548922905caaf438ccfef848ef4ec407c49b8d54b0f160e0ffcd49dd"
+  "cam_feed_sha256": "667093aa7a3f5c6861e9f0bf26ff0f8d6b8acbc981c1a7a7c7e003c8e752c971",
+  "cam_feed_ui_sha256": "989969798608205b47486f014c4c55bc2bed2972f5c36bf52cc663dbd455992b",
+  "softcam_feed_setup_sha256": "793c087c2d1102b1bcac70d14969edf2ca3bdf26f5e971bc083236c83f9e9bcc"
 }
