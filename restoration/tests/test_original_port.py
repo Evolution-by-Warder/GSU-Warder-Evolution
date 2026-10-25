@@ -27,7 +27,7 @@ class OriginalPortTests(unittest.TestCase):
                 if modern:
                     signal.connect=lambda cb:callbacks.append(cb)
                 timer=MagicMock();timer.timeout=signal
-                with patch.object(module,'eTimer',return_value=timer) as factory:
+                with patch.object(module,'eTimer',return_value=timer) as factory, patch.object(module._warder_system,'install'):
                     screen=module.GlassSysInfoBrowser(types.SimpleNamespace())
                     for name in ('getMemInfo','getSpaceInfo','getServicesInfo'):
                         setattr(screen,name,MagicMock())

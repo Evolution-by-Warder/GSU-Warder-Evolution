@@ -487,3 +487,7 @@ r43 hostiteľské overenie:256 testov Python3.14.7 úspešných po odstránení 
 ### r44
 
 Používateľ výslovne schválil kratší názov GSU Warder Evolution. r44 mení spoločnú konštantu názvu; najbližšie overiť názov v prehliadači pluginov. r43 bol publikovaný cez CI40210792043; feed aj SHA zhodné s lokálnym testovaným balíkom.
+
+### r45 ďalšia sekcia
+
+Snímka1(20261025-162230).jpg potvrdzuje r44 hlavné menu, väčšie panely bez nadpisu/spodného riadka, liveTV a4 farebné tlačidlá. Používateľ žiada pokračovať. r45 upravuje Informácie o systéme do spoločného rámu/hlavičky, zachováva všetky pôvodné komponenty a zber dát. Najbližšie: aktualizovať, otvoriť Informácie o systéme a poslať snímku; overiť ľavé údaje, dva pravé výpisy a šípky, návrat červeným. Celý CAM/swap znovu netestovať.

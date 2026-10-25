@@ -1,3 +1,4 @@
+from Plugins.Extensions.GlassSysUtil import warder_system as _warder_system
 from Plugins.Extensions.GlassSysUtil import warder_main as _warder_main
 from Plugins.Extensions.GlassSysUtil import warder_tools_ui as _warder_tools_ui
 from Plugins.Extensions.GlassSysUtil.plugin_update_ui import StartupUpdateCheck as _StartupUpdateCheck, text as _plugin_update_text
@@ -1685,7 +1686,8 @@ class SysUtilMngMain(Screen):
 class GlassSysInfoBrowser(Screen):
 
     def __init__(self, session):
-        self.skin = GlassSysInfo
+        desktop = getDesktop(0).size()
+        self.skin = _warder_system.system_skin(GlassSysInfo, desktop.width(), desktop.height())
         self.session = session
         Screen.__init__(self, session)
         self['mem_labels'] = Label('\nTotal:\nFree:\nUsed:\nUsed(%):')
@@ -1745,6 +1747,7 @@ class GlassSysInfoBrowser(Screen):
            'blue': (self.exit), 
            'yellow': (self.LetsgoParty)}, -2)
         self.size = getDesktop(0).size().width()
+        _warder_system.install(self, globals())
         self.onLayoutFinish.append(self.LetsgoParty)
         return
 

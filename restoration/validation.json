@@ -1,9 +1,9 @@
 {
   "python": "3.14.7",
-  "host_checks": 256,
+  "host_checks": 257,
   "host_checks_passed": true,
   "receiver_tested": false,
-  "source_sha256": "e31b4abaa2b24cb80b8d575e712857df28c63cba0145d9b3cccaa1ba4e206f56",
+  "source_sha256": "9666759cfb6a9dd8d2b6df52aef20c6bab1b1dfd1a389ea51a6a33ee9cd676a7",
   "original_named_classes": 62,
   "original_named_functions": 510,
   "compatibility_replaced_internal_closures": [
@@ -55,11 +55,11 @@
   "plugin_update_sha256": "1f712eefde223d4cd796e4c88cea3f166061ddbbdc52fc3468cfbf346415d37d",
   "plugin_update_ui_sha256": "7775e311991a71e77abf08e054c4474c229477cb97074fe06e65df8e7f155897",
   "latest_candidate": {
-    "version": "13.40-r44",
+    "version": "13.40-r45",
     "published": false,
     "receiver_verified": false,
-    "bytes": 3467256,
-    "sha256": "dcbb07c61e799a4849f33aeeced0f7a3f758c0b7acbe89c8bf54332c38e52dc4",
+    "bytes": 3468256,
+    "sha256": "aebd183a5287ec3816187c45c2114d371e2f7641c1d475a802bcb1181dfde371",
     "feed_advanced": false
   },
   "oscam_readers_ui_sha256": "d0d39fc4462e7c5f46031461cba25e8fd9d4bef82da54ef364384c35d6678753",
@@ -68,14 +68,16 @@
   "notes": " Receiver r40 screenshot145743 confirms About content and layout only; not close/scroll interaction or standalone health menu removal. Full receiver validation remains incomplete.",
   "warder_main_sha256": "1ab968a114ca698dd3a0119e6abe549671a07a5d9e86c79711549b2f97d0c3a7",
   "previous_candidate": {
-    "version": "13.40-r43",
+    "version": "13.40-r44",
     "published": true,
     "receiver_verified": false,
-    "bytes": 3467474,
-    "sha256": "1a94d8d3871671c77377cbecb220cdddae137a628ea14951cd8c610a485d6f57",
+    "bytes": 3467256,
+    "sha256": "dcbb07c61e799a4849f33aeeced0f7a3f758c0b7acbe89c8bf54332c38e52dc4",
     "feed_advanced": true,
-    "source_commit": "21899ea5c4a567850ac1f2bd4920c2b5ef7dc670",
-    "ci_run": 40210792043,
-    "ci_conclusion": "success"
-  }
+    "source_commit": "223505cc958e92432e4600e3fbce5bf93939bcae",
+    "ci_run": 40211201157,
+    "ci_conclusion": "success",
+    "receiver_evidence": "Screenshot1(20261025-162230).jpg confirms r44 main display, expanded panels, four footer actions and live TV"
+  },
+  "warder_system_sha256": "68892f04e473f803fb3e4221e59541234e446d85a1041e4b1ba11c824927e432"
 }

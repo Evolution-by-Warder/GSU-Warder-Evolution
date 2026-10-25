@@ -11,7 +11,7 @@ Runtime changes are explicit: normal Python source instead of version-selected b
 
 The original SD/FHD/UHD skin definitions and original graphics/font/translations are retained. Since r41, the main menu uses the approved common Warder presentation through a separate native XML layout; functional sub-screens still retain their recovered original style. `resources.tar.gz` is a deterministic archive of the actual runtime assets, individually pinned by `resources.json`. Legacy Python cores, `/usr/bin/ftplib.py` and the old bytecode-selecting installer are not installed. Configuration templates are supplied only where the receiver has no existing file. The retired user-script defaults are no longer shipped.
 
-Build: `python3 restoration/tools/build_ipk.py`. The output is one deterministic `enigma2-plugin-glasssysutil_13.40-r44_all.ipk`. All runtime Python files compile under 3.14.7. Host tests exercise imports with native API doubles, all original signatures and main-menu contexts, and local OSCam configuration/authentication. They cannot validate real tuners, mounts, CAM restart, package operations or other receiver changes. Those remain unverified until tested on hardware. Original FTP services and legacy native helper ABI availability are external compatibility limits, not functionality verified by source recovery. Restoration updates use the isolated original-python314 feed; production dashboards and their existing update channel remain unchanged.
+Build: `python3 restoration/tools/build_ipk.py`. The output is one deterministic `enigma2-plugin-glasssysutil_13.40-r45_all.ipk`. All runtime Python files compile under 3.14.7. Host tests exercise imports with native API doubles, all original signatures and main-menu contexts, and local OSCam configuration/authentication. They cannot validate real tuners, mounts, CAM restart, package operations or other receiver changes. Those remain unverified until tested on hardware. Original FTP services and legacy native helper ABI availability are external compatibility limits, not functionality verified by source recovery. Restoration updates use the isolated original-python314 feed; production dashboards and their existing update channel remain unchanged.
 
 The original AGC converter is retained under the unique `GSUAgcConv` name to avoid replacing another skin’s converter. Its progress value is an integer for the current native GUI API. Skin-file hashes verify that the converter reference is the only change to the original SD/FHD/UHD skin definitions.
 
@@ -284,3 +284,7 @@ The redundant Main menu caption is also removed; panels begin directly below the
 ## 13.40-r44: shorter project name
 
 User chose GSU Warder Evolution as the untranslated display name. The shared brand constant updates plugin-browser, setup/extension project entries and About text. Package identity, install path and artwork remain compatible.
+
+## r45 system presentation
+
+System Information now uses the common background/header and opaque frame. Original widgets, data collectors, independent scroll actions and refresh remain; original SD/FHD/UHD XML resources are preserved. Presentation transform fits the existing content below the header and above centered footer actions. A separate header timer closes with the screen. Actual receiver layout awaits review.
