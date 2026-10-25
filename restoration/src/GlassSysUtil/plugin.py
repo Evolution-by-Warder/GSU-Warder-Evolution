@@ -4,6 +4,7 @@
 # Embedded file name: /usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/plugin.py
 # Compiled at: 2021-03-28 16:56:23
 from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox
+from Plugins.Extensions.GlassSysUtil.native_softcam import NativeSoftcam, handle_action as _native_softcam_action
 from Plugins.Extensions.GlassSysUtil.cccam_transport import open_text as _cccam_open
 from Plugins.Extensions.GlassSysUtil.oscam_readers_parser import parse_readers as _oscam_readers
 from Components.Console import Console as CompConsole
@@ -4266,6 +4267,7 @@ class univCamMng(Screen):
             self.skin = UCM
         self.session = session
         Screen.__init__(self, session)
+        self.nativeSoftcam = NativeSoftcam()
         self['picECM'] = Pixmap()
         self['commPic'] = Pixmap()
         self['statPic'] = Pixmap()
@@ -4658,6 +4660,8 @@ class univCamMng(Screen):
         return tmp
 
     def start(self):
+        if _native_softcam_action(self, 'start', eConsoleAppContainer, _):
+            return
         if self.enCommand == False:
             self.statcommPics('comm', 'red')
             self['statCamSrvcmd'].setText(_('Try later ... working'))
@@ -4850,6 +4854,9 @@ class univCamMng(Screen):
         return
 
     def checkStatCam(self):
+        if self.nativeSoftcam.selected():
+            self.CamSrvMsg(_('CAM/SRV Running') if self.nativeSoftcam.running() else _('No Running CAM/SRV'))
+            return True
         stat = False
         if generatePS():
             f = open(A_TM, 'r')
@@ -5070,6 +5077,8 @@ class univCamMng(Screen):
         return
 
     def stop(self):
+        if _native_softcam_action(self, 'stop', eConsoleAppContainer, _):
+            return
         if self.enCommand == False:
             self.statcommPics('comm', 'red')
             self['statCamSrvcmd'].setText(_('Try later ... working'))
@@ -5308,6 +5317,10 @@ class univCamMng(Screen):
                         Srv.append(SrvName)
                         self.Srv_list[SrvName] = x[:-7]
 
+        native = self.nativeSoftcam.selected()
+        if native:
+            Cam.append(native)
+            self.Cam_list[native] = '@native-softcam'
         selCam = ConfigSelection(default=self.getCamName(), choices=Cam)
         selSrv = ConfigSelection(default=self.getSrvName(), choices=Srv)
         self.numCam = len(Cam) - 1
@@ -5420,6 +5433,8 @@ class univCamMng(Screen):
         return
 
     def getCamName(self):
+        if self.nativeSoftcam.running():
+            return self.nativeSoftcam.selected()
         try:
             f = open('/tmp/ucm_cam.info', 'r')
             content = f.read()
@@ -5522,7 +5537,7 @@ class univCamMng(Screen):
         caids = info.getInfoObject(iServiceInformation.sCAIDs)
         if caids:
             if len(caids) > 0:
-                for caid in caids:
+                for caid in dict.fromkeys(caids):
                     cainfo += '%0.4X' % caid + '  '
 
                 return cainfo

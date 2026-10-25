@@ -173,6 +173,39 @@ class OriginalPortTests(unittest.TestCase):
                 self.assertEqual(timer.stop.call_count,3)
                 self.assertIsNone(screen.runECMTimer)
 
+    def test_cam_manager_lists_native_softcam_and_routes_buttons(self):
+        from unittest.mock import MagicMock
+        module=self.plugin
+        adapter=MagicMock();adapter.selected.return_value='oscam-uni';adapter.running.return_value=True
+        with patch.object(module,'NativeSoftcam',return_value=adapter),patch.object(module,'listDir',return_value=[]):
+            screen=module.univCamMng(types.SimpleNamespace())
+            screen.CamSrvList()
+        self.assertEqual(screen.numCam,1)
+        self.assertEqual(screen.numSrv,0)
+        self.assertEqual(screen.getCamName(),'oscam-uni')
+        self.assertEqual(screen.Cam_list['oscam-uni'],'@native-softcam')
+        screen.CamSrvMsg=MagicMock()
+        self.assertTrue(screen.checkStatCam())
+        screen.CamSrvMsg.assert_called_with('CAM/SRV Running')
+        with patch.object(module,'_native_softcam_action',return_value=True) as action:
+            screen.start();screen.stop()
+            self.assertEqual([call.args[1] for call in action.call_args_list],['start','stop'])
+        adapter.running.return_value=False
+        with patch('builtins.open',side_effect=FileNotFoundError):
+            self.assertEqual(screen.getCamName(),'None')
+        self.assertTrue(screen.checkStatCam())
+        screen.CamSrvMsg.assert_called_with('No Running CAM/SRV')
+
+    def test_cam_manager_caids_are_unique_in_broadcast_order(self):
+        module=self.plugin
+        info=types.SimpleNamespace(getInfoObject=lambda key:[0x624,0x181D,0x668,0x624,0x181D,0x668])
+        with patch.object(module,'iServiceInformation',types.SimpleNamespace(sCAIDs=1)):
+            text=module.univCamMng.getCaidInfo(None,info)
+        self.assertEqual(text,'Available CAIDs: 0624  181D  0668  ')
+        empty=types.SimpleNamespace(getInfoObject=lambda key:None)
+        with patch.object(module,'iServiceInformation',types.SimpleNamespace(sCAIDs=1)):
+            self.assertEqual(module.univCamMng.getCaidInfo(None,empty),'No CA info available')
+
     def test_channel_bitrate_output_handles_partial_and_combined_reads(self):
         module=self.plugin
         screen=module.channelInfoCenter(types.SimpleNamespace())

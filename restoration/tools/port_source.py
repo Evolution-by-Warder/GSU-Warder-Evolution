@@ -3,6 +3,7 @@
 import ast
 import pathlib
 import sys
+from native_softcam_port import port_native_softcam
 
 
 def port(source):
@@ -322,6 +323,10 @@ def _gsu_helper(name):
     body=body.replace('self.skin = channelInfo_Center', r"""self.skin = sub(r'(<widget name="ecmValues"[^>]*size=")(\d+),(\d+)(")', lambda match: match[1] + '%d,%s' % (int(match[2]) * 340 // 292, match[3]) + match[4], channelInfo_Center)""", 1)
     body=body.replace('= ECMparser()', '= ECMparser(cl=24)', 1)
     source=source[:start]+body+source[end:]
+    # The CAM manager receives repeated CAIDs from current service metadata too.
+    start=source.index('class univCamMng(');end=source.index('\nclass ',start+1)
+    body=source[start:end].replace('for caid in caids:', 'for caid in dict.fromkeys(caids):', 1)
+    source=source[:start]+body+source[end:]
     # The standalone ECM panel has enough width for the full CAM build too.
     start=source.index('class ECMInfo(');end=source.index('\nclass ',start+1)
     body=source[start:end].replace('= ECMparser()', '= ECMparser(cl=24)', 1)
@@ -368,6 +373,7 @@ def _gsu_helper(name):
     # Legacy parser still applies when column-class markup is absent.
     body=body.replace("            self['list'].l.setList(self.list)\n            self.reactivate()\n        return", "        self['list'].l.setList(self.list)\n        self.reactivate()\n        return",1)
     source=source[:start]+body+source[end:]
+    source=port_native_softcam(source)
     # Preserve class and method signatures; no placeholder function bodies.
     compile(source, 'plugin.py', 'exec')
     return source

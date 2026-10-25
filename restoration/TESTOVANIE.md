@@ -49,3 +49,15 @@ Pred publikovaním vždy čerstvo načítať hlavu a strom vetvy, aktualizovať 
 ## Pokračovanie 25. 10. 2026 — r11
 
 Samostatné ECM okno teraz používa ECMparser(cl=24), rovnako ako Informácie o kanáli. Pôvodné rozmery okna aj grafika sú zachované. Regresný test overuje obidve API časovača, 13 riadkov, plnú revíziu 11968, zmenu ECM Time pri ďalšom callbacku a zastavenie časovača po zatvorení. Spolu 28 testov úspešných pod Python 3.14.7. Pripravený kandidát 13.40-r11; zobrazenie plnej revízie a živú zmenu ECM Time musí ešte potvrdiť používateľ na prijímači. Potom pokračovať CAM/SRV. Historické údaje r10 vyššie označujú predchádzajúci večerný stav.
+
+### Potvrdenie r11 a CAM/SRV
+
+Tri snímky 1/2(20261025-003142).jpg a 3(20261025-003141).jpg potvrdzujú celú revíziu 11968 aj živé zmeny ECM Time 0.110, 0.108, 0.107. Samostatné ECM okno je týmto overené. CAM/SRV sa otvorí, ale starý správca hľadá iba UCM skripty a zobrazuje 0 CAM/SRV. Výpis prijímača potvrdil symlink `/etc/init.d/softcam -> /etc/init.d/softcam.oscam-uni`, dostupné softcam.None a softcam.oscam-uni. Pred zapojením ovládania čakáme na obsah softcam.oscam-uni. Lokálne rozpracovaná oprava CAID odstraňuje duplicity so zachovaním poradia; ešte nevydaná v IPK.
+
+### Pripravené r12 — pôvodný správca a systémový SoftCAM
+
+Používateľ dodal celý skript softcam.oscam-uni; potvrdil štart `/usr/bin/$CAM --config-dir /etc/tuxbox/config/$CAM ...`, PID súbor a akcie start/stop/restart/status. r12 uvádza aktuálne systémom zvolený SoftCAM ako CAM a zisťuje aktívny proces cez skutočný exe v /proc. Červené ho zastaví, zelené spustí alebo reštartuje. Vykonáva sa asynchrónne a úspech vyžaduje návratový kód aj očakávaný procesový stav. Symlink, systémové skripty ani výber OpenATV sa neprepisujú. Zoznam natívnych položiek pokrýva iba systémom zvolený SoftCAM; prepnutie na iný natívny balík zostáva správcovi image. Pôvodné UCM položky zachované. CAID sa už neopakujú. 37 hostiteľských testov úspešných; samotný runtime je presne reprodukovateľný transformáciou predchádzajúceho zdroja.
+
+**Nasleduje:** nainštalovať r12, reštartovať GUI a overiť, že CAM/SRV ukáže oscam-uni ako aktívny CAM a zoznam CAID bez opakovania. SRV (0) je v tomto prípade očakávané, pretože OSCam beží cez systémový softcam, nie ako samostatný UCM SRV. Najprv overiť obrazovku; potom zelené pri označenom oscam-uni môže overiť reštart (krátky výpadok obrazu je očakávaný). Skutočné ovládanie na prijímači zatiaľ neoverené.
+
+Názov CAM nie je napevno: testované oscam-uni, oscam-stable, oscam-custom aj my-softcam; podporený aj binárny symlink smerujúci na inak pomenovaný reálny súbor. Rozhoduje aktuálny systémový odkaz softcam a jeho zodpovedajúci súbor v /usr/bin.

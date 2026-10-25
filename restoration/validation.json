@@ -1,17 +1,18 @@
 {
   "python": "3.14.7",
-  "host_checks": 28,
+  "host_checks": 37,
   "host_checks_passed": true,
   "receiver_tested": false,
-  "source_sha256": "fc417ad39aab89ca70e64354f1e8976ad700afca1d2736eede970c136a55fcd9",
+  "source_sha256": "3751e94d09f676f9265ccb2152a47c131b1671eaab5d1d82c03d2c79eb2fa946",
   "original_named_classes": 62,
   "original_named_functions": 510,
   "compatibility_replaced_internal_closures": [
     "generatePS.chck"
   ],
   "note": "Native API doubles validate import and menu construction, not hardware functionality.",
-  "receiver_evidence": "Partial receiver validation through 2026-10-24 evening: r10 reader protocols/status/address and EMM columns confirmed in four screenshots; system/channel displays and scrolling, measured bitrate, OSCam live log/config viewing, card entitlements and uptime script execution confirmed. IPK install/remove lists and empty TAR screen open; package-changing operations untested. Standalone ECM screen loads data/logo; live refresh confirmation pending and CAM revision still truncated to 1196.. . See TESTOVANIE.md for exact resume point and remaining limits. r11 raises the standalone ECM parser limit to 24; host regression verifies initial population, refresh and timer teardown with both APIs. New build not yet receiver-confirmed.",
+  "receiver_evidence": "Partial validation detailed in TESTOVANIE.md. r11 standalone ECM screenshots confirm full revision 11968 and live ECM Time changes 0.110/0.108/0.107. CAM/SRV screenshot shows legacy-only discovery and repeated CAIDs. Receiver shell listing and supplied init script confirm /etc/init.d/softcam -> softcam.oscam-uni, /usr/bin/$CAM, and start/stop/restart commands. r12 adds image-selected SoftCAM discovery and asynchronous controls plus unique CAIDs. Native lifecycle behavior is host-tested only; new r12 receiver confirmation pending.",
   "bitrate_worker_sha256": "b44d016d9900242a98e1afb753abe36225a9cfdcfa50bfc21be677fc6536fcdd",
   "oscam_readers_parser_sha256": "dfac5fba47e8181bd3d4f2cb55f026c06d107e73307b9401c0deea229c8d3a85",
-  "receiver_validation_scope": "partial; receiver_tested=false means the complete plugin is not yet validated"
+  "receiver_validation_scope": "partial; receiver_tested=false means the complete plugin is not yet validated",
+  "native_softcam_sha256": "c2f5f2030617d6f0ae245bdafba097d717afe13dfc243cbb7ffdc1f695d70e94"
 }
