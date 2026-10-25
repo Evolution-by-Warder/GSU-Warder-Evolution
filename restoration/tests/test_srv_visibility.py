@@ -84,6 +84,13 @@ class ServerVisibilityTests(unittest.TestCase):
         with patch.object(plugin,'listDir',return_value=['NewCS_Srv.sh','NewCS_Srv.sh.bak']):screen.CamSrvList()
         self.assertEqual(screen.numSrv,0);self.assertEqual(len(screen.list),1)
 
+    def test_menu_wraps_after_autocheck_and_image_preparation_has_no_entry_points(self):
+        plugin=self.plugin;screen=self.screen()
+        with patch.object(plugin,'listDir',return_value=[]):screen.CamSrvList()
+        self.assertNotIn('txt9',screen);self.assertNotIn(9,screen.aa)
+        for name in ('killDccamd','doLnk','chckDccamd'):self.assertFalse(hasattr(screen,name))
+        screen.idxAllFnc=8;screen.selectFnc();self.assertEqual(screen.idxAllFnc,0)
+
     def test_all_original_resolutions_keep_first_row_arrows_and_name_second_row(self):
         for filename in ('GSU_skins.py','GSU_skins_FHD.py','GSU_skins_UHD.py'):
             namespace={};exec(compile((ROOT/filename).read_text(),filename,'exec'),namespace)

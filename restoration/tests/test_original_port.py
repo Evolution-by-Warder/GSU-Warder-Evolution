@@ -284,7 +284,7 @@ class OriginalPortTests(unittest.TestCase):
         with patch.object(module.MessageBox,'TYPE_INFO',0,create=True):screen.entitlements()
         self.assertIs(session.open.call_args.args[0],module.MessageBox)
 
-    def test_every_original_class_function_and_signature_is_retained(self):
+    def test_original_signatures_retained_except_explicitly_removed_image_preparation(self):
         tree=ast.parse(SOURCE.read_text());actual={}
         def walk(nodes,prefix=''):
             for node in nodes:
@@ -296,8 +296,10 @@ class OriginalPortTests(unittest.TestCase):
                     walk(list(ast.iter_child_nodes(node)),prefix)
         walk(tree.body)
         manifest=json.loads((BASE/'original-inventory.json').read_text())
+        removed={'univCamMng.killDccamd','univCamMng.doLnk','univCamMng.chckDccamd'}
+        self.assertTrue(removed.isdisjoint(actual))
         for item in manifest['objects']:
-            if '<' not in item['name'] and item['name'] != 'generatePS.chck':
+            if '<' not in item['name'] and item['name'] != 'generatePS.chck' and item['name'] not in removed:
                 self.assertTrue(item['name'] in actual,item['name'])
                 self.assertEqual(actual[item['name']],item['args'],item['name'])
         self.assertEqual(sum(isinstance(n,ast.ClassDef) for n in ast.walk(tree)),62)
@@ -345,13 +347,13 @@ class OriginalPortTests(unittest.TestCase):
         screen=self.plugin.univCamMng(types.SimpleNamespace(openWithCallback=MagicMock()))
         self.assertNotIn(5,screen.aa)
         point=types.SimpleNamespace(x=lambda:500,y=lambda:100)
-        for i in range(10):screen['txt%d'%i].instance=types.SimpleNamespace(position=lambda:point)
+        for i in range(9):screen['txt%d'%i].instance=types.SimpleNamespace(position=lambda:point)
         screen['select_pict'].move=MagicMock()
         screen.idxAllFnc=0;visited=[]
         screen.numSrv=1  # This test retains all non-retired server actions.
-        for _ in range(9):
+        for _ in range(8):
             screen.selectFnc();visited.append(screen.idxAllFnc)
-        self.assertEqual(visited,[1,2,3,4,6,7,8,9,0])
+        self.assertEqual(visited,[1,2,3,4,6,7,8,0])
         screen.enCommand=True;screen.close=MagicMock()
         screen.exit()
         screen.close.assert_called_once_with()

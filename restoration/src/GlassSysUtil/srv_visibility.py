@@ -52,7 +52,7 @@ def apply(screen,api):
     config=layout['config'];width,height=map(int,config['size'].split(','))
     item_height=int(config['itemHeight'])
     screen['config'].instance.resize(eSize(width,height if visible else item_height+2))
-    for name,slot in (('txt8','txt7'),('txt9','txt8')):
+    for name,slot in (('txt8','txt7'),):
         position=layout[name if visible else slot]['position']
         x,y=map(int,position.split(','));screen[name].instance.move(api['ePoint'](x,y))
     if not visible:
@@ -62,7 +62,7 @@ def apply(screen,api):
     for name,text in (('txt1','Download CAM/SRV'),('txt2','Delete CAM/SRV')):
         screen[name].setText(menu_text(screen,api['_'],text))
     screen.enaAutochckChck()
-    help_text={0:'Exit CAM/SRV Manager',1:'Downloading CAM/SRV from server and installing to CAM/SRV Manager',2:'Deleting CAM/SRV from CAM/SRV Manager',6:'Delayed start in seconds of CAM/SRV after start E2',9:'Preparing experimental image to use CAM/SRV and disabling dccamd'}
+    help_text={0:'Exit CAM/SRV Manager',1:'Downloading CAM/SRV from server and installing to CAM/SRV Manager',2:'Deleting CAM/SRV from CAM/SRV Manager',6:'Delayed start in seconds of CAM/SRV after start E2'}
     for key,text in help_text.items():screen.aa[key]=menu_text(screen,api['_'],text)
     screen['helpTXT'].setText(screen.aa.get(screen.idxAllFnc,''))
     screen.setTitle(menu_text(screen,api['_'],'CAM/SRV Manager'))

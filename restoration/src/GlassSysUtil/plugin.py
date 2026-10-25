@@ -4285,8 +4285,7 @@ class univCamMng(Screen):
         self['txt6'] = ColorLabel(_('Delay'))
         self['txt7'] = ColorLabel(_('SRV Restart'))
         self['txt8'] = ColorLabel(_cam_menu_text(self, _, 'Autocheck CAM/SRV'))
-        self['txt9'] = ColorLabel(_('Prepare Exp. Image'))
-        self.aa = {0: _cam_menu_text(self, _, 'Exit CAM/SRV Manager'), 1: _cam_menu_text(self, _, 'Downloading CAM/SRV from server and installing to CAM/SRV Manager'), 2: _cam_menu_text(self, _, 'Deleting CAM/SRV from CAM/SRV Manager'), 3: _('Update OScam to the highest available version'), 4: _('OScam starting with command line options like path to OScam cfg and more'), 6: _cam_menu_text(self, _, 'Delayed start in seconds of CAM/SRV after start E2'), 7: _('Enabling or Disabling Restart SRV if CAM is running'), 8: _cam_menu_text(self, _, 'Enabling or Disabling Autocheck of running CAM/SRV every 10 min and try to start CAM/SRV if is not running'), 9: _cam_menu_text(self, _, 'Preparing experimental image to use CAM/SRV and disabling dccamd')}
+        self.aa = {0: _cam_menu_text(self, _, 'Exit CAM/SRV Manager'), 1: _cam_menu_text(self, _, 'Downloading CAM/SRV from server and installing to CAM/SRV Manager'), 2: _cam_menu_text(self, _, 'Deleting CAM/SRV from CAM/SRV Manager'), 3: _('Update OScam to the highest available version'), 4: _('OScam starting with command line options like path to OScam cfg and more'), 6: _cam_menu_text(self, _, 'Delayed start in seconds of CAM/SRV after start E2'), 7: _('Enabling or Disabling Restart SRV if CAM is running'), 8: _cam_menu_text(self, _, 'Enabling or Disabling Autocheck of running CAM/SRV every 10 min and try to start CAM/SRV if is not running')}
         if self.nativeSoftcam.selected():
             self.aa[8] = _native_autocheck_help(globals())
         self['select_pict'] = Pixmap()
@@ -4311,7 +4310,6 @@ class univCamMng(Screen):
         self.checkCam = self.enCommand = self.typecmd = self.enaBlue = False
 
         self.capic = 'None'
-        self.enaYellow = True
         self.FirstInfoTimer = eTimer()
         try:
             self.FirstInfoTimer_conn = self.FirstInfoTimer.timeout.connect(self.firstInfo)
@@ -4367,8 +4365,6 @@ class univCamMng(Screen):
             self.enaSrvRestart()
         elif self.idxAllFnc == 8:
             self.enaAutochck()
-        elif self.idxAllFnc == 9:
-            self.killDccamd()
         return
 
     def selectFnc(self):
@@ -4377,7 +4373,7 @@ class univCamMng(Screen):
             self.idxAllFnc += 1
         if self.idxAllFnc == 7 and not self.numSrv:
             self.idxAllFnc += 1
-        if self.idxAllFnc > 9:
+        if self.idxAllFnc > 8:
             self.idxAllFnc = 0
         self['select_pict'].move(ePoint(self['txt%s' % self.idxAllFnc].instance.position().x() - fhd(30), self['txt%s' % self.idxAllFnc].instance.position().y()))
         self['helpTXT'].setText(self.aa.get(self.idxAllFnc, ''))
@@ -4868,110 +4864,8 @@ class univCamMng(Screen):
         self.statcommPics('stat', 'blue')
         return True
 
-    def killDccamd(self):
-        if self.enaYellow:
-            return
-        if self.chckDccamd():
-            if ENA_D:
-                system('systemctl stop dccamd')
-                system('systemctl disable dccamd')
-                system('dpkg -r dccamd')
-                tmp = _('Dccamd disabled')
-            else:
-                tmp = ''
-                if fileExists('/usr/bin/dccamd'):
-                    try:
-                        system('rm -rf /usr/bin/dccamd')
-                        if not fileExists('/usr/bin/dccamd'):
-                            tmp = '1.' + _('step - OK') + '\n'
-                        else:
-                            tmp = '1.' + _('step - NOT OK') + '\n'
-                    except:
-                        tmp = '1.' + _('step - NOT OK') + '\n'
 
-                else:
-                    tmp = '1.' + _('step - no needed') + '\n'
-                if fileExists('/etc/init.d/dccamd'):
-                    try:
-                        system('rm -rf /etc/init.d/dccamd')
-                        if not fileExists('/etc/init.d/dccamd'):
-                            tmp += '2.' + _('step - OK') + '\n'
-                        else:
-                            tmp += '2.' + _('step - NOT OK') + '\n'
-                    except:
-                        tmp += '2.' + _('step - NOT OK') + '\n'
 
-                else:
-                    tmp += '2.' + _('step - no needed') + '\n'
-                try:
-                    system('rm -rf /etc/rcS.d/S15dccamd')
-                    tmp += '3.' + _('step - OK') + '\n'
-                except:
-                    tmp += '3.' + _('step - NOT OK') + '\n'
-
-                tmp += '\n\n' + _('Please hard restart your box to finishing operation')
-            self.session.open(MessageBox, tmp, MessageBox.TYPE_INFO, 4)
-            self['txt9'].color2()
-            self.enaYellow = True
-        if not os.path.exists('/usr/keys'):
-            x = self.doLnk('/var/keys', '/usr/keys')
-            self.session.open(MessageBox, '(/var/keys -> /usr/keys) ' + _('Symlink created'), MessageBox.TYPE_INFO, 4)
-            self['txt9'].color2()
-            self.enaYellow = True
-        if not os.path.exists('/var/etc'):
-            x = self.doLnk('/var/etc', '/etc')
-            self.session.open(MessageBox, '(/var/etc -> /etc) ' + _('Symlink created'), MessageBox.TYPE_INFO, 4)
-            self['txt9'].color2()
-            self.enaYellow = True
-        return
-
-    def doLnk(self, what, what1):
-        try:
-            allLines = ''
-            isLnk = True
-            flag = False
-            fileName = ''
-            if fileExists('/etc/init.d/bootup'):
-                fileName = '/etc/init.d/bootup'
-            elif fileExists('/etc/init.d/bootmisc.sh'):
-                fileName = '/etc/init.d/bootmisc.sh'
-            if fileName != '':
-                r = open(fileName, 'r')
-                for line in r.readlines():
-                    if not line.__contains__('exit 0'):
-                        allLines = allLines + line
-                        flag = True
-                    if line.__contains__(what) and line.__contains__(what1):
-                        isLnk = False
-
-                r.close()
-                if isLnk:
-                    allLines += '\nln -sfn %s %s' % (what1, what)
-                    if flag:
-                        allLines += '\n: exit 0\n'
-                    r = open(fileName, 'w')
-                    r.write(allLines)
-                    r.close()
-            system('mkdir %s' % what1)
-            system('ln -sfn %s %s' % (what1, what))
-        except:
-            pass
-
-        return True
-
-    def chckDccamd(self):
-        isDc = False
-        if generatePS():
-            f = open(A_TM, 'r')
-            for z in f.readlines():
-                proc = str(z)
-                if 'dccamd' in proc or 'Dccamd' in proc or 'dcCamd' in proc:
-                    isDc = True
-                    break
-
-            f.close()
-            system(RM_A_TMP)
-        return isDc
 
     def inicializeUCM(self, answer=True):
         self.showActDelay()
@@ -5013,16 +4907,6 @@ class univCamMng(Screen):
                 sname = getTunerPiconInfo(service)
             self['picsat'].instance.setPixmapFromFile(resPicon(sname, 'piconSat'))
         self['txt4'].color2()
-        self['txt9'].color2()
-        if self.chckDccamd():
-            self['txt9'].color1()
-            self.enaYellow = False
-        if not os.path.exists('/usr/keys'):
-            self['txt9'].color1()
-            self.enaYellow = False
-        if not os.path.exists('/var/etc'):
-            self['txt9'].color1()
-            self.enaYellow = False
         return
 
     def CamSrvMsg(self, msg):

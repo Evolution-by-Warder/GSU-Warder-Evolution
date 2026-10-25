@@ -256,3 +256,15 @@ Najbližšie: r25 inštalácia + reštartGUI. Autokontrola má zostať zapnutá,
 - 135testov Python3.14.7: executable-only discoverybezvykonania, nesprávnenázvy aaliasy, prázdnyserverlist, preskok/skrytiereštartu, obnova po inštalácii aopätovnéskrytie po odstránení, rozmery a posuny, šípkyvSD/FHD/UHD. NativeAPIstubs doplnené o skutočnéčíselnébody/rozmery. Zdrojovátransformácia reprodukujeruntime. r26receiverzatiaľneoverené.
 
 Najbližšie iba nainštalovaťr26 + GUIrestart aotvoriťSprávcuCAM. Na tomto prijímači bezSRV má byť jedenCAMriadok, bezAktívnySRV/šípokdruhéhoradka/reštartuSRV, názvySprávcaCAM, StiahnuťCAM aZmazaťCAM. Modré musípreskočiť zOneskorenieštartu priamonaAutokontrolu. Po potvrdeníriešiť poslednúpoložkuPripraviťexp.image; neoznačiť nepoužívanýSRVruntimezafunkčneotestovaný.
+
+
+## 2026-10-25 — r26 zobrazenie potvrdené, r27 úplné odstránenie exp.image
+
+- Snímka092425 z r26 potvrdzuje názov Správca CAM, iba riadok CAM-y(2), skryté SRV šípky/stav/reštart a kompaktné pravé menu. OSCam aj ECM sú aktívne. Navigácia modrým zostáva overená host testami; zo snímky ju nemožno potvrdiť.
+- Používateľ sa pýtal na účel položky Pripraviť exp.image. Reálny kód zastavoval, zakazoval, odinštalovával alebo mazal dccamd. Vytváral kompatibilné odkazy starých ciest a upravoval bootup/bootmisc. Po vysvetlení používateľ výslovne prikázal funkciu celkom odstrániť.
+- r27 odstraňuje metódy univCamMng.killDccamd, doLnk a chckDccamd úplne, bez neaktívnych náhrad. Odstránené sú tiež txt9, aa[9], obsluha indexu9, enaYellow a inicializačné kontroly dccamd a starých ciest. V plugin.py nezostal kód tejto funkcie na úpravy systému.
+- compact_skin odstraňuje txt9 vo všetkých rozlíšeniach. srv_visibility už neodkazuje na jeho riadok ani pomocníka. Modré po Autokontrole (index8) prejde na Ukončiť (index0). Podmienená podpora SRV a nastavenia CAM zostávajú zachované.
+- Pôvodný historický manifest ani grafické assety sa nemenia. Test inventára povoľuje presne tri používateľom odsúhlasené odstránenia; ostatné pôvodné názvy a signatúry stále overuje. remove_exp_image_port reprodukuje odstránenie ako posledný krok zdrojovej transformácie.
+- Prešlo136 testov na Python3.14.7, kompilácia a deterministický build. Testy overujú návrat menu, neprítomnosť widgetu, pomocníka a metód aj zachovanie existujúcich CAM a SRV kontrol. Zobrazenie r27 na prijímači zatiaľ nie je potvrdené.
+
+Najbližšie: inštalácia r27, reštart GUI a snímka Správcu CAM bez Pripraviť exp.image. Modré musí z Autokontroly prejsť na Ukončiť. Skutočná prevádzka samostatného SRV zostáva neoverená, pretože na prijímači nie je nainštalovaný.

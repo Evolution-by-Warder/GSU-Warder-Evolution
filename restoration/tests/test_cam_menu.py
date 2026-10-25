@@ -21,12 +21,13 @@ class CamMenuTests(unittest.TestCase):
                 before={e.get('name'):e for e in old if e.get('name')}
                 after={e.get('name'):e for e in new if e.get('name')}
                 self.assertNotIn('txt5',after)
-                self.assertEqual(set(after),set(before)-{'txt5'})
+                self.assertNotIn('txt9',after)
+                self.assertEqual(set(after),set(before)-{'txt5','txt9'})
                 previous='txt5'
-                for current in ('txt6','txt7','txt8','txt9'):
+                for current in ('txt6','txt7','txt8'):
                     self.assertEqual(after[current].get('position'),before[previous].get('position'))
                     previous=current
-                for current in set(after)-{'txt6','txt7','txt8','txt9'}:
+                for current in set(after)-{'txt6','txt7','txt8'}:
                     self.assertEqual(after[current].attrib,before[current].attrib)
 
     def test_compaction_is_idempotent(self):
