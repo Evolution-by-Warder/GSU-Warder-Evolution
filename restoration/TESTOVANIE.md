@@ -413,3 +413,9 @@ Prešlo228 testov Python3.14.7 a AST reprodukcia transformácie. Prvý reálny r
 ## 2026-10-25 — r37 zverejnená cez vstavaný kanál
 
 Zdrojový commit38a05f400b0de1b9363e9683afa5a02dfb114589, CI40198250001 úspešné vrátane228 testov, dvojitého deterministického buildu a publikácie. Verejný releasev13.40-r37: IPK2 186 370B, SHA2565e8775f69fffadb6480ca3556069aabc457d6db38de3fecaa3400900e14c609e, rovnaký ako lokálny. Kanálcandidate.json bol CI posunutý na r37 až po stiahnutí a porovnaní zverejnených bajtov. Parser aktuálneho feedu ponúka r37 pre nainštalovanú r36; pri r37 neponúka nič. Teraz čakáme na skutočnú aktualizáciu používateľa z GSU a následný GUI reštart, potom na skúšku čítačiek. Nespúšťať novú ručnú IPK inštaláciu namiesto skúšky updatera, pokiaľ sa neobjaví konkrétna chyba.
+
+## 2026-10-25 — prijímač: aktualizácia r36 → r37 potvrdená
+
+Po pokynoch otvoriť r36, potvrdiť r37, nechať dokončiť inštaláciu a GUI reštart používateľ uviedol „aktualizacia OK“. Celý postup je používateľom potvrdený ako úspešný; nejde o nezávislé meranie presného trojsekundového intervalu. Nový IPK nie je potrebný.
+
+Nasledujúci krok v tej istej OSCam sekcii: OSCam informácie → Stav serverov/čítačiek, vybrať čítačku a stlačiť modré. Otázka musí obsahovať jej presný názov a predvolené Nie; zvoliť Nie a skontrolovať návrat bez zmeny stavu a bez pádu. Reálne vypnutie/zapnutie skúšať až potom na vhodnej nepoužívanej čítačke. Neopakovať už potvrdenú aktualizáciu ani klientské ovládanie.
