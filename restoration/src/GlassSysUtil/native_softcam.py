@@ -4,6 +4,9 @@ Switch the image selection only after an explicit start of another installed CAM
 Never copy CAM binaries or write UCM status files.
 """
 import os
+import errno
+import signal
+import time
 import re
 import shlex
 import shutil
@@ -42,18 +45,69 @@ class NativeSoftcam:
             return name if self.valid(name) else None
         except (OSError,RuntimeError):return None
 
-    def running(self,name=None):
-        name=name or self.selected()
-        if not self.valid(name):return False
-        binary=(self.bin_dir/name).resolve()
+    def _identity(self,pid,binary):
         try:
-            for pid in self.proc_dir.iterdir():
-                if not pid.name.isdigit():continue
-                try:
-                    if (pid/'exe').resolve(strict=True)==binary:return True
-                except (OSError,RuntimeError):continue
-        except OSError:pass
-        return False
+            folder=self.proc_dir/str(pid)
+            if (folder/'exe').resolve(strict=True)!=binary:return None
+            # stat starttime distinguishes a process from a reused PID.
+            fields=(folder/'stat').read_text().rsplit(')',1)[1].split()
+            if fields[0] in ('Z','X','x'):return None
+            return fields[19]
+        except (OSError,RuntimeError,IndexError):return None
+
+    def _matching_pids(self,name):
+        if not self.valid(name):return {}
+        binary=(self.bin_dir/name).resolve()
+        try:folders=list(self.proc_dir.iterdir())
+        except OSError:return {}
+        return {int(p.name):identity for p in folders if p.name.isdigit()
+                and (identity:=self._identity(p.name,binary)) is not None}
+
+    def running(self,name=None):
+        return bool(self._matching_pids(name or self.selected()))
+
+    def _wait_stopped(self,name,seconds):
+        deadline=time.monotonic()+seconds
+        while self.running(name):
+            remaining=deadline-time.monotonic()
+            if remaining<=0:return False
+            time.sleep(min(0.1,remaining))
+        return True
+
+    def _signal_matching(self,name,number):
+        binary=(self.bin_dir/name).resolve()
+        for pid,identity in self._matching_pids(name).items():
+            fd=None
+            try:
+                if hasattr(os,'pidfd_open') and hasattr(signal,'pidfd_send_signal'):
+                    try:fd=os.pidfd_open(pid)
+                    except OSError as error:
+                        if error.errno not in (errno.ENOSYS,errno.EINVAL):raise
+                if self._identity(pid,binary)!=identity:continue
+                if fd is not None:signal.pidfd_send_signal(fd,number)
+                else:os.kill(pid,number)
+            except ProcessLookupError:pass
+            finally:
+                if fd is not None:os.close(fd)
+
+    def stop_verified(self,name):
+        # This method runs in the command worker, never on Enigma's GUI thread.
+        if not self.valid(name):raise ValueError('Invalid SoftCAM')
+        try:self._run_script(name,'stop')
+        except subprocess.TimeoutExpired:pass
+        if self._wait_stopped(name,2):return 0
+        # Missing/stale PID files must not leave the actual CAM running.
+        self._signal_matching(name,signal.SIGTERM)
+        if self._wait_stopped(name,2):return 0
+        self._signal_matching(name,signal.SIGKILL)
+        if not self._wait_stopped(name,1):raise OSError('SoftCAM could not be stopped')
+        return 0
+
+    def restart_verified(self,name):
+        self.stop_verified(name)
+        result=self._run_script(name,'start')
+        if result or not self.running(name):raise OSError('SoftCAM did not restart')
+        return 0
 
     def active_name(self):
         selected=self.selected()
@@ -89,6 +143,10 @@ class NativeSoftcam:
     def command(self,name,action):
         if action not in ('start','stop','restart') or not self.valid(name):
             raise ValueError('Invalid SoftCAM or command')
+        if action in ('stop','restart') and (action=='stop' or name==self.selected()):
+            python=shutil.which('python3') or '/usr/bin/python3'
+            args=[python,str(Path(__file__).resolve()),'--action',action,'--name',name]
+            return ' '.join(shlex.quote(value) for value in args)
         if action!='stop' and name!=self.selected():
             python=shutil.which('python3') or '/usr/bin/python3'
             args=[python,str(Path(__file__).resolve()),'--switch',name,'--expected',self.selected() or '']
@@ -123,7 +181,7 @@ class NativeSoftcam:
         was_running=bool(old and self.running(old))
         try:
             if was_running:
-                self._run_script(old,'stop')
+                self.stop_verified(old)
                 if self.running(old):raise OSError('Previous SoftCAM could not be stopped')
             self._set_link(str(self.init_dir/('softcam.'+name)))
             result=self._run_script(name,'start')
@@ -131,7 +189,7 @@ class NativeSoftcam:
         except Exception:
             # Restore selection and the previously working CAM after failure.
             if name!=old and self.running(name):
-                try:self._run_script(name,'stop')
+                try:self.stop_verified(name)
                 except Exception:pass
             self._set_link(old_link)
             if was_running and not self.running(old) and not self.running(name):self._run_script(old,'start')
@@ -202,10 +260,23 @@ def handle_action(screen, action, container_factory, translate):
 if __name__=='__main__':
     import argparse
     parser=argparse.ArgumentParser()
-    parser.add_argument('--switch',required=True)
-    parser.add_argument('--expected',required=True)
+    operation=parser.add_mutually_exclusive_group(required=True)
+    operation.add_argument('--switch')
+    operation.add_argument('--action',choices=('stop','restart'))
+    parser.add_argument('--name')
+    parser.add_argument('--expected')
     args=parser.parse_args()
-    try:raise SystemExit(NativeSoftcam().switch_to(args.switch,args.expected))
+    controller=NativeSoftcam()
+    try:
+        if args.switch:
+            if args.expected is None:parser.error('--expected is required with --switch')
+            result=controller.switch_to(args.switch,args.expected)
+        else:
+            if not args.name:parser.error('--name is required with --action')
+            if args.action=='restart' and controller.selected()!=args.name:
+                raise OSError('SoftCAM selection changed')
+            result=controller.stop_verified(args.name) if args.action=='stop' else controller.restart_verified(args.name)
+        raise SystemExit(result)
     except (OSError,ValueError,subprocess.SubprocessError) as error:
-        print('SoftCAM switch failed: '+str(error),flush=True)
+        print('SoftCAM command failed: '+str(error),flush=True)
         raise SystemExit(1)

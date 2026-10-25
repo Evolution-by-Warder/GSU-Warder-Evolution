@@ -11,7 +11,7 @@ Runtime changes are explicit: normal Python source instead of version-selected b
 
 The original SD/FHD/UHD skin definitions and original graphics/font/translations are retained. `resources.tar.gz` is a deterministic archive of the actual runtime assets, individually pinned by `resources.json`. Legacy Python cores, `/usr/bin/ftplib.py` and the old bytecode-selecting installer are not installed. Original default scripts and configuration templates are supplied only where the receiver has no existing file.
 
-Build: `python3 restoration/tools/build_ipk.py`. The output is one deterministic `enigma2-plugin-glasssysutil_13.40-r17_all.ipk`. All runtime Python files compile under 3.14.7. Host tests exercise imports with native API doubles, all original signatures and main-menu contexts, and local OSCam configuration/authentication. They cannot validate real tuners, mounts, CAM restart, package operations or other receiver changes. Those remain unverified until tested on hardware. Original FTP services and legacy native helper ABI availability are external compatibility limits, not functionality verified by source recovery. This candidate is not published to automatic production updates.
+Build: `python3 restoration/tools/build_ipk.py`. The output is one deterministic `enigma2-plugin-glasssysutil_13.40-r18_all.ipk`. All runtime Python files compile under 3.14.7. Host tests exercise imports with native API doubles, all original signatures and main-menu contexts, and local OSCam configuration/authentication. They cannot validate real tuners, mounts, CAM restart, package operations or other receiver changes. Those remain unverified until tested on hardware. Original FTP services and legacy native helper ABI availability are external compatibility limits, not functionality verified by source recovery. This candidate is not published to automatic production updates.
 
 The original AGC converter is retained under the unique `GSUAgcConv` name to avoid replacing another skin’s converter. Its progress value is an integer for the current native GUI API. Skin-file hashes verify that the converter reference is the only change to the original SD/FHD/UHD skin definitions.
 
@@ -102,3 +102,9 @@ Native CAM package registration now comes from opkg list-installed in a backgrou
 ## 13.40-r17: ignore terminated CAM processes in update checks
 
 Read process State as well as comm before blocking an OSCam/OSEmu update. Zombie and dead entries do not represent a running CAM; live processes still block. Reproduced with the receiver live-parent/zombie-child evidence and covered by 76 host tests. Native shutdown with a missing PID file remains a separate receiver issue; this release does not add forced termination.
+
+## 13.40-r18: verified native CAM shutdown and restart
+
+Native stop/restart now run in the asynchronous command worker. After the original init stop script (20s timeout), wait up to 2s for actual termination; then target only the selected executable with SIGTERM, wait 2s and use SIGKILL only if it survives, with 1s final verification. Process starttime is checked before signalling and pidfd is used on supported kernels. Zombie/dead entries are ignored. Switching CAMs uses the same verified shutdown before changing selection. No package init scripts, binary files, PID files or CAM configurations are rewritten.
+
+82 Python3.14.7 host tests pass, including real harmless Linux processes for both graceful and forced shutdown without a PID file, and a separate executable left running. These tests do not replace receiver confirmation. Receiver r17 confirms successful update workflow with no package changes and subsequent oscam-master start.

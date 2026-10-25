@@ -146,3 +146,13 @@ Oprava balíkovej evidencie: opkg list-installed beží raz pri obnove správcu 
 - Po odporúčanom cielenom ukončení rodiča správca ukazuje Žiadny spustený CAM/SRV, ale aktualizácia stále hlási potrebu zastaviť OSCam. Kontrola oscamRunning doteraz čítala len comm, preto blokovala aj zombie záznamy.
 - r17 kontroluje aj State: Z/X/x neblokujú; živý proces vedľa zombie stále blokuje. Ošetrený zánik procesu počas čítania. Zmena je aj v port_source.py. 76 host testov úspešných na Python3.14.7.
 - Nasleduje nainštalovať r17 + reštart GUI a overiť Aktualizácia OSCam pri zastavenom CAM. Samostatne zostáva vyriešiť spoľahlivé zastavenie oscam-master s chýbajúcim PID súborom. Neoznačovať celé CAM/SRV menu za hotové.
+
+
+## 2026-10-25 — r17 potvrdený, r18 pripravený
+
+- r17 na prijímači: potvrdenie Aktualizácia OSCam sa otvorilo. Po Áno sa načítali feedy vrátane OE6.0; konzola ukázala No packages installed or removed a Príkaz dokončený bez viditeľnej chyby. Následné zelené tlačidlo úspešne spustilo oscam-master (Aktívny CAM + CAM/SRV spustené). Nešlo o inštaláciu novej verzie, ale overenie aktualizačného postupu pri nezmenených balíkoch.
+- Používateľ prikázal pokračovať a odišiel si oddýchnuť. Pripraviť r18 bez ďalšieho vyžadovania skúšok počas jeho neprítomnosti.
+- r18: pôvodný stop skript + overenie reálnych procesov, potom cielený SIGTERM a až pri neúspechu SIGKILL. Bez závislosti od PID súboru. Exe a starttime overené pred signálom, pidfd na podporovanom kerneli. Všetko v samostatnom procese cez existujúci eConsoleAppContainer; GUI nečaká blokujúco. Rovnaké zastavovanie pri reštarte a prepnutí CAM.
+- Host testy: 82 úspešných na Python3.14.7. Skutočné neškodné procesy sleep bez PID súboru: bežný končí TERM, ignorujúci TERM končí KILL; iný executable zostáva bežať. Test aj opätovného použitia PID, zombie, staršieho kernelu a odmietnutia štartu po neúspešnom zastavení.
+- Po návrate používateľa: nainštalovať r18, reštart GUI, pri oscam-master skúsiť červené Zastaviť → žiadny aktívny CAM, zelené Štart → aktívny CAM, znova zelené Reštart → aktívny CAM. Bez ručných kill príkazov. Potom pokračovať pravou ponukou (Zmazať CAM/SRV, štart konfigurácia a ďalšie), nepreskočiť zvyšok menu.
+- Stav r18 zatiaľ potvrdený iba host testami; plná validácia pluginu stále nie. Produkčná vetva a automatická produkčná aktualizácia sa nemenia.
