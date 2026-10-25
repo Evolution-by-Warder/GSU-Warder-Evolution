@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r40",
-    "tag": "v13.40-r40",
-    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r40/enigma2-plugin-glasssysutil_13.40-r40_all.ipk",
-    "sha256": "301fed0916a080bac3b55bb5582115d941c817529d1acf14acf3c32022bb46f9",
-    "bytes": 2192220,
-    "notes": "GSU 13.40-r40\n\n- Nové Nástroje → O plugine: verzia, pôvodný projekt, autor pokračovania a zmeny aktuálneho vydania.\n- Zmeny sa načítavajú priamo z nainštalovaného balíka a musia zodpovedať jeho verzii.\n- Odstránená duplicitná samostatná Kontrola stavu z ponuky Nástroje.\n- Vytvorenie diagnostického balíka zostáva zachované.\n- Informácie o systéme naďalej zobrazujú údaje o prijímači.\n"
+    "version": "13.40-r41",
+    "tag": "v13.40-r41",
+    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r41/enigma2-plugin-glasssysutil_13.40-r41_all.ipk",
+    "sha256": "cf8363c622ef84b607465a65260e6cbdf920e669352a67f9a2d558793e5675f3",
+    "bytes": 3467430,
+    "notes": "GSU 13.40-r41\n\n- Prvý krok spoločného Warder vzhľadu: nové hlavné menu GSU.\n- Nová priehľadná ikona v zozname pluginov: spoločná okrúhla lebka a Glass / Utility.\n- Kompaktný banner Glass System Utility by Warder, dátum, živý čas s menšími sekundami a verzia v dvoch riadkoch.\n- Všetkých 11 položiek vľavo, názov a vysvetlenie vybranej funkcie vpravo.\n- Nepriehľadné panely, rovnaké farby a centrované tlačidlá ako v našich ostatných pluginoch.\n- Dátum podľa jazyka systému, rozloženie pre HD, Full HD a Ultra HD.\n- Existujúce funkcie, nastavenia a vnorené obrazovky zostávajú zachované; ďalšie obrazovky sa budú prispôsobovať postupne.\n"
   }
 }
