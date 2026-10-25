@@ -1,6 +1,6 @@
-# Aktuálny checkpoint — 25. 10. 2026, r41 publikované
+# Aktuálny checkpoint — 25. 10. 2026, r42 pripravené
 
-Pracovať výhradne v `original-python314`, runtime `restoration/src/GlassSysUtil`; produkčná vetva zostáva nedotknutá. Prijímač má r40; používateľ potvrdil vstavanú aktualizáciu z r36, čítačkové potvrdenie/Nie aj skutočný zákaz a povolenie v oboch smeroch. Autokontrola configFalse/guardFalse pri vypnutí a guardTrue pri predvolenomTrue po zapnutí je potvrdená. Štart GUI bez vybraného CAM zostáva hostiteľsky testovaný. Prijímač diagnosticky uvádza Python3.14.9, host tests3.14.7. Staršie odseky nižšie sú história.
+Pracovať výhradne v `original-python314`, runtime `restoration/src/GlassSysUtil`; produkčná vetva zostáva nedotknutá. Prijímač má r41; používateľ potvrdil vstavanú aktualizáciu z r36, čítačkové potvrdenie/Nie aj skutočný zákaz a povolenie v oboch smeroch. Autokontrola configFalse/guardFalse pri vypnutí a guardTrue pri predvolenomTrue po zapnutí je potvrdená. Štart GUI bez vybraného CAM zostáva hostiteľsky testovaný. Prijímač diagnosticky uvádza Python3.14.9, host tests3.14.7. Staršie odseky nižšie sú história.
 
 Používateľ výslovne vyradil celú sekciu IPK/DEB a používateľské skripty vrátane TAR. Rozpracované opravy a testovací balík boli zahodené pred publikáciou; neposielať ich ani nežiadať ich skúšku. r38 odstraňuje položku5 a štyri implementačné triedy, predvolené skripty zo zdroja/balíka aj ich kopírovanie pri inštalácii. Zdieľané ipk_uninstall_center zostáva iba pre CAM/SRV a vždy filtruje CAM; samostatná Aktualizácia GSU zostáva.
 
@@ -8,7 +8,7 @@ Prijímač r40: snímka 1(20261025-145743).jpg potvrdzuje otvorené O plugine, v
 
 Snímky 1(20261025-153234).jpg a 2(20261025-153233).jpg potvrdzujú hlavné menu r40 s11 položkami a Nástroje s dvoma položkami Diagnostický balík/O plugine; samostatná Kontrola stavu je odstránená. Používateľ tým uzavrel funkčný priechod a výslovne „začni“ autorizoval spoločný Warder vzhľad. CCcam/Mbox a samostatný legacy SRV bez príslušnej služby zostávajú bez hardvérového overenia.
 
-r41 mení prvú obrazovku — hlavné menu: plné nepriehľadné pozadie zo spoločnej šablóny, kompaktná hlavička s dátumom/živým časom/verziou,11 riadkov vľavo a existujúci popis vpravo, tri farebné centrované akcie. ID, dostupnosť aj dispatch sú zachované. Podmenu zatiaľ zostávajú pôvodné, aby sa dalo najprv posúdiť reálne nové hlavné menu. Najbližšie: aktualizovať cez GSU na r41; poslať snímku hlavného menu, overiť novú ikonu Glass/Utility v zozname pluginov, pohyb po položkách a zodpovedajúci názov/popis vpravo, bežiace sekundy a otvorenie bežnej funkcie/späť. Nerobiť nanovo funkčné testy CAM, swapu a diagnostického balíka.
+r41 hlavná obrazovka je zobrazením potvrdená na prijímači, snímka1(20261025-155109).jpg. Používateľ si vyžiadal aj liveTV okno ako v našom skine a potvrdil umiestnenie hore vpravo s popisom pod videom. r42 pridáva natívny Pig viewport16:9 bez zásahov do služby alebo CAM. Najbližšie: aktualizovať cez GSU na r42, overiť TV obraz/zvuk, názov a popis pod videom pri pohybe po menu, otvorenie sekcie/späť a obnovenie videa na celú plochu po zatvorení GSU. Ikona Glass/Utility a plynutie sekúnd zostávajú na potvrdenie; snímka ich nedokazuje. Nerobiť nanovo funkčné testy CAM, swapu a diagnostického balíka.
 
 ## OSCam klienti — uzavretie skúšky r35
 
@@ -471,3 +471,11 @@ Zdroj9efd7b2389ae876b40a17f61f2399fd61b6b5ea6, CI40203765977 úspešné vrátane
 ### r41 hostiteľské overenie
 
 253 testov Python3.14.7 úspešných; kompilácia a dva bajtovo rovnaké buildy. IPK3467430B, SHA256cf8363c622ef84b607465a65260e6cbdf920e669352a67f9a2d558793e5675f3. Testy pokrývajú11 riadkov aj pri zaokrúhlení HD, všetky dynamické widgety, nepriehľadné panely, zarovnanie dátumu/verzie, jazykové dátumy, oba timer signály/stop/neskorý callback, nemenné menuID/stavy/dispatch a priehľadnú160x96 ikonu. Transformácia r40→r41 reprodukovala runtime presne. Zdroj d06226a62b2f8645450616852b273b41655d0612; CI40208512135 úspešné vrátane publikácie a overenia vzdialených bajtov. Verejný prerelease v13.40-r41 a candidate.json overené: veľkosť aj SHA zodpovedajú lokálnemu testovanému balíku. Feed commit6f1577c80679fbbfc1b6ee72c253d9f8a1541b76. Na prijímači nový vzhľad a ikona zatiaľ čakajú na posúdenie.
+
+### r41 reálna obrazovka a požiadavka na živé TV
+
+Snímka1(20261025-155109).jpg potvrdzuje hlavné menu r41: všetkých11 položiek, názov/popis Informácií o systéme vpravo, slovenský dátum, čas so sekundami a verziu. Samotná snímka nedokazuje pohyb, plynutie sekúnd ani ikonu v prehliadači pluginov. Používateľ potom výslovne žiada grafiku ako v našom skine s liveTV vpravo hore; potvrdil názov/popis pod videom.
+
+r42 pridáva iba natívny Pig source=session.VideoPicture,16:9 viewport a presun existujúceho názvu/popisu podň. Bez volania playService/stopService, bez vlastného PiP a bez ďalšieho tunera. Skúška: aktualizovať cez GSU na r42, otvoriť hlavné menu na TV stanici, overiť obraz/zvuk, šípkami meniaci sa názov a popis pod videom. Otvoriť bežnú sekciu a vrátiť sa; po zatvorení GSU sa musí obnoviť obraz na celú plochu. Neprepínať ani nereštartovať CAM na túto grafickú skúšku. r42 živé video a návrat celej plochy zatiaľ neoverené na prijímači.
+
+r42 hostiteľské overenie:254 testov Python3.14.7, kompilácia a dva zhodné buildy úspešné. IPK3467340B, SHA25699442409d2da1286deb76cefcb9aac3048ec52b9aa6211cd56479c7b434f5ba4. Publikácia a CI zatiaľ čakajú.

@@ -81,8 +81,10 @@ def main_skin(width=1920, height=1080, api=None):
     for x,w in ((55,1050),(1135,730)):
         out += [fill(x,235,w,700,CYAN),fill(x+2,237,w-4,696,PANEL)]
     out += ['<widget name="list" %s scrollbarMode="showOnDemand" backgroundColor="%s" foregroundColor="#00ffffff" foregroundColorSelected="#00ffffff" backgroundColorSelected="#002a70ad" transparent="0" zPosition="3" />' % (box(75,258,1010,660),PANEL),
-            label('selection',1170,270,660,100,34,CYAN,wrap=True),fill(1170,395,660,2,'#00314b65'),
-            label('info',1170,425,660,400,29,'#00d1e3f3',wrap=True),
+            fill(1178,258,644,364,CYAN),
+            '<widget source="session.VideoPicture" render="Pig" %s backgroundColor="#ff000000" zPosition="2" />' % box(1180,260,640,360),
+            label('selection',1170,645,660,80,30,CYAN,wrap=True),fill(1170,738,660,2,'#00314b65'),
+            label('info',1170,755,660,165,26,'#00d1e3f3',wrap=True),
             label('purpose',60,942,1800,40,24,'#009cf0ff')]
     for name,x,color in (('red',55,'#00ff526a'),('green',665,'#0039ff59'),('yellow',1275,'#00ffdb52')):
         out += [fill(x+190,996,200,2,color),label(name,x,1006,590,50,28,color,'center')]

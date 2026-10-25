@@ -27,7 +27,7 @@ class WarderMainTests(unittest.TestCase):
             root=ET.fromstring(ui.main_skin(width,height))
             self.assertEqual(root.get('backgroundColor'),ui.BASE)
             self.assertEqual(root.get('flags'),'wfNoBorder')
-            widgets={n.get('name'):n for n in root.findall('widget')}
+            widgets={n.get('name'):n for n in root.findall('widget') if n.get('name')}
             self.assertEqual(set(widgets),required)
             self.assertNotIn('blue',widgets)
             for n in root:
@@ -42,6 +42,30 @@ class WarderMainTests(unittest.TestCase):
             for name in ('list','info','selection'):
                 self.assertEqual(widgets[name].get('transparent'),'0')
                 self.assertEqual(widgets[name].get('backgroundColor'),ui.PANEL)
+
+    def test_live_video_uses_native_current_decoder_source_and_keeps_details_below(self):
+        for width,height in ((1280,720),(1920,1080),(3840,2160)):
+            root=ET.fromstring(ui.main_skin(width,height))
+            video=root.findall("widget[@render='Pig']")
+            self.assertEqual(len(video),1)
+            video=video[0]
+            self.assertEqual(video.get('source'),'session.VideoPicture')
+            self.assertEqual(video.get('backgroundColor'),'#ff000000')
+            self.assertIsNone(video.get('name'))
+            x,y=map(int,video.get('position').split(','));w,h=map(int,video.get('size').split(','))
+            self.assertLessEqual(abs(w-h*16/9),1)
+            for name in ('selection','info'):
+                item=root.find("widget[@name='%s']" % name)
+                dx,dy=map(int,item.get('position').split(','));dw,dh=map(int,item.get('size').split(','))
+                self.assertGreater(dy,y+h)
+                self.assertGreaterEqual(dx,round(1137*width/1920))
+                self.assertLessEqual(dx+dw,round(1863*width/1920))
+                self.assertLessEqual(dy+dh,round(933*height/1080))
+            # No opaque, higher-layer widget can paint over the video cut-out.
+            for other in root:
+                if other is video or int(other.get('zPosition','0'))<2:continue
+                ox,oy=map(int,other.get('position').split(','));ow,oh=map(int,other.get('size').split(','))
+                self.assertFalse(ox<x+w and ox+ow>x and oy<y+h and oy+oh>y)
 
     def test_language_dates_and_seconds_are_local_without_locale_mutation(self):
         instant=datetime(2026,10,25,15,32,9)

@@ -1,9 +1,6 @@
-GSU 13.40-r41
+GSU 13.40-r42
 
-- Prvý krok spoločného Warder vzhľadu: nové hlavné menu GSU.
-- Nová priehľadná ikona v zozname pluginov: spoločná okrúhla lebka a Glass / Utility.
-- Kompaktný banner Glass System Utility by Warder, dátum, živý čas s menšími sekundami a verzia v dvoch riadkoch.
-- Všetkých 11 položiek vľavo, názov a vysvetlenie vybranej funkcie vpravo.
-- Nepriehľadné panely, rovnaké farby a centrované tlačidlá ako v našich ostatných pluginoch.
-- Dátum podľa jazyka systému, rozloženie pre HD, Full HD a Ultra HD.
-- Existujúce funkcie, nastavenia a vnorené obrazovky zostávajú zachované; ďalšie obrazovky sa budú prispôsobovať postupne.
+- Živé TV okno vpravo hore v hlavnej ponuke, v rovnakom štýle ako náš skin.
+- Aktuálne vysielanie vo formáte16:9; bez prepínania stanice a spúšťania druhého programu.
+- Názov a popis vybranej funkcie pod TV oknom, menu vľavo.
+- Zachovaný spoločný banner, živé hodiny, verzia a nová ikona Glass / Utility.
