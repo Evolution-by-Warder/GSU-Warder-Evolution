@@ -3,13 +3,16 @@ import ast
 
 
 def port_cam_management(source):
-    source=source.replace('from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox','from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox\nfrom Plugins.Extensions.GlassSysUtil.cam_package_actions import controls as _cam_package_controls, update as _cam_package_update, remove as _cam_package_remove, is_cam_package as _is_cam_package',1)
+    source=source.replace('from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox','from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox\nfrom Plugins.Extensions.GlassSysUtil.cam_package_actions import controls as _cam_package_controls, update as _cam_package_update, remove as _cam_package_remove, is_cam_package as _is_cam_package, refresh_registry as _cam_package_registry',1)
     tree=ast.parse(source);lines=source.splitlines(keepends=True);changes=[]
     for screen in tree.body:
         if not isinstance(screen,ast.ClassDef):continue
         for method in screen.body:
             if not isinstance(method,ast.FunctionDef):continue
             if screen.name=='univCamMng':
+                if method.name=='CamSrvList':
+                    index=method.body[0].lineno-1
+                    changes.append((index,index,"        _cam_package_registry(self)\n"))
                 if method.name=='chckOscam':
                     index=method.body[0].end_lineno
                     changes.append((index,index,"        if _cam_package_controls(self):\n            self.chckOscamTimer.start(500)\n            return\n"))

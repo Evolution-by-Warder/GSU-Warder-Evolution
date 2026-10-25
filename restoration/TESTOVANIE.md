@@ -117,3 +117,23 @@ Zelené na inom natívnom CAM spustí izolovaný worker: stop starého, atomick�
 65 host testov úspešných, overená aj reprodukovateľnosť AST transformácií. Pôvodné grafiky/skin súbory sa nemenia. Drobnosti anglického textu načítania a odrezaného spodného riadku zostávajú zapísané do ďalšej dávky. Nesúlad existujúceho feedu 5.6 vs OE 6.0 zostáva neuzavretý, nerobiť tichý prepis používateľského zdroja.
 
 **Ďalej:** nainštalovať r15 + GUI reštart, zobraziť správcu a šípkami v prvom riadku overiť oba natívne CAMy. Potom skúsiť zvoliť oscam-master a zelené. Bez platnej konfigurácie nemusí dekódovať, stav procesu je samostatná vec; používateľ chce overiť postup/funkcie celého pluginu, nie konkrétny CAM. Po potvrdení výberu/štartu ďalej stop/reštart, aktualizácia balíka a zobrazenie/zrušenie odinštalovania. Pravú ponuku nepreskakovať.
+
+### Po r15 — prijímač odhalil dve nezávislé chyby
+
+Snímky 1(20261025-015452).jpg a 2(20261025-015454).jpg potvrdili CAM-y (2), výber master/uni, obidva zastavené; Aktualizácia OSCam stále sivá. Štart master skončil Chyba, snímka 1(20261025-015637).jpg. Terminálová diagnostika NativeSoftcam potvrdila selected=oscam-uni, available=[oscam-master,oscam-uni], package_for(master)=None. Spúšťací skript vypísal `/usr/bin/oscam-master: error while loading shared libraries: libssl.so.3: cannot open shared object file` a FAILED. Neoznačovať to za úspešný štart ani bez dôkazu za chybu samotnej zmeny odkazu. Nezamieňať SONAME knižnice vytvorením falošného symlinku.
+
+Samostatná chyba GSU: evidencia balíka iba cez predpokladané opkg .list súbory nie je na tomto image spoľahlivá. Rozpracovaná oprava číta opkg list-installed raz na pozadí pri obnove ponuky, cache pre ovládanie a aktualizácie vypĺňa v GUI callbacku. Zároveň ochrana odinštalovania porovná presný natívny názov s kandidátnymi názvami balíka aj bez .list metadát, aby aktívny master nebolo možné omylom odstrániť. Ešte nevydané; testy a balík až po dokončení.
+
+Externé balíky master z upstream 5.6/r3 aj 6.0/r4 majú Depends iba libdvbcsa, libusb1, pcsc-lite, pcsc-tools. Statické čítanie ELF neposkytlo riadky DT_NEEDED; netvrdiť preto, že r4 určite vyrieši chýbajúce SSL3. Pred opravou feedu/knižníc potrebujeme konkrétnu verziu OpenSSL, dostupné SSL balíky a presný feed súbor v prijímači. Existujúci feed 5.6 pri OE6.0 zostáva podozrením na nekompatibilitu, nie samostatným potvrdeným vysvetlením knižničnej chyby.
+
+### r16 — príčina ABI potvrdená a opravy pripravené
+
+Prijímač: openssl version -> OpenSSL 4.0.3 (29 Sep 2026), katalóg ponúka libssl4/libcrypto4, nie libssl3. Aktívny zdroj presne /etc/opkg/cortexa15hf-neon-vfpv4-3rdparty-secret-feed.conf -> http://updates.mynonpublic.com/oea/5.6/cortexa15hf-neon-vfpv4 . Toto je stará vetva pri OE-Alliance 6.0.
+
+Externé ARM binárky sú UPX komprimované; pôvodné readelf pred rozbalením nedalo závislosti. Po rozbalení oficiálnym UPX v5.2.1 (hostiteľský nástroj, ARM kód sa nespúšťal) je potvrdené: master 5.6/r3 -> libssl.so.3 + libcrypto.so.3; master 6.0/r4 -> libssl.so.4 + libcrypto.so.4. Detaily a SHA sú v oscam-abi-evidence.json. Príčinou konkrétneho štartového zlyhania je teda starý balík pre inú vetvu, nie potreba podvrhnúť názov knižnice.
+
+R16 pri známom providerovi porovná aj EXISTUJÚCI zdroj s metadátami prijímača. Pred zmenou overí Packages.gz a architektúru, uloží pôvodnú konfiguráciu do .warder-backup, atomicky nahradí iba URL a vytvorí .warder-refresh-pending. Až úspešný opkg update zruší pending a dovolí ponúkať zoznam. Pri zlyhaní a pri opätovnom otvorení sa nesmie použiť cache pre starý systém. Cudzie vlastné providery sa nemenia. Aktualizácia cez pravú položku tiež pred opkg update/install pripraví kompatibilný zdroj na pozadí.
+
+Oprava balíkovej evidencie: opkg list-installed beží raz pri obnove správcu v pracovnom vlákne (timeout 8 s), výsledok sa prenesie do cache v GUI. Tlačidlá už nemusia hádať cestu k opkg .list databáze. Guard odinštalovania bežiaceho CAM funguje aj bez týchto súborov. 73 testov úspešných.
+
+**Ďalší krok:** používateľ má r15. Nainštalovať r16 a reštart GUI. Otvoriť Stiahnuť CAM/SRV; tým sa starý zdroj opraví a obnoví katalóg pre OE6.0. Vybrať už inštalovaný oscam-master a potvrdiť Áno — má sa cez opkg nahradiť r3 za r4 (alebo novší balík danej správnej vetvy). Zatiaľ neštartovať stále pôvodný r3 bez jeho aktualizácie. Po úspešnej aktualizácii skúsiť zelené na master a overiť aktívny proces. Sledovať aj sprístupnenie pravej Aktualizácie OSCam. Ručný oscam-uni a jeho konfigurácia zachované. OScam štart konfigurácia pre natívne CAMy je stále nedokončená; pokračovať celou pravou ponukou.

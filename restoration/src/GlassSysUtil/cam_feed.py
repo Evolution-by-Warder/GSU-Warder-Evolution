@@ -2,7 +2,7 @@
 import re
 import shutil
 import subprocess
-from .softcam_feed_setup import ensure_softcam_feed
+from .softcam_feed_setup import ensure_softcam_feed, finish_refresh
 
 _NAME=re.compile(r'^[a-z0-9][a-z0-9+._-]*$')
 _CAM=re.compile(r'^(?:oscam|cccam|ncam|doscam|mgcamd|gbox|mbox|newcs|osemu)(?:$|[-_.0-9])')
@@ -33,11 +33,14 @@ def read_catalogue(refresh=True):
     if not opkg:raise OSError('opkg is unavailable')
     warning=False
     if refresh:
-        ensure_softcam_feed()
+        setup=ensure_softcam_feed()
         try:
             update=subprocess.run([opkg,'update'],stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=45,check=False)
             warning=update.returncode != 0
         except (OSError,subprocess.TimeoutExpired):warning=True
+        if warning and setup.get('requires_refresh'):
+            raise OSError('Migrated feed must refresh successfully before offering packages.')
+        if not warning:finish_refresh(setup)
     result=subprocess.run([opkg,'list'],stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=15,check=False)
     if result.returncode:raise OSError('Package catalogue could not be read')
     return {'packages':parse_catalogue(result.stdout.decode('utf-8','replace')),'warning':warning}

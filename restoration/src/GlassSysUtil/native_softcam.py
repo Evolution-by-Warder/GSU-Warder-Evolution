@@ -19,6 +19,7 @@ class NativeSoftcam:
         self.proc_dir=Path(proc_dir)
         self.info_dirs=[Path(p) for p in (info_dirs or ('/var/lib/opkg/info','/usr/lib/opkg/info'))]
         self.package_cache={}
+        self.registered_packages=None
 
     def valid(self,name):
         if not name or name.lower()=='none' or not re.fullmatch(r'[A-Za-z0-9_+.-]+',name):return False
@@ -59,11 +60,22 @@ class NativeSoftcam:
         if selected and self.running():return selected
         return next((name for name in self.available() if self.running(name)),None)
 
+    def read_package_registry(self):
+        opkg=shutil.which('opkg')
+        if not opkg:raise OSError('opkg is unavailable')
+        result=subprocess.run([opkg,'list-installed'],stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=8,check=False)
+        if result.returncode:raise OSError('Installed package registry could not be read')
+        return {line.split(' - ',1)[0].strip() for line in result.stdout.decode('utf-8','replace').splitlines() if ' - ' in line}
+
     def package_for(self,name):
         if name in self.package_cache:return self.package_cache[name]
         package=None
         if self.valid(name):
             candidates=('enigma2-plugin-softcams-'+name,'enigma2-plugin-cams-'+name,name)
+            if self.registered_packages is not None:
+                package=next((p for p in candidates if p in self.registered_packages),None)
+                self.package_cache[name]=package
+                return package
             for root in self.info_dirs:
                 for candidate in candidates:
                     try:files=(root/(candidate+'.list')).read_text().splitlines()

@@ -3,6 +3,27 @@ import shlex
 import shutil
 from .cam_feed import is_cam_package
 from .native_softcam import NativeSoftcam
+from .softcam_feed_setup import ensure_softcam_feed
+from twisted.internet.threads import deferToThread
+
+
+def refresh_registry(screen):
+    # Read package-manager truth once in a worker, not on every 500 ms UI tick.
+    screen.nativeRegistryGeneration=getattr(screen,'nativeRegistryGeneration',0)+1
+    generation=screen.nativeRegistryGeneration
+    if not getattr(screen,'nativeRegistryInitialized',False):
+        screen.nativeRegistryInitialized=True
+        screen.nativeRegistryClosed=False
+        screen.onClose.append(lambda:setattr(screen,'nativeRegistryClosed',True))
+    def done(packages):
+        if screen.nativeRegistryClosed or screen.nativeRegistryGeneration!=generation:return
+        screen.nativeSoftcam.registered_packages=packages
+        screen.nativeSoftcam.package_cache.clear()
+        controls(screen)
+    def failed(failure):return None
+    screen.nativeRegistryRequest=deferToThread(screen.nativeSoftcam.read_package_registry)
+    screen.nativeRegistryRequest.addCallback(done)
+    screen.nativeRegistryRequest.addErrback(failed)
 
 
 def context(screen):
@@ -42,8 +63,22 @@ def update(screen,api):
             screen.session.open(api['MessageBox'],translate('Before update OScam/OSEmu version, please, stop OScam/OSEmu'),api['MessageBox'].TYPE_ERROR,5);return
         opkg=shutil.which('opkg')
         if not opkg:return
-        command=shlex.quote(opkg)+' update && '+shlex.quote(opkg)+' install '+shlex.quote(package)
-        screen.session.openWithCallback(screen.inicializeUCM,api['Console'],title=translate('Update OScam')+': '+name,cmdlist=[command])
+        screen.enCommand=False
+        def prepared(result):
+            screen.enCommand=True
+            if getattr(screen,'nativeRegistryClosed',False):return
+            if api['oscamRunning']():
+                screen.session.open(api['MessageBox'],translate('Before update OScam/OSEmu version, please, stop OScam/OSEmu'),api['MessageBox'].TYPE_ERROR,5);return
+            command=shlex.quote(opkg)+' update && '+shlex.quote(opkg)+' install '+shlex.quote(package)
+            screen.session.openWithCallback(screen.inicializeUCM,api['Console'],title=translate('Update OScam')+': '+name,cmdlist=[command])
+        def failed(failure):
+            screen.enCommand=True
+            if not getattr(screen,'nativeRegistryClosed',False):
+                screen.session.open(api['MessageBox'],translate('Unable to set up or read package feeds.'),api['MessageBox'].TYPE_ERROR,5)
+            return None
+        screen.nativeUpdatePrepare=deferToThread(ensure_softcam_feed)
+        screen.nativeUpdatePrepare.addCallback(prepared)
+        screen.nativeUpdatePrepare.addErrback(failed)
 
     screen.session.openWithCallback(confirmed,api['MessageBox'],translate('Update OScam')+': '+package+'?',api['MessageBox'].TYPE_YESNO)
     return True
@@ -54,7 +89,8 @@ def remove(screen,api):
     if not is_cam_package(package):return False
     native=NativeSoftcam()
     for name in native.available():
-        if native.package_for(name)==package and native.running(name):
+        candidates=('enigma2-plugin-softcams-'+name,'enigma2-plugin-cams-'+name,name)
+        if (package in candidates or native.package_for(name)==package) and native.running(name):
             screen.session.open(api['MessageBox'],name+' '+api['_']('is in use, cannot be uninstalled'),api['MessageBox'].TYPE_ERROR,6)
             return True
     opkg=shutil.which('opkg')

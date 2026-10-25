@@ -56,6 +56,12 @@ class CamFeedTests(unittest.TestCase):
             with self.assertRaises(OSError):feed.read_catalogue()
         run.assert_not_called()
 
+    def test_migrated_feed_never_falls_back_to_incompatible_cached_packages(self):
+        setup_result={'created':False,'requires_refresh':True,'marker':'test-marker'}
+        with patch.object(feed.shutil,'which',return_value='/usr/bin/opkg'),patch.object(feed,'ensure_softcam_feed',return_value=setup_result),patch.object(feed.subprocess,'run',return_value=types.SimpleNamespace(returncode=1)) as run:
+            with self.assertRaises(OSError):feed.read_catalogue()
+        self.assertEqual([call.args[0] for call in run.call_args_list],[['/usr/bin/opkg','update']])
+
     def test_no_manager_or_bad_catalogue_has_clear_failure(self):
         with patch.object(feed.shutil,'which',return_value=None):
             with self.assertRaises(OSError):feed.read_catalogue()

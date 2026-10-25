@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-25",
+  "method": "Unpacked UPX-compressed ARM binaries using upstream UPX v5.2.1, then inspected DT_NEEDED with readelf. ARM binaries were not executed.",
+  "receiver": {
+    "oe": "6.0",
+    "architecture": "cortexa15hf-neon-vfpv4",
+    "openssl": "4.0.3"
+  },
+  "packages": [
+    {
+      "oe": "5.6",
+      "name": "enigma2-plugin-softcams-oscam-master_11968-git10887+39e78a40+39e78a4688-r3_cortexa15hf-neon-vfpv4.ipk",
+      "url": "https://raw.githubusercontent.com/SusanOV/softcamfeed/main/oea/5.6/cortexa15hf-neon-vfpv4/enigma2-plugin-softcams-oscam-master_11968-git10887+39e78a40+39e78a4688-r3_cortexa15hf-neon-vfpv4.ipk",
+      "github_blob_sha": "4a971366a0c66a6340c79ef2df885abf32e2456f",
+      "packed_binary_sha256": "2362dea37e94d2b8fe72fa7243d9c32b4f5346c200bf12109edc6a75484bcc8a",
+      "unpacked_binary_sha256": "6fa9336045b4ca155a55dd69f2c6734513fbe5844f7386fc918b551b5ce77ba3",
+      "needed": [
+        "libdvbcsa.so.1",
+        "libssl.so.3",
+        "libcrypto.so.3",
+        "libpcsclite.so.1",
+        "libusb-1.0.so.0",
+        "libc.so.6"
+      ]
+    },
+    {
+      "oe": "6.0",
+      "name": "enigma2-plugin-softcams-oscam-master_11968-git10887+39e78a40+39e78a4688-r4_cortexa15hf-neon-vfpv4.ipk",
+      "url": "https://raw.githubusercontent.com/SusanOV/softcamfeed/main/oea/6.0/cortexa15hf-neon-vfpv4/enigma2-plugin-softcams-oscam-master_11968-git10887+39e78a40+39e78a4688-r4_cortexa15hf-neon-vfpv4.ipk",
+      "github_blob_sha": "922143bcbbbd8e8303afa760fdd5bb9fd2227ab0",
+      "packed_binary_sha256": "673a7c2985653444157b59d7c5f12fce52aaedbf1545f57d2e88ac66824c8794",
+      "unpacked_binary_sha256": "c06d157bbc0f34963412f01d6d5065476c0d2ee87c4cd24903bc3f7865614c9b",
+      "needed": [
+        "libdvbcsa.so.1",
+        "libssl.so.4",
+        "libcrypto.so.4",
+        "libpcsclite.so.1",
+        "libusb-1.0.so.0",
+        "libc.so.6",
+        "ld-linux-armhf.so.3"
+      ]
+    }
+  ]
+}

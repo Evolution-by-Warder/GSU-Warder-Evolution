@@ -80,6 +80,19 @@ class NativeSoftcamTests(unittest.TestCase):
         self.assertEqual(self.cam.package_for('oscam-master'),package)
         self.assertIsNone(self.cam.package_for('oscam-uni'))
 
+    def test_registry_recognizes_installed_package_without_assuming_info_file_locations(self):
+        self.add_master()
+        self.cam.registered_packages={'enigma2-plugin-softcams-oscam-master','softcam-feed-universal','enigma2-plugin-extensions-oscamstatus'}
+        self.assertEqual(self.cam.package_for('oscam-master'),'enigma2-plugin-softcams-oscam-master')
+        self.assertIsNone(self.cam.package_for('oscam-uni'))
+
+    def test_registry_reader_uses_installed_packages_with_a_timeout(self):
+        result=types.SimpleNamespace(returncode=0,stdout=b'enigma2-plugin-softcams-oscam-master - 11968-r3\nsoftcam-feed-universal - 4.8-r0\n')
+        with patch.object(native.shutil,'which',return_value='/usr/bin/opkg'),patch.object(native.subprocess,'run',return_value=result) as run:
+            self.assertEqual(self.cam.read_package_registry(),{'enigma2-plugin-softcams-oscam-master','softcam-feed-universal'})
+        self.assertEqual(run.call_args.args[0],['/usr/bin/opkg','list-installed'])
+        self.assertEqual(run.call_args.kwargs['timeout'],8)
+
     def test_switch_stops_old_cam_before_selecting_and_starting_new_one(self):
         self.add_master();state={'oscam-uni':True,'oscam-master':False};calls=[]
         def run(name,action):

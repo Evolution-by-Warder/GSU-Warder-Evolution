@@ -2,6 +2,7 @@ import importlib.util
 import pathlib
 import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT=pathlib.Path(__file__).resolve().parents[1]/'src/GlassSysUtil'
 spec=importlib.util.spec_from_file_location('softcam_feed_setup_under_test',ROOT/'softcam_feed_setup.py')
@@ -9,6 +10,10 @@ setup=importlib.util.module_from_spec(spec);spec.loader.exec_module(setup)
 
 
 class SoftcamFeedSetupTests(unittest.TestCase):
+    def setUp(self):
+        self.verifier=patch.object(setup,'verify_feed')
+        self.verify=self.verifier.start();self.addCleanup(self.verifier.stop)
+
     def test_derive_address_from_each_receivers_metadata(self):
         cases=[('6.0','cortexa15hf-neon-vfpv4','cortexa15hf-neon-vfpv4'),('5.4','aarch64','aarch64'),('4.4','mips32el','mips32el'),('5.3','cortexa7hf','cortexa7hf-vfp'),('4.3','sh4','sh4')]
         for version,arch,expected in cases:
@@ -56,6 +61,45 @@ class SoftcamFeedSetupTests(unittest.TestCase):
             root=pathlib.Path(temp)
             with self.assertRaises(OSError):setup.ensure_softcam_feed(root,root/'absent')
             self.assertEqual(list(root.iterdir()),[])
+
+    def old_feed(self,root):
+        conf=root/'opkg';conf.mkdir()
+        target=conf/'cortexa15hf-neon-vfpv4-3rdparty-secret-feed.conf'
+        target.write_text('# keep comment\nsrc/gz cortexa15hf-neon-vfpv4-3rdparty-secret-feed http://updates.mynonpublic.com/oea/5.6/cortexa15hf-neon-vfpv4\n')
+        metadata=root/'enigma.info'
+        metadata.write_text("distro='openatv'\noe='OE-Alliance 6.0'\narchitecture='cortexa15hf-neon-vfpv4'\n")
+        return conf,target,metadata
+
+    def test_old_known_feed_migrates_to_current_image_with_backup_and_refresh_marker(self):
+        with tempfile.TemporaryDirectory() as temp:
+            conf,target,metadata=self.old_feed(pathlib.Path(temp));original=target.read_text()
+            result=setup.ensure_softcam_feed(conf,metadata)
+            self.assertTrue(result['updated']);self.assertTrue(result['requires_refresh'])
+            self.assertIn('/oea/6.0/cortexa15hf-neon-vfpv4',target.read_text())
+            self.assertTrue(target.read_text().startswith('# keep comment\n'))
+            self.assertEqual(pathlib.Path(str(target)+'.warder-backup').read_text(),original)
+            again=setup.ensure_softcam_feed(conf,metadata)
+            self.assertFalse(again['updated']);self.assertTrue(again['requires_refresh'])
+            setup.finish_refresh(again)
+            self.assertFalse(setup.ensure_softcam_feed(conf,metadata)['requires_refresh'])
+            self.verify.assert_called_once()
+
+    def test_unavailable_new_feed_preserves_old_configuration_without_sidecars(self):
+        with tempfile.TemporaryDirectory() as temp:
+            conf,target,metadata=self.old_feed(pathlib.Path(temp));original=target.read_text()
+            self.verify.side_effect=OSError('unreachable')
+            with self.assertRaises(OSError):setup.ensure_softcam_feed(conf,metadata)
+            self.assertEqual(target.read_text(),original)
+            self.assertEqual(list(conf.iterdir()),[target])
+
+    def test_validation_requires_matching_architecture_in_real_gzip_metadata(self):
+        import gzip,io
+        self.verifier.stop()
+        data=gzip.compress(b'Package: enigma2-plugin-softcams-oscam-master\nArchitecture: aarch64\n\n')
+        with patch.object(setup.urllib.request,'urlopen',return_value=io.BytesIO(data)):
+            setup.verify_feed('https://example.invalid/6.0/aarch64','aarch64')
+        with patch.object(setup.urllib.request,'urlopen',return_value=io.BytesIO(data)):
+            with self.assertRaises(OSError):setup.verify_feed('https://example.invalid/6.0/mips32el','mips32el')
 
 
 if __name__=='__main__':unittest.main()
