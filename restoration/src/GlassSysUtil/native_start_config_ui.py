@@ -67,9 +67,12 @@ class NativeStartConfigScreen(Screen,ConfigListScreen):
         self.list.extend([getConfigListEntry(self.translate('Start in background'),daemon),getConfigListEntry(self.translate('Pidfile name'),pid)])
         ConfigListScreen.__init__(self,self.list,session=session)
         self['config'].onSelectionChanged.append(self.selection_changed)
-        self.onLayoutFinish.append(lambda:self.setTitle(self.translate('OScam start cfg')+': '+snapshot['name']))
+        self.onLayoutFinish.append(self.set_title)
         self.onLayoutFinish.append(self.selection_changed)
         self.onClose.append(lambda:setattr(self,'closed',True))
+
+    def set_title(self):
+        self.setTitle(self.translate('OScam start cfg')+': '+self.snapshot['name'])
 
     def selection_changed(self):
         current=self['config'].getCurrent()
@@ -89,13 +92,13 @@ class NativeStartConfigScreen(Screen,ConfigListScreen):
                 self['config'].invalidateCurrent()
         self.session.openWithCallback(chosen,self.api['dirBrowser'],setting.value)
 
-    def values(self):
+    def collect_values(self):
         return {field:int(setting.value) if field in ('restart','gcollect') else setting.value for field,setting in self.settings.items()}
 
     def save(self):
         if self.saving:return
         self.saving=True;self['green'].setText(self.translate('Saving'))
-        pending=deferToThread(self.store.save,self.snapshot,self.values())
+        pending=deferToThread(self.store.save,self.snapshot,self.collect_values())
         self.pending=pending
         def done(result):
             self.saving=False

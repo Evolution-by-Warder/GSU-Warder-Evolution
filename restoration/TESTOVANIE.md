@@ -199,3 +199,12 @@ Potvrdené snímkami na prijímači:
 - 102 testov na Python3.14.7 úspešných. Reálny neškodný shellový init → Python adaptér → argv recorder overuje medzery a shellové znaky v cestách bez vykonávania ako shell. Testy rušenia, rollbacku, chyby, stale script, oddeleniaCAM, aktualizovaného initu a odinštalovania. Nový native editor a štart s jeho hodnotami zatiaľ len host overenie.
 
 Najbližšie na prijímači: r21 inštalácia + reštartGUI, Správca CAM/SRV → vybrať oscam-master → pravá OScam štart konfigurácia → žlté. Najprv snímka hodnôt a overiť načítané cesty. Potom skúška Cancel bez zápisu; následne uložiť napríklad debug128 alebo restart1, overiť uloženie a zelený reštart, podľa /proc cmdline skutočné parametre, následne vrátiť pôvodné hodnoty. Neoznačiť native štart editor za receiver-potvrdený bez týchto dôkazov. Žiadny presun do druhej hlavnej sekcie.
+
+
+## 2026-10-25 — r21 chyba otvorenia, r22 oprava
+
+- Používateľ dodal snímku073119: Nepodarilo sa načítať štart konfiguráciu OSCam-u / exec() arg1 must be a string, bytes or code object. Editor sa neotvoril a používateľ nič neukladal.
+- Overený aktuálny OpenATV Screen.py: onLayoutFinish callback, ktorý nie je typu boundmethod, sa posiela do exec(). V novom editore bol lambda callback pre titulok. Toto je chyba nášho kódu, nie potvrdený problém OSCam configu.
+- r22 mení titulok na bound metódu set_title. Súčasne odstraňuje kolíziu self.values(): Screen.values musí vracať GUI komponenty pri execBegin/show/hide, nie slovník hodnôt nastavení. Zber nastavení teraz collect_values.
+- Dva nové regresné testy reprodukujú presné rozlišovanie boundmethod/exec aj iteráciu komponentov. 104 testov na Python3.14.7 úspešných; kompilácia a deterministický build tiež. Skutočné otvorenie editora na prijímači zatiaľ nepotvrdené.
+- Najbližšie iba r22 inštalácia + reštartGUI → Správca CAM/SRV → oscam-master → OScam štart konfigurácia žltým → snímka pred uložením. Zostávame výhradne v CAM/SRV.

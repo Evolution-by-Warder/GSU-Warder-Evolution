@@ -31,10 +31,27 @@ class NativeStartConfigUITests(unittest.TestCase):
         screen=self.make_screen()
         screen.settings['config_dir'].value='/another/config'
         screen.settings['restart'].value='0'
-        self.assertEqual(screen.values()['restart'],0)
+        self.assertEqual(screen.collect_values()['restart'],0)
         screen.cancel()
         self.assertEqual(screen.result,(False,));self.store.save.assert_not_called()
         self.assertEqual(self.plugin.config.plugins.GlassSysUtil.par17.value,previous)
+
+    def test_openatv_layout_callbacks_are_bound_methods_not_exec_arguments(self):
+        screen=self.make_screen()
+        # OpenATV Screen.applySkin executes non-bound callbacks as Python code.
+        # Reproduce that dispatch instead of assuming all callables are accepted.
+        for callback in screen.onLayoutFinish:
+            if not isinstance(callback,type(screen.close)):
+                exec(callback,{}, {})
+            else:callback()
+        self.assertEqual(screen.title,'OScam start cfg: oscam-master')
+
+    def test_screen_values_remains_native_component_collection(self):
+        screen=self.make_screen()
+        self.assertEqual(list(screen.values()),list(dict.values(screen)))
+        # Screen.execBegin must receive widgets, not the settings field names.
+        for component in list(screen.values()):component.execBegin()
+        self.assertEqual(screen.collect_values(),self.snapshot()['values'])
 
     def test_save_runs_in_worker_and_closes_after_the_information_dialog(self):
         screen=self.make_screen();screen.settings['debug'].value=128
