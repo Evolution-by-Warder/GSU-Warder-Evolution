@@ -1,4 +1,4 @@
-# Aktuálny checkpoint —25.10.2026, r49 publikované
+# Aktuálny checkpoint —25.10.2026, r50 publikované
 
 Pracovať výhradne v original-python314, runtime plugin/src/GlassSysUtil. Bez force/rebase. Aktuálny kód je zjednotený v plugin/; main zobrazuje rovnakú vyčistenú štruktúru. Staré vetvy nie sú zdrojom zostavenia. GSU Warder Evolution je spoločný neprekladaný názov. Hlavná obrazovka má spoločný banner, živé hodiny,11 položiek, liveTV vpravo a popis pod ním,4 farebné akcie vrátane modrého O plugine. Nadpis Hlavná ponuka a spodný purpose riadok sú odstránené; panely využívajú miesto. LiveTV a návrat do normálu potvrdené používateľom.
 
@@ -15,7 +15,7 @@ Používateľ odmietol schematické hardvérové ikony r47, ale výslovne schvá
 3. Referenčná snímka k bodom 1–2: 1(20261025-172724).jpg, pôvodná lokálna cesta /workspace/scratch/53fa7d0977c8/upload/1(20261025-172724).jpg. Snímka ešte nebola vyhodnotená pre výpadok prostredia; nezamieňať to za schválenie celej grafiky.
 4. Následne zabudovať jazykovú podporu celého GSU podľa jazyka systému, vrátane dní a mesiacov v hlavičke. Dohodnutý rozsah: slovenčina, čeština, angličtina, nemčina, poľština, maďarčina, ruština, francúzština, taliančina a španielčina; pri chýbajúcom preklade angličtina. Spoločný názov GSU Warder Evolution neprekladať. Skontrolovať aj dlhšie preklady, zarovnanie hlavičky a texty tlačidiel.
 
-Tieto úpravy zatiaľ NIE SÚ implementované ani vydané. r49 zostáva posledná vydaná verzia; r50 nebolo vytvorené. Pracovné prostredie počas zadávania nebolo dostupné, pri zápise tohto checkpointu už opäť fungovalo. Najprv dokončiť vyššie uvedenú geometriu v aktuálnej sekcii, potom pokračovať lokalizáciou; nepreskakovať medzi sekciami.
+Tieto úpravy zatiaľ NIE SÚ implementované ani vydané. Grafické a jazykové úpravy stále čakajú; r50 bolo vydané výhradne pre premenovanie repozitára a novú štruktúru. Pracovné prostredie počas zadávania nebolo dostupné, pri zápise tohto checkpointu už opäť fungovalo. Najprv dokončiť vyššie uvedenú geometriu v aktuálnej sekcii, potom pokračovať lokalizáciou; nepreskakovať medzi sekciami.
 
 Pred vydaním primerané testy Python3.14.7, kompilácia, dva zhodné buildy a CI; novú verziu sprístupniť cez existujúci GSU updater. Opakované skúšky CAM, swapu, diagnostického archívu a už potvrdených šípok nežiadať. CCcam/Mbox a samostatný SRV bez príslušnej služby stále nie sú hardvérovo overené; celý plugin neoznačovať za úplne overený.
 
@@ -30,3 +30,5 @@ Kontrola štruktúry: dva nezávislé buildy vytvorili presne pôvodný vydaný 
 ## Premenovanie repozitára — r50
 
 Repozitár je Evolution-by-Warder/GSU-Warder-Evolution. Nový aktualizátor používa nový názov a plugin/update/candidate.json. Existujúce verzie používajú starú raw adresu (HTTP200 overené) a kompatibilný feed s pôvodným download URL; GitHub presmeruje stiahnutie. Test kontroluje manifest aj pôvodným prísnym parserom. Zachovať oba feedy pri každom vydaní. CI pri prvom presune zachytil chýbajúce ignorované PNG; požadované pôvodne verzované grafické súbory sú doplnené. Pred publikáciou overiť čistý checkout bez lokálnych neverzovaných súborov.
+
+Publikácia r50 potvrdená: zdroj 0d2a928c178d2386747bd1a7d53d3f5e2184f6d8, CI40218044974 úspešné vrátane vzdialenej kontroly vydaného IPK. 260 testov z čistého checkoutu prešlo, dva zhodné buildy: 3639378 B, SHA256 e6a60d171304879592dc9ee727eb27cf59dcf11d11f17495a8ad41354eda637d. Oba feedy overené na r50. Stará raw adresa aj stará download adresa vracajú HTTP200 po premenovaní. Nová verzia je dostupná cez existujúci updater; netreba ručnú inštaláciu IPK. Aktuálne otvorené úlohy: veľkosť ikoniek/spodky bargrafov, potom jazyková podpora.
