@@ -1,4 +1,0 @@
-uncompyle6==3.9.3
-xdis==6.1.8
-spark-parser==1.9.0
-six==1.17.0

@@ -1,8 +1,8 @@
-name: Original GSU Python 3.14
+name: GSU Warder Evolution
 on:
   push:
-    branches: [original-python314]
-    paths: ['restoration/**', '.github/workflows/original-python314.yml']
+    branches: [main, original-python314]
+    paths: ['plugin/**', 'restoration/update/**', '.github/workflows/original-python314.yml']
   workflow_dispatch:
 permissions:
   contents: write
@@ -17,24 +17,24 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.14.7'
-      - name: Verify original interfaces and compatibility
+      - name: Verify plugin interfaces and compatibility
         run: |
           python --version
-          python -m compileall -q restoration/src
-          python -m unittest discover -s restoration/tests -v
+          python -m compileall -q plugin/src
+          python -m unittest discover -s plugin/tests -v
       - name: Build receiver candidate twice and compare
         run: |
-          python restoration/tools/build_ipk.py --output restoration/dist
-          cp restoration/dist/*.ipk /tmp/first.ipk
-          python restoration/tools/build_ipk.py --output restoration/dist
-          cmp /tmp/first.ipk restoration/dist/*.ipk
+          python plugin/tools/build_ipk.py --output plugin/dist
+          cp plugin/dist/*.ipk /tmp/first.ipk
+          python plugin/tools/build_ipk.py --output plugin/dist
+          cmp /tmp/first.ipk plugin/dist/*.ipk
       - uses: actions/upload-artifact@v4
         with:
-          name: GSU-original-Python314-receiver-candidate
-          path: restoration/dist/*
+          name: GSU-Warder-Evolution-IPK
+          path: plugin/dist/*
           retention-days: 90
-      - name: Publish tested restoration release and advance its feed
+      - name: Publish verified IPK and synchronize update feeds
         if: github.ref == 'refs/heads/original-python314'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python restoration/tools/publish_update.py
+        run: python plugin/tools/publish_update.py
