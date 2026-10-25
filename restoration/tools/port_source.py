@@ -13,6 +13,7 @@ from remove_exp_image_port import remove_exp_image
 from osd_restore_port import restore_osd
 from cam_status_port import port_cam_status
 from osd_layout_port import port_osd_layout
+from swap_port import port_swap
 
 
 def port(source):
@@ -399,6 +400,7 @@ def _gsu_helper(name):
     source=restore_osd(source)
     source=port_cam_status(source)
     source=port_osd_layout(source)
+    source=port_swap(source)
     # Preserve original signatures; retired shortcut entry points are intentional no-ops.
     compile(source, 'plugin.py', 'exec')
     return source

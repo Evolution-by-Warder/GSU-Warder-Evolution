@@ -4,6 +4,7 @@
 # Embedded file name: /usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/plugin.py
 # Compiled at: 2021-03-28 16:56:23
 from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox
+from Plugins.Extensions.GlassSysUtil import swap_ui as _swap_ui
 from Plugins.Extensions.GlassSysUtil.osd_layout import rolling_skin as _wide_osd_skin, place as _place_osd, right_limit as _osd_right_limit
 from Plugins.Extensions.GlassSysUtil.native_status import request as _native_status_request
 from Plugins.Extensions.GlassSysUtil.srv_visibility import apply as _srv_visibility, prepare_skin as _srv_skin, binary_status as _srv_binary_status, menu_text as _cam_menu_text
@@ -8575,6 +8576,7 @@ class swap_manager(Screen):
         self.skin = swap_info
         self.session = session
         Screen.__init__(self, session)
+        _swap_ui.init(self)
         self.list = []
         self['red'] = Label(_('Exit'))
         self['yellow'] = Label(_('Delete'))
@@ -8583,82 +8585,31 @@ class swap_manager(Screen):
         self['actions'] = ActionMap(['ColorActions', 'SetupActions', 'DirectionActions', 'WizardActions'], {'yellow': (self.swapDeleteQuestion), 
            'ok': (self.add), 
            'green': (self.add), 
-           'red': (self.close), 
-           'cancel': (self.close)})
+           'red': (self.exitSwap), 
+           'cancel': (self.exitSwap)})
         self.onLayoutFinish.append(self.readSwapInfo)
         self.onLayoutFinish.append(self.setTitlenew)
         return
 
     def add(self):
-        self.session.openWithCallback(self.readSwapInfo, SwapCreate)
-        return
+        if not self._swap_busy:
+            self.session.openWithCallback(self.readSwapInfo, SwapCreate)
 
     def setTitlenew(self):
         self.setTitle(_('Swap Management'))
         return
 
     def readSwapInfo(self, callback=None):
-        self.list = []
-        try:
-            f = open('/proc/swaps')
-            content = f.read()
-            f.close()
-        except:
-            content = ''
-
-        item = []
-        if content != '':
-            if '/' in content:
-                contentInfo = content.split('\n')
-                for line in contentInfo:
-                    if line.startswith('/'):
-                        tmp = str(line).strip()
-                        tmp = tmp.replace('\t', ' ')
-                        while tmp.find('  ') != -1:
-                            tmp = tmp.replace('  ', ' ')
-
-                        tmp = tmp.strip().split(' ')
-                        item = [tmp[0]]
-                        item.append(MultiContentEntryText(pos=(0, 0), size=(fhd(380), fhd(20)), font=0, text=tmp[0]))
-                        item.append(MultiContentEntryText(pos=(fhd(400), 0), size=(fhd(80), fhd(20)), font=0, text=tmp[1]))
-                        item.append(MultiContentEntryText(pos=(fhd(490), 0), size=(fhd(100), fhd(20)), font=0, text=tmp[2]))
-                        item.append(MultiContentEntryText(pos=(fhd(600), 0), size=(fhd(100), fhd(20)), font=0, text=tmp[3]))
-                        item.append(MultiContentEntryText(pos=(fhd(690), 0), size=(fhd(40), fhd(20)), font=0, text=tmp[4]))
-                        self.list.append(item)
-
-        if len(self.list) == 0:
-            item = [
-             'No swapfile']
-            item.append(MultiContentEntryText(pos=(0, 0), size=(fhd(380), fhd(20)), font=0, text=_('No swapfile')))
-            item.append(MultiContentEntryText(pos=(fhd(400), 0), size=(fhd(80), fhd(20)), font=0, text='****'))
-            item.append(MultiContentEntryText(pos=(fhd(490), 0), size=(fhd(100), fhd(20)), font=0, text='****'))
-            item.append(MultiContentEntryText(pos=(fhd(600), 0), size=(fhd(100), fhd(20)), font=0, text='****'))
-            item.append(MultiContentEntryText(pos=(fhd(690), 0), size=(fhd(40), fhd(20)), font=0, text='****'))
-            self.list.append(item)
-        self['list'].l.setList(self.list)
-        return
+        _swap_ui.read_info(self, globals())
 
     def swapDeleteQuestion(self):
-        selection = self['list'].getCurrent()[0]
-        if str(selection) != 'No swapfile':
-            self.session.openWithCallback(self.swapDelete, MessageBox, _('Really delete swap ?'))
-        else:
-            self.session.open(MessageBox, _('No swapfile for delete'), MessageBox.TYPE_INFO, 4)
-            self.close()
-        return
+        _swap_ui.delete_question(self, globals())
 
     def swapDelete(self, answer):
-        if answer:
-            selection = self['list'].getCurrent()[0]
-            if selection:
-                tmp = selection
-                os.system('swapoff %s' % tmp)
-                os.system('rm %s' % tmp)
-                info = _('Delete swap') + ': ' + tmp
-                deleteFstab(tmp)
-                self.session.open(MessageBox, info, MessageBox.TYPE_INFO, 4)
-                self.readSwapInfo()
-        return
+        _swap_ui.delete(self, globals(), answer)
+
+    def exitSwap(self):
+        _swap_ui.exit_screen(self, globals())
 
 
 def deleteFstab(tmp):
@@ -8691,41 +8642,20 @@ class SwapCreate(Screen, ConfigListScreen):
             self.skin = swap_create
         self.session = session
         Screen.__init__(self, session)
+        _swap_ui.init(self)
         self.list = []
         self['red'] = Label(_('Exit'))
         self['green'] = Label(_('Create'))
         ConfigListScreen.__init__(self, self.list, session)
         self['actions'] = ActionMap(['SetupActions', 'ColorActions'], {'green': (self.SwapCreate), 
            'ok': (self.SwapCreate), 
-           'red': (self.close), 
-           'cancel': (self.close)}, -2)
+           'red': (self.exitSwap), 
+           'cancel': (self.exitSwap)}, -2)
         self.onLayoutFinish.append(self.SwapDefine)
         return
 
     def mountDevices(self):
-        mountPoints = []
-        mountPoints.append(_('None'))
-        os.system('df -h > /tmp/tempinfo.tmp')
-        if fileExists('/tmp/tempinfo.tmp'):
-            f = open('/tmp/tempinfo.tmp', 'r')
-            for line in f.readlines():
-                line = line.replace('part1', ' ')
-                parts = line.strip().split()
-                totsp = len(parts) - 1
-                if parts[totsp] == '/media/cf':
-                    mountPoints.append('/media/cf')
-                if parts[totsp] == '/media/sd':
-                    mountPoints.append('/media/sd')
-                if parts[totsp] == '/media/usb':
-                    mountPoints.append('/media/usb')
-                if parts[totsp] == '/media/ba':
-                    mountPoints.append('/media/ba')
-                if parts[totsp] == '/media/hdd':
-                    mountPoints.append('/media/hdd')
-
-            f.close()
-            os.remove('/tmp/tempinfo.tmp')
-        return mountPoints
+        return [_('None')]
 
     def SwapDefine(self):
         size = [
@@ -8741,29 +8671,14 @@ class SwapCreate(Screen, ConfigListScreen):
         self['config'].list = self.list
         self['config'].l.setList(self.list)
         self.setTitle(_('Create'))
+        _swap_ui.load_places(self, globals())
         return
 
     def SwapCreate(self):
-        self['config'].setCurrentIndex(0)
-        swapSize = self['config'].getCurrent()[1].getText()
-        self['config'].setCurrentIndex(1)
-        swapPlace = self['config'].getCurrent()[1].getText()
-        self['config'].setCurrentIndex(2)
-        name = self['config'].getCurrent()[1].getText()
-        if swapPlace == _('None') or swapSize == _('None') or name == '':
-            self.session.open(MessageBox, _('Please set all parameters') + ': ' + _('Size') + ', ' + _('Disk') + ', ' + _('Name'), MessageBox.TYPE_ERROR, 4)
-        else:
-            swapfileName = str(swapPlace) + '/swapfile_' + str(re.sub('\\W+', '', name))
-            if os.path.isfile(swapfileName):
-                self.session.open(MessageBox, swapfileName + ' ' + _('is already used as swapfile'), MessageBox.TYPE_ERROR, 4)
-            else:
-                os.system('dd if=/dev/zero of=%s bs=1M count=%s' % (swapfileName, swapSize))
-                os.system('mkswap %s' % swapfileName)
-                os.system('swapon %s' % swapfileName)
-                writeFstab('%s swap swap defaults 0 0\n' % swapfileName)
-                self.session.open(MessageBox, _('Create swapfile finished') + ': %s' % swapfileName, MessageBox.TYPE_INFO, 4)
-        self.close()
-        return
+        _swap_ui.create(self, globals())
+
+    def exitSwap(self):
+        _swap_ui.exit_screen(self, globals())
 
 
 def checkDevices():
