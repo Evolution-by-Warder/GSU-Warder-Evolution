@@ -105,9 +105,6 @@ class Pane:
                 self.widgets[name]=component;host[kind+'_'+name]=component
                 self.wanted[name]=getattr(component,'visible',True)
                 self.wrap_visibility(name,component)
-                if kind=='log' and name=='log_info':
-                    selection=component.selectionEnabled
-                    component.selectionEnabled=lambda enabled,selection=selection:selection(1)
                 if name in FOOTERS and name!='red':
                     original_set=component.setText
                     def set_text(value,original_set=original_set):
@@ -288,6 +285,10 @@ class OscamWorkspace(Screen):
         if name and getattr(self,'instance',None) is not None:self.setFocus(model[name])
     def footer(self):
         if not self.ready:return
+        selected='servers' if self.current=='servers' else ('intro' if self.menu_focus else self.current)
+        for kind,pane in self.panes.items():
+            for name in ('list','log_info','entitlements_list'):
+                if name in pane.widgets:pane.widgets[name].selectionEnabled(int(kind==selected))
         for pane in self.panes.values():
             for name,component in pane.widgets.items():
                 if name in FOOTERS and component.instance is not None:component.instance.hide()
@@ -322,7 +323,14 @@ class OscamWorkspace(Screen):
         return 1
     def right(self):self.focus(True);return 1
     def move(self,delta):
-        if not self.menu_focus:return 0
+        if not self.menu_focus:
+            model=self.panes[self.current].model
+            if 'file_info' in model:
+                getattr(model['file_info'],'pageUp' if delta<0 else 'pageDown')()
+            else:
+                name=next((n for n in ('list','log_info','entitlements_list') if n in model),None)
+                if name:getattr(model[name],'up' if delta<0 else 'down')()
+            return 1
         pane=self.panes['servers' if self.current=='servers' else 'intro'];widget=pane.model['list']
         length=len(pane.model.list)
         if length:widget.moveToIndex((widget.getSelectedIndex()+delta)%length)

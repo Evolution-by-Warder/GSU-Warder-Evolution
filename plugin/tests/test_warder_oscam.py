@@ -60,8 +60,32 @@ class WorkspaceTests(unittest.TestCase):
             self.host.right();enable.assert_called_with(False)
             self.assertEqual(self.host.move(1),1)
             self.host.left();enable.assert_called_with(True)
-            self.assertEqual(self.host.move(1),0)
+            self.assertEqual(self.host.move(1),1)
             self.assertEqual(self.host.choose(),0)
+    def test_results_arrows_drive_only_the_selected_left_list(self):
+        right=self.host.panes['intro'].model['list']
+        for kind,name in (('summary','list'),('readers','list'),('users','list'),('files','list'),('log','log_info'),('entitlements','entitlements_list')):
+            self.host.activate(kind)
+            widget=self.host.panes[kind].model[name]
+            with patch.object(widget,'up') as up,patch.object(widget,'down') as down,patch.object(right,'moveToIndex') as menu_move:
+                self.assertEqual(self.host.move(-1),1);up.assert_called_once()
+                self.assertEqual(self.host.move(1),1);down.assert_called_once()
+                menu_move.assert_not_called()
+                self.host.right();self.host.move(1);menu_move.assert_called_once()
+                down.assert_called_once()
+                self.host.left();self.host.move(-1);self.assertEqual(up.call_count,2)
+    def test_file_arrows_scroll_text_and_do_not_move_menu(self):
+        self.host.activate('file');widget=self.host.panes['file'].model['file_info']
+        with patch.object(widget,'pageUp') as up,patch.object(widget,'pageDown') as down:
+            self.assertEqual(self.host.move(-1),1);up.assert_called_once()
+            self.assertEqual(self.host.move(1),1);down.assert_called_once()
+    def test_only_current_panel_has_selection_enabled(self):
+        right=self.host.panes['intro'].model['list'];left=self.host.panes['summary'].model['list']
+        with patch.object(right,'selectionEnabled') as r,patch.object(left,'selectionEnabled') as l:
+            self.host.activate('summary');r.assert_called_with(0);l.assert_called_with(1)
+            self.host.right();r.assert_called_with(1);l.assert_called_with(0)
+            self.host.left();r.assert_called_with(0);l.assert_called_with(1)
+
     def test_hidden_timer_cannot_run_or_restart_until_pane_active(self):
         pane=self.host.panes['readers'];timer=pane.timers[0];timer.native=MagicMock()
         callback=MagicMock();timer.callback[:]=[callback]
