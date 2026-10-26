@@ -122,6 +122,7 @@ def standalone_skin(original):
     w,h=round(180*scale),round(108*scale)
     values=root.find("widget[@name='ecmValues']")
     if values is not None:
+        values.set('noWrap','1')
         vw,vh=map(int,values.get('size').split(','));values.set('size','%d,%d'%(vw+width-old_width,vh))
     for node in list(root):
         if node.tag=='ePixmap' and 'frame' in node.get('pixmap',''):root.remove(node)

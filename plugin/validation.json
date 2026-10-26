@@ -55,19 +55,14 @@
   "plugin_update_sha256": "2daac161e69e25e4e1ba94404ed5f179a36f07ea6d4d28e4b47c4e2a8bca69d6",
   "plugin_update_ui_sha256": "e6db46d8f5db8ecd5a64a0f4a3a1eabebe33c3527875a2cdd979c3a0e244f31b",
   "latest_candidate": {
-    "version": "13.40-r82",
+    "version": "13.40-r83",
     "receiver_tested": false,
-    "status": "Published; CI and both update feeds verified; native visual confirmation pending",
-    "bytes": 3680236,
-    "sha256": "436153b460b55b8838d84800957915b2ef9f04026c636d2b690484d50d78ff3d",
-    "source_commit": "036aef115648856ae24f342c3e4847bc3c929c0a",
-    "ci_run": 40325123174,
-    "ci_conclusion": "success"
+    "status": "Local checks pending; native visual confirmation pending"
   },
   "oscam_readers_ui_sha256": "88f2da2c4eba5a05db9b333b3d8de003ca4f6e6ad82d6e2c6eed41b6feb40865",
   "warder_tools_sha256": "ef23dab03508f12e73cc5c8196f04ebaa44fd1bf7bf0d357881acc49ac341563",
   "warder_tools_ui_sha256": "337e4b0ca69041d64a3104060c9c454a4cd26428c52abb7da6f9a2d1ba7b072e",
-  "notes": "r82 shifts OSD ECM edit hint from y520 to y562 FHD (one42px row). Hide hint while lower inline editor is open, restore via existing bind on return, to avoid divider/title collision. All other layout and config behavior unchanged.",
+  "notes": "r83 sets noWrap=1 only on standalone ECM values label. Explicit newline-separated parser rows preserved; long CAM clips at right rather than adding a visual row. Inline ECM receiver-approved unchanged.",
   "warder_main_sha256": "73ab1ca400a675bf4f5baf0869f2d43b9968f44ca2bacccb183574aca11cb209",
   "warder_system_sha256": "4cb25fcb2209d7cd709f1b53770abe9aa6a9fa1e5d345b05e1475a9662fc63d2",
   "i18n_sha256": "85a45d5f6cf6d05674eb88f60996f12b2c90484eb1c3cc7aa1fe9386e31631ba",
@@ -89,7 +84,7 @@
     "confirmed": true,
     "evidence": "User explicitly reports local DVBAPI disable/re-enable recovery works after update, 26 October 2026."
   },
-  "warder_ecm_sha256": "9953b57609aaf83225e3b09f9b93b75d02f417b18017900dca7c95e24d574558",
+  "warder_ecm_sha256": "f0f4ad84a847f510b1313a30ead12596929933375cd6fbf1fdbf146d36c556bf",
   "oscam_r64_receiver_confirmed": true,
   "warder_cam_sha256": "eda09cdddf0db7706cfccfc5402f48f2999ee820645266d00ea941bb9ee3b131",
   "ecm_r67_receiver_confirmed": true,
