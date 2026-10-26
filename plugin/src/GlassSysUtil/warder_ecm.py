@@ -62,6 +62,10 @@ class InlineECM:
     def pigs(self):return [r for r in getattr(self.screen,'renderer',[]) if type(r).__name__=='Pig']
     def show(self):
         if self.closed:return
+        pane=getattr(self.screen,'_rightpane',None)
+        if pane:
+            if pane.active:pane.leave(restore=False)
+            pane.glass(True)
         if not self.active:
             self.old_red=self.screen['red'].getText()
             for pig in self.pigs():
@@ -77,6 +81,8 @@ class InlineECM:
     def hide(self,restore_video=True):
         if not self.active:return
         self.active=False;self.timer.stop()
+        pane=getattr(self.screen,'_rightpane',None)
+        if pane:pane.glass(False)
         for widget in self.widgets:widget.hide()
         self.screen['selection'].show();self.screen['info'].show()
         self.screen['red'].setText(self.old_red)
