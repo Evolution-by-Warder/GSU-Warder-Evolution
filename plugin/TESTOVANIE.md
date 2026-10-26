@@ -415,3 +415,10 @@ Publikované r79: zdrojba705b4d6b27ad42406e76a948b0575d23725106, CI40323465353 s
 Po obrázku používateľa: ručná ponuka má červené Nie a zelené Áno, žiadne zavádzajúce zelené Aktualizácia. Červená odmietne ponuku a vráti LiveTV; zelená používa existujúci overený inštalátor. Keď nie je nová verzia alebo kontrola zlyhá, zostáva Naspäť. Desať katalógov obsahuje explicitné Yes/No; platí aj pre automatickú ponuku. 358 testov OK.
 
 Workflow40323610759 odstránil r76/r77/r78 po overení r79; spolu55 historických vydaní, Git tagy zachované.
+
+
+Publikované r80: zdroj7d39cdb07a9ec3c636f53ed05a087ca148fe7f52, CI40323912661 success,358 testov. IPK3 680 336 bajtov, SHA2565832acc6b180755e96c0287260fc7cfdd1836161c8dad3b9264ee65c10aa4a9b. Oba feedy overené.
+
+Prijímač: používateľ schválil r78 názov a picony v oboch ECM oknách (snímky123631/123630). Zostávajúce predčasné skracovanie CAM na týchto snímkach je ešte r78; full_cam=True je vydané od r79, obsahuje ho r80. Rozloženie nemeníme ďalej. Natívne r80 Áno/Nie a dlhší CAM ešte čakajú na potvrdenie.
+
+Workflow40324092192 úspešne odstránil r79 po overení r80; zostáva iba v13.40-r80. Spolu56 odstránených vydaní; Git tagy a história zachované.
