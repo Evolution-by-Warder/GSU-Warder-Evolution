@@ -1,4 +1,4 @@
-"""CI only: publish the verified restoration IPK, then advance its isolated feed."""
+"""CI only: publish the verified stable IPK, then advance compatible update feeds."""
 import copy
 import hashlib
 import json
@@ -40,14 +40,16 @@ def publish():
     existing=next((item for page in releases for item in page if item['tag_name']==tag),None)
     if existing is None:
         run('gh','release','create',tag,str(path),str(path)+'.sha256','--repo',REPOSITORY,'--target',os.environ['GITHUB_SHA'],
-            '--prerelease','--title','GSU Warder Evolution '+version,'--notes-file',str(BASE/'update/RELEASE-NOTES.md'))
-    elif existing.get('draft') or not existing.get('prerelease'):
-        raise RuntimeError('Restoration release must be a public prerelease')
+            '--latest','--title','GSU Warder Evolution '+version,'--notes-file',str(BASE/'update/RELEASE-NOTES.md'))
+    elif existing.get('draft'):
+        raise RuntimeError('Stable release must be public')
     with tempfile.TemporaryDirectory(prefix='gsu-published-') as folder:
         run('gh','release','download',tag,'--repo',REPOSITORY,'--pattern',path.name,'--dir',folder)
         published=Path(folder)/path.name
         if published.read_bytes()!=path.read_bytes():
             raise RuntimeError('Published IPK differs from the tested build; feed unchanged')
+    if existing is not None and existing.get('prerelease'):
+        run('gh','release','edit',tag,'--repo',REPOSITORY,'--prerelease=false','--latest')
     feed=BASE/'update/candidate.json'
     payload=json.dumps(document,ensure_ascii=False,indent=2)+'\n'
     compatibility=BASE.parent/'restoration/update/candidate.json'

@@ -100,6 +100,21 @@ class PublishUpdateTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):publish_update.publish()
             run.assert_not_called()
 
+    def test_new_production_release_is_stable_and_latest(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=self.prepare(folder);commands=[]
+            def run(*args):
+                commands.append(args)
+                if args[:2]==('gh','api'):return '[[]]'
+                if args[:3]==('gh','release','download'):
+                    (Path(args[-1])/(update.PACKAGE_ID+'_13.40-r37_all.ipk')).write_bytes(ipk())
+                return ''
+            with patch.object(publish_update,'BASE',root),patch.object(publish_update,'run',side_effect=run),patch.dict('os.environ',{'GITHUB_REF':'refs/heads/original-python314','GITHUB_SHA':'approved-source'}):
+                publish_update.publish()
+            create=next(c for c in commands if c[:3]==('gh','release','create'))
+            self.assertIn('--latest',create);self.assertNotIn('--prerelease',create)
+            self.assertEqual(commands[-1],('git','push','origin','HEAD:original-python314'))
+
     def test_feed_advances_only_after_verifying_actual_published_bytes(self):
         for valid in (False,True):
             with self.subTest(valid=valid),tempfile.TemporaryDirectory() as folder:
@@ -124,6 +139,7 @@ class PublishUpdateTests(unittest.TestCase):
                             self.assertEqual(update.parse_release(json.dumps(legacy),'13.40-r36').version,'13.40-r37')
                         legacy['release']['url']=legacy['release']['url'].replace(old_repository,update.REPOSITORY,1)
                         self.assertEqual(legacy,canonical)
+                        self.assertTrue(any(command[:3]==('gh','release','edit') and '--prerelease=false' in command for command in commands))
                         self.assertEqual(commands[-1],('git','push','origin','HEAD:original-python314'))
                         before=len(commands)
                         publish_update.publish()
@@ -133,6 +149,7 @@ class PublishUpdateTests(unittest.TestCase):
                         self.assertEqual((root/'update/candidate.json').read_text(),'original-feed')
                         self.assertEqual((root.parent/'restoration/update/candidate.json').read_text(),'original-feed')
                         self.assertFalse(any(command[0]=='git' for command in commands))
+                        self.assertFalse(any(command[:3]==('gh','release','edit') for command in commands))
 
 
 class PluginUpdateUITests(unittest.TestCase):
