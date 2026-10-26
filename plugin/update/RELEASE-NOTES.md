@@ -1,9 +1,8 @@
-GSU 13.40-r59
+GSU 13.40-r60
 
-Jednoznačné ovládanie panelov v Informáciách o OSCame:
-- Predvolene je aktívna pravá ponuka aj po otvorení výsledkov.
-- Doľava aktivuje ľavý panel; hore/dole posúvajú jeho údaje.
-- Doprava aktivuje pravú ponuku; hore/dole vyberajú jej položky.
-- Zvýraznenie výberu má iba aktívny panel.
-- Súbor alebo oprávnenia otvorené z ľavého panelu zachovajú ovládanie vľavo.
-Opravené priame smerovanie šípok do zoznamov a posúvanie textu súborov.
+Jednotné zvýraznenie v celom GSU a grafické opravy OSCamu:
+- Všetky vlastné výberové zoznamy a nastavenia GSU majú rovnaké nepriehľadné modré zvýraznenie ako hlavné menu.
+- Platí aj pre OSCam, CAM správcu, nástroje a výber súborov; bez zmeny systémového skinu.
+- Text oprávnení karty je odsadený od stavovej ikony.
+- Technické interné popisky TypeCRD/CAIDcrd sú zobrazené ako Type/CAID.
+Zachované prepínanie panelov doľava/doprava, posúvanie záznamov aj návrat do čítačiek.

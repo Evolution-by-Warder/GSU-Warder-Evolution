@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r59 prepínanie panelov publikované
+# Aktuálny checkpoint — 26. 10. 2026, r60 jednotné zvýraznenie pripravené
 
 ## Projekt a vydávanie
 
@@ -117,3 +117,20 @@ Staré r57 odstránené workflow40273582391 success; API overilo iba r58 (spolu3
 Publikované r59: zdroj c1e868bcb43abd32b0e8107b74934976d86b34d9, CI40273740657 success. Oba feedy overené na r59 / 3662394 B / SHA256 vyššie.
 
 Nahradené r58 odstránené workflow40273822150 success; API overilo iba r59 (spolu35 odstránení). Spotrebovaný request zmazaný, tagy a história zachované.
+
+
+## r60 – jednotné zvýraznenie v celom GSU
+
+Snímky r59 1(20261026-052831).jpg,2(20261026-052903).jpg potvrdili pohyb medzi
+čítačkami a aktualizáciu počítadiel. 1(20261026-053031).jpg a snímky 053157/053158
+potvrdili oprávnenia, posun a návrat do čítačiek. Presvitanie LiveTV sa vyskytuje
+na výbere; používateľ vyžaduje rovnaké nepriehľadné modré zvýraznenie ako hlavné
+menu v celom plugine. warder_main.style_lists raz upraví importované vlastné skiny
+pred definíciou Screen tried: zoznamy list/config/devices/txt/log_info/entitlements_list.
+Mení iba farby výberu; systémový skin ani globálny Enigma štýl sa nemení.
+Dynamické OSCam zoznamy používajú tú istú konštantu. Testy overujú každý listový
+widget všetkých troch skinových rozlíšení aj reálne exporty pluginu.
+Texty kariet odsadené od ikon, interné TypeCRD/CAIDcrd normalizované na Type/CAID.
+297 testov prešlo aj v čistom checkoute, dva identické buildy3662806 B, SHA256
+ce297ce3a193c3a148dcffa24e1082b3ca288f22f34358e6695143a3cfa0af41.
+Vizuálne potvrdenie r60 na prijímači zatiaľ chýba.
