@@ -251,8 +251,10 @@ class OscamWorkspace(Screen):
              'up':lambda:self.move(-1),'down':lambda:self.move(1),'ok':self.choose,'green':self.choose,
              'blue':self.color,'yellow':self.color},-10)
         self.skin=skin(self);warder_system.install(self,api)
-        self.onLayoutFinish.append(lambda:self.begin(select_server));self.onClose.append(self.shutdown)
-    def begin(self,select_server=False):
+        self.select_server=select_server
+        self.onLayoutFinish.append(self.begin);self.onClose.append(self.shutdown)
+    def begin(self,select_server=None):
+        if select_server is None:select_server=self.select_server
         self.ready=True
         for pane in self.panes.values():
             for name in ('list','log_info','entitlements_list'):

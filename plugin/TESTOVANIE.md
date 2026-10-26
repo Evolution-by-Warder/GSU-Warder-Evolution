@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r56 publikované
+# Aktuálny checkpoint — 26. 10. 2026, r57 oprava pádu pripravená
 
 ## Projekt a vydávanie
 
@@ -68,3 +68,16 @@ kontrolu kreslenia/fokusu na prijímači. Aktuálne čaká na prijímačové ove
 Publikované: zdroj 88a4ffbe012c8abe1e3b0b10fd16ad04d82a98df; CI40271924200 (original) a CI40271928990 (main) success. Oba feedy majú r56, 3662346 B a zhodný SHA256. Vizuál a fokus na prijímači ešte neoverené.
 
 Nahradené vydanie r55 odstránené workflow40272024725 success. API overilo iba v13.40-r56; spolu odstránených32 starých vydaní, tagy/história zachované. Spotrebovaný request zmazaný.
+
+
+## r57 – oprava pádu pri otvorení OSCamu
+
+Prijímačový log 20261026-060718-enigma2-crash.log potvrdil pád r56:
+Screen.createGUIScreen -> exec(method, ...) -> TypeError, pretože onLayoutFinish
+obsahoval lambda funkciu. OpenATV rozlišuje viazanú metódu a text skriptu podľa
+isinstance(method, type(self.close)). Opravené na self.begin; výber servera je uložený
+v atribúte. Regresný test vykonáva identické rozlišovanie všetkých callbackov.
+Žiadna zmena rozloženia alebo OSCam akcií. 290 testov Python3.14.7 aj v čistom
+checkoute prešlo, dva identické buildy:3662198 B, SHA256
+e97f9f0670497216b9bfd055eae3865525b327683915393d9aa36f5172ac5ae8.
+Prijímačové potvrdenie opravy zatiaľ chýba.
