@@ -1,10 +1,9 @@
-GSU 13.40-r64
+GSU 13.40-r65
 
-Potvrdenie povolenia klienta obsahuje krátku informáciu, že uplatnenie zmeny
-a obnovenie zoznamu chvíľu trvá. Pri lokálnom DVBAPI účte upozorní na reštart
-OSCamu na pozadí. Text je preložený do všetkých podporovaných jazykov.
-Odpoveď Nie zachová stav a nespustí žiadnu operáciu.
-
-Zahŕňa jemnú priehľadnosť oboch OSCam panelov z r63; hlavička, tlačidlá a výber
-ostávajú nepriehľadné. V celej sekcii OK vpravo aktivuje ľavý obsah.
-Obnova lokálneho DVBAPI po povolení je používateľom overená na prijímači.
+Informácie o ECM priamo v hlavnom menu:
+- Po výbere položky sa údaje zobrazia v pravom paneli namiesto LiveTV.
+- Hlavná ponuka zostáva vľavo dostupná; ďalšie okno sa neotvára.
+- Zachované pôvodné ECM údaje, aktualizácia aj picon kódovacieho systému.
+- Červené vráti pravý panel na LiveTV; ďalšie stlačenie zatvorí hlavné menu.
+- Pri otvorení inej sekcie sa ECM obnovovanie zastaví a návrat obnoví LiveTV.
+Bez zmeny kanála alebo reštartovania prehrávania.

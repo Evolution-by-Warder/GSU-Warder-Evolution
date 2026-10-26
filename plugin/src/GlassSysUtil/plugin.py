@@ -2,6 +2,7 @@ from Plugins.Extensions.GlassSysUtil import warder_oscam as _warder_oscam
 from Plugins.Extensions.GlassSysUtil import warder_channel as _warder_channel
 from Plugins.Extensions.GlassSysUtil import warder_system as _warder_system
 from Plugins.Extensions.GlassSysUtil import warder_main as _warder_main
+from Plugins.Extensions.GlassSysUtil import warder_ecm as _warder_ecm
 from Plugins.Extensions.GlassSysUtil import warder_tools_ui as _warder_tools_ui
 from Plugins.Extensions.GlassSysUtil.plugin_update_ui import StartupUpdateCheck as _StartupUpdateCheck, text as _plugin_update_text
 # uncompyle6 version 3.9.3
@@ -1527,6 +1528,7 @@ class SysUtilMngMain(Screen):
         self['actions'] = ActionMap(['SetupActions', 'ColorActions', 'GlobalActions', 'WizardActions', 'MenuActions'], {'blue': self.aboutPlugin, 'green': self.selectedmenuitem, 'ok': self.selectedmenuitem, 'red': self.close, 'yellow': self.cfgGsu, 'back': self.close, 'menu': self.cfgGsu})
         self.size = getDesktop(0).size().width()
         _warder_main.install(self, globals())
+        _warder_ecm.install(self, globals())
         self.onLayoutFinish.append(self.updatemenulist)
         self._plugin_update = _StartupUpdateCheck(self, globals())
         return
@@ -1562,7 +1564,7 @@ class SysUtilMngMain(Screen):
             elif selectedItem == '7':
                 self.session.open(univCamMng)
             elif selectedItem == '6':
-                self.session.open(ECMInfo)
+                _warder_ecm.show(self, globals())
             elif selectedItem == '8':
                 self.session.open(OSD_ECM_Menu)
             elif selectedItem == '9':

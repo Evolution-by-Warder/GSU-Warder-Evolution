@@ -82,6 +82,15 @@ def main_skin(width=1920, height=1080, api=None):
             '<widget source="session.VideoPicture" render="Pig" %s backgroundColor="#ff000000" zPosition="2" />' % box(1180,205,640,360),
             label('selection',1170,590,660,80,30,CYAN,wrap=True),fill(1170,683,660,2,'#00314b65'),
             label('info',1170,700,660,265,26,'#00d1e3f3',wrap=True)]
+    # Hidden until ECM is selected; the main left menu stays active.
+    out += [label('inline_ecm_mask',1137,182,726,796,1),
+            label('inline_ecm_title',1160,203,680,45,28,CYAN,'center'),
+            label('inline_ecm_labels',1160,270,160,460,24,'#00d1e3f3'),
+            label('inline_ecm_values',1325,270,515,460,24),
+            '<widget name="inline_ecm_picon" %s scale="1" alphaTest="blend" zPosition="5" />' % box(1390,760,220,132)]
+    for index,node in enumerate(out):
+        if 'name="inline_ecm_' in node:
+            out[index]=node.replace('zPosition="3"','zPosition="4"' if 'name="inline_ecm_mask"' in node else 'zPosition="5"').replace('valign="center"','valign="top"' if 'inline_ecm_labels' in node or 'inline_ecm_values' in node else 'valign="center"')
     slot = (1810-3*20)/4
     for index,(name,color) in enumerate((('red','#00ff526a'),('green','#0039ff59'),('yellow','#00ffdb52'),('blue','#0045b9ff'))):
         x = 55+index*(slot+20)
