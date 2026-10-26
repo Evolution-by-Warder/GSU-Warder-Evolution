@@ -1,4 +1,11 @@
-# Aktuálny checkpoint — 26. 10. 2026, r86 natívny posun názvu v internom ECM
+# Aktuálny checkpoint — 26. 10. 2026, r87 ostrá prevádzka
+
+## Schválenie ostrej prevádzky
+
+Používateľ po r86 potvrdil „hotovo“ a výslovne požiadal zapísať celý stav a spustiť ostrú prevádzku. Aktuálne rozhranie a prejdené funkcie sú schválené na GigaBlue Quad 4K Pro / OpenATV 8. Prvá stabilná verzia13.40-r87 zachováva runtime a rozloženie r86; mení len číslo verzie, vydávacie metadáta, poznámky a dokumentáciu. Nové GitHub vydania sú stabilné (bez prerelease) a označené Latest. Kompatibilné aktualizačné URL aj schéma a interný identifikátor kanála ostávajú zachované pre existujúce prijímače.
+
+Týmto je dnešný zoznam úprav uzavretý. Ďalšie zmeny robiť až podľa novej požiadavky. Neotvárať znova už schválené rozloženie. receiver_tested=false naďalej označuje chýbajúce úplné pokrytie všetkých zariadení/CCcam/Mbox/SRV, nie neúspech používateľovho walkthrough.
+
 
 ## Projekt a vydávanie
 
