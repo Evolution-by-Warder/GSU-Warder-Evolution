@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "repository": "Evolution-by-Warder/GSU-Warder-Evolution",
+  "keep": "v13.40-r79",
+  "delete": [
+    {
+      "id": 424226413,
+      "tag": "v13.40-r78"
+    },
+    {
+      "id": 424222031,
+      "tag": "v13.40-r77"
+    },
+    {
+      "id": 424210161,
+      "tag": "v13.40-r76"
+    }
+  ]
+}
