@@ -360,3 +360,12 @@ Statická poloha má vlastné static_osd_x/y, defaultX=68% šírky (1306 FHD),Y=
 R75 publikované: zdroj676a90f6d764ff43b4f4bfca90bae55941ba8463, CI40318500383 success vrátane čistého checkoutu, zhodných buildov a kontroly vydaných bajtov. Oba feedy overené: 3679050 B, SHA256 88cfb502330d1f571ddcca4f3860da8402cead3569d1d3fd9a0819b5d20bdc95.
 
 Nahradené r74 odstránené workflow40318663230; API overilo iba v13.40-r75. Spolu51 odstránených vydaní, Git tagy a história zachované.
+
+
+## r76 — aktualizácia a drobné rozloženie
+
+Používateľ potvrdil r75 Nápovedu, Nastavenia aj Informácie o kanáli. Prázdny pravý text panelov O plugine / Aktualizácia spôsoboval podklad z=1 pred natívnym rodičom ScrollLabel z=0; priehľadný podklad je teraz z=-1. Existujúci obsah sa nemení, opäť je viditeľný.
+
+Systémové ľavé skupiny posunuté ako celok o 50 FHD px doprava, posuvníky majú explicitné nepriehľadné farby. Riadok družice y900 a hodnota x1470 podľa stĺpca transpondéra. Automatická ponuka UpdateOffer a PluginInstallScreen používajú spoločný veľký rám s bannerom a presvitaním. Predvolené Nie, hash/size/opkg kontrola a reštart GUI po troch sekundách ostávajú zachované. Ručná kontrola a O plugine ostávajú v pravom paneli.
+
+Python 3.14.7: 355 testov OK. Natívne zobrazenie r76 ešte čaká na prijímač.

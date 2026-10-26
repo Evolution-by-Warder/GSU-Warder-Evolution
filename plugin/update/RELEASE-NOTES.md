@@ -1,10 +1,7 @@
-GSU 13.40-r75
+GSU 13.40-r76
 
-Zjednotenie obrazoviek:
-- Systémové a kanálové informácie majú jemnú priehľadnosť.
-- Procesy a Systémový log sú posunuté doprava.
-- Nápoveda nahradí obsah celého systémového okna; Naspäť obnoví údaje.
-- Nastavenia GSU používajú veľké spoločné okno s hlavičkou.
-- Ručná aktualizácia a O plugine zobrazujú informácie v pravom paneli.
-- Meniteľné hodnoty OSD ECM sú označené farbou a symbolom úpravy.
-- Statické ECM má vlastnú predvolenú polohu vpravo hore mimo stĺpca hodnôt; vlastná uložená poloha sa zachová.
+- Opravené neviditeľné texty v pravom paneli O plugine a Aktualizácia.
+- Automatická ponuka aktualizácie má spoločný veľký presvitný rám, banner a voľbu Áno/Nie; predvolené je Nie.
+- Inštalácia aj výsledok aktualizácie používajú rovnaký rám. Po úspechu sa GUI reštartuje za 3 sekundy.
+- Ikony a údaje systémových informácií posunuté doprava; posuvníky majú nepriehľadné tmavomodré pozadie.
+- Riadok družice v kanálových informáciách posunutý nižšie a hodnota zarovnaná so stĺpcom nad ním.

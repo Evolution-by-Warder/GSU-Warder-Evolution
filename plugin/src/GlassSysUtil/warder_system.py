@@ -120,6 +120,15 @@ def system_skin(original,width,height,translator=lambda value:value):
         if x>=round(850*sx) and round(180*sy)<=y<round(978*sy):
             node.set('position','%d,%d'%(x+round(90*sx),y))
             if node.get('name') in ('ProccessInfo','DmesgInfo') or node.get('text'):node.set('size','%d,%d'%(max(1,w-round(90*sx)),h))
+    # Give the left-hand icon/data groups the same breathing room as the logs.
+    for node in root:
+        x,y=map(int,node.get('position','0,0').split(','));w,h=map(int,node.get('size','0,0').split(','))
+        if x<round(850*sx) and w<round(850*sx) and round(182*sy)<=y<round(978*sy):
+            node.set('position','%d,%d'%(x+round(50*sx),y))
+        if node.get('name') in ('ProccessInfo','DmesgInfo'):
+            node.set('scrollbarBackgroundColor','#00102136')
+            node.set('scrollbarForegroundColor',main.CYAN)
+            node.set('scrollbarBorderColor','#00364b61')
     from .warder_glass import apply
     apply(root,width,height)
     from .warder_system_help import prepare
