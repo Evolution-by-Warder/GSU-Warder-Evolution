@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r73 výbery v pravom paneli
+# Aktuálny checkpoint — 26. 10. 2026, r74 spodný editor
 
 ## Projekt a vydávanie
 
@@ -326,3 +326,12 @@ Nahradené r71 odstránené workflow40292575618; API overilo iba v13.40-r72. Spo
 Prezreté0(20261026-083359).jpg a1(20261026-083400).jpg: nastavenia OSD ECM sú správne vpravo, ale ich Typ otvára starý modal ChoiceBox. Používateľ žiada upraviť aj výber. R73 mení zoznamové hodnoty pravého config panela na vlastný pravý list v rovnakej obrazovke, vrátane Statické/Rolované info a swapových výberov. Udržuje aktuálnu hodnotu označenú, OK/green potvrdzuje iba rozpracovanú hodnotu, red ruší bez zmeny. Vráti pôvodný model a footer Save; trvalé uloženie je stále samostatné. OSD hint timer sa počas výberu zastaví a po návrate obnoví. Pri prepnutí sekcie sa stav voľby zahodí.
 
 347 testov prešlo vrátane potvrdenia/zrušenia typu a dôkazu, že sa neotvára Session okno. Prvý nový test omylom použil v stuboch neimplementované setCurrentIndex; opravený na existujúce moveToIndex bez zmeny natívneho ovládania. Natívne zobrazenie výberu čaká na box.
+
+
+## r74 — horné nastavenia zostávajú, editor dole
+
+Používateľ výslovne upresnil: po OK na Typ/Prah/Čas obnovy/Čas zobrazenia či Rýchlosť nesmie zmiznúť horné menu. Pravý panel sa vizuálne rozdelí, nastavenia zostanú hore, editor sa otvorí DOLE. Výnimka Nastaviť polohu ponecháva pôvodný pozičný editor. R73 bola už publikovaná (zdroj7156edd777c38d14a5002c9184f3e87f6b458b77, CI40293852343 success), no používateľské snímky0/1(20261026-111150).jpg ukazujú práve jej nahradenie celého pravého obsahu; r74 to mení. Obe snímky prezreté.
+
+Nové right_editor_* widgety: oddeľovacia čiara y560, titulok y580, list y635–875 alebo číselná hodnota y650–730, pomoc dole y890–955 (FHD). Horný right_config sa neschováva. Výber začne na aktuálnej hodnote, čísla sa zadávajú0–9 (prvá číslica nahradí pôvodné číslo) alebo menia šípkami, pomoc ukazuje povolený rozsah. Rozpracovaný buffer nemení config do OK/green; red ho zahodí. Kontrola rozsahov1–2000,2–12,4–15,50–450. Konfiguračné uloženie zostáva ďalší samostatný krok. OSD hint timer je počas editoru pozastavený.
+
+349 testov Python3.14.7 prešlo, compileall/diff check OK. Nové testy zachovanej hornej časti a dolného listu, dočasného číselného bufferu, odmietnutia hodnoty mimo rozsahu, potvrdenia a zrušenia a bounds HD/FHD/UHD. Native receiver výsledok čaká na potvrdenie. Dočasný checkout bol po obnove pracovného prostredia znova získaný z originálnej vydávacej vetvy; žiadne neuložené zmeny sa nestratili.
