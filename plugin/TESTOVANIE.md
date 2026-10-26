@@ -237,3 +237,7 @@ Nahradené r64 odstránené workflow40284220781; API overilo iba v13.40-r65 s IP
 ## r66 — preklady ECM
 
 Snímka1(20261026-071243).jpg potvrdzuje ECM v pravom paneli. Používateľ výslovne zachováva čiernu piconu a žiada iba preklad anglických popisov. Chyba: pred hľadaním prekladu sa odstraňovala dvojbodka, ale locale kľúče ju obsahujú. R66 ju zachováva; test kontroluje Operátor a Čas ECM aj nezmenené CHID a parserovú predlohu. 320 testov prešlo.
+
+R66 publikované: zdroj985996f35088b5c09a66c80803435de0f5f72409, CI40284764313 success vrátane deterministického dvojitého buildu a kontroly vydaných bajtov. Oba feedy overené na r66: 3667024 B, SHA256 bd636876d7c23e893ce112ad90037be334d6f9c21c0db76aa3cb53572d1cda78.
+
+Nahradené r65 odstránené workflow40284856704; API overilo iba v13.40-r66. Spolu42 odstránených vydaní, Git tagy a história zachované.
