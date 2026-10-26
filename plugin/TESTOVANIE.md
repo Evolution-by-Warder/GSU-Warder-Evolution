@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r82 odstup nápovedy OSD ECM
+# Aktuálny checkpoint — 26. 10. 2026, r83 externé ECM bez zalamovania CAM
 
 ## Projekt a vydávanie
 
@@ -442,3 +442,8 @@ Po snímke124251: Stlač OK pre úpravu posunuté y520→562 FHD, jeden42px riad
 Publikované r82: zdroj036aef115648856ae24f342c3e4847bc3c929c0a, CI40325123174 success (358 testov), lokálne13 testov pravého panela OK + compileall + diffcheck. IPK3 680 236 bajtov, SHA256436153b460b55b8838d84800957915b2ef9f04026c636d2b690484d50d78ff3d. Oba feedy overené. Natívny vzhľad posunutej nápovedy ešte čaká na prijímač.
 
 Workflow40325257859 odstránil r81 po overení r82; API overilo iba v13.40-r82. Spolu58 odstránených vydaní; Git tagy a história zachované.
+
+
+## r83 — externé ECM bez zalamovania hodnôt
+
+Používateľ schválil interné ECM na snímke124813/2 (r81) a hlásil externé124813/1: celý CAM sa zalomil po11968-, čím posunul všetky hodnoty oproti názvom. Iba standalone_skin nastavuje ecmValues noWrap=1, zachová explicitné nové riadky od parsera, dlhý obsah sa oreže na pravom okraji. Interné rozloženie ani parser sa nemenia. Natívne potvrdenie r83 čaká na prijímač.
