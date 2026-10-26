@@ -1,3 +1,3 @@
-GSU 13.40-r72
+GSU 13.40-r73
 
-Do pravého panela doplnená aj ponuka Informácie ECM na obrazovke (nastavenia OSD ECM). Zachované uloženie, zrušenie zmien a nastavenie polohy. Opravené zachovanie pravého panela pri otvorení editora alebo výberu hodnoty.
+Výber typu OSD ECM (Statické info / Rolované info) sa otvára priamo v pravom paneli v spoločnom vzhľade. Rovnaký výber používajú aj ostatné zoznamové hodnoty v pravom paneli. OK alebo zelené potvrdí, červené zruší a vráti nastavenia. Uloženie nastavení zostáva samostatným krokom.

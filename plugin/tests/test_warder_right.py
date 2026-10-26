@@ -89,3 +89,14 @@ class RightWorkspaceTests(unittest.TestCase):
         done=self.session.openWithCallback.call_args.args[0];done(None)
         self.assertEqual(self.view.modal,0);callback.assert_called_once_with(None)
         self.assertIs(self.view.model,model);self.pig.instance.hide.assert_called()
+    def test_osd_type_choice_stays_in_panel_cancel_preserves_and_confirm_changes_value(self):
+        cfg=self.plugin.config.plugins.GlassSysUtil;cfg.par0.value=True
+        self.view.enter('osd');model=self.view.model;model.changeShow=MagicMock()
+        model['config'].moveToIndex(1);old=cfg.par80.value
+        self.view.choose();self.assertIsNotNone(self.view.choice)
+        self.assertTrue(self.screen['right_list'].visible);self.assertFalse(self.screen['right_config'].visible)
+        self.session.open.assert_not_called();self.session.openWithCallback.assert_not_called()
+        self.view.back();self.assertEqual(cfg.par80.value,old);self.assertIs(self.view.model,model)
+        self.view.choose();new='0' if old=='1' else '1';self.view.close_choice(new)
+        self.assertEqual(cfg.par80.value,new);self.assertIsNone(self.view.choice)
+        self.assertTrue(self.screen['right_config'].visible)

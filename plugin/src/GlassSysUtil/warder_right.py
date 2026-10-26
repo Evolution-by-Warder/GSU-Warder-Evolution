@@ -60,7 +60,7 @@ class Session:
 
 class Workspace:
     def __init__(self,screen,api):
-        self.screen,self.api=screen,api;self.model=None;self.kind=None;self.history=[];self.closed=False;self.focus_right=True;self.modal=0;self.disposing=False
+        self.screen,self.api=screen,api;self.model=None;self.kind=None;self.history=[];self.closed=False;self.focus_right=True;self.modal=0;self.disposing=False;self.choice=None
         self.targets={api['swap_manager']:'swap',api['SwapCreate']:'create',tools_ui.ToolsScreen:'tools',tools_ui.DiagnosticScreen:'diagnostic',api['OSD_ECM_Menu']:'osd'}
         size=api['getDesktop'](0).size();self.sx,self.sy=size.width()/1920,size.height()/1080
         screen.skin,deco=prepare(screen.skin,size.width(),size.height())
@@ -95,6 +95,7 @@ class Workspace:
         if self.screen._inline_ecm.active:self.screen._inline_ecm.hide(restore_video=False)
         if self.active:
             if getattr(self.model,'_swap_busy',False):return
+            self.choice=None
             if child:self.history.append((self.kind,self.model))
             else:self.dispose(self.model);self.history.clear()
         else:
@@ -143,6 +144,8 @@ class Workspace:
     def focus(self):
         self.screen['list'].selectionEnabled(int(not self.focus_right))
         if self.active:
+            if self.choice is not None:
+                self.screen['right_list'].selectionEnabled(int(self.focus_right));self.screen['right_config'].selectionEnabled(0);return
             for name in ('list','config'):
                 if name in self.model:self.model[name].selectionEnabled(int(self.focus_right))
     def left(self):
@@ -156,6 +159,7 @@ class Workspace:
     def move(self,direction):
         if not self.active:return 0
         if not self.focus_right:widget=self.screen['list']
+        elif self.choice is not None:widget=self.screen['right_list']
         elif 'file_info' in self.model:
             (self.model['file_info'].pageUp if direction<0 else self.model['file_info'].pageDown)();return 1
         elif 'config' in self.model:
@@ -169,6 +173,10 @@ class Workspace:
         if not self.active:return 0
         if not self.focus_right:
             if not getattr(self.model,'_swap_busy',False):self.screen.selectedmenuitem()
+            return 1
+        if self.choice is not None:
+            current=self.screen['right_list'].getCurrent()
+            if current:self.close_choice(current[0])
             return 1
         if self.kind in ('create','osd'):
             current=self.model['config'].getCurrent()
@@ -193,12 +201,7 @@ class Workspace:
                 raw=getattr(setting,'choices',None)
                 if raw is not None:
                     choices=getattr(raw,'choices',raw);items=[(str(v[1]),v[0]) if isinstance(v,(tuple,list)) else (str(v),v) for v in choices]
-                    def selected(answer):
-                        if answer and self.active and self.kind in ('create','osd'):
-                            setting.value=answer[1]
-                            if self.kind=='osd':self.model.chckSetup()
-                            self.model['config'].invalidateCurrent()
-                    Session(self).openWithCallback(selected,self.api['ChoiceBox'],title=str(current[0]),list=items)
+                    self.open_choice(str(current[0]),items,setting)
                 else:self.model['config'].handleKey(self.api['KEY_RIGHT'])
             return 1
         return self.action('ok')
@@ -208,6 +211,7 @@ class Workspace:
         self.footer();return 1
     def green(self):
         if not self.active:return 0
+        if self.choice is not None:return self.choose()
         if not self.focus_right:
             if not getattr(self.model,'_swap_busy',False):self.screen.selectedmenuitem()
             return 1
@@ -223,11 +227,13 @@ class Workspace:
         for fn in model.onClose:fn()
     def back(self):
         if not self.active:return 0
+        if self.choice is not None:self.close_choice();return 1
         if getattr(self.model,'_swap_busy',False):return 1
         if self.kind=='osd':return self.action('red')
         self.leave();return 1
     def leave(self,restore=True):
         if not self.active or self.disposing:return
+        self.choice=None
         self.dispose(self.model)
         if self.history and restore:
             self.kind,self.model=self.history.pop();self.bind(self.model)
@@ -238,6 +244,26 @@ class Workspace:
         for widget in self.widgets:widget.hide()
         for name,value in self.saved_footer.items():self.screen[name].setText(value)
         self.glass(False);self.preview(True,restore);self.screen['list'].selectionEnabled(1)
+    def open_choice(self,title,items,setting):
+        if self.kind=='osd':self.model.chckTimer.stop()
+        self.choice={'setting':setting,'title':self.screen['right_title'].getText()}
+        for widget in self.widgets:widget.hide()
+        self.screen['right_title'].setText(title);self.screen['right_title'].show()
+        rows=[];index=0
+        for n,(label,value) in enumerate(items):
+            if value==setting.value:index=n
+            rows.append([value,self.api['MultiContentEntryText'](pos=(round(12*self.sx),0),size=(round(660*self.sx),round(36*self.sy)),font=0,text=label)])
+        self.screen['right_list'].l.setList(rows);self.screen['right_list'].moveToIndex(index);self.screen['right_list'].show()
+        self.screen['green'].setText(main.text(self.api,'Select with OK'));self.screen['yellow'].setText('')
+        self.focus_right=True;self.focus()
+    def close_choice(self,value=None):
+        choice=self.choice;self.choice=None
+        if value is not None:
+            choice['setting'].value=value
+            if self.kind=='osd':self.model.chckSetup()
+        self.bind(self.model);self.screen['right_title'].setText(choice['title'])
+        self.model['config'].invalidateCurrent();self.footer();self.focus()
+        if self.kind=='osd':self.model.chckTimer.start(1000,True)
     def resume(self):
         if self.active and not self.closed:self.preview(False);self.focus()
     def suspend(self):
