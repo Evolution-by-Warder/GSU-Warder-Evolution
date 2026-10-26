@@ -37,17 +37,17 @@ class WorkspaceTests(unittest.TestCase):
         for index,kind in enumerate(intro.status):
             intro['list'].moveToIndex(index);self.host.choose()
             self.assertEqual(self.host.current,kind)
-            self.assertFalse(self.host.menu_focus)
+            self.assertTrue(self.host.menu_focus)
             self.host.back();self.assertEqual(self.host.current,'intro')
         self.session.open.assert_not_called()
         with patch.object(self.host,'close') as close:self.host.back();close.assert_called_once()
     def test_nested_file_and_card_use_left_pane_and_back_parent(self):
-        self.host.navigate('files','http://192.0.2.1/','demo','test')
+        self.host.navigate('files','http://192.0.2.1/','demo','test');self.host.left()
         proxy=self.host.panes['files'].model.session
         proxy.open(self.plugin.oscam_Files_detailed,'http://192.0.2.1/files','demo','test','oscam.conf')
         self.assertEqual(self.host.current,'file')
         self.assertEqual(self.host.panes['file'].model.titleFile,'oscam.conf')
-        self.host.back();self.assertEqual(self.host.current,'files')
+        self.host.back();self.assertEqual(self.host.current,'files');self.assertFalse(self.host.menu_focus)
         self.host.navigate('readers','http://192.0.2.1/','demo','test')
         self.host.panes['readers'].model.session.open(self.plugin.oscam_entitlements,'http://192.0.2.1/','reader','demo','test')
         self.assertEqual(self.host.panes['entitlements'].model.reader,'reader')
@@ -62,10 +62,21 @@ class WorkspaceTests(unittest.TestCase):
             self.host.left();enable.assert_called_with(True)
             self.assertEqual(self.host.move(1),1)
             self.assertEqual(self.host.choose(),0)
+    def test_opening_results_keeps_right_menu_until_explicit_left_arrow(self):
+        intro=self.host.panes['intro'].model
+        intro['list'].moveToIndex(0);self.host.choose()
+        self.assertEqual(self.host.current,'summary');self.assertTrue(self.host.menu_focus)
+        left=self.host.panes['summary'].model['list'];right=intro['list']
+        with patch.object(right,'moveToIndex') as move,patch.object(left,'down') as down:
+            self.host.move(1);move.assert_called_once();down.assert_not_called()
+            self.host.left();self.host.move(1);down.assert_called_once()
+            self.host.right();self.host.move(1);self.assertEqual(move.call_count,2)
+            down.assert_called_once()
+
     def test_results_arrows_drive_only_the_selected_left_list(self):
         right=self.host.panes['intro'].model['list']
         for kind,name in (('summary','list'),('readers','list'),('users','list'),('files','list'),('log','log_info'),('entitlements','entitlements_list')):
-            self.host.activate(kind)
+            self.host.activate(kind);self.host.left()
             widget=self.host.panes[kind].model[name]
             with patch.object(widget,'up') as up,patch.object(widget,'down') as down,patch.object(right,'moveToIndex') as menu_move:
                 self.assertEqual(self.host.move(-1),1);up.assert_called_once()
@@ -82,7 +93,7 @@ class WorkspaceTests(unittest.TestCase):
     def test_only_current_panel_has_selection_enabled(self):
         right=self.host.panes['intro'].model['list'];left=self.host.panes['summary'].model['list']
         with patch.object(right,'selectionEnabled') as r,patch.object(left,'selectionEnabled') as l:
-            self.host.activate('summary');r.assert_called_with(0);l.assert_called_with(1)
+            self.host.activate('summary');r.assert_called_with(1);l.assert_called_with(0)
             self.host.right();r.assert_called_with(1);l.assert_called_with(0)
             self.host.left();r.assert_called_with(0);l.assert_called_with(1)
 

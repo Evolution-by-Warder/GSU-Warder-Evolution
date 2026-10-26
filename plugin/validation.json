@@ -1,6 +1,6 @@
 {
   "python": "3.14.7",
-  "host_checks": 293,
+  "host_checks": 294,
   "host_checks_passed": true,
   "receiver_tested": false,
   "source_sha256": "6562050a7d5d1ce913ceebb9e97656527fe806508befd89c4ba0f8720fe49c75",
@@ -55,27 +55,27 @@
   "plugin_update_sha256": "2daac161e69e25e4e1ba94404ed5f179a36f07ea6d4d28e4b47c4e2a8bca69d6",
   "plugin_update_ui_sha256": "176c289f60774144f82b20ea4a0038b7751f9067aec796215e3717d91ec27f93",
   "latest_candidate": {
-    "version": "13.40-r58",
+    "version": "13.40-r59",
     "receiver_tested": false,
-    "status": "293 host tests and identical clean builds passed; publication pending",
-    "bytes": 3662312,
-    "sha256": "5a5d11fab40dcb8ec1f9261bce4c46a9deaf150ffaceca3f3fdd4af9271997a5"
+    "status": "294 host tests and identical clean builds passed; publication pending",
+    "bytes": 3662394,
+    "sha256": "f77736521d21b97318be84ae26fc37e34c7f9bbd882f79319eb500d0687482fb"
   },
   "oscam_readers_ui_sha256": "88f2da2c4eba5a05db9b333b3d8de003ca4f6e6ad82d6e2c6eed41b6feb40865",
   "warder_tools_sha256": "ef23dab03508f12e73cc5c8196f04ebaa44fd1bf7bf0d357881acc49ac341563",
   "warder_tools_ui_sha256": "337e4b0ca69041d64a3104060c9c454a4cd26428c52abb7da6f9a2d1ba7b072e",
-  "notes": "r57 opens OSCam on receiver; results and overview render. Receiver reported arrows still moving right menu. r58 dispatches arrows explicitly to active list/ScrollLabel and enables selection only on active panel. Receiver confirmation pending.",
+  "notes": "r59 follows explicit user panel navigation: right menu remains active by default after showing results; left/right switch controls; arrows are sent directly to active list/ScrollLabel. Nested content returns to its prior focus. Receiver confirmation pending.",
   "warder_main_sha256": "36e397f76cf5a94623a96d6bce593e5df975a65a5ad59b0e6c159e3233062fbe",
   "warder_system_sha256": "932f968b76486d0ef4bba012752a6e8e9817b9902987491825885cb80ce3260a",
   "i18n_sha256": "85a45d5f6cf6d05674eb88f60996f12b2c90484eb1c3cc7aa1fe9386e31631ba",
   "warder_channel_sha256": "130a41b4de7fcc4de4481b4abf2488f989cfd67d3ffe52f0e2aaf7087ec0222e",
   "release_cleanup": {
-    "kept": "v13.40-r57",
-    "removed": 33,
+    "kept": "v13.40-r58",
+    "removed": 34,
     "first_run": 40220658958,
-    "final_run": 40272834229,
+    "final_run": 40273582391,
     "verified_release_count": 1,
     "tags_unchanged": true
   },
-  "warder_oscam_sha256": "a1635f9c45972bca0531651e94f9e4667f139b48970514e3d6da18765f2dc73d"
+  "warder_oscam_sha256": "e1a571256e3bdd51523ceaee6fa19c81505ae7b19c943877daafd3e87c3f08b5"
 }
