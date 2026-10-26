@@ -131,3 +131,10 @@ class InlineECMTests(unittest.TestCase):
         self.assertEqual(self.ui.compact_cam_version(' (2.26.09-11968-802@39e78a46)\n'),' (2.26.09-11968-802)\n')
         self.assertEqual(self.ui.compact_cam_version(' (11968)\n'),' (11968)\n')
         self.assertTrue(self.view.model._inline_ecm_display)
+
+    def test_opening_inline_ecm_applies_name_position_to_native_instance(self):
+        native=self.screen['inline_ecm_channel_name'].instance
+        with patch.object(self.view.model,'startSearchInfo'):self.view.show()
+        point=native.move.call_args.args[0]
+        self.assertEqual((point.x(),point.y()),(1160,672))
+        native.resize.assert_called_once()

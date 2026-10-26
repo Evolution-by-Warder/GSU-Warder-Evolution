@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r85 interný ECM názov o riadok vyššie
+# Aktuálny checkpoint — 26. 10. 2026, r86 natívny posun názvu v internom ECM
 
 ## Projekt a vydávanie
 
@@ -466,3 +466,8 @@ r84 zdroj4def60af620538f3bdb9646096208366d1f81b45.
 Publikované r85: zdroj2b387ce3969fa19175d3c0f2643aa2c1c92ee7d0, CI40326232813 success (359 testov), lokálne12 ECM testov OK + compileall + diffcheck. IPK3 680 362 bajtov, SHA2568249e200f19a2398cf974f8ae1d840ecd6d784f1ab70e885388ce58435a3177a. Oba feedy overené. Natívne r85 potvrdenie ešte čaká na prijímač.
 
 Workflow40326380003 odstránil r82/r83/r84 po overení r85; API overilo iba v13.40-r85. Spolu61 odstránených vydaní; Git tagy a história zachované.
+
+
+## r86 — vynútenie polohy interného názvu na natívnom prvku
+
+Snímka125909 na r85 ukazuje názov stále pri piconoch napriek XML y672. Príčina rozdielu na prijímači nie je dokázaná. r86 pri InlineECM.show po zobrazení komponentov explicitne nastaví instance.move(ePoint(1160,672)) a resize680×40, škálované na desktop. Picony sú y760, medzi názvom a piconmi48px. Externé okno bez zmeny. Nový test overí priamo natívne volanie pri otvorení.

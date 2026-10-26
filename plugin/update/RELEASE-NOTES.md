@@ -1,4 +1,4 @@
-GSU 13.40-r85
+GSU 13.40-r86
 
-- Názov stanice v internom ECM paneli posunutý o riadok vyššie; pod ním väčšia medzera pred piconmi.
-- Externé ECM ponecháva názov na pôvodnej pozícii, CAM bez identifikátora za @ a vypnuté zalamovanie hodnôt.
+- Pri otvorení interného ECM sa poloha názvu stanice nastaví priamo na natívnom prvku: o riadok vyššie a s väčšou medzerou nad piconmi.
+- Externé ECM okno zostáva bez zmeny.
