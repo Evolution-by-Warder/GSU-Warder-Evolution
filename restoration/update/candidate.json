@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r64",
-    "tag": "v13.40-r64",
-    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r64/enigma2-plugin-glasssysutil_13.40-r64_all.ipk",
-    "sha256": "b7843a7d1b0ce4c645890c06af55f680a5681610cc86d298e884f53c8f422aa3",
-    "bytes": 3666062,
-    "notes": "GSU 13.40-r64\n\nPotvrdenie povolenia klienta obsahuje krátku informáciu, že uplatnenie zmeny\na obnovenie zoznamu chvíľu trvá. Pri lokálnom DVBAPI účte upozorní na reštart\nOSCamu na pozadí. Text je preložený do všetkých podporovaných jazykov.\nOdpoveď Nie zachová stav a nespustí žiadnu operáciu.\n\nZahŕňa jemnú priehľadnosť oboch OSCam panelov z r63; hlavička, tlačidlá a výber\nostávajú nepriehľadné. V celej sekcii OK vpravo aktivuje ľavý obsah.\nObnova lokálneho DVBAPI po povolení je používateľom overená na prijímači.\n"
+    "version": "13.40-r65",
+    "tag": "v13.40-r65",
+    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r65/enigma2-plugin-glasssysutil_13.40-r65_all.ipk",
+    "sha256": "d1ac6d5b093c81c9ec2296da604fa10c5fbcc170c60baf49d80fd991a375d373",
+    "bytes": 3667220,
+    "notes": "GSU 13.40-r65\n\nInformácie o ECM priamo v hlavnom menu:\n- Po výbere položky sa údaje zobrazia v pravom paneli namiesto LiveTV.\n- Hlavná ponuka zostáva vľavo dostupná; ďalšie okno sa neotvára.\n- Zachované pôvodné ECM údaje, aktualizácia aj picon kódovacieho systému.\n- Červené vráti pravý panel na LiveTV; ďalšie stlačenie zatvorí hlavné menu.\n- Pri otvorení inej sekcie sa ECM obnovovanie zastaví a návrat obnoví LiveTV.\nBez zmeny kanála alebo reštartovania prehrávania.\n"
   }
 }
