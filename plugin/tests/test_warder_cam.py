@@ -20,7 +20,7 @@ class WarderCamTests(unittest.TestCase):
             original=self.plugin._srv_skin(self.plugin._compact_cam_menu(self.plugin.UCM))
             root=ET.fromstring(self.ui.cam_skin(original,width,height))
             names={n.get('name') for n in root if n.get('name')}
-            self.assertTrue({n.get('name') for n in ET.fromstring(original) if n.get('name')}<=names)
+            self.assertTrue({n.get('name') for n in ET.fromstring(original) if n.get('name') and n.get('name')!='blue'}<=names)
             self.assertTrue({'day','date','clock','seconds','version_title','version','focus_hint'}<=names)
             self.assertEqual(len(names),len([n for n in root if n.get('name')]))
             for node in root:
@@ -77,3 +77,12 @@ class WarderCamTests(unittest.TestCase):
             if n.tag=='eLabel' and n.get('backgroundColor') in (self.ui.main.BASE,self.ui.main.CYAN):
                 x,y=map(int,n.get('position').split(','));w,h=map(int,n.get('size').split(','))
                 self.assertFalse(x<1103 and x+w>57 and y<978 and y+h>182)
+
+    def test_blue_is_absent_and_consumed_without_moving_selection(self):
+        root=ET.fromstring(self.screen.skin)
+        self.assertIsNone(root.find("widget[@name='blue']"))
+        before=self.screen.idxAllFnc
+        self.screen['cam_panel_actions'].actions['blue']()
+        self.assertEqual(self.screen.idxAllFnc,before)
+        footers=[root.find("widget[@name='%s']"%name) for name in ('red','green','yellow')]
+        self.assertEqual(len({n.get('size') for n in footers}),1)

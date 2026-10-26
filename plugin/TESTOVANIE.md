@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r69 vložené panely správcu CAM
+# Aktuálny checkpoint — 26. 10. 2026, r70 bez modrého Presunúť výber
 
 ## Projekt a vydávanie
 
@@ -280,3 +280,10 @@ Potvrdzovacie MessageBox, Console priebeh opkg a editory hodnôt/priečinkov zos
 R69 publikované: zdroj8aaf649d90b1ebd235fb476a07b631af6071b8ec, CI40288939178 success vrátane čistého checkoutu, zhodných buildov a kontroly vydaných bajtov. Oba feedy overené: 3671812 B, SHA256 79a2f5fea275ba61970d10fc963c1150d5ababae55f3b2189ec3e83108a73771.
 
 Nahradené r68 odstránené workflow40289114626; API overilo iba v13.40-r69. Spolu45 odstránených vydaní, Git tagy a história zachované.
+
+
+## r70 — odstránenie modrého tlačidla správcu
+
+Prezretých všetkých7 snímok:1–5(20261026-080152/080153).jpg,6(7).jpg,7(1).jpg. Preukazujú priehľadnosť, CAM výber, feed zoznam, odinštalačný zoznam, štart konfiguráciu a oneskorenie v ľavom paneli. Nie sú dôkazom vykonania inštalácie/odinštalácie ani uloženia hodnôt. Používateľ žiada zrušiť modré Presunúť výber, pretože navigáciu už riešia šípky. R70 odstraňuje footer aj funkciu (modré sa spotrebuje bez posunu, aby neprepadlo pôvodnému handleru). Zostávajúce červené/zelené/žlté sú rovnomerne centrované v troch stĺpcoch. Všetky vložené obrazovky používajú spoločný footer.
+
+336 testov prešlo. Prvý beh mal izolovaný5s timeout reálneho shell smoke testu native_start_config; opakovaný kompletný beh bez zmien kódu prešiel za7.7s. Žiadne procesy zo skúšky nezostali. Nová regresia overuje neprítomnosť modrého widgetu, nečinnosť jeho klávesu a rovnaké rozmery troch footerov.
