@@ -276,3 +276,7 @@ warder_cam_panes.py vlastní vopred vytvorené natívne list/config/title widget
 Potvrdzovacie MessageBox, Console priebeh opkg a editory hodnôt/priečinkov zostávajú modal; netvrdiť, že už je vložený úplne každý historický dialóg. Malé rozlíšenia pod1280 zachovávajú pôvodné správanie.
 
 335 testov Python3.14.7 prešlo. Kontroly glass vrstiev, zachovaných komponentov, odložených výsledkov, vložených ponúk, save/cancel, delay a výberov; samostatné testy používajú reálny startup controller so simulovaným store, bez zápisu do prijímača. Natívny výsledok čaká na potvrdenie boxu.
+
+R69 publikované: zdroj8aaf649d90b1ebd235fb476a07b631af6071b8ec, CI40288939178 success vrátane čistého checkoutu, zhodných buildov a kontroly vydaných bajtov. Oba feedy overené: 3671812 B, SHA256 79a2f5fea275ba61970d10fc963c1150d5ababae55f3b2189ec3e83108a73771.
+
+Nahradené r68 odstránené workflow40289114626; API overilo iba v13.40-r69. Spolu45 odstránených vydaní, Git tagy a história zachované.
