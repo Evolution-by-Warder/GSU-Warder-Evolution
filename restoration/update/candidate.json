@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r80",
-    "tag": "v13.40-r80",
-    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r80/enigma2-plugin-glasssysutil_13.40-r80_all.ipk",
-    "sha256": "5832acc6b180755e96c0287260fc7cfdd1836161c8dad3b9264ee65c10aa4a9b",
-    "bytes": 3680336,
-    "notes": "GSU 13.40-r80\n\n- Ručná ponuka novej verzie má jednoznačné tlačidlá: červené Nie a zelené Áno.\n- Bez novej verzie alebo pri chybe zostáva Naspäť.\n- Preklady Áno/Nie doplnené pre všetky podporované jazyky.\n- Obsahuje rozšírené ECM okno, picon stanice vedľa kódovania, názov stanice nad nimi a širší prvý riadok CAM z r77–r79.\n"
+    "version": "13.40-r81",
+    "tag": "v13.40-r81",
+    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r81/enigma2-plugin-glasssysutil_13.40-r81_all.ipk",
+    "sha256": "d20574def14eeb37ad9ec6c89e05768d9308fac11a067d644d03dcb5a9b2042c",
+    "bytes": 3680288,
+    "notes": "GSU 13.40-r81\n\n- Automatická ponuka aktualizácie zobrazuje iba spodné farebné tlačidlá Nie / Áno v jazyku prostredia; duplicitné biele voľby odstránené.\n- Červené odmietne, zelené potvrdí; OK / EXIT ponuku zatvorí bez inštalácie.\n- Obsahuje širší riadok CAM, názov stanice a dva picony v oboch ECM zobrazeniach, aj jednoznačné Áno/Nie pri ručnej aktualizácii.\n"
   }
 }
