@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r86",
-    "tag": "v13.40-r86",
-    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r86/enigma2-plugin-glasssysutil_13.40-r86_all.ipk",
-    "sha256": "15ace1057116c3a9f65085ce9065c3c2193a9c3ff7b1cf5510b1d5a5e133570b",
-    "bytes": 3680406,
-    "notes": "GSU 13.40-r86\n\n- Pri otvorení interného ECM sa poloha názvu stanice nastaví priamo na natívnom prvku: o riadok vyššie a s väčšou medzerou nad piconmi.\n- Externé ECM okno zostáva bez zmeny.\n"
+    "version": "13.40-r87",
+    "tag": "v13.40-r87",
+    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r87/enigma2-plugin-glasssysutil_13.40-r87_all.ipk",
+    "sha256": "a981085699f22bb4b9fb97ddc6a2d3af4b452920fa8fe51c962ce16f70c73d6b",
+    "bytes": 3680642,
+    "notes": "GSU 13.40-r87\n\nStabilné vydanie\n\n- Ostrá prevádzka používateľom schváleného rozhrania a prejdených funkcií na OpenATV 8 / GigaBlue Quad 4K Pro.\n- Spoločný vzhľad Warder, živá TV, panelové ponuky a nastavenia, informácie systému a kanála, OSCam a správa CAM.\n- ECM v paneli aj cez dlhé modré: názov stanice, picon stanice a kódovania; externý CAM bez identifikátora za @ a bez zalamovania.\n- Automatická aj ručná kontrola aktualizácií, preložené potvrdenie Nie / Áno a reštart GUI tri sekundy po úspešnej inštalácii.\n- Stabilné vydanie na GitHube; zachovaná kompatibilita existujúcich inštalácií a ich nastavení.\n"
   }
 }
