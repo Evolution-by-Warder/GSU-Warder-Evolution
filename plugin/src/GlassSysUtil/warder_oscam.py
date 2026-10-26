@@ -338,7 +338,12 @@ class OscamWorkspace(Screen):
         if length:widget.moveToIndex((widget.getSelectedIndex()+delta)%length)
         return 1
     def choose(self):
-        if not self.menu_focus:return 0
+        if not self.menu_focus:
+            if self.current in ('summary','users'):
+                self.panes[self.current].model.reactivate()
+            # Only readers/files have an actual child action on OK. The old
+            # read-only screens mapped OK to exit, which loses the result pane.
+            return 0 if self.current in ('readers','files') else 1
         pane=self.panes['servers' if self.current=='servers' else 'intro']
         if pane.model['list'].getCurrent():
             if self.current=='servers':pane.model.choiseServer()

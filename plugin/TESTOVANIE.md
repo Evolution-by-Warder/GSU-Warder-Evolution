@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r60 jednotné zvýraznenie publikované
+# Aktuálny checkpoint — 26. 10. 2026, r61 oprava OK pripravená
 
 ## Projekt a vydávanie
 
@@ -138,3 +138,17 @@ Vizuálne potvrdenie r60 na prijímači zatiaľ chýba.
 Publikované r60: zdroj b825858a6b8548c2cfe3d78ec7bd197f7222fd7c, CI40275205808 success. Oba feedy overené r60 / 3662806 B / SHA256 vyššie.
 
 Nahradené r59 odstránené workflow40275325752 success; API overilo iba r60 (spolu36 odstránení). Spotrebovaný request zmazaný, tagy/história zachované.
+
+
+## r61 – OK v ľavých výsledkoch nesmie zatvárať panel
+
+Snímky r60 054154 potvrdili nepriehľadné modré zvýraznenie na oboch stranách aj
+odsadenie ikon v oprávneniach. Snímky054326 potvrdili klienta Gigablue a živé údaje,
+ale OK vyvolalo starý oscam_Users.exit a vrátilo úvod OSCamu. Root choose teraz OK
+spotrebuje pre users/summary/log/file/entitlements. Users a summary aktualizujú
+podrobnosti vybraného riadka; žiadne nové vymyslené detailné okno. Readers/files
+ďalej prepúšťajú OK pôvodnej akcii otvárajúcej oprávnenia alebo súbor.
+Návrat cez červené a prepínanie doľava/doprava ostávajú.
+299 testov Python3.14.7 aj v čistom checkoute, dva identické buildy3662832 B,
+SHA256 2fd4189f5ca92fe9942de68f83f1aed6829e39979df21b018345b6705593fdb0.
+Prijímačové potvrdenie OK zatiaľ chýba.

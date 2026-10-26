@@ -1,8 +1,7 @@
-GSU 13.40-r60
+GSU 13.40-r61
 
-Jednotné zvýraznenie v celom GSU a grafické opravy OSCamu:
-- Všetky vlastné výberové zoznamy a nastavenia GSU majú rovnaké nepriehľadné modré zvýraznenie ako hlavné menu.
-- Platí aj pre OSCam, CAM správcu, nástroje a výber súborov; bez zmeny systémového skinu.
-- Text oprávnení karty je odsadený od stavovej ikony.
-- Technické interné popisky TypeCRD/CAIDcrd sú zobrazené ako Type/CAID.
-Zachované prepínanie panelov doľava/doprava, posúvanie záznamov aj návrat do čítačiek.
+Oprava tlačidla OK v ľavom paneli OSCamu.
+- OK na klientovi ponechá klienta vybraného a zobrazí jeho podrobnosti pod zoznamom.
+- Súhrn, log, súbor a oprávnenia sa po OK nezatvoria.
+- OK na čítačke alebo v zozname súborov naďalej otvára príslušné oprávnenia/súbor.
+Návrat ovláda červené tlačidlo; prepnutie do pravej ponuky šípka doprava.
