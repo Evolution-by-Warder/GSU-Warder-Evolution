@@ -163,6 +163,8 @@ class PluginUpdateUITests(unittest.TestCase):
         self.check.assert_called_once_with('13.40-r36')
         self.session.openWithCallback.assert_not_called()
         self.assertIs(self.screen._rightpane.model.release,self.release)
+        self.assertEqual(self.screen['red'].getText(),'Nie')
+        self.assertEqual(self.screen['green'].getText(),'Áno')
 
     def test_offer_waits_until_parent_active_and_closed_parent_cannot_install(self):
         self.controller.results.put((self.release,None))

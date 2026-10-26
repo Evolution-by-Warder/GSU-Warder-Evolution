@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r75 spoločné kozmetické úpravy
+# Aktuálny checkpoint — 26. 10. 2026, r80 ručná aktualizácia Áno/Nie
 
 ## Projekt a vydávanie
 
@@ -405,3 +405,13 @@ Finálna kontrola po rozšírení:358 testov OK, Python3.14.7.
 Používateľ spresnil, že chce viac priestoru iba pre hodnotu prvého riadka CAM. Rozšírený pravý okraj z r78 je zachovaný; ECMparser pre obe ECM zobrazenia používa full_cam=True, aby dlhý CAM názov nebol skrátený už pred vykreslením. Ostatné položky parsera sa nemenia. Natívne orezanie na pravom okraji ostáva; celý ľubovoľne dlhý build-reťazec nemusí vojsť.
 
 r78 zdroj9e538a00932f6cc8f899a413810fc289c118ed05, CI40323204278 success.
+
+
+Publikované r79: zdrojba705b4d6b27ad42406e76a948b0575d23725106, CI40323465353 success,358 testov. IPK3 680 280 bajtov, SHA25689c60f288ac2ca91ff0f319eb8d43920080e751b0e1052d6785185b15f05d3b4. Oba feedy overené, stará URL kompatibilného feedu zámerne zachovaná. Používateľ dovolil nechať pôvodné CAM zobrazenie v prípade problémov; host kontroly problém neukázali, natívne vizuálne potvrdenie čaká na prijímač.
+
+
+## r80 — jednoznačné potvrdenie ručnej aktualizácie
+
+Po obrázku používateľa: ručná ponuka má červené Nie a zelené Áno, žiadne zavádzajúce zelené Aktualizácia. Červená odmietne ponuku a vráti LiveTV; zelená používa existujúci overený inštalátor. Keď nie je nová verzia alebo kontrola zlyhá, zostáva Naspäť. Desať katalógov obsahuje explicitné Yes/No; platí aj pre automatickú ponuku. 358 testov OK.
+
+Workflow40323610759 odstránil r76/r77/r78 po overení r79; spolu55 historických vydaní, Git tagy zachované.
