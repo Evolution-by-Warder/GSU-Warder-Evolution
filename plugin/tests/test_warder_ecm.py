@@ -65,7 +65,10 @@ class InlineECMTests(unittest.TestCase):
         other.cleanup();self.assertIsNone(other.timer.native)
     def test_labels_translate_without_changing_parser_label_substitution_or_values(self):
         original=self.view.model.e
-        self.view.model['ecmlabels'].setText('Provider:\nCHID:\nECM Time:')
+        mapping={'Provider:':'Operátor:','ECM Time:':'Čas ECM:'}
+        with patch.object(self.ui.main,'text',side_effect=lambda api,key:mapping.get(key,key)):
+            self.view.model['ecmlabels'].setText('Provider:\nCHID:\nECM Time:')
+        self.assertEqual(self.screen['inline_ecm_labels'].text,'Operátor:\nCHID:\nČas ECM:')
         self.assertEqual(self.view.model.e,original)
         self.assertIn('CHID:',self.screen['inline_ecm_labels'].text)
     def test_overlay_geometry_stays_within_right_panel_at_all_resolutions(self):

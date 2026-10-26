@@ -232,3 +232,8 @@ Používateľ schválil r64: OSCam priehľadnosť, ovládanie a hlášky sú OK.
 R65 publikované: zdroj94575bc1af68cf246a4a3f960a4e2b281eef76f1, CI40284135235 success vrátane stiahnutia a kontroly vydaného balíka. Oba aktualizačné feedy overené na r65 s vyššie uvedenou veľkosťou a hashom.
 
 Nahradené r64 odstránené workflow40284220781; API overilo iba v13.40-r65 s IPK a SHA256. Spolu41 odstránených vydaní, Git tagy a história zachované.
+
+
+## r66 — preklady ECM
+
+Snímka1(20261026-071243).jpg potvrdzuje ECM v pravom paneli. Používateľ výslovne zachováva čiernu piconu a žiada iba preklad anglických popisov. Chyba: pred hľadaním prekladu sa odstraňovala dvojbodka, ale locale kľúče ju obsahujú. R66 ju zachováva; test kontroluje Operátor a Čas ECM aj nezmenené CHID a parserovú predlohu. 320 testov prešlo.
