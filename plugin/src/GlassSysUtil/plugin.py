@@ -6844,13 +6844,14 @@ class oscam_Users(Screen):
 class ECMInfo(Screen):
 
     def __init__(self, session):
-        self.skin = Ecm_Info_scr
+        self.skin = _warder_ecm.standalone_skin(Ecm_Info_scr)
         self.session = session
         Screen.__init__(self, session)
         self['ecmValues'] = Label()
         self.e = 'CAM:\nSystem:\nCAID:\nProvider:\nProvID:\nPID:\nCW0:\nCW1:\nUsing:\nAddress:\nHops:\nShare:\nECM Time:'
         self['ecmlabels'] = Label(self.e)
         self['piccode'] = Pixmap()
+        self['picchannel'] = Pixmap()
         self['actions'] = ActionMap(['ColorActions', 'SetupActions', 'DirectionActions'], {'green': (self.exit), 
            'red': (self.exit), 
            'ok': (self.exit), 
@@ -6879,6 +6880,7 @@ class ECMInfo(Screen):
         return
 
     def startSearchInfo(self):
+        _warder_ecm.channel_picon(self,globals())
         service = self.session.nav.getCurrentService()
         info = service and service.info()
         if info:
@@ -6892,6 +6894,7 @@ class ECMInfo(Screen):
         return
 
     def readEcmInfo(self):
+        _warder_ecm.channel_picon(self,globals())
         self.runECMTimer.stop()
         (oscVer, typecam, system, caid, provider, provid, pid, using, adress, hops, share, ecmTime, coding, dcw0, dcw1) = ECMparser(cl=24)
         if using == 'unsupported CAs\n':

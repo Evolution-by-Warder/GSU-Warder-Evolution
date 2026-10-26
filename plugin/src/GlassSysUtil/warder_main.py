@@ -87,7 +87,8 @@ def main_skin(width=1920, height=1080, api=None):
             label('inline_ecm_title',1160,203,680,45,28,CYAN,'center'),
             label('inline_ecm_labels',1160,270,160,460,24,'#00d1e3f3'),
             label('inline_ecm_values',1325,270,515,460,24),
-            '<widget name="inline_ecm_picon" %s scale="1" alphaTest="blend" zPosition="5" />' % box(1390,760,220,132)]
+            '<widget name="inline_ecm_picon" %s scale="1" alphaTest="blend" zPosition="5" />' % box(1510,760,220,132),
+            '<widget name="inline_ecm_channel" %s scale="1" alphaTest="blend" zPosition="5" />' % box(1260,760,220,132)]
     for index,node in enumerate(out):
         if 'name="inline_ecm_' in node:
             out[index]=node.replace('zPosition="3"','zPosition="4"' if 'name="inline_ecm_mask"' in node else 'zPosition="5"').replace('valign="center"','valign="top"' if 'inline_ecm_labels' in node or 'inline_ecm_values' in node else 'valign="center"')

@@ -23,7 +23,7 @@ class WarderMainTests(unittest.TestCase):
     def setUpClass(cls):cls.plugin=load(ROOT)
 
     def test_scaled_opaque_layout_fits_eleven_rows_and_contains_all_dynamic_widgets(self):
-        required={'list','info','selection','day','date','clock','seconds','version_title','version','red','green','yellow','blue','inline_ecm_mask','inline_ecm_title','inline_ecm_labels','inline_ecm_values','inline_ecm_picon'}
+        required={'list','info','selection','day','date','clock','seconds','version_title','version','red','green','yellow','blue','inline_ecm_mask','inline_ecm_title','inline_ecm_labels','inline_ecm_values','inline_ecm_picon','inline_ecm_channel'}
         for width,height in ((1280,720),(1920,1080),(3840,2160)):
             root=ET.fromstring(ui.main_skin(width,height))
             self.assertEqual(root.get('backgroundColor'),ui.BASE)

@@ -71,7 +71,7 @@ class OriginalPortTests(unittest.TestCase):
                   'frequency':12207000,'symbol_rate':27500000}
         service=types.SimpleNamespace(info=lambda:info,audioTracks=lambda:None,
             frontendInfo=lambda:types.SimpleNamespace(getAll=lambda original:frontend))
-        session=types.SimpleNamespace(nav=types.SimpleNamespace(getCurrentService=lambda:service))
+        session=types.SimpleNamespace(nav=types.SimpleNamespace(getCurrentService=lambda:service,getCurrentlyPlayingServiceReference=lambda:None))
         for modern in (False,True):
             with self.subTest(modern=modern),ExitStack() as stack:
                 timers=[];callbacks=[]
@@ -159,7 +159,7 @@ class OriginalPortTests(unittest.TestCase):
         module=self.plugin
         info=types.SimpleNamespace(getInfo=lambda key:1)
         service=types.SimpleNamespace(info=lambda:info)
-        session=types.SimpleNamespace(nav=types.SimpleNamespace(getCurrentService=lambda:service))
+        session=types.SimpleNamespace(nav=types.SimpleNamespace(getCurrentService=lambda:service,getCurrentlyPlayingServiceReference=lambda:None))
         for modern in (False,True):
             with self.subTest(modern=modern),ExitStack() as stack:
                 callbacks=[]
