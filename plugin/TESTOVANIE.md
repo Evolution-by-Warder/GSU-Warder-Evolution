@@ -369,3 +369,12 @@ Používateľ potvrdil r75 Nápovedu, Nastavenia aj Informácie o kanáli. Práz
 Systémové ľavé skupiny posunuté ako celok o 50 FHD px doprava, posuvníky majú explicitné nepriehľadné farby. Riadok družice y900 a hodnota x1470 podľa stĺpca transpondéra. Automatická ponuka UpdateOffer a PluginInstallScreen používajú spoločný veľký rám s bannerom a presvitaním. Predvolené Nie, hash/size/opkg kontrola a reštart GUI po troch sekundách ostávajú zachované. Ručná kontrola a O plugine ostávajú v pravom paneli.
 
 Python 3.14.7: 355 testov OK. Natívne zobrazenie r76 ešte čaká na prijímač.
+
+
+Publikované r76: zdroj1370d0a3c10a6435a2d24eff26f3886ec296fdb9, CI40321101820 success; IPK3 679 542 bajtov, SHA2563e122c4e7e3218cd515b0dc1673e41c714da9b95d885e3d1f156748bc3875f0b. Oba feedy overené. Kompatibilná stará adresa repozitára ostáva zámerne zachovaná.
+
+Používateľ výslovne schválil samostatné malé ECM okno cez dlhé modré → (GSU) Informácie ECM nad živou TV. Zachovať tento priamy vstup aj popri panelovom ECM v hlavnom GSU. Samostatný ECM dialóg ani jeho extension-menu cesta sa v r76 nemenili.
+
+Nový vzhľad automatickej ponuky platí až po inštalácii r76 pre nasledujúce vydanie; prechod r75 → r76 zobrazuje ešte kód r75.
+
+Nahradené r75 odstránené workflow40321263088; API overilo iba v13.40-r76. Spolu52 odstránených vydaní, Git tagy a história zachované.
