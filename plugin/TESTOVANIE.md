@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r83 externé ECM bez zalamovania CAM
+# Aktuálny checkpoint — 26. 10. 2026, r84 externé ECM CAM bez @hash
 
 ## Projekt a vydávanie
 
@@ -447,3 +447,10 @@ Workflow40325257859 odstránil r81 po overení r82; API overilo iba v13.40-r82. 
 ## r83 — externé ECM bez zalamovania hodnôt
 
 Používateľ schválil interné ECM na snímke124813/2 (r81) a hlásil externé124813/1: celý CAM sa zalomil po11968-, čím posunul všetky hodnoty oproti názvom. Iba standalone_skin nastavuje ecmValues noWrap=1, zachová explicitné nové riadky od parsera, dlhý obsah sa oreže na pravom okraji. Interné rozloženie ani parser sa nemenia. Natívne potvrdenie r83 čaká na prijímač.
+
+
+## r84 — externé ECM CAM po značku @
+
+Používateľ upresnil, že stačí verzia po @. Externý displej odstráni @ a buildhash, ponechá uzatváraciu zátvorku a explicitný nový riadok. Napr. OScam (2.26.09-11968-802). Interný controller má príznak _inline_ecm_display=True a ponechá celý schválený text. Pôvodný parser sa nemení. noWrap z r83 ostáva.
+
+r83 zdroja81b04304c3c2b0b2ba81a8aefff82ac20449f86, CI40325730477 success.

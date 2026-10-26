@@ -1,4 +1,5 @@
-GSU 13.40-r83
+GSU 13.40-r84
 
-- Opravené zalamovanie dlhého názvu CAM v samostatnom ECM okne. Hodnoty zostávajú na svojich riadkoch; príliš dlhý text sa oreže na pravom okraji.
-- Vnorené ECM zobrazenie v GSU zostáva bez zmeny.
+- Samostatné ECM okno zobrazuje názov a verziu CAM bez dlhého identifikátora za znakom @.
+- Zalamovanie hodnôt je vypnuté: riadky ostávajú zarovnané aj pri dlhšom CAM.
+- Interné ECM zobrazenie ostáva bez zmeny.

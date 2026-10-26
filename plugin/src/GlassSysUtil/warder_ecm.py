@@ -40,6 +40,7 @@ class InlineECM:
         methods['setTitle']=lambda model,title:None
         methods['close']=lambda model,*args:self.hide()
         self.model=type('InlineECMController',(original,),methods)(screen.session)
+        self.model._inline_ecm_display=True
         for source,target in FIELDS.items():screen[target]=self.model[source]
         screen['inline_ecm_mask']=api['Label']('')
         screen['inline_ecm_title']=api['Label'](main.text(api,'ECM Information'))
@@ -150,3 +151,8 @@ def channel_picon(screen,api):
     if path:
         widget.instance.setPixmapFromFile(path);widget.show()
     else:widget.hide()
+
+
+def compact_cam_version(value):
+    if '@' not in value:return value
+    return value.split('@',1)[0].rstrip(')\n')+')\n'

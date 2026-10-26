@@ -126,3 +126,8 @@ class InlineECMTests(unittest.TestCase):
                 self.assertGreaterEqual(x,0);self.assertLessEqual(x+w,width);self.assertLessEqual(y+h,height)
             label=root.find("widget[@name='channel_name']");icon=root.find("widget[@name='picchannel']")
             self.assertLessEqual(int(label.get('position').split(',')[1])+int(label.get('size').split(',')[1]),int(icon.get('position').split(',')[1]))
+
+    def test_external_cam_version_omits_build_hash_without_losing_revision(self):
+        self.assertEqual(self.ui.compact_cam_version(' (2.26.09-11968-802@39e78a46)\n'),' (2.26.09-11968-802)\n')
+        self.assertEqual(self.ui.compact_cam_version(' (11968)\n'),' (11968)\n')
+        self.assertTrue(self.view.model._inline_ecm_display)
