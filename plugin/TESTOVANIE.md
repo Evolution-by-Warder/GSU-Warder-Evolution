@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r63 jemná priehľadnosť pripravená
+# Aktuálny checkpoint — 26. 10. 2026, r64 informácia pri povolení pripravená
 
 ## Projekt a vydávanie
 
@@ -203,3 +203,17 @@ balenom configparser. Funkcie a databáza účtov sa nemenia.
 312 testov Python3.14.7 aj z čistého checkoutu, dva identické buildy3665352 B,
 SHA256 c074843fc4a8c2dbe0e12044782b5846dee826df5364e2d8ff2d618f1e1f0496.
 Čaká sa už len na vizuálne potvrdenie priehľadnosti/banneru na prijímači.
+
+
+## r64 – informácia v potvrdení povolenia klienta
+
+r63 publikované zdrojom 7b72f324f46835d7d32bb8105d24370264242818,
+CI40280241163 success, oba feedy overené. Priehľadnosť ešte čaká na snímku.
+Používateľ žiada pri Ano/Nie vysvetliť čakanie na reštart/refresh, aby ho nemiatol
+starý zoznam počas spracovania. Pri povolení je teraz krátky druhý odsek:
+„Po povolení chvíľu počkajte, kým sa zmena prejaví a zoznam obnoví. Pri lokálnom
+DVBAPI účte sa na pozadí reštartuje OSCam.“ Pri zákaze sa nepridáva. Desať jazykov,
+138 spoločných katalógových kľúčov. Nie ostáva predvolené a nič nevykoná.
+313 testov Python3.14.7 aj z čistého checkoutu; dva identické buildy3666062 B,
+SHA256 b7843a7d1b0ce4c645890c06af55f680a5681610cc86d298e884f53c8f422aa3.
+Aktuálne treba iba vizuálne overenie priehľadnosti/banneru a novej správy.

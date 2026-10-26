@@ -221,6 +221,19 @@ class ClientScreenTests(unittest.TestCase):
             pending.addCallback.call_args.args[0](True)
         refresh.assert_called_once()
 
+    def test_enable_confirmation_explains_delay_and_cancel_does_not_start_worker(self):
+        self.records[0]['disabled']=True
+        self.ui.render(self.screen,vars(self.plugin),self.records);self.screen.chngState()
+        call=self.screen.session.openWithCallback.call_args
+        self.assertIn(self.ui.tr(vars(self.plugin),self.ui.ENABLE_NOTICE),call.args[2])
+        self.assertFalse(call.kwargs['default'])
+        with patch.object(self.ui,'deferToThread') as worker:call.args[0](False)
+        worker.assert_not_called()
+        self.records[0]['disabled']=False
+        self.ui.render(self.screen,vars(self.plugin),self.records);self.screen.chngState()
+        question=self.screen.session.openWithCallback.call_args.args[2]
+        self.assertNotIn(self.ui.tr(vars(self.plugin),self.ui.ENABLE_NOTICE),question)
+
     def test_restart_completion_renders_fresh_clients_without_extra_request(self):
         self.records[0]['disabled']=True
         self.ui.render(self.screen,vars(self.plugin),self.records)

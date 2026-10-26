@@ -1,11 +1,10 @@
-GSU 13.40-r63
+GSU 13.40-r64
 
-Jemná priehľadnosť v sekcii Informácie o OSCame:
-- Oba tmavé panely prepúšťajú približne 10 % živého obrazu na pozadí.
-- Hlavička, spodné tlačidlá a modré zvýraznenie zostávajú nepriehľadné.
-- Rovnaký vzhľad majú súhrn, servery, klienti, log, súbory aj oprávnenia.
-- Zachovaný pôvodný banner bez zmeny grafiky; bez nových balíkových závislostí.
+Potvrdenie povolenia klienta obsahuje krátku informáciu, že uplatnenie zmeny
+a obnovenie zoznamu chvíľu trvá. Pri lokálnom DVBAPI účte upozorní na reštart
+OSCamu na pozadí. Text je preložený do všetkých podporovaných jazykov.
+Odpoveď Nie zachová stav a nespustí žiadnu operáciu.
 
-Obsahuje aj obnovu lokálneho DVBAPI po povolení účtu z r62: overené povolenie,
-reštart lokálneho OSCamu na pozadí, čakanie na pôvodný účet a obnovenie zoznamu.
-V celej sekcii OK vpravo aktivuje ľavý obsah; doprava vráti pravú ponuku.
+Zahŕňa jemnú priehľadnosť oboch OSCam panelov z r63; hlavička, tlačidlá a výber
+ostávajú nepriehľadné. V celej sekcii OK vpravo aktivuje ľavý obsah.
+Obnova lokálneho DVBAPI po povolení je používateľom overená na prijímači.

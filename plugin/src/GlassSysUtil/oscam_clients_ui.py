@@ -5,11 +5,14 @@ from xml.etree import ElementTree
 from .oscam_clients import EMPTY, COUNTERS, fetch_clients, set_enabled
 from .oscam_client_recovery import change_account, RecoveryError
 
+ENABLE_NOTICE = 'After enabling, please wait for the change and client list refresh. A local DVBAPI account restarts OSCam in the background.'
+
 _SK = {
     'Loading clients...': 'Načítavam klientov...',
     'No clients or accounts found.': 'Nenašli sa žiadni klienti ani účty.',
     'Unable to load OSCam clients.': 'Nepodarilo sa načítať klientov OSCam-u.',
     'Account change failed.': 'Zmena stavu účtu zlyhala.',
+    ENABLE_NOTICE:'Po povolení chvíľu počkajte, kým sa zmena prejaví a zoznam obnoví. Pri lokálnom DVBAPI účte sa na pozadí reštartuje OSCam.',
     'Account enabled, but OSCam recovery failed.':'Účet bol povolený, ale reštart alebo opätovné pripojenie OSCamu zlyhalo.',
 }
 
@@ -198,5 +201,6 @@ def change_state(screen, api):
                                              api['getUrlData'], name, disabled)
         screen.clientsRequest.addCallback(done)
         screen.clientsRequest.addErrback(failed)
-    screen.session.openWithCallback(confirmed, box,
-        api['_']('Disable' if disabled else 'Enable') + ': ' + name + '?', box.TYPE_YESNO, default=False)
+    question=api['_']('Disable' if disabled else 'Enable') + ': ' + name + '?'
+    if not disabled:question+='\n\n'+tr(api,ENABLE_NOTICE)
+    screen.session.openWithCallback(confirmed,box,question,box.TYPE_YESNO,default=False)

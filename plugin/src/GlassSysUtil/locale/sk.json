@@ -159,5 +159,6 @@
   "Start Time": "Čas spustenia",
   "Details": "Podrobnosti",
   "Menu": "Ponuka",
-  "Account enabled, but OSCam recovery failed.": "Účet bol povolený, ale reštart alebo opätovné pripojenie OSCamu zlyhalo."
+  "Account enabled, but OSCam recovery failed.": "Účet bol povolený, ale reštart alebo opätovné pripojenie OSCamu zlyhalo.",
+  "After enabling, please wait for the change and client list refresh. A local DVBAPI account restarts OSCam in the background.": "Po povolení chvíľu počkajte, kým sa zmena prejaví a zoznam obnoví. Pri lokálnom DVBAPI účte sa na pozadí reštartuje OSCam."
 }
