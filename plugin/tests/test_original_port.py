@@ -175,7 +175,7 @@ class OriginalPortTests(unittest.TestCase):
                 screen=module.ECMInfo(session)
                 screen['piccode'].instance.setPixmapFromFile=MagicMock()
                 screen.startSearchInfo()
-                parser.assert_called_once_with(cl=24)
+                parser.assert_called_once_with(cl=24, full_cam=True)
                 self.assertEqual(screen['ecmValues'].text.splitlines()[0],'OScam (2.26.09-11968-802)')
                 self.assertEqual(len(screen['ecmValues'].text.splitlines()),13)
                 self.assertEqual(screen['ecmValues'].text.splitlines()[-1],'0.126')

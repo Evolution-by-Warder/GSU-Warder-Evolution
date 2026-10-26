@@ -55,7 +55,7 @@ class InlineECMTests(unittest.TestCase):
         other.model['piccode'].instance=MagicMock()
         other.timer.fire();api['ECMparser'].assert_not_called()
         other.show()
-        api['ECMparser'].assert_called_once_with(cl=24)
+        api['ECMparser'].assert_called_once_with(cl=24, full_cam=True)
         self.assertIn('M7 Group',other.model['ecmValues'].text)
         self.assertIn('0668',other.model['ecmValues'].text)
         self.assertIn('123 ms',other.model['ecmValues'].text)

@@ -398,3 +398,10 @@ Python3.14.7:357 testov OK, nový test obnovy názvu pri nezmenenej referencii. 
 Malé ECM okno je rozšírené o100 FHD px a zvýšené o45 px; dvojica180×108 s odstupom35 px a názov34 px nad nimi. HD/FHD/UHD kontrola hraníc.
 
 Finálna kontrola po rozšírení:358 testov OK, Python3.14.7.
+
+
+## r79 — využitie pravého okraja prvého riadka CAM
+
+Používateľ spresnil, že chce viac priestoru iba pre hodnotu prvého riadka CAM. Rozšírený pravý okraj z r78 je zachovaný; ECMparser pre obe ECM zobrazenia používa full_cam=True, aby dlhý CAM názov nebol skrátený už pred vykreslením. Ostatné položky parsera sa nemenia. Natívne orezanie na pravom okraji ostáva; celý ľubovoľne dlhý build-reťazec nemusí vojsť.
+
+r78 zdroj9e538a00932f6cc8f899a413810fc289c118ed05, CI40323204278 success.
