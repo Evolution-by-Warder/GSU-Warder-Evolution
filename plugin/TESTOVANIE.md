@@ -483,3 +483,12 @@ Snímka125909 na r85 ukazuje názov stále pri piconoch napriek XML y672. Príč
 Publikované r86: zdrojf4b884a10dfb6c2f92356b18116ca74296af8fcf, CI40327181308 success (360 testov). IPK3 680 406 bajtov, SHA25615ace1057116c3a9f65085ce9065c3c2193a9c3ff7b1cf5510b1d5a5e133570b. Oba feedy overené. Natívne potvrdenie posunu na prijímači čaká.
 
 Workflow40327406279 odstránil r85 po overení r86; API overilo iba v13.40-r86. Spolu62 odstránených vydaní; Git tagy a história zachované.
+
+
+## Potvrdenie spustenia ostrej prevádzky — r87
+
+Stabilné vydanie v13.40-r87 je verejné Latest, GitHub prerelease=false / draft=false, releaseID424266966. Zdroj45aaa86780ed6b7be707f02e9a78684226f555ed, CI40328378779 success,361 testov vrátane stabilného vytvorenia vydania a bezpečného retry po overení bajtov. IPK3 680 642 bajtov, SHA256a981085699f22bb4b9fb97ddc6a2d3af4b452920fa8fe51c962ce16f70c73d6b. Oba feedy ponúkajú r87 a rovnaký hash/veľkosť; kompatibilná stará URL zachovaná.
+
+Ostrá prevádzka spustená na výslovný pokyn používateľa. Budúce vydania sa publikujú stabilne; r87 nemení schválenú funkčnosť ani grafiku r86. Stav aj release metadáta zosúladené na main a original-python314.
+
+Workflow40328562919 odstránil r86 po overení stabilnej r87; API overilo iba v13.40-r87, prerelease=false. Spolu63 odstránených vydaní; Git tagy a história zachované.
