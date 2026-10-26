@@ -387,3 +387,14 @@ Používateľ potvrdil r76 obrazovky 1 (systém), 3 (O plugine), 4 (ručná Aktu
 Samostatné ECM cez dlhé modré aj vnorené ECM v GSU majú picon stanice vedľa kódovania. Používa existujúci resPicon a normalizovanú referenciu prvých10 polí; nezmenená referencia nečíta obrázok znovu. Pôvodné historické skiny sa nemenia, samostatné rozloženie sa upraví za behu. Pri chýbajúcej službe sa picon skryje.
 
 Python3.14.7:356 testov OK, vrátane resolvera referencie a cache. Natívne zobrazenie r77 čaká na prijímač.
+
+
+## r78 — názov stanice nad piconmi ECM
+
+Používateľ zvolil umiestnenie názvu stanice dole nad dvojicou piconov v oboch ECM zobrazeniach, vo farbe a písme nadpisu Informácie ECM. Vnorený názov y714/h40, Regular28 cyan, na stred. Samostatný názov má škálovanú rovnakú farbu a písmo, tesne nad ikonami. Zdroj je natívne service.info().getName(), nie ECM súbor. Obnovuje sa aj pri cache piconu; bez služby prázdny text.
+
+Python3.14.7:357 testov OK, nový test obnovy názvu pri nezmenenej referencii. r77 zdroj5ad8ca21308137d9e6883101ea9208f7be2abed2, CI40322545264 success, oba feedy boli publikované. r78 vizuálne čaká na prijímač.
+
+Malé ECM okno je rozšírené o100 FHD px a zvýšené o45 px; dvojica180×108 s odstupom35 px a názov34 px nad nimi. HD/FHD/UHD kontrola hraníc.
+
+Finálna kontrola po rozšírení:358 testov OK, Python3.14.7.

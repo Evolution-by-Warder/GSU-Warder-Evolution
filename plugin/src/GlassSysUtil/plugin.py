@@ -6852,6 +6852,7 @@ class ECMInfo(Screen):
         self['ecmlabels'] = Label(self.e)
         self['piccode'] = Pixmap()
         self['picchannel'] = Pixmap()
+        self['channel_name'] = Label('')
         self['actions'] = ActionMap(['ColorActions', 'SetupActions', 'DirectionActions'], {'green': (self.exit), 
            'red': (self.exit), 
            'ok': (self.exit), 

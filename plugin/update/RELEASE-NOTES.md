@@ -1,5 +1,6 @@
-GSU 13.40-r77
+GSU 13.40-r78
 
-- Picon aktuálnej stanice vedľa piconu kódovania v oboch ECM zobrazeniach: malom okne cez dlhé modré aj pravom paneli GSU.
-- Picon sa pri nezmenenej stanici znovu nenačítava.
-- Riadok Družica je umiestnený nižšie a hodnota zarovnaná s údajmi transpondéra aj po vytvorení natívneho okna.
+- Názov sledovanej stanice nad dvojicou piconov v malom ECM okne aj pravom paneli GSU, tyrkysovou farbou a písmom nadpisu Informácie ECM.
+- Názov sa získava priamo z Enigmy a aktualizuje spolu s ECM údajmi.
+- Obsahuje picon stanice vedľa kódovania a zarovnanie riadka Družica z r77.
+- Malé samostatné ECM okno jemne rozšírené, picony majú viac priestoru.

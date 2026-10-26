@@ -101,3 +101,28 @@ class InlineECMTests(unittest.TestCase):
         self.ui.channel_picon(self.view.model,api)
         resolve.assert_called_once_with('1_0_1_3C3C_C90_3_EB0000_0_0_0','picon')
         self.view.model['picchannel'].instance.setPixmapFromFile.assert_called_once_with('/picon/channel.png')
+
+    def test_channel_name_is_from_native_service_and_refreshes_even_with_cached_picon(self):
+        ref=MagicMock();ref.toString.return_value='1:0:1:3C3C:C90:3:EB0000:0:0:0:'
+        self.session.nav.getCurrentlyPlayingServiceReference.return_value=ref
+        info=self.session.nav.getCurrentService.return_value.info.return_value
+        info.getName.return_value='Jednotka HD'
+        api=dict(vars(self.plugin));api['resPicon']=MagicMock(return_value='/picon/channel.png')
+        self.ui.channel_picon(self.view.model,api)
+        self.assertEqual(self.view.model['channel_name'].getText(),'Jednotka HD')
+        info.getName.return_value='Jednotka HD nový názov'
+        self.ui.channel_picon(self.view.model,api)
+        self.assertEqual(self.view.model['channel_name'].getText(),'Jednotka HD nový názov')
+        api['resPicon'].assert_called_once()
+
+    def test_standalone_name_and_two_picons_fit_expanded_window_at_all_resolutions(self):
+        for suffix in ('','_FHD','_UHD'):
+            original=importlib.import_module('Plugins.Extensions.GlassSysUtil.GSU_skins'+suffix).Ecm_Info_scr
+            old=ET.fromstring(original);root=ET.fromstring(self.ui.standalone_skin(original))
+            width,height=map(int,root.get('size').split(','))
+            self.assertGreater(width,int(old.get('size').split(',')[0]))
+            for name in ('piccode','picchannel','channel_name'):
+                n=root.find("widget[@name='%s']"%name);x,y=map(int,n.get('position').split(','));w,h=map(int,n.get('size').split(','))
+                self.assertGreaterEqual(x,0);self.assertLessEqual(x+w,width);self.assertLessEqual(y+h,height)
+            label=root.find("widget[@name='channel_name']");icon=root.find("widget[@name='picchannel']")
+            self.assertLessEqual(int(label.get('position').split(',')[1])+int(label.get('size').split(',')[1]),int(icon.get('position').split(',')[1]))
