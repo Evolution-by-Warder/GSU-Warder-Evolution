@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r84 externé ECM CAM bez @hash
+# Aktuálny checkpoint — 26. 10. 2026, r85 interný ECM názov o riadok vyššie
 
 ## Projekt a vydávanie
 
@@ -454,3 +454,10 @@ Používateľ schválil interné ECM na snímke124813/2 (r81) a hlásil externé
 Používateľ upresnil, že stačí verzia po @. Externý displej odstráni @ a buildhash, ponechá uzatváraciu zátvorku a explicitný nový riadok. Napr. OScam (2.26.09-11968-802). Interný controller má príznak _inline_ecm_display=True a ponechá celý schválený text. Pôvodný parser sa nemení. noWrap z r83 ostáva.
 
 r83 zdroja81b04304c3c2b0b2ba81a8aefff82ac20449f86, CI40325730477 success.
+
+
+## r85 — iba interný ECM názov vyššie
+
+Používateľ výslovne žiada iba vnútorné ECM: názov stanice y714→672 FHD, posun42px. Picony zostávajú y760, názov h40 končí y712, odstup48px. Externý názov a rozloženie sa nemenia, zostáva r84 CAM bez @hash a bez zalamovania.
+
+r84 zdroj4def60af620538f3bdb9646096208366d1f81b45.
