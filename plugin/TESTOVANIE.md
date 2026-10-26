@@ -461,3 +461,8 @@ r83 zdroja81b04304c3c2b0b2ba81a8aefff82ac20449f86, CI40325730477 success.
 Používateľ výslovne žiada iba vnútorné ECM: názov stanice y714→672 FHD, posun42px. Picony zostávajú y760, názov h40 končí y712, odstup48px. Externý názov a rozloženie sa nemenia, zostáva r84 CAM bez @hash a bez zalamovania.
 
 r84 zdroj4def60af620538f3bdb9646096208366d1f81b45.
+
+
+Publikované r85: zdroj2b387ce3969fa19175d3c0f2643aa2c1c92ee7d0, CI40326232813 success (359 testov), lokálne12 ECM testov OK + compileall + diffcheck. IPK3 680 362 bajtov, SHA2568249e200f19a2398cf974f8ae1d840ecd6d784f1ab70e885388ce58435a3177a. Oba feedy overené. Natívne r85 potvrdenie ešte čaká na prijímač.
+
+Workflow40326380003 odstránil r82/r83/r84 po overení r85; API overilo iba v13.40-r85. Spolu61 odstránených vydaní; Git tagy a história zachované.
