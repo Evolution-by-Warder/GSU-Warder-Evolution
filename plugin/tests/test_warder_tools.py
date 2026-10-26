@@ -149,7 +149,8 @@ class WarderToolsUITests(unittest.TestCase):
         session=MagicMock();screen=self.plugin.SysUtilMngMain(session)
         self.assertIn(('17','Nástroje'),[(item[0],item[1]) for item in screen.menuListAll])
         screen.status={'17':True};screen['list'].getCurrent=lambda:['17']
-        screen.selectedmenuitem();session.open.assert_called_once_with(self.ui.ToolsScreen,vars(self.plugin))
+        screen.selectedmenuitem();session.open.assert_not_called()
+        self.assertEqual(screen._rightpane.kind,'tools')
         menu=self.ui.ToolsScreen(session,vars(self.plugin));menu.prepare()
         self.assertEqual([row[0] for row in menu['list'].list],['bundle'])
         self.assertIn('Vytvorenie',menu['descriptions'].text)

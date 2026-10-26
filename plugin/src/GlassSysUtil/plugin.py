@@ -4,6 +4,7 @@ from Plugins.Extensions.GlassSysUtil import warder_system as _warder_system
 from Plugins.Extensions.GlassSysUtil import warder_main as _warder_main
 from Plugins.Extensions.GlassSysUtil import warder_ecm as _warder_ecm
 from Plugins.Extensions.GlassSysUtil import warder_cam as _warder_cam
+from Plugins.Extensions.GlassSysUtil import warder_right as _warder_right
 from Plugins.Extensions.GlassSysUtil import warder_tools_ui as _warder_tools_ui
 from Plugins.Extensions.GlassSysUtil.plugin_update_ui import StartupUpdateCheck as _StartupUpdateCheck, text as _plugin_update_text
 # uncompyle6 version 3.9.3
@@ -1530,6 +1531,7 @@ class SysUtilMngMain(Screen):
         self.size = getDesktop(0).size().width()
         _warder_main.install(self, globals())
         _warder_ecm.install(self, globals())
+        _warder_right.install(self, globals())
         self.onLayoutFinish.append(self.updatemenulist)
         self._plugin_update = _StartupUpdateCheck(self, globals())
         return
@@ -1569,9 +1571,9 @@ class SysUtilMngMain(Screen):
             elif selectedItem == '8':
                 self.session.open(OSD_ECM_Menu)
             elif selectedItem == '9':
-                self.session.open(swap_manager)
+                _warder_right.show(self, globals(), 'swap')
             elif selectedItem == '17':
-                _warder_tools_ui.open_tools(self.session, globals())
+                _warder_right.show(self, globals(), 'tools')
             elif selectedItem == '16':
                 self.updatechckact()
         return

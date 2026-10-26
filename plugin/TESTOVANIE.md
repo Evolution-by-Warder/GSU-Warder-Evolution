@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r70 bez modrého Presunúť výber
+# Aktuálny checkpoint — 26. 10. 2026, r71 pravý panel
 
 ## Projekt a vydávanie
 
@@ -287,3 +287,16 @@ Nahradené r68 odstránené workflow40289114626; API overilo iba v13.40-r69. Spo
 Prezretých všetkých7 snímok:1–5(20261026-080152/080153).jpg,6(7).jpg,7(1).jpg. Preukazujú priehľadnosť, CAM výber, feed zoznam, odinštalačný zoznam, štart konfiguráciu a oneskorenie v ľavom paneli. Nie sú dôkazom vykonania inštalácie/odinštalácie ani uloženia hodnôt. Používateľ žiada zrušiť modré Presunúť výber, pretože navigáciu už riešia šípky. R70 odstraňuje footer aj funkciu (modré sa spotrebuje bez posunu, aby neprepadlo pôvodnému handleru). Zostávajúce červené/zelené/žlté sú rovnomerne centrované v troch stĺpcoch. Všetky vložené obrazovky používajú spoločný footer.
 
 336 testov prešlo. Prvý beh mal izolovaný5s timeout reálneho shell smoke testu native_start_config; opakovaný kompletný beh bez zmien kódu prešiel za7.7s. Žiadne procesy zo skúšky nezostali. Nová regresia overuje neprítomnosť modrého widgetu, nečinnosť jeho klávesu a rovnaké rozmery troch footerov.
+
+
+## r70 publikácia a r71 pravý panel
+
+R70 publikované: zdroj1ad2b9dda2820e12d78d77f4069cc5faa696505a, CI40289803826 success, oba feedy overené na r70. Nahradené Releases69/70 sa upracú po overenom vydaní71.
+
+Používateľ upresnil, že Informácie ECM, Správa swapu a Nástroje majú používať MENŠÍ PRAVÝ panel namiesto LiveTV, ľavá hlavná ponuka zostáva. Ide o krátke obsahy, prípadné korekcie až podľa výsledku na boxe. Netýka sa to prehodenia panelov správcu CAM.
+
+warder_right.py transformuje iba runtime skin hlavného menu: priehľadný root, orezaný spoločný banner, tenké rámiky/jedna10% alpha vrstva a prepínateľné nepriehľadné podklady pre pôvodné menu. Nepriehľadný normálny vzhľad a LiveTV sa obnovia po odchode; počas ECM/swap/tools sú podklady aj dekorácie videa schované. Pig a nepriehľadné vrstvy majú explicitné oddelené zPosition, preview nie je prekryté. Ostatné systémové/kanálové/OSCam skiny sa nemenia.
+
+Pôvodné swap/tools/diagnostic/create controllery sú headless, používajú vopred vytvorené widgety pravého panela a Session proxy pre vnorené Create/Diagnostic. Originálne operácie swap_store a diagnostický worker sa nemenia; busy blokuje návrat z operácie, onClose zatvára async výsledky. Vytvorenie swapu obsahuje pôvodné3 polia vpravo; konfiguračné výbery/editor a potvrdzovacie MessageBox sú ešte modal. Nástroje majú zoznam a popis vpravo, výsledok archívu ScrollLabel vpravo. Hore/dole posúva aktívny panel, doľava/doprava mení focus, červené obnoví predchádzajúci obsah/LiveTV. Zelené/žlté používajú originálne akcie modelu. Bez stop/playService. ECM ponecháva schválený parser/picon/legendu a iba prepína rovnaké glass podklady.
+
+343 testov Python3.14.7 prešlo, compileall/diff check OK. Nové testy používajú originálne controllery: Tools/Diagnostic návrat, Swap/Create busy, neotvorenie Session dialógu pre vložené stránky, ECM glass, obnova PIG bez preladenia a bounds HD/FHD/UHD. Skutočný natívny vzhľad r71 ešte čaká na prijímač; celý plugin zostáva receiver_tested=false.
