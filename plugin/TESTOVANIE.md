@@ -259,3 +259,7 @@ Snímka1(20261026-072903).jpg z r67 preukazuje správne slovenské ECM popisy. L
 Nový warder_cam.py mení iba prezentáciu a navigačnú vrstvu: pôvodné pomenované komponenty, konfiguračné hodnoty, natívne príkazy, časovače, zelený štart/reštart a červený stop sú zachované. Hore/dole vpravo prechádza akcie vrátane spätného posunu a vynechania odstránených/nedostupných SRV položiek. OK vpravo aktivuje akciu; vľavo otvorí zoznam hodnôt vybraného konfiguračného riadku. Zrušenie nič nemení, potvrdenie iba nastaví výber, nespúšťa CAM. Modré prepne na pravý panel a ďalšiu akciu. EXIT pôvodne zavrie správcu a vráti hlavné menu/LiveTV. Tenké rámiky, rovnaké modré zvýraznenie a hlavička s časom/verziou. Malé rozlíšenia pod1280 zostávajú pôvodné.
 
 327 testov Python3.14.7 prešlo, compileall a diff check OK. Nové kontroly zachovaných komponentov/bounds HD/FHD/UHD, navigácie, výberu a zachovaných farebných handlerov. Existujúce SRV testy používajú rozmery aktuálneho skinu namiesto starých čísel42/82. Nový natívny vzhľad a navigáciu musí ešte potvrdiť prijímač; už overené backend skúšky neopakovať.
+
+R68 publikované: zdroj2e923bda7007c882f4feb02bacb3b0880c94c907, CI40287426629 success vrátane deterministického dvojitého buildu a kontroly vydaných bajtov. Oba feedy overené: 3668966 B, SHA256 844622f2e5941a7c1ecfa2da1f1374e35f27f588bcc777e2ba7dc8a3054ec83d.
+
+Nahradené r67 odstránené workflow40287552293; API overilo iba v13.40-r68. Spolu44 odstránených vydaní; Git tagy a história zachované.
