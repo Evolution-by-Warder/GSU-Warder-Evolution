@@ -1,8 +1,9 @@
-GSU 13.40-r58
+GSU 13.40-r59
 
-Oprava ovládania panelov v Informáciách o OSCame.
-- Po otvorení výsledkov šípky hore/dole priamo ovládajú ľavý zoznam.
-- Doprava prepne na ponuku, doľava späť na výsledky.
-- V konfiguračnom súbore šípky hore/dole posúvajú text.
+Jednoznačné ovládanie panelov v Informáciách o OSCame:
+- Predvolene je aktívna pravá ponuka aj po otvorení výsledkov.
+- Doľava aktivuje ľavý panel; hore/dole posúvajú jeho údaje.
+- Doprava aktivuje pravú ponuku; hore/dole vyberajú jej položky.
 - Zvýraznenie výberu má iba aktívny panel.
-Pôvodné akcie čítačiek, klientov a návraty zostávajú zachované.
+- Súbor alebo oprávnenia otvorené z ľavého panelu zachovajú ovládanie vľavo.
+Opravené priame smerovanie šípok do zoznamov a posúvanie textu súborov.

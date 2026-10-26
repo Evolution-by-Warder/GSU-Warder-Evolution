@@ -263,7 +263,7 @@ class OscamWorkspace(Screen):
         self.activate('servers' if select_server else 'intro')
     def activate(self,kind):
         for pane in self.panes.values():pane.pause()
-        self.current=kind;self.menu_focus=kind in ('intro','servers')
+        self.current=kind;self.menu_focus=kind not in ('file','entitlements')
         self['pane_title'].setText(main.text(self.api,TITLES[kind]))
         pane=self.panes[kind];pane.resume()
         if self.current!=kind:return
@@ -310,11 +310,12 @@ class OscamWorkspace(Screen):
         elif kind=='file':model.url,model.login,model.passwd,model.titleFile=args
         elif kind=='entitlements':model.url,model.reader,model.login,model.passwd=args
         else:model.url,model.login,model.passwd=args
-        if kind in ('file','entitlements'):self.history.append(self.current)
+        if kind in ('file','entitlements'):self.history.append((self.current,self.menu_focus))
         else:self.history=[]
         self.activate(kind)
     def back(self):
-        if self.history:self.activate(self.history.pop())
+        if self.history:
+            kind,menu=self.history.pop();self.activate(kind);self.focus(menu)
         elif self.current not in ('intro','servers'):self.activate('intro')
         else:self.close()
         return 1

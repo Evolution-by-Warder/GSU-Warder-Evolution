@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r58 oprava ovládania pripravená
+# Aktuálny checkpoint — 26. 10. 2026, r59 prepínanie panelov pripravené
 
 ## Projekt a vydávanie
 
@@ -100,3 +100,16 @@ farebné akcie ostávajú. Testy pokrývajú šesť ľavých zoznamov, text súb
 strany prepínania. 293 testov aj z čistého checkoutu, zhodné dva buildy3662312 B,
 SHA256 5a5d11fab40dcb8ec1f9261bce4c46a9deaf150ffaceca3f3fdd4af9271997a5.
 Zatiaľ čaká na potvrdenie ovládania na prijímači.
+
+
+## r59 – pravá ponuka predvolená podľa používateľa
+
+Používateľ upresnil: predvolene hore/dole vpravo, doľava aktivuje ľavý panel,
+doprava opäť pravý. Toto nahrádza automatické prepínanie doľava po otvorení výsledkov.
+Výber výsledkov teraz ponechá pravú ponuku aktívnu. Súbor/oprávnenia otvorené zľava
+ostávajú vľavo, návrat zachová predchádzajúci fokus. Stále sa používa priame smerovanie
+up/down z r58 a iba jeden zvýraznený zoznam. 294 testov Python3.14.7, dva identické
+čisté buildy3662394 B, SHA256 f77736521d21b97318be84ae26fc37e34c7f9bbd882f79319eb500d0687482fb.
+Prijímačové potvrdenie ovládania zatiaľ chýba. r58 vydané zdrojom
+1c6fb01e71dc55691b6c93875837927ae0860ede, CI40273485815 success, oba feedy overené.
+Staré r57 odstránené workflow40273582391 success; API overilo iba r58 (spolu34 odstránení).
