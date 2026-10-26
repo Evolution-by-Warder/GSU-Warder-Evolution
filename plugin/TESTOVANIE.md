@@ -378,3 +378,12 @@ Používateľ výslovne schválil samostatné malé ECM okno cez dlhé modré �
 Nový vzhľad automatickej ponuky platí až po inštalácii r76 pre nasledujúce vydanie; prechod r75 → r76 zobrazuje ešte kód r75.
 
 Nahradené r75 odstránené workflow40321263088; API overilo iba v13.40-r76. Spolu52 odstránených vydaní, Git tagy a história zachované.
+
+
+## r77 — picon stanice v ECM a zarovnanie družice
+
+Používateľ potvrdil r76 obrazovky 1 (systém), 3 (O plugine), 4 (ručná Aktualizácia). V kanálových informáciách bol riadok družice na snímke stále v pôvodnej polohe; r77 explicitne aplikuje y900, x1470 hodnoty aj po vytvorení natívnych komponentov.
+
+Samostatné ECM cez dlhé modré aj vnorené ECM v GSU majú picon stanice vedľa kódovania. Používa existujúci resPicon a normalizovanú referenciu prvých10 polí; nezmenená referencia nečíta obrázok znovu. Pôvodné historické skiny sa nemenia, samostatné rozloženie sa upraví za behu. Pri chýbajúcej službe sa picon skryje.
+
+Python3.14.7:356 testov OK, vrátane resolvera referencie a cache. Natívne zobrazenie r77 čaká na prijímač.

@@ -3,7 +3,7 @@ from copy import deepcopy
 from pathlib import Path
 from xml.etree import ElementTree as ET
 from . import warder_main as main
-from .warder_system import install
+from .warder_system import install as _install_header
 
 # Coordinates in the receiver's Full HD design space.
 SLOTS={
@@ -75,3 +75,17 @@ def channel_skin(original,width,height,translator=lambda value:value):
     from .warder_glass import apply
     apply(root,width,height)
     return ET.tostring(root,encoding='unicode')
+
+
+def install(screen,api):
+    _install_header(screen,api)
+    def align_satellite():
+        from enigma import ePoint,eSize
+        size=api['getDesktop'](0).size();sx,sy=size.width()/1920,size.height()/1080
+        for name in ('tp_lab_sat','tp_sat'):
+            node=screen[name].instance
+            if node is not None:
+                x,y,w,h,_=SLOTS[name]
+                node.move(ePoint(round(x*sx),round(y*sy)))
+                node.resize(eSize(round(w*sx),round(h*sy)))
+    screen.onLayoutFinish.append(align_satellite)

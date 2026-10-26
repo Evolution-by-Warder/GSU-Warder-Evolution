@@ -2,7 +2,7 @@
 from types import FunctionType
 from . import warder_main as main
 
-FIELDS={'ecmlabels':'inline_ecm_labels','ecmValues':'inline_ecm_values','piccode':'inline_ecm_picon'}
+FIELDS={'ecmlabels':'inline_ecm_labels','ecmValues':'inline_ecm_values','piccode':'inline_ecm_picon','picchannel':'inline_ecm_channel'}
 
 class Signal:
     def __init__(self):self.callbacks=[]
@@ -107,3 +107,32 @@ def show(screen,api):
     view=getattr(screen,'_inline_ecm',None)
     if view is None:return screen.session.open(api['ECMInfo'])
     view.show()
+
+
+def standalone_skin(original):
+    from xml.etree import ElementTree as ET
+    root=ET.fromstring(original)
+    width,height=map(int,root.get('size').split(','))
+    code=root.find("widget[@name='piccode']")
+    if code is None:return original
+    x,y=map(int,code.get('position').split(','));w,h=map(int,code.get('size').split(','))
+    for node in list(root):
+        if node.tag=='ePixmap' and 'frame' in node.get('pixmap',''):root.remove(node)
+    gap=round(width*.055);start=(width-(2*w+gap))//2
+    code.set('position','%d,%d'%(start+w+gap,y));code.set('scale','1')
+    ET.SubElement(root,'widget',name='picchannel',position='%d,%d'%(start,y),size='%d,%d'%(w,h),scale='1',alphatest='blend',zPosition='4')
+    return ET.tostring(root,encoding='unicode')
+
+
+def channel_picon(screen,api):
+    widget=screen['picchannel']
+    if widget.instance is None:return
+    ref=screen.session.nav.getCurrentlyPlayingServiceReference()
+    if ref is None:widget.hide();return
+    name='_'.join(ref.toString().split(':')[:10])
+    if getattr(screen,'_channel_picon_ref',None)==name:return
+    screen._channel_picon_ref=name
+    path=api['resPicon'](name,'picon')
+    if path:
+        widget.instance.setPixmapFromFile(path);widget.show()
+    else:widget.hide()

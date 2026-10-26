@@ -91,3 +91,13 @@ class InlineECMTests(unittest.TestCase):
                 self.assertGreaterEqual(x,round(1137*width/1920));self.assertLessEqual(x+w,round(1863*width/1920))
                 self.assertGreaterEqual(y,round(182*height/1080));self.assertLessEqual(y+h,round(978*height/1080))
             self.assertEqual(len(root.findall("widget[@render='Pig']")),1)
+
+    def test_channel_picon_uses_normalized_current_reference_and_caches_unchanged_service(self):
+        ref=MagicMock();ref.toString.return_value='1:0:1:3C3C:C90:3:EB0000:0:0:0:'
+        self.session.nav.getCurrentlyPlayingServiceReference.return_value=ref
+        resolve=MagicMock(return_value='/picon/channel.png')
+        api=dict(vars(self.plugin));api['resPicon']=resolve
+        self.ui.channel_picon(self.view.model,api)
+        self.ui.channel_picon(self.view.model,api)
+        resolve.assert_called_once_with('1_0_1_3C3C_C90_3_EB0000_0_0_0','picon')
+        self.view.model['picchannel'].instance.setPixmapFromFile.assert_called_once_with('/picon/channel.png')
