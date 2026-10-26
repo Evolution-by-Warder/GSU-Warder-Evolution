@@ -3,6 +3,7 @@ from copy import deepcopy
 from xml.etree import ElementTree as ET
 from . import warder_main as main
 from .warder_system import install as install_header
+from .warder_oscam import HeaderArtwork, PANEL_GLASS, CLEAR
 
 SLOTS={
  'config':(105,245,950,104,27),
@@ -26,15 +27,22 @@ def cam_skin(original,width,height,translator=lambda value:value):
     for node in list(root):
         if node.get('name') not in headers and not(node.tag=='ePixmap' and node.get('pixmap')==main.BACKGROUND):root.remove(node)
     root.set('name','WarderGSUCam')
-    root.find('ePixmap').set('zPosition','-3')
+    root.remove(root.find('ePixmap'))
+    root.set('backgroundColor',CLEAR)
     def place(node,x,y,w,h,font=None):
         node.set('position','%d,%d'%(round(x*sx),round(y*sy)));node.set('size','%d,%d'%(round(w*sx),round(h*sy)))
         if font:node.set('font','Regular;%d'%round(font*sy))
         return node
     def fill(x,y,w,h,color,z=-1):return place(ET.SubElement(root,'eLabel',backgroundColor=color,zPosition=str(z)),x,y,w,h)
+    header=ET.SubElement(root,'widget',name='header_art',zPosition='-3',backgroundColor=main.BASE)
+    place(header,0,0,1920,164)
+    for bounds in ((0,164,1920,16),(0,180,55,800),(1105,180,30,800),(1865,180,55,800),(0,980,1920,100)):
+        fill(*bounds,main.BASE,-2)
     for x,w in ((55,1050),(1135,730)):
-        fill(x,180,w,800,main.CYAN,-2);fill(x+2,182,w-4,796,main.PANEL)
-    title=ET.SubElement(root,'eLabel',text=translator('CAM/SRV Manager'),foregroundColor=main.CYAN,backgroundColor=main.PANEL,halign='center',zPosition='2')
+        for bounds in ((x,180,w,2),(x,978,w,2),(x,182,2,796),(x+w-2,182,2,796)):
+            fill(*bounds,main.CYAN,-2)
+        fill(x+2,182,w-4,796,PANEL_GLASS)
+    title=ET.SubElement(root,'widget',name='cam_title',foregroundColor=main.CYAN,backgroundColor=CLEAR,transparent='1',halign='center',zPosition='2')
     place(title,80,195,1000,40,28)
     for original_node in ET.fromstring(original):
         name=original_node.get('name')
@@ -42,22 +50,22 @@ def cam_skin(original,width,height,translator=lambda value:value):
         node=deepcopy(original_node);place(node,*SLOTS[name]);node.set('zPosition','3')
         node.attrib.pop('shadowColor',None);node.attrib.pop('shadowOffset',None)
         if name=='config':
-            node.set('itemHeight',str(round(50*sy)));node.set('backgroundColor',main.PANEL)
-            node.set('backgroundColorSelected',main.SELECTION);node.set('foregroundColorSelected','#00ffffff');node.set('transparent','0')
+            node.set('itemHeight',str(round(50*sy)));node.set('backgroundColor',CLEAR)
+            node.set('backgroundColorSelected',main.SELECTION);node.set('foregroundColorSelected','#00ffffff');node.set('transparent','1')
         elif name=='select_pict':
             node.attrib.pop('pixmap',None);node.set('backgroundColor',main.SELECTION);node.set('transparent','0');node.set('zPosition','2')
         elif name.startswith('pic') or name.endswith('Pic') or name.startswith('srvArrow'):
             node.set('alphatest','blend');node.set('scale','1')
         else:
-            node.set('backgroundColor',main.PANEL);node.set('transparent','1');node.set('foregroundColor','#00ffffff')
+            node.set('backgroundColor',CLEAR);node.set('transparent','1');node.set('foregroundColor','#00ffffff')
             node.set('valign','center');node.set('halign','left' if name!='helpTXT' else 'center')
         root.append(node)
-    # Keep first CAM-row arrows, separate from the conditional SRV arrows.
-    for direction,x in (('left',75),('right',1070)):
-        source=next((n for n in ET.fromstring(original) if n.tag=='ePixmap' and n.get('pixmap','').endswith('/'+direction+'.png')),None)
-        if source is not None:
-            node=deepcopy(source);place(node,x,250,15,27);root.append(node)
-    hint=ET.SubElement(root,'widget',name='focus_hint',foregroundColor=main.CYAN,backgroundColor=main.PANEL,halign='center',valign='center',zPosition='3')
+    for name,bounds in {'workspace_list':(75,255,1010,650,26),'workspace_config':(75,255,1010,650,24),'workspace_title':(80,195,1000,40,28),'workspace_hint':(80,925,1000,38,22)}.items():
+        node=ET.SubElement(root,'widget',name=name,backgroundColor=CLEAR,transparent='1',foregroundColor='#00ffffff',zPosition='4',scrollbarMode='showOnDemand')
+        if name in ('workspace_list','workspace_config'):
+            node.set('backgroundColorSelected',main.SELECTION);node.set('foregroundColorSelected','#00ffffff');node.set('itemHeight',str(round(42*sy)))
+        place(node,*bounds)
+    hint=ET.SubElement(root,'widget',name='focus_hint',foregroundColor=main.CYAN,backgroundColor=CLEAR,transparent='1',halign='center',valign='center',zPosition='3')
     place(hint,1165,925,670,38,22)
     for i,(name,color) in enumerate((('red','#00ff526a'),('green','#0039ff59'),('yellow','#00ffdb52'),('blue','#0055baff'))):
         x=55+i*457
@@ -74,9 +82,15 @@ def prepare(original,api):
 
 def install(screen,api):
     if api['getDesktop'](0).size().width()<1280:return
+    size=api['getDesktop'](0).size()
+    screen['header_art']=HeaderArtwork(size.width(),size.height())
     screen['select_pict']=api['Label']('')
     screen['focus_hint']=api['Label']('')
+    screen['cam_title']=api['Label'](main.text(api,'CAM/SRV Manager'))
+    screen._warder_cam_slots=SLOTS
     screen._warder_cam=Controls(screen,api)
+    from .warder_cam_panes import Panes
+    screen._cam_panes=Panes(screen,api)
     install_header(screen,api)
 
 
@@ -84,13 +98,29 @@ class Controls:
     def __init__(self,screen,api):
         self.screen,self.api=screen,api;self.menu=True
         screen['cam_panel_actions']=api['ActionMap'](['DirectionActions','SetupActions','ColorActions'],
-            {'left':self.left,'right':self.right,'up':self.up,'down':self.down,'ok':self.choose,'blue':self.next_action},-10)
+            {'left':self.left,'right':self.right,'up':self.up,'down':self.down,'ok':self.choose,'blue':self.next_action,'green':self.green,'red':self.red,'yellow':self.choose,'cancel':self.back,'back':self.back},-10)
         screen.onLayoutFinish.append(self.begin)
-    def begin(self):self.focus(True)
+    def begin(self):
+        self.screen['workspace_list'].l.setFont(0,self.api['gFont']('Regular',self.api['fhd'](25)))
+        self.screen['workspace_list'].l.setItemHeight(self.api['fhd'](42))
+        self.focus(True)
+    def green(self):
+        panes=self.screen._cam_panes
+        if panes.active:return panes.green()
+        self.screen.start();return 1
+    def red(self):
+        panes=self.screen._cam_panes
+        if panes.active:return panes.back()
+        self.screen.stop();return 1
+    def back(self):
+        panes=self.screen._cam_panes
+        if panes.active:return panes.back()
+        self.screen.exit();return 1
     def focus(self,menu):
         self.menu=menu
         (self.screen['select_pict'].show if menu else self.screen['select_pict'].hide)()
         self.screen['config'].selectionEnabled(int(not menu))
+        if hasattr(self.screen,'_cam_panes'):self.screen._cam_panes.focus(menu)
         self.screen['focus_hint'].setText('◀ '+main.text(self.api,'Details') if menu else main.text(self.api,'Select with OK')+'  |  '+main.text(self.api,'Menu')+' ▶')
         return 1
     def left(self):return self.focus(False)
@@ -109,6 +139,7 @@ class Controls:
                 position=s['txt%s'%s.idxAllFnc].instance.position()
                 s['select_pict'].move(self.api['ePoint'](position.x()-self.api['fhd'](30),position.y()))
                 s['helpTXT'].setText(s.aa.get(s.idxAllFnc,''))
+        elif s._cam_panes.active:return s._cam_panes.move(direction)
         elif s['config'].list:
             count=len(s['config'].list)
             s['config'].setCurrentIndex((s['config'].getCurrentIndex()+direction)%count)
@@ -116,6 +147,7 @@ class Controls:
     def choose(self):
         s=self.screen
         if self.menu:s.ActivateselectedFnc();return 1
+        if s._cam_panes.active:return s._cam_panes.choose()
         current=s['config'].getCurrent()
         if not current:return 1
         setting=current[1];self.pending_setting=setting;choices=getattr(setting.choices,'choices',setting.choices)

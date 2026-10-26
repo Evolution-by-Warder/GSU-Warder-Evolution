@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r68 správca CAM
+# Aktuálny checkpoint — 26. 10. 2026, r69 vložené panely správcu CAM
 
 ## Projekt a vydávanie
 
@@ -263,3 +263,16 @@ Nový warder_cam.py mení iba prezentáciu a navigačnú vrstvu: pôvodné pomen
 R68 publikované: zdroj2e923bda7007c882f4feb02bacb3b0880c94c907, CI40287426629 success vrátane deterministického dvojitého buildu a kontroly vydaných bajtov. Oba feedy overené: 3668966 B, SHA256 844622f2e5941a7c1ecfa2da1f1374e35f27f588bcc777e2ba7dc8a3054ec83d.
 
 Nahradené r67 odstránené workflow40287552293; API overilo iba v13.40-r68. Spolu44 odstránených vydaní; Git tagy a história zachované.
+
+
+## r69 — priehľadnosť a obsah vľavo
+
+Prezreté snímky1(20261026-074516).jpg a1/2(20261026-074916).jpg. Používateľ chce jemnú priehľadnosť celého správcu a všetky tieto ponuky v ľavom paneli: Stiahnuť CAM, Zmazať CAM, OSCam štart konfigurácia, Oneskorenie štartu, samotný výber CAM. Všetko zahrnuté do jednej r69; r69 sa ešte priebežne nevydávala.
+
+Použitý rovnaký PANEL_GLASS #1a102136, CLEAR a orezaný HeaderArtwork ako v schválenom OSCame. Žiadny nepriehľadný obrázok/plný cyan obdĺžnik pod panelmi; len tenké rámiky a jedna alpha vrstva. Textové komponenty/config majú priehľadný podklad, vybraná položka zostáva nepriehľadne modrá.
+
+warder_cam_panes.py vlastní vopred vytvorené natívne list/config/title widgety hlavného správcu. Session proxy zachytí iba výslovne požadované obrazovky a výbery, pôvodné Python controllery sa používajú bez samostatného Session okna. Zachované pôvodné feedy, ochrana bežiaceho CAM pred zmazaním, store štart konfigurácie. Odinštalačný zoznam sa načítava v pracovnom vlákne; zatvorené panely odmietajú oneskorené výsledky. Červené/EXIT obnoví základný panel alebo zruší vnorený výber. Zelené v konfigurácii ukladá, vo výbere potvrdzuje. Samotná zmena CAM hodnoty CAM nespúšťa. Oneskorenie je výber1–30s s pôvodným uložením. Vnorené výbery v konfigurácii zachovávajú rozpracované hodnoty. Viditeľnosť základných status komponentov je počas obsahu blokovaná, aby backend refresh nevykreslil stav cez zoznam.
+
+Potvrdzovacie MessageBox, Console priebeh opkg a editory hodnôt/priečinkov zostávajú modal; netvrdiť, že už je vložený úplne každý historický dialóg. Malé rozlíšenia pod1280 zachovávajú pôvodné správanie.
+
+335 testov Python3.14.7 prešlo. Kontroly glass vrstiev, zachovaných komponentov, odložených výsledkov, vložených ponúk, save/cancel, delay a výberov; samostatné testy používajú reálny startup controller so simulovaným store, bez zápisu do prijímača. Natívny výsledok čaká na potvrdenie boxu.
