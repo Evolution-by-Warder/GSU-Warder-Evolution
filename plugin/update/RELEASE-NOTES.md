@@ -1,6 +1,5 @@
-GSU 13.40-r80
+GSU 13.40-r81
 
-- Ručná ponuka novej verzie má jednoznačné tlačidlá: červené Nie a zelené Áno.
-- Bez novej verzie alebo pri chybe zostáva Naspäť.
-- Preklady Áno/Nie doplnené pre všetky podporované jazyky.
-- Obsahuje rozšírené ECM okno, picon stanice vedľa kódovania, názov stanice nad nimi a širší prvý riadok CAM z r77–r79.
+- Automatická ponuka aktualizácie zobrazuje iba spodné farebné tlačidlá Nie / Áno v jazyku prostredia; duplicitné biele voľby odstránené.
+- Červené odmietne, zelené potvrdí; OK / EXIT ponuku zatvorí bez inštalácie.
+- Obsahuje širší riadok CAM, názov stanice a dva picony v oboch ECM zobrazeniach, aj jednoznačné Áno/Nie pri ručnej aktualizácii.

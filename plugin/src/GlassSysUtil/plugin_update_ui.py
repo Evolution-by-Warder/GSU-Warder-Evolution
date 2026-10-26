@@ -134,11 +134,11 @@ class UpdateOffer(Screen):
         self['status']=ScrollLabel(message)
         self['red']=Label(_shared_text(api,'No'));self['green']=Label(_shared_text(api,'Yes'))
         self['decision']=Label('');self.select(default)
-        self['actions']=ActionMap(['ColorActions','OkCancelActions','DirectionActions'],{'red':lambda:self.close(False),'cancel':lambda:self.close(False),'green':lambda:self.close(True),'ok':lambda:self.close(self.accepted),'left':lambda:self.select(False),'right':lambda:self.select(True),'up':self['status'].pageUp,'down':self['status'].pageDown},-2)
+        self['actions']=ActionMap(['ColorActions','OkCancelActions','DirectionActions'],{'red':lambda:self.close(False),'cancel':lambda:self.close(False),'green':lambda:self.close(True),'ok':lambda:self.close(self.accepted),'up':self['status'].pageUp,'down':self['status'].pageDown},-2)
         _install_header(self,api)
     def select(self,accepted):
         self.accepted=accepted
-        self['decision'].setText(('  ' if accepted else '› ')+_shared_text(self.api,'No')+'       '+('› ' if accepted else '  ')+_shared_text(self.api,'Yes'))
+        self['decision'].setText('')
 
 
 class PluginInstallScreen(Screen):

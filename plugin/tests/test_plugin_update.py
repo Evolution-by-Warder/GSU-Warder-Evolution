@@ -213,7 +213,10 @@ class PluginUpdateUITests(unittest.TestCase):
         self.assertFalse(screen.accepted)
         self.assertIn('glass_header_art',screen.skin)
         self.assertEqual(screen['status'].getText(),'New release details')
-        screen.select(True);self.assertTrue(screen.accepted)
+        self.assertEqual(screen['decision'].getText(),'')
+        self.assertEqual(screen['red'].getText(),'Nie')
+        self.assertEqual(screen['green'].getText(),'Áno')
+        self.assertNotIn('right',screen['actions'].actions)
 
     def test_install_failure_allows_back_without_restart(self):
         timers=[MagicMock(),MagicMock(),MagicMock()];api=dict(self.api);api['eTimer']=iter(timers).__next__
