@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r68",
-    "tag": "v13.40-r68",
-    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r68/enigma2-plugin-glasssysutil_13.40-r68_all.ipk",
-    "sha256": "844622f2e5941a7c1ecfa2da1f1374e35f27f588bcc777e2ba7dc8a3054ec83d",
-    "bytes": 3668966,
-    "notes": "GSU 13.40-r68\n\nSprávca CAM v spoločnom Warder vzhľade:\n- Spoločná hlavička s dátumom, časom a verziou.\n- Výber CAM a stav vľavo, akcie a nápoveda vpravo.\n- Doľava/doprava prepína panel, hore/dole pohyb v paneli.\n- OK vľavo otvorí výber CAM, OK vpravo vykoná vybranú akciu.\n- Zelené štart/reštart, červené stop, žlté aktivácia, modré ďalšia akcia.\n- Zachované pôvodné príkazy, kontrola CAM a podmienené SRV položky.\n"
+    "version": "13.40-r69",
+    "tag": "v13.40-r69",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r69/enigma2-plugin-glasssysutil_13.40-r69_all.ipk",
+    "sha256": "79a2f5fea275ba61970d10fc963c1150d5ababae55f3b2189ec3e83108a73771",
+    "bytes": 3671812,
+    "notes": "GSU 13.40-r69\n\nSprávca CAM: jemná priehľadnosť oboch panelov ako pri OSCame. Stiahnuť CAM, Zmazať CAM, OSCam štart konfigurácia, oneskorenie a výber CAM sa zobrazujú v ľavom paneli. Pravá ponuka zostáva viditeľná. Červené/Naspäť obnoví pôvodný stavový panel; v konfigurácii zelené uloží. Potvrdenia operácií a priebeh balíkov zostávajú samostatné.\n"
   }
 }
