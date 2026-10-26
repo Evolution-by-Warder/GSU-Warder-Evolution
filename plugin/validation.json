@@ -1,9 +1,9 @@
 {
   "python": "3.14.7",
-  "host_checks": 313,
+  "host_checks": 320,
   "host_checks_passed": true,
   "receiver_tested": false,
-  "source_sha256": "f33d044f7b3d806c80745c5e0af27aa27e7a363982372f5e2b4d1f225dda0864",
+  "source_sha256": "53fcbbcd781f22ed3c3bb7f76dc9203a150e36f54284c463eac2a729bf8f3e32",
   "original_named_classes": 62,
   "original_named_functions": 510,
   "compatibility_replaced_internal_closures": [
@@ -55,20 +55,17 @@
   "plugin_update_sha256": "2daac161e69e25e4e1ba94404ed5f179a36f07ea6d4d28e4b47c4e2a8bca69d6",
   "plugin_update_ui_sha256": "176c289f60774144f82b20ea4a0038b7751f9067aec796215e3717d91ec27f93",
   "latest_candidate": {
-    "version": "13.40-r64",
+    "version": "13.40-r65",
     "receiver_tested": false,
-    "status": "Published; both r64 feeds verified; receiver visual confirmation of panels and confirmation notice pending",
-    "bytes": 3666062,
-    "sha256": "b7843a7d1b0ce4c645890c06af55f680a5681610cc86d298e884f53c8f422aa3",
-    "source_commit": "654a568489c0d1f82a01bf50f45914fc87344fec",
-    "ci_run": 40280660157,
-    "ci_conclusion": "success"
+    "status": "Local checks passed; publication pending; inline ECM native receiver display pending",
+    "bytes": 3667220,
+    "sha256": "d1ac6d5b093c81c9ec2296da604fa10c5fbcc170c60baf49d80fd991a375d373"
   },
   "oscam_readers_ui_sha256": "88f2da2c4eba5a05db9b333b3d8de003ca4f6e6ad82d6e2c6eed41b6feb40865",
   "warder_tools_sha256": "ef23dab03508f12e73cc5c8196f04ebaa44fd1bf7bf0d357881acc49ac341563",
   "warder_tools_ui_sha256": "337e4b0ca69041d64a3104060c9c454a4cd26428c52abb7da6f9a2d1ba7b072e",
-  "notes": "r64 adds a localized wait/restart notice to enable confirmation, with No/cancel still performing no operation. Includes r63 subtle OSCam panel transparency and automatic left-content focus. r62 DVBAPI recovery receiver-confirmed. Visual confirmation of transparency/header and notice pending.",
-  "warder_main_sha256": "ce78e2ea4706d6a9c6c110dee1ca125de901d3cb6c22518ee2d087f05698bf7f",
+  "notes": "r64 OSCam transparency, controls and wait notice receiver-approved. r65 embeds original ECM controller in the main right panel, with red restoring LiveTV; native display awaits receiver confirmation.",
+  "warder_main_sha256": "2156fa0607b4986ab00f5223b3204776cc90ef96b214e5e9b625c2140aba6467",
   "warder_system_sha256": "932f968b76486d0ef4bba012752a6e8e9817b9902987491825885cb80ce3260a",
   "i18n_sha256": "85a45d5f6cf6d05674eb88f60996f12b2c90484eb1c3cc7aa1fe9386e31631ba",
   "warder_channel_sha256": "130a41b4de7fcc4de4481b4abf2488f989cfd67d3ffe52f0e2aaf7087ec0222e",
@@ -86,5 +83,7 @@
     "version": "13.40-r62",
     "confirmed": true,
     "evidence": "User explicitly reports local DVBAPI disable/re-enable recovery works after update, 26 October 2026."
-  }
+  },
+  "warder_ecm_sha256": "75347ea5ee666e2c2c214be14d6f314d26d191b0e0fdff3b24e2edea48751866",
+  "oscam_r64_receiver_confirmed": true
 }

@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r64 informácia pri povolení publikovaná
+# Aktuálny checkpoint — 26. 10. 2026, r65 ECM v pravom paneli
 
 ## Projekt a vydávanie
 
@@ -221,3 +221,10 @@ Aktuálne treba iba vizuálne overenie priehľadnosti/banneru a novej správy.
 Publikované r64: zdroj 654a568489c0d1f82a01bf50f45914fc87344fec, CI40280660157 success. Oba feedy overené r64 / 3666062 B / SHA256 vyššie.
 
 Nahradené r61–r63 odstránené workflow40280828196 success; API overilo iba r64 (spolu40 odstránení). Spotrebovaný request zmazaný, tagy/história zachované.
+
+
+## r65 — ECM v hlavnom pravom paneli
+
+Používateľ schválil r64: OSCam priehľadnosť, ovládanie a hlášky sú OK. Na jeho ďalší pokyn Informácie o ECM nahrádzajú LiveTV v pravom paneli hlavného menu. Ľavá ponuka zostáva dostupná. Prvé červené obnoví LiveTV, ďalšie zavrie menu. Otvorenie inej obrazovky zastaví ECM timer a obnoví pripravenosť LiveTV bez zastavenia/preladenia kanála. Pôvodný ECM parser a 5-sekundové obnovovanie ostávajú zachované; malé rozlíšenia pod 1280 používajú pôvodný dialóg. Správca CAM sa teraz nemení.
+
+320 testov Python 3.14.7 prešlo aj v čistom checkoute, compileall a diff check OK. Dva nezávislé buildy sú zhodné: 3667220 B, SHA256 d1ac6d5b093c81c9ec2296da604fa10c5fbcc170c60baf49d80fd991a375d373. Natívny vzhľad ECM a návrat LiveTV musí ešte potvrdiť prijímač.

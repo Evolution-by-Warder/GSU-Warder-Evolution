@@ -23,7 +23,7 @@ class WarderMainTests(unittest.TestCase):
     def setUpClass(cls):cls.plugin=load(ROOT)
 
     def test_scaled_opaque_layout_fits_eleven_rows_and_contains_all_dynamic_widgets(self):
-        required={'list','info','selection','day','date','clock','seconds','version_title','version','red','green','yellow','blue'}
+        required={'list','info','selection','day','date','clock','seconds','version_title','version','red','green','yellow','blue','inline_ecm_mask','inline_ecm_title','inline_ecm_labels','inline_ecm_values','inline_ecm_picon'}
         for width,height in ((1280,720),(1920,1080),(3840,2160)):
             root=ET.fromstring(ui.main_skin(width,height))
             self.assertEqual(root.get('backgroundColor'),ui.BASE)
@@ -65,7 +65,7 @@ class WarderMainTests(unittest.TestCase):
                 self.assertLessEqual(dy+dh,round(978*height/1080))
             # No opaque, higher-layer widget can paint over the video cut-out.
             for other in root:
-                if other is video or int(other.get('zPosition','0'))<2:continue
+                if other is video or int(other.get('zPosition','0'))<2 or other.get('name','').startswith('inline_ecm_'):continue
                 ox,oy=map(int,other.get('position').split(','));ow,oh=map(int,other.get('size').split(','))
                 self.assertFalse(ox<x+w and ox+ow>x and oy<y+h and oy+oh>y)
 

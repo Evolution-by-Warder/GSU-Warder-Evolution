@@ -1,0 +1,99 @@
+"""Read-only ECM controller embedded in the main screen's right panel."""
+from types import FunctionType
+from . import warder_main as main
+
+FIELDS={'ecmlabels':'inline_ecm_labels','ecmValues':'inline_ecm_values','piccode':'inline_ecm_picon'}
+
+class Signal:
+    def __init__(self):self.callbacks=[]
+    def connect(self,callback):self.callbacks.append(callback);return callback
+    def get(self):return self.callbacks
+
+class Timer:
+    def __init__(self,owner):
+        self.owner=owner;self.timeout=Signal();self.callback=self.timeout.callbacks
+        self.native=owner.api['eTimer']()
+        signal=getattr(self.native,'timeout',None)
+        if signal is not None and hasattr(signal,'connect'):self.connection=signal.connect(self.fire)
+        elif signal is not None and hasattr(signal,'get'):signal.get().append(self.fire)
+        else:self.native.callback.append(self.fire)
+    def fire(self):
+        if self.owner.active and not self.owner.closed:
+            for callback in list(self.callback):callback()
+    def start(self,*args):
+        if self.owner.active and not self.owner.closed:self.native.start(*args)
+    def stop(self):
+        if self.native is not None:self.native.stop()
+    def isActive(self):return self.owner.active and self.native is not None and self.native.isActive()
+    def cleanup(self):self.stop();self.callback.clear();self.connection=None;self.native=None
+
+class InlineECM:
+    def __init__(self,screen,api):
+        self.screen,self.api=screen,api;self.active=False;self.closed=False
+        overlay=dict(api);overlay['eTimer']=self.make_timer
+        original=api['ECMInfo'];methods={}
+        for name,value in vars(original).items():
+            if isinstance(value,FunctionType):
+                fn=FunctionType(value.__code__,overlay,name,value.__defaults__,value.__closure__)
+                fn.__kwdefaults__=value.__kwdefaults__;methods[name]=fn
+        methods['setTitle']=lambda model,title:None
+        methods['close']=lambda model,*args:self.hide()
+        self.model=type('InlineECMController',(original,),methods)(screen.session)
+        for source,target in FIELDS.items():screen[target]=self.model[source]
+        screen['inline_ecm_mask']=api['Label']('')
+        screen['inline_ecm_title']=api['Label'](main.text(api,'ECM Information'))
+        labels=self.model['ecmlabels'];set_text=labels.setText
+        def translated(value):
+            lines=[]
+            for line in value.split('\n'):
+                name,separator,rest=line.partition(':')
+                lines.append(main.text(api,name)+separator+rest)
+            set_text('\n'.join(lines))
+        labels.setText=translated;labels.setText(self.model.e)
+        self.widgets=[screen[name] for name in ('inline_ecm_mask','inline_ecm_title',*FIELDS.values())]
+        for widget in self.widgets:widget.hide()
+        actions=screen['actions'].actions
+        self.original_back=actions['back'];actions['red']=self.back;actions['back']=self.back
+        screen.onHide.append(self.suspend);screen.onClose.append(self.cleanup)
+    def make_timer(self):self.timer=Timer(self);return self.timer
+    def pigs(self):return [r for r in getattr(self.screen,'renderer',[]) if type(r).__name__=='Pig']
+    def show(self):
+        if self.closed:return
+        if not self.active:
+            self.old_red=self.screen['red'].getText()
+            for pig in self.pigs():
+                pig.onHide()
+                if pig.instance is not None:pig.instance.hide()
+            self.screen['selection'].hide();self.screen['info'].hide()
+            for widget in self.widgets:widget.show()
+        self.active=True
+        self.screen['red'].setText(main.text(self.api,'Back'))
+        self.model.runECMTimer=self.timer
+        self.model.startSearchInfo()
+    def hide(self,restore_video=True):
+        if not self.active:return
+        self.active=False;self.timer.stop()
+        for widget in self.widgets:widget.hide()
+        self.screen['selection'].show();self.screen['info'].show()
+        self.screen['red'].setText(self.old_red)
+        for pig in self.pigs():
+            if pig.instance is not None:pig.instance.show()
+            if restore_video and not self.closed:pig.onShow()
+    def back(self):
+        if self.active:self.hide()
+        else:self.original_back()
+        return 1
+    def suspend(self):self.hide(restore_video=False)
+    def cleanup(self):
+        self.closed=True;self.suspend();self.timer.cleanup()
+        self.model.runECMTimer_conn=None
+
+
+def install(screen,api):
+    if api['getDesktop'](0).size().width()>=1280:screen._inline_ecm=InlineECM(screen,api)
+
+
+def show(screen,api):
+    view=getattr(screen,'_inline_ecm',None)
+    if view is None:return screen.session.open(api['ECMInfo'])
+    view.show()
