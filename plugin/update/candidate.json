@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r78",
-    "tag": "v13.40-r78",
-    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r78/enigma2-plugin-glasssysutil_13.40-r78_all.ipk",
-    "sha256": "3c845fda70b424703b9ef9f178e65cf8727ecc0d04553b271215a83158177f52",
-    "bytes": 3680228,
-    "notes": "GSU 13.40-r78\n\n- Názov sledovanej stanice nad dvojicou piconov v malom ECM okne aj pravom paneli GSU, tyrkysovou farbou a písmom nadpisu Informácie ECM.\n- Názov sa získava priamo z Enigmy a aktualizuje spolu s ECM údajmi.\n- Obsahuje picon stanice vedľa kódovania a zarovnanie riadka Družica z r77.\n- Malé samostatné ECM okno jemne rozšírené, picony majú viac priestoru.\n"
+    "version": "13.40-r79",
+    "tag": "v13.40-r79",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r79/enigma2-plugin-glasssysutil_13.40-r79_all.ipk",
+    "sha256": "89c60f288ac2ca91ff0f319eb8d43920080e751b0e1052d6785185b15f05d3b4",
+    "bytes": 3680280,
+    "notes": "GSU 13.40-r79\n\n- Malé ECM okno jemne rozšírené a prvý riadok CAM využíva širší pravý okraj bez predčasného skracovania názvu v parseri.\n- Názov stanice nad dvojicou piconov v malom ECM okne aj pravom paneli GSU, vo farbe a písme nadpisu Informácie ECM.\n- Picon stanice vedľa kódovania; pri nezmenenej stanici sa obrázok znovu nenačítava.\n- Zachované zarovnanie riadka Družica a ostatné schválené obrazovky.\n"
   }
 }
