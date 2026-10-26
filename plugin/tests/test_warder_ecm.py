@@ -19,7 +19,7 @@ class InlineECMTests(unittest.TestCase):
         self.assertIsInstance(self.view.model,self.plugin.ECMInfo)
         self.assertNotIn(self.view.model['actions'],list(self.screen.values()))
         self.assertIs(self.screen['inline_ecm_values'],self.view.model['ecmValues'])
-        self.assertIs(self.screen['inline_ecm_labels'],self.view.model['ecmlabels'])
+        self.assertIsNot(self.screen['inline_ecm_labels'],self.view.model['ecmlabels'])
         self.assertIs(self.screen['inline_ecm_picon'],self.view.model['piccode'])
         self.session.open.assert_not_called()
     def test_ecm_menu_selection_uses_right_panel_without_session_dialog(self):
@@ -68,9 +68,19 @@ class InlineECMTests(unittest.TestCase):
         mapping={'Provider:':'Operátor:','ECM Time:':'Čas ECM:'}
         with patch.object(self.ui.main,'text',side_effect=lambda api,key:mapping.get(key,key)):
             self.view.model['ecmlabels'].setText('Provider:\nCHID:\nECM Time:')
+            self.view.refresh_labels()
         self.assertEqual(self.screen['inline_ecm_labels'].text,'Operátor:\nCHID:\nČas ECM:')
         self.assertEqual(self.view.model.e,original)
         self.assertIn('CHID:',self.screen['inline_ecm_labels'].text)
+    def test_real_catalog_renders_slovak_after_original_backend_refresh(self):
+        with patch.object(self.plugin.config.osd.language,'value','sk_SK'), patch.object(self.plugin.config.plugins.GlassSysUtil.par62,'value',True):
+            self.view.model['ecmlabels'].setText('System:\nProvider:\nCHID:\nUsing:\nAddress:\nHops:\nShare:\nECM Time:')
+            with patch.object(self.view.model,'startSearchInfo'):
+                self.view.show()
+            self.assertEqual(self.screen['inline_ecm_labels'].getText(),'Systém:\nOperátor:\nCHID:\nPoužíva:\nAdresa:\nPreskoky:\nZdieľanie:\nČas ECM:')
+            self.assertIn('Provider:',self.view.model['ecmlabels'].getText())
+            self.view.timer.fire()
+            self.assertIn('Čas ECM:',self.screen['inline_ecm_labels'].getText())
     def test_overlay_geometry_stays_within_right_panel_at_all_resolutions(self):
         main=self.ui.main
         for width,height in ((1280,720),(1920,1080),(3840,2160)):

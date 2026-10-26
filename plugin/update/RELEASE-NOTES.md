@@ -1,3 +1,3 @@
-GSU 13.40-r66
+GSU 13.40-r67
 
-Opravené preklady popisov v ECM paneli podľa jazyka systému. Zachované logo, živé hodnoty a ovládanie.
+ECM panel používa samostatné preložené popisy, obnovené pri otvorení aj každom načítaní údajov. Pôvodné interné popisy parsera zostávajú oddelené. Logo a ovládanie zachované.
