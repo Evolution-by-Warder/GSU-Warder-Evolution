@@ -37,6 +37,11 @@ def prepare(skin,width,height):
         if name in ('list','config'):
             node.set('backgroundColorSelected',main.SELECTION);node.set('foregroundColorSelected','#00ffffff');node.set('itemHeight',str(round(42*sy)))
         box(node,*bounds)
+    for name,bounds,font in (('line',(1160,560,680,2),1),('title',(1160,580,680,40),24),('list',(1155,635,690,240),23),('value',(1160,650,680,80),40),('help',(1160,890,680,65),21)):
+        node=ET.SubElement(root,'widget',name='right_editor_'+name,font='Regular;%d'%round(font*sy),backgroundColor=main.CYAN if name=='line' else CLEAR,transparent='0' if name=='line' else '1',foregroundColor=main.CYAN if name in ('title','value') else '#00ffffff',zPosition='8',scrollbarMode='showOnDemand')
+        if name=='list':node.set('backgroundColorSelected',main.SELECTION);node.set('foregroundColorSelected','#00ffffff')
+        if name=='value':node.set('halign','center');node.set('valign','center')
+        box(node,*bounds)
     return ET.tostring(root,encoding='unicode'),decorations
 
 
@@ -74,6 +79,11 @@ class Workspace:
         screen['right_scroll']=api['ScrollLabel']('')
         self.widgets=[screen['right_'+n] for n in ('title','text','list','config','scroll')]
         for widget in self.widgets:widget.hide()
+        for name in ('line','title','value','help'):screen['right_editor_'+name]=api['Label']('')
+        screen['right_editor_list']=api['ListboxSys2']([])
+        self.editor_widgets=[screen['right_editor_'+n] for n in ('line','title','value','help','list')]
+        for widget in self.editor_widgets:widget.hide()
+        screen['right_editor_numbers']=api['ActionMap'](['NumberActions'],{str(n):(lambda n=n:self.digit(n)) for n in range(10)},-13)
         screen['right_actions']=api['ActionMap'](['DirectionActions','SetupActions','ColorActions','WizardActions'],{'left':self.left,'right':self.right,'up':self.up,'down':self.down,'ok':self.choose,'green':self.green,'yellow':self.yellow,'red':self.back,'cancel':self.back,'back':self.back},-12)
         screen.onHide.append(self.suspend);screen.onClose.append(self.shutdown);screen.onShown.append(self.resume)
     @property
@@ -121,7 +131,7 @@ class Workspace:
         for fn in model.onLayoutFinish:fn()
         self.footer()
     def bind(self,model):
-        for widget in self.widgets:widget.hide()
+        for widget in self.widgets+self.editor_widgets:widget.hide()
         self.screen['right_title'].show()
         for component in model.values():
             if isinstance(component,self.api['ActionMap']):component.setEnabled(False)
@@ -145,13 +155,15 @@ class Workspace:
         self.screen['list'].selectionEnabled(int(not self.focus_right))
         if self.active:
             if self.choice is not None:
-                self.screen['right_list'].selectionEnabled(int(self.focus_right));self.screen['right_config'].selectionEnabled(0);return
+                self.screen['right_editor_list'].selectionEnabled(int(self.focus_right and self.choice['mode']=='list'));self.screen['right_config'].selectionEnabled(int(self.focus_right));return
             for name in ('list','config'):
                 if name in self.model:self.model[name].selectionEnabled(int(self.focus_right))
     def left(self):
+        if self.choice is not None and self.choice['mode']=='number' and self.focus_right:return self.adjust(-1)
         if not self.active:return 0
         self.focus_right=False;self.focus();return 1
     def right(self):
+        if self.choice is not None and self.choice['mode']=='number' and self.focus_right:return self.adjust(1)
         if not self.active:return 0
         self.focus_right=True;self.focus();return 1
     def up(self):return self.move(-1)
@@ -159,7 +171,9 @@ class Workspace:
     def move(self,direction):
         if not self.active:return 0
         if not self.focus_right:widget=self.screen['list']
-        elif self.choice is not None:widget=self.screen['right_list']
+        elif self.choice is not None:
+            if self.choice['mode']=='number':return self.adjust(-direction)
+            widget=self.screen['right_editor_list']
         elif 'file_info' in self.model:
             (self.model['file_info'].pageUp if direction<0 else self.model['file_info'].pageDown)();return 1
         elif 'config' in self.model:
@@ -175,7 +189,12 @@ class Workspace:
             if not getattr(self.model,'_swap_busy',False):self.screen.selectedmenuitem()
             return 1
         if self.choice is not None:
-            current=self.screen['right_list'].getCurrent()
+            if self.choice['mode']=='number':
+                value=int(self.choice['buffer'] or '0');low,high=self.choice['bounds']
+                if low<=value<=high:self.close_choice(value)
+                else:self.screen['right_editor_help'].setText('%d – %d'%(low,high))
+                return 1
+            current=self.screen['right_editor_list'].getCurrent()
             if current:self.close_choice(current[0])
             return 1
         if self.kind in ('create','osd'):
@@ -190,13 +209,7 @@ class Workspace:
                     if type(setting.value) is int:
                         model=self.model
                         bounds=next((limits for key,limits in (('par4',(1,2000)),('par81',(2,12)),('par78',(50,450)),('par5',(4,15))) if setting is getattr(cfg,key)),None)
-                        def edited(value):
-                            if self.model is not model or value is None:return
-                            try:value=int(value)
-                            except ValueError:return
-                            if bounds and not bounds[0]<=value<=bounds[1]:return
-                            setting.value=value;model['config'].invalidateCurrent()
-                        Session(self).openWithCallback(edited,self.api['InputBox'],title=str(current[0]),text=str(setting.value),type=self.api['Input'].NUMBER)
+                        self.open_number(str(current[0]),setting,bounds)
                         return 1
                 raw=getattr(setting,'choices',None)
                 if raw is not None:
@@ -241,21 +254,46 @@ class Workspace:
             self.footer();return
         for _,model in self.history:self.dispose(model)
         self.history.clear();self.model=None;self.kind=None
-        for widget in self.widgets:widget.hide()
+        for widget in self.widgets+self.editor_widgets:widget.hide()
         for name,value in self.saved_footer.items():self.screen[name].setText(value)
         self.glass(False);self.preview(True,restore);self.screen['list'].selectionEnabled(1)
-    def open_choice(self,title,items,setting):
+    def begin_editor(self,title,setting,mode):
         if self.kind=='osd':self.model.chckTimer.stop()
-        self.choice={'setting':setting,'title':self.screen['right_title'].getText()}
-        for widget in self.widgets:widget.hide()
-        self.screen['right_title'].setText(title);self.screen['right_title'].show()
+        self.choice={'setting':setting,'title':self.screen['right_title'].getText(),'mode':mode}
+        for widget in self.editor_widgets:widget.hide()
+        self.screen['right_text'].hide()
+        for name in ('line','title','help'):self.screen['right_editor_'+name].show()
+        self.screen['right_editor_title'].setText(title)
+        self.screen['right_editor_help'].setText(main.text(self.api,'Select with OK'))
+        self.screen['green'].setText(main.text(self.api,'Select with OK'));self.screen['yellow'].setText('')
+        self.focus_right=True;self.focus()
+    def open_choice(self,title,items,setting):
+        self.begin_editor(title,setting,'list')
         rows=[];index=0
         for n,(label,value) in enumerate(items):
             if value==setting.value:index=n
             rows.append([value,self.api['MultiContentEntryText'](pos=(round(12*self.sx),0),size=(round(660*self.sx),round(36*self.sy)),font=0,text=label)])
-        self.screen['right_list'].l.setList(rows);self.screen['right_list'].moveToIndex(index);self.screen['right_list'].show()
-        self.screen['green'].setText(main.text(self.api,'Select with OK'));self.screen['yellow'].setText('')
-        self.focus_right=True;self.focus()
+        widget=self.screen['right_editor_list']
+        widget.l.setFont(0,self.api['gFont']('Regular',round(23*self.sy)));widget.l.setItemHeight(round(40*self.sy))
+        widget.l.setList(rows);widget.moveToIndex(index);widget.show()
+    def open_number(self,title,setting,bounds):
+        self.begin_editor(title,setting,'number')
+        self.choice.update(buffer=str(setting.value),fresh=True,bounds=bounds)
+        self.screen['right_editor_value'].show();self.render_number()
+    def render_number(self):
+        self.screen['right_editor_value'].setText(self.choice['buffer'] or '0')
+        low,high=self.choice['bounds']
+        self.screen['right_editor_help'].setText('0–9  |  ◀ −   + ▶    (%d–%d)'%(low,high))
+    def digit(self,number):
+        if not self.active or self.choice is None or self.choice['mode']!='number' or not self.focus_right:return 0
+        value='' if self.choice['fresh'] else self.choice['buffer']
+        value=(value+str(number)).lstrip('0') or '0'
+        if len(value)<=len(str(self.choice['bounds'][1])):self.choice['buffer']=value
+        self.choice['fresh']=False;self.render_number();return 1
+    def adjust(self,delta):
+        low,high=self.choice['bounds'];value=int(self.choice['buffer'] or '0')
+        self.choice['buffer']=str(max(low,min(high,value+delta)))
+        self.choice['fresh']=True;self.render_number();return 1
     def close_choice(self,value=None):
         choice=self.choice;self.choice=None
         if value is not None:

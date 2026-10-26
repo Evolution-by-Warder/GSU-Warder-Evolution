@@ -94,9 +94,33 @@ class RightWorkspaceTests(unittest.TestCase):
         self.view.enter('osd');model=self.view.model;model.changeShow=MagicMock()
         model['config'].moveToIndex(1);old=cfg.par80.value
         self.view.choose();self.assertIsNotNone(self.view.choice)
-        self.assertTrue(self.screen['right_list'].visible);self.assertFalse(self.screen['right_config'].visible)
+        self.assertTrue(self.screen['right_editor_list'].visible);self.assertTrue(self.screen['right_config'].visible)
         self.session.open.assert_not_called();self.session.openWithCallback.assert_not_called()
         self.view.back();self.assertEqual(cfg.par80.value,old);self.assertIs(self.view.model,model)
         self.view.choose();new='0' if old=='1' else '1';self.view.close_choice(new)
         self.assertEqual(cfg.par80.value,new);self.assertIsNone(self.view.choice)
         self.assertTrue(self.screen['right_config'].visible)
+
+    def test_lower_numeric_editor_keeps_settings_visible_and_commits_only_confirmed_values(self):
+        cfg=self.plugin.config.plugins.GlassSysUtil;cfg.par0.value=True
+        self.view.enter('osd');self.view.model.changeShow=MagicMock()
+        setting=cfg.par4;setting.value=500
+        self.view.open_number('Threshold',setting,(1,2000))
+        self.assertTrue(self.screen['right_config'].visible);self.assertTrue(self.screen['right_editor_value'].visible)
+        self.assertEqual(self.view.digit(7),1);self.view.digit(5)
+        self.assertEqual(setting.value,500)
+        self.view.back();self.assertEqual(setting.value,500)
+        self.view.open_number('Threshold',setting,(1,2000));self.view.digit(0);self.view.choose()
+        self.assertIsNotNone(self.view.choice);self.assertEqual(setting.value,500)
+        self.view.digit(5);self.view.digit(0);self.view.green()
+        self.assertIsNone(self.view.choice);self.assertEqual(setting.value,50)
+        self.session.openWithCallback.assert_not_called()
+    def test_editor_geometry_is_below_osd_settings_and_inside_right_panel(self):
+        ui=importlib.import_module('Plugins.Extensions.GlassSysUtil.warder_right')
+        for width,height in ((1280,720),(1920,1080),(3840,2160)):
+            xml,_=ui.prepare(ui.main.main_skin(width,height),width,height)
+            for node in ET.fromstring(xml):
+                if not node.get('name','').startswith('right_editor_'):continue
+                x,y=map(int,node.get('position').split(','));w,h=map(int,node.get('size').split(','))
+                self.assertGreaterEqual(y,round(550*height/1080));self.assertLessEqual(y+h,round(978*height/1080))
+                self.assertGreaterEqual(x,round(1137*width/1920));self.assertLessEqual(x+w,round(1863*width/1920))
