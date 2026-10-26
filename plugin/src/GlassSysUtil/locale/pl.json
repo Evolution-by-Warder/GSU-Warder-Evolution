@@ -127,5 +127,12 @@
   "Signal": "Sygnał",
   "Bitrate": "Przepływność",
   "Avg:": "Śr.:",
-  "Act:": "Bież.:"
+  "Act:": "Bież.:",
+  "Select Server": "Wybierz serwer",
+  "Login": "Login",
+  "Pass": "Hasło",
+  "Ip adress": "Adres IP",
+  "Start Time": "Czas uruchomienia",
+  "Details": "Szczegóły",
+  "Menu": "Menu"
 }

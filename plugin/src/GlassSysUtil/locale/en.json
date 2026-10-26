@@ -127,5 +127,12 @@
   "Signal": "Signal",
   "Bitrate": "Bitrate",
   "Avg:": "Avg:",
-  "Act:": "Act:"
+  "Act:": "Act:",
+  "Select Server": "Select Server",
+  "Login": "Login",
+  "Pass": "Password",
+  "Ip adress": "IP address",
+  "Start Time": "Start Time",
+  "Details": "Details",
+  "Menu": "Menu"
 }

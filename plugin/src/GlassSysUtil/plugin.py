@@ -1,3 +1,4 @@
+from Plugins.Extensions.GlassSysUtil import warder_oscam as _warder_oscam
 from Plugins.Extensions.GlassSysUtil import warder_channel as _warder_channel
 from Plugins.Extensions.GlassSysUtil import warder_system as _warder_system
 from Plugins.Extensions.GlassSysUtil import warder_main as _warder_main
@@ -390,10 +391,7 @@ def main3(session, **kwargs):
     (c, o) = countServers()
     c = oscamRunning()
     if c or not c and not o:
-        if o:
-            session.open(oscamInfo)
-        else:
-            session.open(oscamInfoChoiceServer)
+        _warder_oscam.open_workspace(session, globals(), select_server=not o)
     return
 
 
@@ -1557,10 +1555,7 @@ class SysUtilMngMain(Screen):
                 else:
                     self.session.open(cccamInfoChoiceServer)
             elif selectedItem == '3':
-                if self.enaNonLocalOscam:
-                    self.session.open(oscamInfo)
-                else:
-                    self.session.open(oscamInfoChoiceServer)
+                _warder_oscam.open_workspace(self.session, globals(), select_server=not self.enaNonLocalOscam)
             elif selectedItem == '4':
                 self.session.open(mboxInfo)
             elif selectedItem == '7':

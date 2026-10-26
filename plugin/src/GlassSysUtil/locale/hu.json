@@ -127,5 +127,12 @@
   "Signal": "Jel",
   "Bitrate": "Bitráta",
   "Avg:": "Átlag:",
-  "Act:": "Akt.:"
+  "Act:": "Akt.:",
+  "Select Server": "Szerver kiválasztása",
+  "Login": "Bejelentkezés",
+  "Pass": "Jelszó",
+  "Ip adress": "IP-cím",
+  "Start Time": "Indítás ideje",
+  "Details": "Részletek",
+  "Menu": "Menü"
 }
