@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r81 automatická aktualizácia bez duplicitných volieb
+# Aktuálny checkpoint — 26. 10. 2026, r82 odstup nápovedy OSD ECM
 
 ## Projekt a vydávanie
 
@@ -432,3 +432,8 @@ Používateľ schválil automatické veľké okno na snímke123823 (r78), žiada
 Publikované r81: zdroj41f20f9e012b38bae07bb9c240b9a6c03f436137, CI40324432572 success;358 testov. IPK3 680 288 bajtov, SHA256d20574def14eeb37ad9ec6c89e05768d9308fac11a067d644d03dcb5a9b2042c. Oba feedy overené. Nová podoba ponuky je účinná až po nainštalovaní r81 pri ďalšej ponuke; prechod zo staršej verzie vykreslí ešte starý kód.
 
 Workflow40324557070 odstránil r80 po overení r81; API overilo iba v13.40-r81. Spolu57 odstránených vydaní; Git tagy a história zachované.
+
+
+## r82 — odstup nápovedy OSD ECM
+
+Po snímke124251: Stlač OK pre úpravu posunuté y520→562 FHD, jeden42px riadok. Pri spodnom vnorenom editore je táto nápoveda skrytá, aby nekolidovala s deliacou čiarou y560 a názvom výberu; návrat obnoví viditeľnosť existujúcim bind. Konfigurácia a ostatné súradnice sa nemenia.

@@ -32,7 +32,7 @@ def prepare(skin,width,height):
         for bounds in ((x,180,w,2),(x,978,w,2),(x,182,2,796),(x+w-2,182,2,796)):fill(*bounds,main.CYAN,1)
         fill(x+2,182,w-4,796,PANEL_GLASS,-1)
         node=ET.SubElement(root,'widget',name='right_opaque_'+side,backgroundColor=main.PANEL,zPosition='1');box(node,x+2,182,w-4,796)
-    for name,bounds,font in (('title',(1160,200,680,45),28),('list',(1155,265,690,410),23),('config',(1155,265,690,540),22),('text',(1160,700,680,255),23),('scroll',(1160,265,680,680),23),('edit_hint',(1160,520,680,30),20)):
+    for name,bounds,font in (('title',(1160,200,680,45),28),('list',(1155,265,690,410),23),('config',(1155,265,690,540),22),('text',(1160,700,680,255),23),('scroll',(1160,265,680,680),23),('edit_hint',(1160,562,680,30),20)):
         node=ET.SubElement(root,'widget',name='right_'+name,font='Regular;%d'%round(font*sy),backgroundColor=CLEAR,transparent='1',foregroundColor=main.CYAN if name=='title' else '#00ffffff',zPosition='6',scrollbarMode='showOnDemand')
         if name in ('list','config'):
             node.set('backgroundColorSelected',main.SELECTION);node.set('foregroundColorSelected','#00ffffff');node.set('itemHeight',str(round(42*sy)))
@@ -271,6 +271,7 @@ class Workspace:
         self.choice={'setting':setting,'title':self.screen['right_title'].getText(),'mode':mode}
         for widget in self.editor_widgets:widget.hide()
         self.screen['right_text'].hide()
+        self.screen['right_edit_hint'].hide()
         for name in ('line','title','help'):self.screen['right_editor_'+name].show()
         self.screen['right_editor_title'].setText(title)
         self.screen['right_editor_help'].setText(main.text(self.api,'Select with OK'))
