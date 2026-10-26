@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r61 oprava OK pripravená
+# Aktuálny checkpoint — 26. 10. 2026, r61 oprava OK publikovaná
 
 ## Projekt a vydávanie
 
@@ -152,3 +152,7 @@ Návrat cez červené a prepínanie doľava/doprava ostávajú.
 299 testov Python3.14.7 aj v čistom checkoute, dva identické buildy3662832 B,
 SHA256 2fd4189f5ca92fe9942de68f83f1aed6829e39979df21b018345b6705593fdb0.
 Prijímačové potvrdenie OK zatiaľ chýba.
+
+Publikované r61: zdroj b0fe5e758aa95ae199017c0bad20f2de33c21733, CI40275956332 success. Oba feedy overené r61 / 3662832 B / SHA256 vyššie.
+
+Nahradené r60 odstránené workflow40276053192 success; API overilo iba r61 (spolu37 odstránení). Spotrebovaný request zmazaný, tagy/história zachované.
