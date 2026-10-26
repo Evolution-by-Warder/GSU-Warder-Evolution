@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r57 oprava pádu publikovaná
+# Aktuálny checkpoint — 26. 10. 2026, r58 oprava ovládania pripravená
 
 ## Projekt a vydávanie
 
@@ -85,3 +85,18 @@ Prijímačové potvrdenie opravy zatiaľ chýba.
 Publikované r57: zdroj ea928644f332a566cc537aff128f7edc59fd4975, CI40272777670 success. Oba feedy overené: r57 / 3662198 B / zhodný SHA256 vyššie.
 
 Chybné vydanie r56 odstránené workflow40272834229 success. API overilo iba r57; spolu33 odstránených vydaní, tagy a história zachované. Spotrebovaný request zmazaný.
+
+
+## r58 – ovládanie ľavého panelu OSCamu
+
+Snímky 1(20261026-051447).jpg a 1(20261026-051540).jpg potvrdzujú otvorenie r57
+bez predchádzajúceho pádu a správne zobrazenie úvodu/súhrnu. Používateľ hlási,
+že pohyb zostal vpravo. Root ActionMap teraz vždy spotrebuje up/down a volá
+priamo up/down aktívneho MenuList alebo pageUp/pageDown ScrollLabel. Žiadne
+prenechanie šípok natívnemu spoločnému fokusu viacerých listboxov. Pravá ponuka
+sa nemení pri pohybe vo výsledkoch. selectionEnabled je zapnuté iba pre aktívny
+panel; ostatné zoznamy nevykresľujú výber. Doprava/doľava menia panel, pôvodné
+farebné akcie ostávajú. Testy pokrývajú šesť ľavých zoznamov, text súboru a obe
+strany prepínania. 293 testov aj z čistého checkoutu, zhodné dva buildy3662312 B,
+SHA256 5a5d11fab40dcb8ec1f9261bce4c46a9deaf150ffaceca3f3fdd4af9271997a5.
+Zatiaľ čaká na potvrdenie ovládania na prijímači.

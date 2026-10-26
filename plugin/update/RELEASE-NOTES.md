@@ -1,6 +1,8 @@
-GSU 13.40-r57
+GSU 13.40-r58
 
-Oprava pádu pri otvorení Informácií o OSCame na OpenATV.
-Úvodné spustenie obrazovky používa viazanú metódu požadovanú natívnym Screen API.
-Doplnený regresný test kopíruje spôsob spúšťania onLayoutFinish v OpenATV.
-Rozloženie OSCamu a všetky jeho funkcie zostávajú zachované.
+Oprava ovládania panelov v Informáciách o OSCame.
+- Po otvorení výsledkov šípky hore/dole priamo ovládajú ľavý zoznam.
+- Doprava prepne na ponuku, doľava späť na výsledky.
+- V konfiguračnom súbore šípky hore/dole posúvajú text.
+- Zvýraznenie výberu má iba aktívny panel.
+Pôvodné akcie čítačiek, klientov a návraty zostávajú zachované.
