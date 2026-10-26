@@ -155,7 +155,7 @@ class Workspace:
     def footer(self):
         if not self.active:return
         for name in ('red','green','yellow'):
-            self.screen[name].setText(main.text(self.api,'Back') if name=='red' else (self.model[name].getText() if name in self.model else ''))
+            self.screen[name].setText(main.text(self.api,'No' if self.kind=='update' and self.model.release is not None else 'Back') if name=='red' else (self.model[name].getText() if name in self.model else ''))
     def focus(self):
         self.screen['list'].selectionEnabled(int(not self.focus_right))
         if self.active:
@@ -319,7 +319,7 @@ class Workspace:
         if self.active and self.kind=='update':
             self.model.release,self.model.checker=release,checker
             self.model['file_info'].setText(message)
-            self.model['green'].setText(main.text(self.api,'Update') if release else '')
+            self.model['green'].setText(main.text(self.api,'Yes') if release else '')
             self.footer()
         else:self.enter('update',(self.api,message,release,checker))
     def resume(self):
@@ -350,7 +350,7 @@ class UpdateInfo(Screen):
         Screen.__init__(self,session);self.api,self.release,self.checker=api,release,checker
         self['file_info']=api['ScrollLabel'](message)
         self['red']=api['Label'](_update_display(api,'Back'))
-        self['green']=api['Label'](_update_display(api,'Update') if release else '')
+        self['green']=api['Label'](_update_display(api,'Yes') if release else '')
         self['actions']=api['ActionMap'](['ColorActions','SetupActions'],{'red':self.close,'cancel':self.close,'green':self.install},-2)
         self.onLayoutFinish.append(self.title)
     def title(self):self.setTitle(_update_display(self.api,'Update'))

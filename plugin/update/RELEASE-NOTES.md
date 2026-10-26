@@ -1,6 +1,6 @@
-GSU 13.40-r79
+GSU 13.40-r80
 
-- Malé ECM okno jemne rozšírené a prvý riadok CAM využíva širší pravý okraj bez predčasného skracovania názvu v parseri.
-- Názov stanice nad dvojicou piconov v malom ECM okne aj pravom paneli GSU, vo farbe a písme nadpisu Informácie ECM.
-- Picon stanice vedľa kódovania; pri nezmenenej stanici sa obrázok znovu nenačítava.
-- Zachované zarovnanie riadka Družica a ostatné schválené obrazovky.
+- Ručná ponuka novej verzie má jednoznačné tlačidlá: červené Nie a zelené Áno.
+- Bez novej verzie alebo pri chybe zostáva Naspäť.
+- Preklady Áno/Nie doplnené pre všetky podporované jazyky.
+- Obsahuje rozšírené ECM okno, picon stanice vedľa kódovania, názov stanice nad nimi a širší prvý riadok CAM z r77–r79.

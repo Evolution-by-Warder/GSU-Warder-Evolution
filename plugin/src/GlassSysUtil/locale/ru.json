@@ -137,5 +137,7 @@
   "Menu": "Меню",
   "Account enabled, but OSCam recovery failed.": "Учётная запись включена, но перезапуск или повторное подключение OSCam не удалось.",
   "After enabling, please wait for the change and client list refresh. A local DVBAPI account restarts OSCam in the background.": "После включения подождите применения изменения и обновления списка. Для локальной учётной записи DVBAPI OSCam перезапустится в фоне.",
-  "Press OK to edit": "Нажмите OK для изменения"
+  "Press OK to edit": "Нажмите OK для изменения",
+  "Yes": "Да",
+  "No": "Нет"
 }
