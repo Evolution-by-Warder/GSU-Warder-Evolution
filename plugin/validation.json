@@ -57,7 +57,12 @@
   "latest_candidate": {
     "version": "13.40-r81",
     "receiver_tested": false,
-    "status": "358 host checks passed; native visual confirmation pending"
+    "status": "Published; CI and both update feeds verified; native visual confirmation pending",
+    "bytes": 3680288,
+    "sha256": "d20574def14eeb37ad9ec6c89e05768d9308fac11a067d644d03dcb5a9b2042c",
+    "source_commit": "41f20f9e012b38bae07bb9c240b9a6c03f436137",
+    "ci_run": 40324432572,
+    "ci_conclusion": "success"
   },
   "oscam_readers_ui_sha256": "88f2da2c4eba5a05db9b333b3d8de003ca4f6e6ad82d6e2c6eed41b6feb40865",
   "warder_tools_sha256": "ef23dab03508f12e73cc5c8196f04ebaa44fd1bf7bf0d357881acc49ac341563",
@@ -68,13 +73,13 @@
   "i18n_sha256": "85a45d5f6cf6d05674eb88f60996f12b2c90484eb1c3cc7aa1fe9386e31631ba",
   "warder_channel_sha256": "fbe65a0eaf2b21b664423bf51b13482ce53a3c2a91613cf396f6a255d8489856",
   "release_cleanup": {
-    "kept": "v13.40-r80",
-    "removed": 56,
+    "kept": "v13.40-r81",
+    "removed": 57,
     "first_run": 40220658958,
     "final_run": 40318663230,
     "verified_release_count": 1,
     "tags_unchanged": true,
-    "last_run": 40324092192,
+    "last_run": 40324557070,
     "remaining_releases": 1
   },
   "warder_oscam_sha256": "ba32e2e4820de48f9d226d536b51d050a37bcd3834cfa891857666d1b58082de",
