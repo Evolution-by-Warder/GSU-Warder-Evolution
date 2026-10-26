@@ -67,11 +67,11 @@ def cam_skin(original,width,height,translator=lambda value:value):
         place(node,*bounds)
     hint=ET.SubElement(root,'widget',name='focus_hint',foregroundColor=main.CYAN,backgroundColor=CLEAR,transparent='1',halign='center',valign='center',zPosition='3')
     place(hint,1165,925,670,38,22)
-    for i,(name,color) in enumerate((('red','#00ff526a'),('green','#0039ff59'),('yellow','#00ffdb52'),('blue','#0055baff'))):
-        x=55+i*457
-        fill(x+129,996,200,2,color,3)
+    for i,(name,color) in enumerate((('red','#00ff526a'),('green','#0039ff59'),('yellow','#00ffdb52'))):
+        x=55+i*610
+        fill(x+195,996,200,2,color,3)
         node=ET.SubElement(root,'widget',name=name,foregroundColor=color,backgroundColor=main.BASE,halign='center',valign='center',zPosition='3',noWrap='1')
-        place(node,x,1006,440,50,28)
+        place(node,x,1006,590,50,28)
     return ET.tostring(root,encoding='unicode')
 
 
@@ -98,7 +98,7 @@ class Controls:
     def __init__(self,screen,api):
         self.screen,self.api=screen,api;self.menu=True
         screen['cam_panel_actions']=api['ActionMap'](['DirectionActions','SetupActions','ColorActions'],
-            {'left':self.left,'right':self.right,'up':self.up,'down':self.down,'ok':self.choose,'blue':self.next_action,'green':self.green,'red':self.red,'yellow':self.choose,'cancel':self.back,'back':self.back},-10)
+            {'left':self.left,'right':self.right,'up':self.up,'down':self.down,'ok':self.choose,'blue':self.ignore_blue,'green':self.green,'red':self.red,'yellow':self.choose,'cancel':self.back,'back':self.back},-10)
         screen.onLayoutFinish.append(self.begin)
     def begin(self):
         self.screen['workspace_list'].l.setFont(0,self.api['gFont']('Regular',self.api['fhd'](25)))
@@ -125,8 +125,7 @@ class Controls:
         return 1
     def left(self):return self.focus(False)
     def right(self):return self.focus(True)
-    def next_action(self):
-        self.focus(True);return self.move(1)
+    def ignore_blue(self):return 1
     def up(self):return self.move(-1)
     def down(self):return self.move(1)
     def move(self,direction):
