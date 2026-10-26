@@ -241,3 +241,8 @@ Snímka1(20261026-071243).jpg potvrdzuje ECM v pravom paneli. Používateľ výs
 R66 publikované: zdroj985996f35088b5c09a66c80803435de0f5f72409, CI40284764313 success vrátane deterministického dvojitého buildu a kontroly vydaných bajtov. Oba feedy overené na r66: 3667024 B, SHA256 bd636876d7c23e893ce112ad90037be334d6f9c21c0db76aa3cb53572d1cda78.
 
 Nahradené r65 odstránené workflow40284856704; API overilo iba v13.40-r66. Spolu42 odstránených vydaní, Git tagy a história zachované.
+
+
+## r67 — oddelené ECM popisy
+
+Používateľ snímkou1(20261026-072259).jpg potvrdil anglické popisy aj po ďalšom GUI reštarte. Reštart sa už vykonáva automaticky; neopakovať tento návrh. Receiver diagnostika potvrdzuje r66 zdroj aj správne slovenské JSON hodnoty. Presná príčina na prijímači zatiaľ nie je dokázaná. R67 odstraňuje patchovanie setText zdieľaného Labelu: interný parserový Label zostáva súkromný, nový zobrazovací Label dostáva preložené popisy po otvorení aj po každom obnovení. Test používa reálny SK katalóg a overuje CHID aj nezmenenú internú predlohu. 321 testov prešlo; natívny výsledok musí potvrdiť box.
