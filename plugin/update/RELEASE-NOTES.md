@@ -1,5 +1,4 @@
-GSU 13.40-r84
+GSU 13.40-r85
 
-- Samostatné ECM okno zobrazuje názov a verziu CAM bez dlhého identifikátora za znakom @.
-- Zalamovanie hodnôt je vypnuté: riadky ostávajú zarovnané aj pri dlhšom CAM.
-- Interné ECM zobrazenie ostáva bez zmeny.
+- Názov stanice v internom ECM paneli posunutý o riadok vyššie; pod ním väčšia medzera pred piconmi.
+- Externé ECM ponecháva názov na pôvodnej pozícii, CAM bez identifikátora za @ a vypnuté zalamovanie hodnôt.
