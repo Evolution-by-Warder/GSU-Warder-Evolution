@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r60 jednotné zvýraznenie pripravené
+# Aktuálny checkpoint — 26. 10. 2026, r60 jednotné zvýraznenie publikované
 
 ## Projekt a vydávanie
 
@@ -134,3 +134,7 @@ Texty kariet odsadené od ikon, interné TypeCRD/CAIDcrd normalizované na Type/
 297 testov prešlo aj v čistom checkoute, dva identické buildy3662806 B, SHA256
 ce297ce3a193c3a148dcffa24e1082b3ca288f22f34358e6695143a3cfa0af41.
 Vizuálne potvrdenie r60 na prijímači zatiaľ chýba.
+
+Publikované r60: zdroj b825858a6b8548c2cfe3d78ec7bd197f7222fd7c, CI40275205808 success. Oba feedy overené r60 / 3662806 B / SHA256 vyššie.
+
+Nahradené r59 odstránené workflow40275325752 success; API overilo iba r60 (spolu36 odstránení). Spotrebovaný request zmazaný, tagy/história zachované.
