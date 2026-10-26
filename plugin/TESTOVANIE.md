@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r56 pripravené na vydanie
+# Aktuálny checkpoint — 26. 10. 2026, r56 publikované
 
 ## Projekt a vydávanie
 
@@ -64,3 +64,7 @@ bola znovu vytvorená nad presným publikovaným r55. Hostiteľské testy nenahr
 kontrolu kreslenia/fokusu na prijímači. Aktuálne čaká na prijímačové overenie.
 
 289 testov Python 3.14.7 prešlo aj z čistého checkoutu. Dva identické IPK buildy: 3662346 B, SHA256 90aa221dc7c3fa1e7077240492e18819987209f9ce713cd0daec140981d34c9b.
+
+Publikované: zdroj 88a4ffbe012c8abe1e3b0b10fd16ad04d82a98df; CI40271924200 (original) a CI40271928990 (main) success. Oba feedy majú r56, 3662346 B a zhodný SHA256. Vizuál a fokus na prijímači ešte neoverené.
+
+Nahradené vydanie r55 odstránené workflow40272024725 success. API overilo iba v13.40-r56; spolu odstránených32 starých vydaní, tagy/história zachované. Spotrebovaný request zmazaný.
