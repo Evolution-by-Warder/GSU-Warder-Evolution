@@ -356,3 +356,7 @@ OSD editovateľné hodnoty majú getMulti render marker ✎ a tyrkysovú farbu, 
 Statická poloha má vlastné static_osd_x/y, defaultX=68% šírky (1306 FHD),Y=50FHD. Rolované info používa pôvodné par1/2. Explicitne uložená nenulová legacy vlastná poloha sa prenesie do statickej, takže existujúci ručný výber sa zámerne nepresunie. SelectPosition upravuje/savuje/canceluje súradnice aktívneho typu. Bez nového zápisu configfile pri importe; samotná migrácia používa štandardné configElement.save a finálne uloženie prebehne štandardným spôsobom.
 
 354 testov Python3.14.7 prešlo, compileall/diff check OK. Nové kontroly help restore bez dialógu, potlačenie backend show počas Help, zachovanie ScrollLabel identity, geometria všetkých rozlíšení, cfg fullscreen, marks bez zmeny hodnoty a obnova pôvodného metódu, default/migrácia polohy a About vpravo. Existujúce tests manual updatera upravené na nový požadovaný right-pane výsledok; automatic tests zostávajú pôvodné. Úplné hardvérové overenie zostáva neúplné. R75 natívny výsledok čaká na box.
+
+R75 publikované: zdroj676a90f6d764ff43b4f4bfca90bae55941ba8463, CI40318500383 success vrátane čistého checkoutu, zhodných buildov a kontroly vydaných bajtov. Oba feedy overené: 3679050 B, SHA256 88cfb502330d1f571ddcca4f3860da8402cead3569d1d3fd9a0819b5d20bdc95.
+
+Nahradené r74 odstránené workflow40318663230; API overilo iba v13.40-r75. Spolu51 odstránených vydaní, Git tagy a história zachované.
