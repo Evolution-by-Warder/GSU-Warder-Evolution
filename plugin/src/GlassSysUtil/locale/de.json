@@ -127,5 +127,12 @@
   "Signal": "Signal",
   "Bitrate": "Datenrate",
   "Avg:": "Mittel:",
-  "Act:": "Akt.:"
+  "Act:": "Akt.:",
+  "Select Server": "Server auswählen",
+  "Login": "Anmeldung",
+  "Pass": "Passwort",
+  "Ip adress": "IP-Adresse",
+  "Start Time": "Startzeit",
+  "Details": "Details",
+  "Menu": "Menü"
 }

@@ -151,5 +151,12 @@
   "Signal": "Signál",
   "Bitrate": "Dátový tok",
   "Avg:": "Priem.:",
-  "Act:": "Akt.:"
+  "Act:": "Akt.:",
+  "Select Server": "Vybrať server",
+  "Login": "Prihlásenie",
+  "Pass": "Heslo",
+  "Ip adress": "IP adresa",
+  "Start Time": "Čas spustenia",
+  "Details": "Podrobnosti",
+  "Menu": "Ponuka"
 }

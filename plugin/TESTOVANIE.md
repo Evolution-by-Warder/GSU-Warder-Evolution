@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 25. 10. 2026, r55 publikované
+# Aktuálny checkpoint — 26. 10. 2026, r56 pripravené na vydanie
 
 ## Projekt a vydávanie
 
@@ -49,3 +49,18 @@ Používateľ potvrdil systémovú obrazovku r54 snímkou1(20261025-183534).jpg 
 R55 vydané:278 testov Python3.14.7 z čistého checkoutu, dva zhodné IPK3656778 B,SHA256cff650e7d526a4db388aa3a55a06d8e8598919182ee68340fa86feb37ae53ff4, zdrojf936e7e3b4c6c0953b9df865f44b76d4afb0945d, CI40222366028 success. Oba feedy overené na r55. Test overuje skutočné čítanie plnej verzie; nejde iba o mockovaný výstup. Pôvodný positional signature ECMparser(cl) je zachovaný, nový prepínač je keyword-only. Celý parserov výsledok okrem CAM verzie je zhodný s pôvodným režimom. Prvá systémová fotografia bola tiež prezretá a jej schválenie je zapísané; kanálová obsahuje aj video/audio bitrate hodnoty. R55 CAM text ešte treba vidieť na prijímači.
 
 Nahradené r54 odstránené workflow40222445982 success; API overilo iba v13.40-r55. Spolu odstránených31 starých vydaní. Spotrebovaný request zmazaný, Git tagy a história zachované.
+
+
+## r56 – OSCam v dvoch paneloch (26. 10. 2026)
+
+Používateľ prijal r55 a žiada pokračovať OSCamom. Ponuka je vpravo namiesto LiveTV,
+úvodné údaje prijímača/OSCam/štartu/uptime vľavo. Výsledky vrátane súborov a oprávnení
+zostávajú vľavo v jednom natívnom Screen; pôvodné kontroléry a ich funkcie sú zachované.
+Vľavo fungujú pôvodné akcie; doprava prepne ovládanie do ponuky, doľava späť.
+Späť z výsledku -> úvod OSCamu -> hlavná ponuka s LiveTV. Skryté časovače a ActionMap
+sú vypnuté; oneskorené dialógové callbacky po zatvorení sú ignorované.
+Rozpracované lokálne súbory predchádzajúceho prostredia sa nezachovali; implementácia
+bola znovu vytvorená nad presným publikovaným r55. Hostiteľské testy nenahrádzajú
+kontrolu kreslenia/fokusu na prijímači. Aktuálne čaká na prijímačové overenie.
+
+289 testov Python 3.14.7 prešlo aj z čistého checkoutu. Dva identické IPK buildy: 3662346 B, SHA256 90aa221dc7c3fa1e7077240492e18819987209f9ce713cd0daec140981d34c9b.

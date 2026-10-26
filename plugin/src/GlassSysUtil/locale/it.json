@@ -127,5 +127,12 @@
   "Signal": "Segnale",
   "Bitrate": "Bitrate",
   "Avg:": "Media:",
-  "Act:": "Att.:"
+  "Act:": "Att.:",
+  "Select Server": "Seleziona server",
+  "Login": "Accesso",
+  "Pass": "Password",
+  "Ip adress": "Indirizzo IP",
+  "Start Time": "Ora di avvio",
+  "Details": "Dettagli",
+  "Menu": "Menu"
 }

@@ -123,7 +123,7 @@ class WarderMainTests(unittest.TestCase):
             self.assertEqual(screen['selection'].text,entry[1])
             self.assertEqual(screen['info'].text,entry[2])
         screen.status['3']=True;screen['list'].getCurrent=lambda:['3'];screen.enaNonLocalOscam=True
-        screen.selectedmenuitem();session.open.assert_called_with(module.oscamInfo)
+        screen.selectedmenuitem();self.assertIs(session.open.call_args.args[0],module._warder_oscam.OscamWorkspace)
         self.assertIs(screen['actions'].actions['green'].__self__,screen)
         self.assertEqual(screen['actions'].actions['green'],screen['actions'].actions['ok'])
         self.assertEqual(screen['actions'].actions['yellow'],screen.cfgGsu)
