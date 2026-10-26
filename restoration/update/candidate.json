@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r62",
-    "tag": "v13.40-r62",
-    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r62/enigma2-plugin-glasssysutil_13.40-r62_all.ipk",
-    "sha256": "ff83872e39c25981437850b2c88016483c77b1843d3e4ef04ce2d05db4188f24",
-    "bytes": 3664744,
-    "notes": "GSU 13.40-r62\n\nOSCam – obnova lokálneho DVBAPI po povolení účtu:\n- Po úspešnom povolení účtu uvedeného v lokálnom [dvbapi] sa OSCam reštartuje na pozadí.\n- GSU počká na pripojenie pôvodného DVBAPI účtu a obnoví zoznam klientov.\n- Pri zákaze ani povolení iných účtov/vzdialených serverov sa automatický reštart nevykonáva.\n- Lokálny proces, konfigurácia, účet a WebIF port sa musia zhodovať; názov CAM sa neodhaduje.\n- Prípadná chyba reštartu je odlíšená od úspešného povolenia účtu.\n\nV celej sekcii Informácie o OSCame sa po výbere položky aktivuje ľavý obsah.\nDoprava prepne na pravú ponuku, doľava späť na výsledky.\n"
+    "version": "13.40-r63",
+    "tag": "v13.40-r63",
+    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r63/enigma2-plugin-glasssysutil_13.40-r63_all.ipk",
+    "sha256": "c074843fc4a8c2dbe0e12044782b5846dee826df5364e2d8ff2d618f1e1f0496",
+    "bytes": 3665352,
+    "notes": "GSU 13.40-r63\n\nJemná priehľadnosť v sekcii Informácie o OSCame:\n- Oba tmavé panely prepúšťajú približne 10 % živého obrazu na pozadí.\n- Hlavička, spodné tlačidlá a modré zvýraznenie zostávajú nepriehľadné.\n- Rovnaký vzhľad majú súhrn, servery, klienti, log, súbory aj oprávnenia.\n- Zachovaný pôvodný banner bez zmeny grafiky; bez nových balíkových závislostí.\n\nObsahuje aj obnovu lokálneho DVBAPI po povolení účtu z r62: overené povolenie,\nreštart lokálneho OSCamu na pozadí, čakanie na pôvodný účet a obnovenie zoznamu.\nV celej sekcii OK vpravo aktivuje ľavý obsah; doprava vráti pravú ponuku.\n"
   }
 }
