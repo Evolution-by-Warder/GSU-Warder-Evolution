@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r75",
-    "tag": "v13.40-r75",
-    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r75/enigma2-plugin-glasssysutil_13.40-r75_all.ipk",
-    "sha256": "88cfb502330d1f571ddcca4f3860da8402cead3569d1d3fd9a0819b5d20bdc95",
-    "bytes": 3679050,
-    "notes": "GSU 13.40-r75\n\nZjednotenie obrazoviek:\n- Systémové a kanálové informácie majú jemnú priehľadnosť.\n- Procesy a Systémový log sú posunuté doprava.\n- Nápoveda nahradí obsah celého systémového okna; Naspäť obnoví údaje.\n- Nastavenia GSU používajú veľké spoločné okno s hlavičkou.\n- Ručná aktualizácia a O plugine zobrazujú informácie v pravom paneli.\n- Meniteľné hodnoty OSD ECM sú označené farbou a symbolom úpravy.\n- Statické ECM má vlastnú predvolenú polohu vpravo hore mimo stĺpca hodnôt; vlastná uložená poloha sa zachová.\n"
+    "version": "13.40-r76",
+    "tag": "v13.40-r76",
+    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r76/enigma2-plugin-glasssysutil_13.40-r76_all.ipk",
+    "sha256": "3e122c4e7e3218cd515b0dc1673e41c714da9b95d885e3d1f156748bc3875f0b",
+    "bytes": 3679542,
+    "notes": "GSU 13.40-r76\n\n- Opravené neviditeľné texty v pravom paneli O plugine a Aktualizácia.\n- Automatická ponuka aktualizácie má spoločný veľký presvitný rám, banner a voľbu Áno/Nie; predvolené je Nie.\n- Inštalácia aj výsledok aktualizácie používajú rovnaký rám. Po úspechu sa GUI reštartuje za 3 sekundy.\n- Ikony a údaje systémových informácií posunuté doprava; posuvníky majú nepriehľadné tmavomodré pozadie.\n- Riadok družice v kanálových informáciách posunutý nižšie a hodnota zarovnaná so stĺpcom nad ním.\n"
   }
 }
