@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r60",
-    "tag": "v13.40-r60",
-    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r60/enigma2-plugin-glasssysutil_13.40-r60_all.ipk",
-    "sha256": "ce297ce3a193c3a148dcffa24e1082b3ca288f22f34358e6695143a3cfa0af41",
-    "bytes": 3662806,
-    "notes": "GSU 13.40-r60\n\nJednotné zvýraznenie v celom GSU a grafické opravy OSCamu:\n- Všetky vlastné výberové zoznamy a nastavenia GSU majú rovnaké nepriehľadné modré zvýraznenie ako hlavné menu.\n- Platí aj pre OSCam, CAM správcu, nástroje a výber súborov; bez zmeny systémového skinu.\n- Text oprávnení karty je odsadený od stavovej ikony.\n- Technické interné popisky TypeCRD/CAIDcrd sú zobrazené ako Type/CAID.\nZachované prepínanie panelov doľava/doprava, posúvanie záznamov aj návrat do čítačiek.\n"
+    "version": "13.40-r61",
+    "tag": "v13.40-r61",
+    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r61/enigma2-plugin-glasssysutil_13.40-r61_all.ipk",
+    "sha256": "2fd4189f5ca92fe9942de68f83f1aed6829e39979df21b018345b6705593fdb0",
+    "bytes": 3662832,
+    "notes": "GSU 13.40-r61\n\nOprava tlačidla OK v ľavom paneli OSCamu.\n- OK na klientovi ponechá klienta vybraného a zobrazí jeho podrobnosti pod zoznamom.\n- Súhrn, log, súbor a oprávnenia sa po OK nezatvoria.\n- OK na čítačke alebo v zozname súborov naďalej otvára príslušné oprávnenia/súbor.\nNávrat ovláda červené tlačidlo; prepnutie do pravej ponuky šípka doprava.\n"
   }
 }
