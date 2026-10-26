@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r70",
-    "tag": "v13.40-r70",
-    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r70/enigma2-plugin-glasssysutil_13.40-r70_all.ipk",
-    "sha256": "e3366cf971d6084867cd50f31dcffa2e12992c4d9a49678cf61ad9c50489703a",
-    "bytes": 3671706,
-    "notes": "GSU 13.40-r70\n\nSprávca CAM: odstránené nadbytočné modré Presunúť výber. Pohyb zostáva na šípkach. Tri zostávajúce farebné tlačidlá rovnomerne rozložené po spodnej časti obrazovky.\n"
+    "version": "13.40-r71",
+    "tag": "v13.40-r71",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r71/enigma2-plugin-glasssysutil_13.40-r71_all.ipk",
+    "sha256": "86d13a1986a562d09bb1782e87b0fe6beca50633281790e4ae3c373cd24b3671",
+    "bytes": 3674528,
+    "notes": "GSU 13.40-r71\n\nECM, Správa swapu a Nástroje sa zobrazujú v pravom paneli namiesto LiveTV. Hlavná ponuka zostáva vľavo. Panely majú jemnú priehľadnosť ako pri OSCame. Šípky doľava/doprava prepínajú hlavné menu a obsah; hore/dole posúvajú aktívny panel. Naspäť obnoví LiveTV. Zahŕňa vytvorenie swapu a diagnostický výsledok v tom istom paneli. Potvrdenia a editory hodnôt zostávajú samostatné.\n"
   }
 }
