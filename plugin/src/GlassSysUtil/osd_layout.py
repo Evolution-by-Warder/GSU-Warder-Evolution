@@ -37,8 +37,26 @@ def place(screen,api,editing=False):
     if screen.instance is None:return
     desktop=api['getDesktop'](0).size();window=screen.instance.size()
     settings=api['config'].plugins.GlassSysUtil
-    x=max(0,min(settings.par1.value,right_limit(screen,api)))
-    y=max(0,min(settings.par2.value,max(0,desktop.height()-window.height())))
+    horizontal,vertical=position_settings(api)
+    x=max(0,min(horizontal.value,right_limit(screen,api)))
+    y=max(0,min(vertical.value,max(0,desktop.height()-window.height())))
     if editing:
-        settings.par1.value=x;settings.par2.value=y
+        horizontal.value=x;vertical.value=y
     screen.instance.move(api['ePoint'](x,y))
+
+
+def position_settings(api):
+    settings=api['config'].plugins.GlassSysUtil
+    if settings.par3.value and hasattr(settings,'static_osd_x'):
+        return settings.static_osd_x,settings.static_osd_y
+    return settings.par1,settings.par2
+
+
+def init_static_position(api):
+    """Migrate an explicitly stored legacy position, preserving user placement."""
+    settings=api['config'].plugins.GlassSysUtil
+    if any(getattr(getattr(settings,key),'saved_value',None) is not None for key in ('static_osd_x','static_osd_y')):return
+    if (settings.par1.value,settings.par2.value)==(1030,70):return
+    if not any(getattr(getattr(settings,key),'saved_value',None) is not None for key in ('par1','par2')):return
+    for target,source in ((settings.static_osd_x,settings.par1),(settings.static_osd_y,settings.par2)):
+        target.value=source.value;target.save()

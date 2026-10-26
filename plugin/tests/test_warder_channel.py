@@ -16,11 +16,11 @@ class ChannelLayoutTests(unittest.TestCase):
             original=importlib.import_module('Plugins.Extensions.GlassSysUtil.GSU_skins'+suffix).channelInfo_Center
             before=ET.fromstring(original);after=ET.fromstring(plugin._warder_channel.channel_skin(original,w,h))
             names=lambda root:{n.get('name') for n in root if n.get('name')}
-            self.assertEqual(names(after),names(before)|{'day','date','clock','seconds','version_title','version'})
+            self.assertEqual(names(after),names(before)|{'day','date','clock','seconds','version_title','version','glass_header_art'})
             def sources(root):
                 return sorted((n.get('source'),n.get('render'),tuple((c.get('type'),c.text.strip()) for c in n.findall('convert'))) for n in root if n.get('source'))
             self.assertEqual(sources(before),sources(after))
-            self.assertEqual(after.find('ePixmap').get('zPosition'),'-3')
+            self.assertEqual(after.find("widget[@name='glass_header_art']").get('zPosition'),'-3')
             self.assertFalse(any(n.get('pixmap','').endswith('/frame.png') for n in after))
             for n in after:
                 x,y=map(int,n.get('position').split(','));iw,ih=map(int,n.get('size').split(','))
@@ -32,7 +32,7 @@ class ChannelLayoutTests(unittest.TestCase):
             for name in ('ecmlabels','ecmValues','tp_lab','tp_values'):
                 n=after.find("widget[@name='%s']"%name)
                 self.assertEqual(n.get('transparent'),'1')
-                self.assertEqual(n.get('backgroundColor'),'#00102136')
+                self.assertEqual(n.get('backgroundColor'),'#ff000000')
             ecm=after.find("widget[@name='ecmValues']")
             icon=after.find("widget[@name='picchannel']")
             self.assertLess(int(ecm.get('position').split(',')[0])+int(ecm.get('size').split(',')[0]),int(icon.get('position').split(',')[0]))

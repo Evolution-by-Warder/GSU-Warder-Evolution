@@ -1,3 +1,10 @@
-GSU 13.40-r74
+GSU 13.40-r75
 
-OSD ECM: výber typu a úprava číselných hodnôt sa otvárajú dole v pravom paneli. Horné nastavenia zostávajú viditeľné. Čísla sa zadávajú tlačidlami 0–9 alebo menia šípkami, s kontrolou povoleného rozsahu. OK/zelené potvrdí rozpracovanú hodnotu, červené zruší. Trvalé uloženie zostáva samostatné. Nastavenie polohy používa pôvodný pozičný editor.
+Zjednotenie obrazoviek:
+- Systémové a kanálové informácie majú jemnú priehľadnosť.
+- Procesy a Systémový log sú posunuté doprava.
+- Nápoveda nahradí obsah celého systémového okna; Naspäť obnoví údaje.
+- Nastavenia GSU používajú veľké spoločné okno s hlavičkou.
+- Ručná aktualizácia a O plugine zobrazujú informácie v pravom paneli.
+- Meniteľné hodnoty OSD ECM sú označené farbou a symbolom úpravy.
+- Statické ECM má vlastnú predvolenú polohu vpravo hore mimo stĺpca hodnôt; vlastná uložená poloha sa zachová.

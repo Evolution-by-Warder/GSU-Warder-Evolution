@@ -20,25 +20,12 @@ CLASSES = {'intro':'oscamInfo','servers':'oscamInfoChoiceServer',
 TITLES = dict(intro='OScam Information',servers='Select Server',summary='Summary Info',
               readers='Servers Status',users='Clients Status',log='Log view',
               files='Config Files',file='OScam File',entitlements='Entitlements')
-PANEL_GLASS = '#1a102136'  # Enigma alpha: 26/255 (~10%) transparent.
-CLEAR = '#ff000000'
+from .warder_glass import HeaderArtwork, PANEL_GLASS, CLEAR
 
 FOOTERS = {'red':(55,'#00ff526a'),'green':(665,'#0039ff59'),
            'blue':(1275,'#0045b9ff'),'blue_button':(1275,'#0045b9ff')}
 
 
-class HeaderArtwork(GUIComponent):
-    """Clip a full-desktop scaled picture inside a header-height native parent."""
-    GUI_WIDGET=eWidget
-    def __init__(self,width,height):
-        GUIComponent.__init__(self);self.width=width;self.height=height;self.picture=None
-    def postWidgetCreate(self,instance):
-        self.picture=ePixmap(instance)
-        self.picture.resize(eSize(self.width,self.height))
-        self.picture.setScale(1)
-        self.picture.setPixmapFromFile(main.BACKGROUND)
-        self.picture.show()
-    def preWidgetRemove(self,instance):self.picture=None
 
 
 class Signal:

@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r74 spodný editor
+# Aktuálny checkpoint — 26. 10. 2026, r75 spoločné kozmetické úpravy
 
 ## Projekt a vydávanie
 
@@ -339,3 +339,20 @@ Nové right_editor_* widgety: oddeľovacia čiara y560, titulok y580, list y635�
 R74 publikované: zdroj115eb288c728653aa79a2f3e09c336b3be5f6f94, CI40313766300 success vrátane čistého checkoutu, zhodných buildov a kontroly vydaných bajtov. Oba feedy overené: 3676008 B, SHA256 d81af3d70f4fe01660ff96873d96491b2e5cfbfea755b387d810c25bd153fe14.
 
 Nahradené r72/r73 odstránené workflow40313907045; API overilo iba v13.40-r74. Spolu50 odstránených vydaní, Git tagy a história zachované.
+
+
+## r75 — spoločná dávka požiadaviek po r74
+
+Prezreté všetky5 snímok1–5(20261026-112233/112234/112235).jpg: používateľ potvrdil spodné OSD editory ako OK. Požiadal označiť meniteľné hodnoty, statické OSD defaultne vpravo hore mimo Áno/Nie a zachovať ručné polohy, jemnú priehľadnosť System/Channel, ručnú aktualizáciu a About vpravo, posunúť Procesy/Dmesg doprava.
+
+Následné prílohy1(20261026-113253).jpg,1(20261026-114010).jpg,2(20261026-114115).jpg,1(20261026-114256).jpg,2(20261026-114343).jpg a1/2(20261026-114448/114447).jpg všetky prezreté. Dôležité upresnenie: systémová Nápoveda nahradí CELÝ obsah veľkého systémového okna textom pôvodnej nápovedy, nie iba pravú časť a nie MessageBox. Naspäť obnoví pôvodné widgets/posúvanie/viditeľnosť; údaje na pozadí môžu ďalej aktualizovať, bez odkrývania prekrytej plochy. Žlté Nastavenia z hlavného menu otvára samostatnú veľkú spoločnú fullscreen obrazovku s jeho nastaveniami, nie split mainmenu ani pôvodný malý cfg dialog. Posledné2 obrázky sú referenčné: geometria/rám systémového okna + zoznam volieb cfg.
+
+Implementácia: warder_glass extrahuje schválený HeaderArtwork (OSCam ho ďalej re-exportuje), jedna alpha #1a102136 vrstva s tenkými rámikmi. System/Channel ostávajú v rozsahu180–980 a používajú CLEAR pre texty. System posun pravých textov/nadpisov/šípok o90FHDpx, šírka textových oblastí o90px menšia, pravý okraj zachovaný. warder_system_help pomenuje pôvodné statické prvky a dočasne ich skrýva; on/off stavy sa obnovia, natívne ScrollLabel objekty zostávajú tie isté. CPU timer/netestované systémové zbery sa nemenia. warder_settings mení len skin cfgGsuScreen, pôvodné save/cancel zostáva.
+
+Ručný StartupUpdateCheck zobrazí checking/result/new release/error do pravého UpdateInfo controllera. Zelené pri nájdenej verzii explicitne spustí pôvodný installer s kontrolami a3s GUI reštartom. Automatická startup ponuka sa nemení. Modré About teraz otvára pôvodný AboutScreen ako headless pravý ScrollLabel. Odložený manuálny výsledok neotvára znovu už opustený panel.
+
+OSD editovateľné hodnoty majú getMulti render marker ✎ a tyrkysovú farbu, pôvodné config objekty/identity/value sa nemenia; wrapper sa po odchode obnoví. Nápoveda Stlač OK pre úpravu je vo všetkých10 jazykoch. Číslicový kurzor hodnoty v riadku je nahradený označenou textovou hodnotou, pretože úpravu vlastní spodný editor.
+
+Statická poloha má vlastné static_osd_x/y, defaultX=68% šírky (1306 FHD),Y=50FHD. Rolované info používa pôvodné par1/2. Explicitne uložená nenulová legacy vlastná poloha sa prenesie do statickej, takže existujúci ručný výber sa zámerne nepresunie. SelectPosition upravuje/savuje/canceluje súradnice aktívneho typu. Bez nového zápisu configfile pri importe; samotná migrácia používa štandardné configElement.save a finálne uloženie prebehne štandardným spôsobom.
+
+354 testov Python3.14.7 prešlo, compileall/diff check OK. Nové kontroly help restore bez dialógu, potlačenie backend show počas Help, zachovanie ScrollLabel identity, geometria všetkých rozlíšení, cfg fullscreen, marks bez zmeny hodnoty a obnova pôvodného metódu, default/migrácia polohy a About vpravo. Existujúce tests manual updatera upravené na nový požadovaný right-pane výsledok; automatic tests zostávajú pôvodné. Úplné hardvérové overenie zostáva neúplné. R75 natívny výsledok čaká na box.

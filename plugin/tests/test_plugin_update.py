@@ -161,7 +161,8 @@ class PluginUpdateUITests(unittest.TestCase):
         self.check.return_value=self.release
         self.controller.work();self.controller.poll()
         self.check.assert_called_once_with('13.40-r36')
-        self.assertFalse(self.session.openWithCallback.call_args.kwargs['default'])
+        self.session.openWithCallback.assert_not_called()
+        self.assertIs(self.screen._rightpane.model.release,self.release)
 
     def test_offer_waits_until_parent_active_and_closed_parent_cannot_install(self):
         self.controller.results.put((self.release,None))
@@ -176,16 +177,18 @@ class PluginUpdateUITests(unittest.TestCase):
     def test_automatic_failure_is_silent_and_manual_failure_visible(self):
         self.controller.results.put((None,'offline'));self.controller.poll()
         self.session.open.assert_not_called()
-        self.controller.manual=True
+        self.controller.request(manual=True)
         self.controller.results.put((None,'offline'));self.controller.poll()
-        self.session.open.assert_called_once()
+        self.session.open.assert_not_called()
+        self.assertIn('offline',self.screen['right_scroll'].getText())
 
     def test_accepted_update_opens_installer_and_manual_current_is_reported(self):
         self.controller.answer(self.release,True)
         self.session.open.assert_called_once_with(self.ui.PluginInstallScreen,self.release,self.api)
-        self.session.reset_mock();self.controller.manual=True
+        self.session.reset_mock();self.controller.request(manual=True)
         self.controller.results.put((None,None));self.controller.poll()
-        self.session.open.assert_called_once()
+        self.session.open.assert_not_called()
+        self.assertIn('aktuálny',self.screen['right_scroll'].getText())
 
     def test_install_success_changes_existing_screen_then_restarts_after_three_seconds(self):
         timers=[MagicMock(),MagicMock()];api=dict(self.api);api['eTimer']=iter(timers).__next__

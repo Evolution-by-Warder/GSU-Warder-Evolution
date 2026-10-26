@@ -19,15 +19,16 @@ class SystemLayoutTests(unittest.TestCase):
             old=ET.fromstring(original);root=ET.fromstring(self.ui.system_skin(original,w,h))
             before={n.get('name') for n in old if n.get('name')}
             after={n.get('name') for n in root if n.get('name')}
-            self.assertEqual(after,before|header)
-            self.assertEqual(root.get('backgroundColor'),'#00071627')
+            self.assertTrue(before|header<=after)
+            self.assertIn('system_help_text',after);self.assertIn('glass_header_art',after)
+            self.assertEqual(root.get('backgroundColor'),'#ff000000')
             self.assertFalse(root.findall("widget[@render='Pig']"))
             # Native ScrollLabel applies zPosition to its labels, leaving its
             # parent at zero. Every full-screen backing must stay below zero.
             for backing in root:
                 if backing.tag=='eLabel' and int(backing.get('size','0,0').split(',')[1])>h//2:
                     self.assertLess(int(backing.get('zPosition','0')),0)
-            self.assertEqual(root.find('ePixmap').get('zPosition'),'-3')
+            self.assertEqual(root.find("widget[@name='glass_header_art']").get('zPosition'),'-3')
             for name in before-{'red','green','yellow'}:
                 n=root.find("widget[@name='%s']"%name)
                 y=int(n.get('position').split(',')[1]);height=int(n.get('size').split(',')[1])
@@ -36,13 +37,13 @@ class SystemLayoutTests(unittest.TestCase):
             for name in ('ProccessInfo','DmesgInfo'):
                 n=root.find("widget[@name='%s']"%name)
                 self.assertEqual(n.get('transparent'),'1')
-                self.assertEqual(n.get('backgroundColor'),'#00102136')
+                self.assertEqual(n.get('backgroundColor'),'#ff000000')
 
     def test_device_icons_precede_their_data_and_lower_meters_share_bottoms(self):
         for suffix,w,h in (('',1280,720),('_FHD',1920,1080),('_UHD',3840,2160)):
             source=importlib.import_module('Plugins.Extensions.GlassSysUtil.GSU_skins'+suffix).GlassSysInfo
             old=ET.fromstring(source);root=ET.fromstring(self.ui.system_skin(source,w,h))
-            pictures=[n for n in root if n.tag=='ePixmap' and '/system-' in n.get('pixmap','') and 'status' not in n.get('pixmap','')]
+            pictures=[n for n in root if n.tag in ('ePixmap','widget') and '/system-' in n.get('pixmap','') and 'status' not in n.get('pixmap','')]
             devices=[n for n in pictures if not n.get('pixmap').endswith(('system-lr.png','system-updown.png'))]
             originals=[n for n in old if '/devices/' in n.get('pixmap','')]
             self.assertEqual(len(devices),len(originals))

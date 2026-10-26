@@ -32,7 +32,7 @@ def prepare(skin,width,height):
         for bounds in ((x,180,w,2),(x,978,w,2),(x,182,2,796),(x+w-2,182,2,796)):fill(*bounds,main.CYAN,1)
         fill(x+2,182,w-4,796,PANEL_GLASS,1)
         node=ET.SubElement(root,'widget',name='right_opaque_'+side,backgroundColor=main.PANEL,zPosition='1');box(node,x+2,182,w-4,796)
-    for name,bounds,font in (('title',(1160,200,680,45),28),('list',(1155,265,690,410),23),('config',(1155,265,690,540),22),('text',(1160,700,680,255),23),('scroll',(1160,265,680,680),23)):
+    for name,bounds,font in (('title',(1160,200,680,45),28),('list',(1155,265,690,410),23),('config',(1155,265,690,540),22),('text',(1160,700,680,255),23),('scroll',(1160,265,680,680),23),('edit_hint',(1160,520,680,30),20)):
         node=ET.SubElement(root,'widget',name='right_'+name,font='Regular;%d'%round(font*sy),backgroundColor=CLEAR,transparent='1',foregroundColor=main.CYAN if name=='title' else '#00ffffff',zPosition='6',scrollbarMode='showOnDemand')
         if name in ('list','config'):
             node.set('backgroundColorSelected',main.SELECTION);node.set('foregroundColorSelected','#00ffffff');node.set('itemHeight',str(round(42*sy)))
@@ -66,7 +66,7 @@ class Session:
 class Workspace:
     def __init__(self,screen,api):
         self.screen,self.api=screen,api;self.model=None;self.kind=None;self.history=[];self.closed=False;self.focus_right=True;self.modal=0;self.disposing=False;self.choice=None
-        self.targets={api['swap_manager']:'swap',api['SwapCreate']:'create',tools_ui.ToolsScreen:'tools',tools_ui.DiagnosticScreen:'diagnostic',api['OSD_ECM_Menu']:'osd'}
+        self.targets={api['swap_manager']:'swap',api['SwapCreate']:'create',tools_ui.ToolsScreen:'tools',tools_ui.DiagnosticScreen:'diagnostic',api['OSD_ECM_Menu']:'osd',tools_ui.AboutScreen:'about',UpdateInfo:'update'}
         size=api['getDesktop'](0).size();self.sx,self.sy=size.width()/1920,size.height()/1080
         screen.skin,deco=prepare(screen.skin,size.width(),size.height())
         screen['right_header_art']=HeaderArtwork(size.width(),size.height())
@@ -77,7 +77,8 @@ class Workspace:
         screen['right_title']=api['Label']('');screen['right_text']=api['Label']('')
         screen['right_list']=api['ListboxSys2']([]);screen['right_config']=api['ConfigList']([])
         screen['right_scroll']=api['ScrollLabel']('')
-        self.widgets=[screen['right_'+n] for n in ('title','text','list','config','scroll')]
+        screen['right_edit_hint']=api['Label'](main.text(api,'Press OK to edit'))
+        self.widgets=[screen['right_'+n] for n in ('title','text','list','config','scroll','edit_hint')]
         for widget in self.widgets:widget.hide()
         for name in ('line','title','value','help'):screen['right_editor_'+name]=api['Label']('')
         screen['right_editor_list']=api['ListboxSys2']([])
@@ -125,14 +126,18 @@ class Workspace:
                 fn=FunctionType(value.__code__,globals_,name,value.__defaults__,value.__closure__);fn.__kwdefaults__=value.__kwdefaults__;methods[name]=fn
         methods['close']=lambda model,*values:self.leave()
         methods['setTitle']=lambda model,title:self.screen['right_title'].setText(title)
-        model=type('Right_'+kind,(target,),methods)(Session(self),*(args if args else ((self.api,) if kind=='tools' else ())))
+        model=type('Right_'+kind,(target,),methods)(Session(self),*(args if args else ((self.api,) if kind in ('tools','about') else ())))
         self.model,self.kind=model,kind
         self.bind(model);self.glass(True);self.focus_right=True;self.focus()
         for fn in model.onLayoutFinish:fn()
+        if kind=='osd':
+            from .warder_editable import mark
+            mark(model)
         self.footer()
     def bind(self,model):
         for widget in self.widgets+self.editor_widgets:widget.hide()
         self.screen['right_title'].show()
+        if self.kind=='osd':self.screen['right_edit_hint'].show()
         for component in model.values():
             if isinstance(component,self.api['ActionMap']):component.setEnabled(False)
         for source,target in (('list','list'),('config','config'),('descriptions','text'),('file_info','scroll'),('info','text')):
@@ -205,7 +210,9 @@ class Workspace:
                     cfg=self.api['config'].plugins.GlassSysUtil
                     if setting is cfg.par79:return self.action('ok')
                     if type(setting.value) is bool:
-                        setting.value=not setting.value;self.model.chckSetup();self.model['config'].invalidateCurrent();return 1
+                        setting.value=not setting.value;self.model.chckSetup()
+                        from .warder_editable import mark
+                        mark(self.model);self.model['config'].invalidateCurrent();return 1
                     if type(setting.value) is int:
                         model=self.model
                         bounds=next((limits for key,limits in (('par4',(1,2000)),('par81',(2,12)),('par78',(50,450)),('par5',(4,15))) if setting is getattr(cfg,key)),None)
@@ -233,6 +240,8 @@ class Workspace:
         if not self.active:return 0
         return self.action('yellow')
     def dispose(self,model):
+        from .warder_editable import restore
+        restore(model)
         if hasattr(model,'osdType') and getattr(model,'chckTimer',None) is not None:
             self.disposing=True
             try:model.exitCancel()
@@ -298,10 +307,21 @@ class Workspace:
         choice=self.choice;self.choice=None
         if value is not None:
             choice['setting'].value=value
-            if self.kind=='osd':self.model.chckSetup()
+            if self.kind=='osd':
+                self.model.chckSetup()
+                from .warder_editable import mark
+                mark(self.model)
         self.bind(self.model);self.screen['right_title'].setText(choice['title'])
         self.model['config'].invalidateCurrent();self.footer();self.focus()
         if self.kind=='osd':self.model.chckTimer.start(1000,True)
+    def update_info(self,message,release=None,checker=None):
+        if self.closed:return
+        if self.active and self.kind=='update':
+            self.model.release,self.model.checker=release,checker
+            self.model['file_info'].setText(message)
+            self.model['green'].setText(main.text(self.api,'Update') if release else '')
+            self.footer()
+        else:self.enter('update',(self.api,message,release,checker))
     def resume(self):
         if self.active and not self.closed:self.preview(False);self.focus()
     def suspend(self):
@@ -318,4 +338,21 @@ def show(screen,api,kind):
     if hasattr(screen,'_rightpane'):return screen._rightpane.enter(kind)
     if kind=='swap':return screen.session.open(api['swap_manager'])
     if kind=='osd':return screen.session.open(api['OSD_ECM_Menu'])
+    if kind=='about':return screen.session.open(tools_ui.AboutScreen,api)
     return tools_ui.open_tools(screen.session,api)
+
+
+from Screens.Screen import Screen
+from .warder_main import text as _update_display
+
+class UpdateInfo(Screen):
+    def __init__(self,session,api,message,release=None,checker=None):
+        Screen.__init__(self,session);self.api,self.release,self.checker=api,release,checker
+        self['file_info']=api['ScrollLabel'](message)
+        self['red']=api['Label'](_update_display(api,'Back'))
+        self['green']=api['Label'](_update_display(api,'Update') if release else '')
+        self['actions']=api['ActionMap'](['ColorActions','SetupActions'],{'red':self.close,'cancel':self.close,'green':self.install},-2)
+        self.onLayoutFinish.append(self.title)
+    def title(self):self.setTitle(_update_display(self.api,'Update'))
+    def install(self):
+        if self.release is not None and self.checker is not None:self.checker.answer(self.release,True)

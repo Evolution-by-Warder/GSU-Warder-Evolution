@@ -136,5 +136,6 @@
   "Details": "Detalles",
   "Menu": "Menú",
   "Account enabled, but OSCam recovery failed.": "Cuenta habilitada, pero falló el reinicio o la reconexión de OSCam.",
-  "After enabling, please wait for the change and client list refresh. A local DVBAPI account restarts OSCam in the background.": "Tras habilitar, espere a que se aplique el cambio y se actualice la lista. Para una cuenta DVBAPI local, OSCam se reinicia en segundo plano."
+  "After enabling, please wait for the change and client list refresh. A local DVBAPI account restarts OSCam in the background.": "Tras habilitar, espere a que se aplique el cambio y se actualice la lista. Para una cuenta DVBAPI local, OSCam se reinicia en segundo plano.",
+  "Press OK to edit": "Pulsa OK para editar"
 }

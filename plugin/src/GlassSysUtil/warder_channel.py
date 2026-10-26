@@ -72,4 +72,6 @@ def channel_skin(original,width,height,translator=lambda value:value):
         if name=='red':node.set('foregroundColor','#00ff526a');node.set('halign','center');node.set('valign','center')
         root.append(node)
     fill(860,996,200,2,'#00ff526a',3)
+    from .warder_glass import apply
+    apply(root,width,height)
     return ET.tostring(root,encoding='unicode')

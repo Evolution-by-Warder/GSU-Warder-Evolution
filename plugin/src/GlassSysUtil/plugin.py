@@ -5,6 +5,7 @@ from Plugins.Extensions.GlassSysUtil import warder_main as _warder_main
 from Plugins.Extensions.GlassSysUtil import warder_ecm as _warder_ecm
 from Plugins.Extensions.GlassSysUtil import warder_cam as _warder_cam
 from Plugins.Extensions.GlassSysUtil import warder_right as _warder_right
+from Plugins.Extensions.GlassSysUtil import warder_settings as _warder_settings
 from Plugins.Extensions.GlassSysUtil import warder_tools_ui as _warder_tools_ui
 from Plugins.Extensions.GlassSysUtil.plugin_update_ui import StartupUpdateCheck as _StartupUpdateCheck, text as _plugin_update_text
 # uncompyle6 version 3.9.3
@@ -16,7 +17,7 @@ from Plugins.Extensions.GlassSysUtil.editInputBox import editInputBox
 from Plugins.Extensions.GlassSysUtil import oscam_readers_ui as _oscam_readers_ui
 from Plugins.Extensions.GlassSysUtil import oscam_clients_ui as _oscam_clients_ui
 from Plugins.Extensions.GlassSysUtil import swap_ui as _swap_ui
-from Plugins.Extensions.GlassSysUtil.osd_layout import rolling_skin as _wide_osd_skin, place as _place_osd, right_limit as _osd_right_limit
+from Plugins.Extensions.GlassSysUtil.osd_layout import rolling_skin as _wide_osd_skin, place as _place_osd, right_limit as _osd_right_limit, position_settings as _osd_position_settings, init_static_position as _osd_init_static
 from Plugins.Extensions.GlassSysUtil.native_status import request as _native_status_request
 from Plugins.Extensions.GlassSysUtil.srv_visibility import apply as _srv_visibility, prepare_skin as _srv_skin, binary_status as _srv_binary_status, menu_text as _cam_menu_text
 from Plugins.Extensions.GlassSysUtil.native_autostart import begin as _native_autostart_begin, configure as _native_autostart_configure, autocheck_help as _native_autocheck_help
@@ -301,6 +302,9 @@ config.plugins.GlassSysUtil.par0 = ConfigYesNo(default=False)
 config.plugins.GlassSysUtil.par1 = ConfigInteger(default=1030)
 config.plugins.GlassSysUtil.par2 = ConfigInteger(default=70)
 config.plugins.GlassSysUtil.par3 = ConfigYesNo(default=False)
+config.plugins.GlassSysUtil.static_osd_x = ConfigInteger(default=round(getDesktop(0).size().width()*0.68))
+config.plugins.GlassSysUtil.static_osd_y = ConfigInteger(default=round(getDesktop(0).size().height()*50/1080))
+_osd_init_static(globals())
 config.plugins.GlassSysUtil.par4 = ConfigInteger(500, (1, 2000))
 config.plugins.GlassSysUtil.par5 = ConfigInteger(8, (4, 15))
 config.plugins.GlassSysUtil.par6 = ConfigSelection(default='CIFS', choices=[('CIFS', _('CIFS')), ('NFS', _('NFS'))])
@@ -1537,7 +1541,7 @@ class SysUtilMngMain(Screen):
         return
 
     def aboutPlugin(self):
-        self.session.open(_warder_tools_ui.AboutScreen, globals())
+        _warder_right.show(self, globals(), 'about')
 
     def resetRootPass(self, a):
         return  # Retired legacy action.
@@ -1752,6 +1756,7 @@ class GlassSysInfoBrowser(Screen):
         return
 
     def HelpKey(self):
+        if hasattr(self,'_system_help'):return self._system_help.toggle()
         help = _('To moving in the list of running aplications use LEFT/RIGHT') + '\n' + _('To moving in the list of system info use UP/DOWN') + '\n' + _('Refresh press a YELLOW button')
         self.session.open(MessageBox, help, MessageBox.TYPE_INFO)
         return
@@ -7378,48 +7383,48 @@ class SelectPosition(Screen):
         return
 
     def left(self):
-        value = config.plugins.GlassSysUtil.par1.value
+        value = _osd_position_settings(globals())[0].value
         value -= 5
         if value < 0:
             value = 0
-        config.plugins.GlassSysUtil.par1.value = value
+        _osd_position_settings(globals())[0].value = value
         return
 
     def up(self):
-        value = config.plugins.GlassSysUtil.par2.value
+        value = _osd_position_settings(globals())[1].value
         value -= 5
         if value < 0:
             value = 0
-        config.plugins.GlassSysUtil.par2.value = value
+        _osd_position_settings(globals())[1].value = value
         return
 
     def right(self):
-        value = config.plugins.GlassSysUtil.par1.value
+        value = _osd_position_settings(globals())[0].value
         value += 5
         if value > _osd_right_limit(self, globals()):
             value = _osd_right_limit(self, globals())
-        config.plugins.GlassSysUtil.par1.value = value
+        _osd_position_settings(globals())[0].value = value
         return
 
     def down(self):
-        value = config.plugins.GlassSysUtil.par2.value
+        value = _osd_position_settings(globals())[1].value
         value += 5
         if value > max(0, getDesktop(0).size().height() - self.instance.size().height()):
             value = max(0, getDesktop(0).size().height() - self.instance.size().height())
-        config.plugins.GlassSysUtil.par2.value = value
+        _osd_position_settings(globals())[1].value = value
         return
 
     def ok(self):
-        config.plugins.GlassSysUtil.par1.save()
-        config.plugins.GlassSysUtil.par2.save()
+        _osd_position_settings(globals())[0].save()
+        _osd_position_settings(globals())[1].save()
         self.moveTimer.stop()
         self.moveTimer = None
         self.close()
         return
 
     def exit(self):
-        config.plugins.GlassSysUtil.par1.cancel()
-        config.plugins.GlassSysUtil.par2.cancel()
+        _osd_position_settings(globals())[0].cancel()
+        _osd_position_settings(globals())[1].cancel()
         self.moveTimer.stop()
         self.moveTimer = None
         self.close()
@@ -9288,6 +9293,7 @@ class cfgGsuScreen(Screen, ConfigListScreen):
         CfgConfigList.append(getConfigListEntry(_('OScam info - log refresh time'), config.plugins.GlassSysUtil.par61))
         CfgConfigList.append(getConfigListEntry(_('Enable GSU localization'), config.plugins.GlassSysUtil.par62))
         ConfigListScreen.__init__(self, CfgConfigList, session)
+        _warder_settings.install(self, globals())
         self.onLayoutFinish.append(self.setTitlenew)
         return
 
