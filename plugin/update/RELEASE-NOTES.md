@@ -1,3 +1,3 @@
-GSU 13.40-r71
+GSU 13.40-r72
 
-ECM, Správa swapu a Nástroje sa zobrazujú v pravom paneli namiesto LiveTV. Hlavná ponuka zostáva vľavo. Panely majú jemnú priehľadnosť ako pri OSCame. Šípky doľava/doprava prepínajú hlavné menu a obsah; hore/dole posúvajú aktívny panel. Naspäť obnoví LiveTV. Zahŕňa vytvorenie swapu a diagnostický výsledok v tom istom paneli. Potvrdenia a editory hodnôt zostávajú samostatné.
+Do pravého panela doplnená aj ponuka Informácie ECM na obrazovke (nastavenia OSD ECM). Zachované uloženie, zrušenie zmien a nastavenie polohy. Opravené zachovanie pravého panela pri otvorení editora alebo výberu hodnoty.

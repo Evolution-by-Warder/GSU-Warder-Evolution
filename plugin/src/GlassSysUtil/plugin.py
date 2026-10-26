@@ -1569,7 +1569,7 @@ class SysUtilMngMain(Screen):
             elif selectedItem == '6':
                 _warder_ecm.show(self, globals())
             elif selectedItem == '8':
-                self.session.open(OSD_ECM_Menu)
+                _warder_right.show(self, globals(), 'osd')
             elif selectedItem == '9':
                 _warder_right.show(self, globals(), 'swap')
             elif selectedItem == '17':

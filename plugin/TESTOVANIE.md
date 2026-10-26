@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r71 pravý panel
+# Aktuálny checkpoint — 26. 10. 2026, r72 nastavenia OSD ECM vpravo
 
 ## Projekt a vydávanie
 
@@ -304,3 +304,14 @@ Pôvodné swap/tools/diagnostic/create controllery sú headless, používajú vo
 R71 publikované: zdroj0f2ca65296c479f04b2342fa7266c75ba4dd7774, CI40291132117 success vrátane čistého checkoutu a zhodných buildov/kontroly vydaných bajtov. Oba feedy overené na r71: 3674528 B, SHA256 86d13a1986a562d09bb1782e87b0fe6beca50633281790e4ae3c373cd24b3671.
 
 Nahradené r69/r70 odstránené workflow40291271244; API overilo iba v13.40-r71. Spolu47 odstránených vydaní, Git tagy a história zachované.
+
+
+## r72 — Informácie ECM na obrazovke
+
+Prezreté0(10).jpg,1/2(20261026-082320).jpg. Swap/tools sú v pravom paneli, ale používateľ upozornil na pôvodné samostatné nastavenia Informácie ECM NA OBRAZOVKE (ID8), nie na read-only ECM(ID6). Toto rozlíšenie sa predtým prehliadlo. R72 vkladá aj OSD_ECM_Menu do existujúceho pravého config widgetu.
+
+Použité pôvodné save/saveOnly/exitCancel/chckSetup/setPosition. OK mení bool alebo otvorí editor/voľbu hodnoty; pole Set position zachová pôvodný pozičný editor. Green uloží, red zruší; typové zmeny ponechávajú pôvodné potvrdenie GUI reštartu. Normálny návrat aj nútené zatvorenie zastavia chckTimer a rušia neuložené hodnoty; uložené hodnoty sa následne nerušia.
+
+Session proxy teraz rozlišuje dočasné modal editory/potvrdenia od skutočného odchodu z hlavného menu: nevyhadzuje pravý controller pri onHide editora. Callback/onShown obnoví skrytý PIG počas aktívneho panelu. Tým sa opravuje aj prípad straty swap konfigurácie po výbere hodnoty v r71.
+
+346 testov prešlo vrátane reálneho OSD controllera so simulovaným config/save/cancel, rozbalenia polí po zapnutí, zastavenia timeru a zachovania modelu pri modal editore. Skutočný natívny výsledok čaká na prijímač. Pôvodné systémové nastavenie alebo poloha OSD sa nemenia bez potvrdenia používateľom.

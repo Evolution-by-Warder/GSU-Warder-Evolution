@@ -65,3 +65,27 @@ class RightWorkspaceTests(unittest.TestCase):
                 x,y=map(int,node.get('position').split(','));w,h=map(int,node.get('size').split(','))
                 self.assertGreaterEqual(x,round(1137*width/1920));self.assertLessEqual(x+w,round(1863*width/1920))
                 self.assertGreaterEqual(y,round(182*height/1080));self.assertLessEqual(y+h,round(978*height/1080))
+    def test_osd_menu_is_embedded_toggles_fields_and_cancel_stops_timer(self):
+        cfg=self.plugin.config.plugins.GlassSysUtil;cfg.par0.value=False
+        self.view.enter('osd');model=self.view.model;timer=model.chckTimer
+        self.assertIs(model['config'],self.screen['right_config'])
+        self.session.open.assert_not_called();self.session.openWithCallback.assert_not_called()
+        with patch.object(model,'changeShow'):
+            self.view.choose();self.assertTrue(cfg.par0.value);self.assertGreater(len(model.list),1)
+            with patch.object(cfg.par0,'cancel') as cancel:self.view.back();cancel.assert_called_once()
+        self.assertFalse(self.view.active);self.assertIsNone(model.chckTimer)
+    def test_osd_save_uses_original_save_and_does_not_cancel_saved_values(self):
+        cfg=self.plugin.config.plugins.GlassSysUtil;cfg.par0.value=False
+        self.view.enter('osd');model=self.view.model
+        with patch.object(cfg.par0,'save') as save,patch.object(cfg.par0,'cancel') as cancel:
+            self.view.green();save.assert_called_once();cancel.assert_not_called()
+        self.assertFalse(self.view.active);self.assertIsNone(model.chckTimer)
+    def test_modal_editor_keeps_workspace_until_callback_and_restores_full_video_under_it(self):
+        self.view.enter('tools');model=self.view.model
+        ui=importlib.import_module('Plugins.Extensions.GlassSysUtil.warder_right')
+        callback=MagicMock()
+        ui.Session(self.view).openWithCallback(callback,self.plugin.ChoiceBox,title='Edit',list=[])
+        self.view.suspend();self.assertIs(self.view.model,model)
+        done=self.session.openWithCallback.call_args.args[0];done(None)
+        self.assertEqual(self.view.modal,0);callback.assert_called_once_with(None)
+        self.assertIs(self.view.model,model);self.pig.instance.hide.assert_called()
