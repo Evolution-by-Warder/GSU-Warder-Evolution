@@ -427,3 +427,8 @@ Workflow40324092192 úspešne odstránil r79 po overení r80; zostáva iba v13.4
 ## r81 — automatické potvrdenie bez duplicitných bielych volieb
 
 Používateľ schválil automatické veľké okno na snímke123823 (r78), žiada len odstrániť biele No/Yes a lokalizovať spodné tlačidlá. r81 ponecháva len červené Nie / zelené Áno, katalógy doplnené od r80. Skryté prepínanie ľavá/pravá je odstránené, aby neexistoval neviditeľný výber. OK predvolene odmieta, zelené explicitne potvrdzuje.
+
+
+Publikované r81: zdroj41f20f9e012b38bae07bb9c240b9a6c03f436137, CI40324432572 success;358 testov. IPK3 680 288 bajtov, SHA256d20574def14eeb37ad9ec6c89e05768d9308fac11a067d644d03dcb5a9b2042c. Oba feedy overené. Nová podoba ponuky je účinná až po nainštalovaní r81 pri ďalšej ponuke; prechod zo staršej verzie vykreslí ešte starý kód.
+
+Workflow40324557070 odstránil r80 po overení r81; API overilo iba v13.40-r81. Spolu57 odstránených vydaní; Git tagy a história zachované.
