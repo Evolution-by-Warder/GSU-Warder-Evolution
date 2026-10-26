@@ -170,6 +170,7 @@ class PluginUpdateUITests(unittest.TestCase):
         self.controller.poll();self.session.openWithCallback.assert_not_called()
         self.session.current_dialog=self.screen
         self.controller.poll();self.session.openWithCallback.assert_called_once()
+        self.assertIs(self.session.openWithCallback.call_args.args[1],self.ui.UpdateOffer)
         callback=self.session.openWithCallback.call_args.args[0]
         callback(False);self.session.open.assert_not_called()
         self.controller.stop();callback(True);self.session.open.assert_not_called()
@@ -191,27 +192,34 @@ class PluginUpdateUITests(unittest.TestCase):
         self.assertIn('aktuálny',self.screen['right_scroll'].getText())
 
     def test_install_success_changes_existing_screen_then_restarts_after_three_seconds(self):
-        timers=[MagicMock(),MagicMock()];api=dict(self.api);api['eTimer']=iter(timers).__next__
+        timers=[MagicMock(),MagicMock(),MagicMock()];api=dict(self.api);api['eTimer']=iter(timers).__next__
         install=MagicMock(return_value='13.40-r37');factory=MagicMock()
         screen=self.ui.PluginInstallScreen(self.session,self.release,api,install,factory)
         screen.start();screen.start();factory.return_value.start.assert_called_once()
         install.assert_not_called()
         screen.work();screen.poll()
         self.assertIn('3 sekundy',screen['status'].text)
-        timers[1].start.assert_called_once_with(3000,True)
+        timers[2].start.assert_called_once_with(3000,True)
         self.session.open.assert_not_called();screen.finish();self.assertFalse(hasattr(screen,'result'))
         import enigma
         with patch.object(enigma,'quitMainloop') as quit:
             screen.restart();quit.assert_called_once_with(3)
             screen.cleanup();screen.restart();quit.assert_called_once()
 
+    def test_offer_uses_shared_glass_frame_and_defaults_to_no(self):
+        screen=self.ui.UpdateOffer(self.session,'New release details',self.api)
+        self.assertFalse(screen.accepted)
+        self.assertIn('glass_header_art',screen.skin)
+        self.assertEqual(screen['status'].getText(),'New release details')
+        screen.select(True);self.assertTrue(screen.accepted)
+
     def test_install_failure_allows_back_without_restart(self):
-        timers=[MagicMock(),MagicMock()];api=dict(self.api);api['eTimer']=iter(timers).__next__
+        timers=[MagicMock(),MagicMock(),MagicMock()];api=dict(self.api);api['eTimer']=iter(timers).__next__
         screen=self.ui.PluginInstallScreen(self.session,self.release,api,thread_factory=MagicMock())
         screen.results.put((None,'opkg failed'));screen.poll()
         self.assertIn('zlyhala',screen['status'].text)
         self.assertEqual(screen['red'].text,'Naspäť')
-        timers[1].start.assert_not_called()
+        timers[2].start.assert_not_called()
         screen.finish();self.assertEqual(screen.result,())
 
 

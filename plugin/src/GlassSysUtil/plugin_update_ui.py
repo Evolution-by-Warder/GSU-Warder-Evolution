@@ -11,6 +11,10 @@ from Screens.MessageBox import MessageBox
 from enigma import eTimer, getDesktop
 
 from .plugin_update import check_release, install_release
+from xml.etree import ElementTree as ET
+from .warder_settings import skin as _window_skin
+from .warder_system import install as _install_header
+from .warder_main import text as _shared_text
 
 
 _SK = {
@@ -90,7 +94,7 @@ class StartupUpdateCheck:
                 notes=release.notes_i18n.get(language,release.notes)
                 message='GSU Warder Evolution\n\n'+text(self.api,'New version: %s\nInstalled version: %s\n\n%s\n\nInstall the update?')%(release.version,self.screen.readVersion(),notes)
                 pane.update_info(message,release,self)
-            else:pane.update_info(text(self.api,'The plugin is up to date.'))
+            else:pane.update_info('GSU Warder Evolution\n'+self.screen.readVersion()+'\n\n'+text(self.api,'The plugin is up to date.'))
             return
         if error:
             print('[GSU update] '+error)
@@ -99,7 +103,7 @@ class StartupUpdateCheck:
             language=self.api['config'].osd.language.value.split('_')[0]
             notes=release.notes_i18n.get(language,release.notes)
             message='Glass System Utility Warder Evolution\n\n'+text(self.api,'New version: %s\nInstalled version: %s\n\n%s\n\nInstall the update?') % (release.version,self.screen.readVersion(),notes)
-            self.screen.session.openWithCallback(lambda answer:self.answer(release,answer),MessageBox,message,type=MessageBox.TYPE_YESNO,default=False)
+            self.screen.session.openWithCallback(lambda answer:self.answer(release,answer),UpdateOffer,message,self.api,default=False)
         elif self.manual:
             self.screen.session.open(MessageBox,text(self.api,'The plugin is up to date.'),type=MessageBox.TYPE_INFO,timeout=6)
 
@@ -110,16 +114,41 @@ class StartupUpdateCheck:
         self.alive=False;self.timer.stop()
 
 
+def update_skin(confirm=False):
+    size=getDesktop(0).size();root=ET.fromstring(_window_skin(size.width(),size.height()))
+    root.set('name','WarderGSUUpdate')
+    node=root.find("widget[@name='config']");node.set('name','status')
+    for key in ('itemHeight','backgroundColorSelected','foregroundColorSelected'):node.attrib.pop(key,None)
+    sy=size.height()/1080
+    node.set('size','%d,%d'%(round(1740*size.width()/1920),round((570 if confirm else 650)*sy)))
+    ET.SubElement(root,'widget',name='decision',position='%d,%d'%(round(90*size.width()/1920),round(880*sy)),size='%d,%d'%(round(1740*size.width()/1920),round(55*sy)),font='Regular;%d'%round(28*sy),foregroundColor='#00ffffff',backgroundColor='#ff000000',transparent='1',halign='center',zPosition='3')
+    return ET.tostring(root,encoding='unicode')
+
+
+class UpdateOffer(Screen):
+    """Native Warder confirmation; decline remains the default."""
+    def __init__(self,session,message,api,default=False):
+        self.skin=update_skin(True);Screen.__init__(self,session)
+        self.api=api;self.accepted=default
+        self['settings_title']=Label(text(api,'Update'))
+        self['status']=ScrollLabel(message)
+        self['red']=Label(_shared_text(api,'No'));self['green']=Label(_shared_text(api,'Yes'))
+        self['decision']=Label('');self.select(default)
+        self['actions']=ActionMap(['ColorActions','OkCancelActions','DirectionActions'],{'red':lambda:self.close(False),'cancel':lambda:self.close(False),'green':lambda:self.close(True),'ok':lambda:self.close(self.accepted),'left':lambda:self.select(False),'right':lambda:self.select(True),'up':self['status'].pageUp,'down':self['status'].pageDown},-2)
+        _install_header(self,api)
+    def select(self,accepted):
+        self.accepted=accepted
+        self['decision'].setText(('  ' if accepted else '› ')+_shared_text(self.api,'No')+'       '+('› ' if accepted else '  ')+_shared_text(self.api,'Yes'))
+
+
 class PluginInstallScreen(Screen):
     def __init__(self,session,release,api,install=install_release,thread_factory=threading.Thread):
-        width=getDesktop(0).size().width()
-        scale=width/1920
-        def px(value):return max(1,int(value*scale))
-        self.skin='''<screen position="center,center" size="%d,%d" title="Glass System Utility — Aktualizácia" backgroundColor="#181818">
-          <widget name="status" position="%d,%d" size="%d,%d" font="Regular;%d" scrollbarMode="showOnDemand" transparent="1" />
-          <widget name="red" position="%d,%d" size="%d,%d" font="Regular;%d" foregroundColor="#ff5555" halign="center" transparent="1" />
-        </screen>''' % tuple(px(v) for v in (1200,600,30,30,1140,480,26,30,540,300,40,24))
+        self.skin=update_skin()
         Screen.__init__(self,session)
+        self['settings_title']=Label(text(api,'Update'))
+        self['green']=Label('')
+        self['decision']=Label('')
+        _install_header(self,api)
         self.api,self.release,self.install,self.thread_factory=api,release,install,thread_factory
         self.closed,self.started,self.done=False,False,False
         self.results=queue.Queue()

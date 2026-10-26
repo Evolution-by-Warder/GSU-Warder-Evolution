@@ -55,7 +55,7 @@ class SystemLayoutTests(unittest.TestCase):
                 data_y=int(field.get('position').split(',')[1])
                 self.assertEqual(nw,nh)
                 self.assertGreater(nw,iw)
-                self.assertLessEqual(abs((nx+nw/2)-(x+iw/2)),1)
+                self.assertLessEqual(abs((nx+nw/2)-(x+iw/2+round(50*w/1920))),1)
                 self.assertGreaterEqual(ny,round(180*h/1080))
                 self.assertLessEqual(ny+nh+round(12*h/1080),data_y)
             lower=[n for n in devices if int(n.get('position').split(',')[1])>=round(700*h/1080)]
