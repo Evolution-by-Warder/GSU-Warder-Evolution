@@ -1,9 +1,9 @@
 {
   "python": "3.14.7",
-  "host_checks": 358,
+  "host_checks": 359,
   "host_checks_passed": true,
   "receiver_tested": false,
-  "source_sha256": "43f04a54bc032473dd0e2e6dbac92db5c7c906f74731c792edff5f7113febaf7",
+  "source_sha256": "9cea3de1266bf77b317b8a619af699e373f2cfe13268b56f30dbaca6e679fe67",
   "original_named_classes": 62,
   "original_named_functions": 510,
   "compatibility_replaced_internal_closures": [
@@ -55,14 +55,14 @@
   "plugin_update_sha256": "2daac161e69e25e4e1ba94404ed5f179a36f07ea6d4d28e4b47c4e2a8bca69d6",
   "plugin_update_ui_sha256": "e6db46d8f5db8ecd5a64a0f4a3a1eabebe33c3527875a2cdd979c3a0e244f31b",
   "latest_candidate": {
-    "version": "13.40-r83",
+    "version": "13.40-r84",
     "receiver_tested": false,
-    "status": "Local checks pending; native visual confirmation pending"
+    "status": "359 host checks passed; native visual confirmation pending"
   },
   "oscam_readers_ui_sha256": "88f2da2c4eba5a05db9b333b3d8de003ca4f6e6ad82d6e2c6eed41b6feb40865",
   "warder_tools_sha256": "ef23dab03508f12e73cc5c8196f04ebaa44fd1bf7bf0d357881acc49ac341563",
   "warder_tools_ui_sha256": "337e4b0ca69041d64a3104060c9c454a4cd26428c52abb7da6f9a2d1ba7b072e",
-  "notes": "r83 sets noWrap=1 only on standalone ECM values label. Explicit newline-separated parser rows preserved; long CAM clips at right rather than adding a visual row. Inline ECM receiver-approved unchanged.",
+  "notes": "r84 standalone ECM strips @buildhash from CAM version display only; inline backend flagged and remains full. r83 noWrap retained on standalone values to prevent row drift. Parser and internal layout unchanged.",
   "warder_main_sha256": "73ab1ca400a675bf4f5baf0869f2d43b9968f44ca2bacccb183574aca11cb209",
   "warder_system_sha256": "4cb25fcb2209d7cd709f1b53770abe9aa6a9fa1e5d345b05e1475a9662fc63d2",
   "i18n_sha256": "85a45d5f6cf6d05674eb88f60996f12b2c90484eb1c3cc7aa1fe9386e31631ba",
@@ -84,7 +84,7 @@
     "confirmed": true,
     "evidence": "User explicitly reports local DVBAPI disable/re-enable recovery works after update, 26 October 2026."
   },
-  "warder_ecm_sha256": "f0f4ad84a847f510b1313a30ead12596929933375cd6fbf1fdbf146d36c556bf",
+  "warder_ecm_sha256": "2e95fb8cfa8452fcf041e12e93983060fb12bd2118ced71195b3c24f931f41ff",
   "oscam_r64_receiver_confirmed": true,
   "warder_cam_sha256": "eda09cdddf0db7706cfccfc5402f48f2999ee820645266d00ea941bb9ee3b131",
   "ecm_r67_receiver_confirmed": true,
