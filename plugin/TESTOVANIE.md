@@ -315,3 +315,7 @@ Použité pôvodné save/saveOnly/exitCancel/chckSetup/setPosition. OK mení boo
 Session proxy teraz rozlišuje dočasné modal editory/potvrdenia od skutočného odchodu z hlavného menu: nevyhadzuje pravý controller pri onHide editora. Callback/onShown obnoví skrytý PIG počas aktívneho panelu. Tým sa opravuje aj prípad straty swap konfigurácie po výbere hodnoty v r71.
 
 346 testov prešlo vrátane reálneho OSD controllera so simulovaným config/save/cancel, rozbalenia polí po zapnutí, zastavenia timeru a zachovania modelu pri modal editore. Skutočný natívny výsledok čaká na prijímač. Pôvodné systémové nastavenie alebo poloha OSD sa nemenia bez potvrdenia používateľom.
+
+R72 publikované: zdroj0fe1e856ed4aee01106fcb590a056708bb05999b, CI40292458200 success vrátane čistého checkoutu/deterministických buildov/kontroly vydaných bajtov. Oba feedy overené: 3674988 B, SHA256 fe47612b03b0f6176d24b3b971c85529cac68bd44199aa50b52722dec30842dd.
+
+Nahradené r71 odstránené workflow40292575618; API overilo iba v13.40-r72. Spolu48 odstránených vydaní; Git tagy a história zachované.
