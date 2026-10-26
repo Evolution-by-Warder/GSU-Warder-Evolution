@@ -335,3 +335,7 @@ Používateľ výslovne upresnil: po OK na Typ/Prah/Čas obnovy/Čas zobrazenia 
 Nové right_editor_* widgety: oddeľovacia čiara y560, titulok y580, list y635–875 alebo číselná hodnota y650–730, pomoc dole y890–955 (FHD). Horný right_config sa neschováva. Výber začne na aktuálnej hodnote, čísla sa zadávajú0–9 (prvá číslica nahradí pôvodné číslo) alebo menia šípkami, pomoc ukazuje povolený rozsah. Rozpracovaný buffer nemení config do OK/green; red ho zahodí. Kontrola rozsahov1–2000,2–12,4–15,50–450. Konfiguračné uloženie zostáva ďalší samostatný krok. OSD hint timer je počas editoru pozastavený.
 
 349 testov Python3.14.7 prešlo, compileall/diff check OK. Nové testy zachovanej hornej časti a dolného listu, dočasného číselného bufferu, odmietnutia hodnoty mimo rozsahu, potvrdenia a zrušenia a bounds HD/FHD/UHD. Native receiver výsledok čaká na potvrdenie. Dočasný checkout bol po obnove pracovného prostredia znova získaný z originálnej vydávacej vetvy; žiadne neuložené zmeny sa nestratili.
+
+R74 publikované: zdroj115eb288c728653aa79a2f3e09c336b3be5f6f94, CI40313766300 success vrátane čistého checkoutu, zhodných buildov a kontroly vydaných bajtov. Oba feedy overené: 3676008 B, SHA256 d81af3d70f4fe01660ff96873d96491b2e5cfbfea755b387d810c25bd153fe14.
+
+Nahradené r72/r73 odstránené workflow40313907045; API overilo iba v13.40-r74. Spolu50 odstránených vydaní, Git tagy a história zachované.
