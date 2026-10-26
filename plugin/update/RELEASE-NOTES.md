@@ -1,5 +1,4 @@
-GSU 13.40-r81
+GSU 13.40-r82
 
-- Automatická ponuka aktualizácie zobrazuje iba spodné farebné tlačidlá Nie / Áno v jazyku prostredia; duplicitné biele voľby odstránené.
-- Červené odmietne, zelené potvrdí; OK / EXIT ponuku zatvorí bez inštalácie.
-- Obsahuje širší riadok CAM, názov stanice a dva picony v oboch ECM zobrazeniach, aj jednoznačné Áno/Nie pri ručnej aktualizácii.
+- Nápoveda Stlač OK pre úpravu je v nastaveniach OSD ECM posunutá o riadok nižšie, aby nebola nalepená na položkách.
+- Pri otvorenom spodnom výbere sa táto nápoveda skryje, aby neprekrývala jeho obsah; po návrate sa obnoví.
