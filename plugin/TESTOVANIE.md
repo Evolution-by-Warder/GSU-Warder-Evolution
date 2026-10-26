@@ -471,3 +471,8 @@ Workflow40326380003 odstránil r82/r83/r84 po overení r85; API overilo iba v13.
 ## r86 — vynútenie polohy interného názvu na natívnom prvku
 
 Snímka125909 na r85 ukazuje názov stále pri piconoch napriek XML y672. Príčina rozdielu na prijímači nie je dokázaná. r86 pri InlineECM.show po zobrazení komponentov explicitne nastaví instance.move(ePoint(1160,672)) a resize680×40, škálované na desktop. Picony sú y760, medzi názvom a piconmi48px. Externé okno bez zmeny. Nový test overí priamo natívne volanie pri otvorení.
+
+
+Publikované r86: zdrojf4b884a10dfb6c2f92356b18116ca74296af8fcf, CI40327181308 success (360 testov). IPK3 680 406 bajtov, SHA25615ace1057116c3a9f65085ce9065c3c2193a9c3ff7b1cf5510b1d5a5e133570b. Oba feedy overené. Natívne potvrdenie posunu na prijímači čaká.
+
+Workflow40327406279 odstránil r85 po overení r86; API overilo iba v13.40-r86. Spolu62 odstránených vydaní; Git tagy a história zachované.
