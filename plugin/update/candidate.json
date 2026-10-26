@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r59",
-    "tag": "v13.40-r59",
-    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r59/enigma2-plugin-glasssysutil_13.40-r59_all.ipk",
-    "sha256": "f77736521d21b97318be84ae26fc37e34c7f9bbd882f79319eb500d0687482fb",
-    "bytes": 3662394,
-    "notes": "GSU 13.40-r59\n\nJednoznačné ovládanie panelov v Informáciách o OSCame:\n- Predvolene je aktívna pravá ponuka aj po otvorení výsledkov.\n- Doľava aktivuje ľavý panel; hore/dole posúvajú jeho údaje.\n- Doprava aktivuje pravú ponuku; hore/dole vyberajú jej položky.\n- Zvýraznenie výberu má iba aktívny panel.\n- Súbor alebo oprávnenia otvorené z ľavého panelu zachovajú ovládanie vľavo.\nOpravené priame smerovanie šípok do zoznamov a posúvanie textu súborov.\n"
+    "version": "13.40-r60",
+    "tag": "v13.40-r60",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r60/enigma2-plugin-glasssysutil_13.40-r60_all.ipk",
+    "sha256": "ce297ce3a193c3a148dcffa24e1082b3ca288f22f34358e6695143a3cfa0af41",
+    "bytes": 3662806,
+    "notes": "GSU 13.40-r60\n\nJednotné zvýraznenie v celom GSU a grafické opravy OSCamu:\n- Všetky vlastné výberové zoznamy a nastavenia GSU majú rovnaké nepriehľadné modré zvýraznenie ako hlavné menu.\n- Platí aj pre OSCam, CAM správcu, nástroje a výber súborov; bez zmeny systémového skinu.\n- Text oprávnení karty je odsadený od stavovej ikony.\n- Technické interné popisky TypeCRD/CAIDcrd sú zobrazené ako Type/CAID.\nZachované prepínanie panelov doľava/doprava, posúvanie záznamov aj návrat do čítačiek.\n"
   }
 }
