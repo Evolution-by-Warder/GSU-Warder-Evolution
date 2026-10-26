@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r65 ECM v pravom paneli
+# Aktuálny checkpoint — 26. 10. 2026, r68 správca CAM
 
 ## Projekt a vydávanie
 
@@ -250,3 +250,12 @@ Používateľ snímkou1(20261026-072259).jpg potvrdil anglické popisy aj po ďa
 R67 publikované: zdroj6c0a0bd0eb7c0188a6b208be7b0cbd22f29f2f34, CI40285869341 success vrátane zhodných buildov a kontroly vydaných bajtov. Oba feedy overené: 3667108 B, SHA256 5c32f52b0550e75cf74473d68b53215dd9968c46da4d78669ad3a58f03d28a90.
 
 Nahradené r66 odstránené workflow40285973189; API overilo iba v13.40-r67. Spolu43 odstránených vydaní; Git tagy a história zachované.
+
+
+## r68 — Správca CAM
+
+Snímka1(20261026-072903).jpg z r67 preukazuje správne slovenské ECM popisy. Logo čiernej picony zostáva na výslovný pokyn. Ďalšia sekcia je správca CAM: používateľ schválil rovnaký princíp ako OSCam, pravý panel akcie, ľavý CAM a stav, horizontálne šípky prepínajú panely.
+
+Nový warder_cam.py mení iba prezentáciu a navigačnú vrstvu: pôvodné pomenované komponenty, konfiguračné hodnoty, natívne príkazy, časovače, zelený štart/reštart a červený stop sú zachované. Hore/dole vpravo prechádza akcie vrátane spätného posunu a vynechania odstránených/nedostupných SRV položiek. OK vpravo aktivuje akciu; vľavo otvorí zoznam hodnôt vybraného konfiguračného riadku. Zrušenie nič nemení, potvrdenie iba nastaví výber, nespúšťa CAM. Modré prepne na pravý panel a ďalšiu akciu. EXIT pôvodne zavrie správcu a vráti hlavné menu/LiveTV. Tenké rámiky, rovnaké modré zvýraznenie a hlavička s časom/verziou. Malé rozlíšenia pod1280 zostávajú pôvodné.
+
+327 testov Python3.14.7 prešlo, compileall a diff check OK. Nové kontroly zachovaných komponentov/bounds HD/FHD/UHD, navigácie, výberu a zachovaných farebných handlerov. Existujúce SRV testy používajú rozmery aktuálneho skinu namiesto starých čísel42/82. Nový natívny vzhľad a navigáciu musí ešte potvrdiť prijímač; už overené backend skúšky neopakovať.

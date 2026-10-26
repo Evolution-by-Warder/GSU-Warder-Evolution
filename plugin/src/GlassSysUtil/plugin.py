@@ -3,6 +3,7 @@ from Plugins.Extensions.GlassSysUtil import warder_channel as _warder_channel
 from Plugins.Extensions.GlassSysUtil import warder_system as _warder_system
 from Plugins.Extensions.GlassSysUtil import warder_main as _warder_main
 from Plugins.Extensions.GlassSysUtil import warder_ecm as _warder_ecm
+from Plugins.Extensions.GlassSysUtil import warder_cam as _warder_cam
 from Plugins.Extensions.GlassSysUtil import warder_tools_ui as _warder_tools_ui
 from Plugins.Extensions.GlassSysUtil.plugin_update_ui import StartupUpdateCheck as _StartupUpdateCheck, text as _plugin_update_text
 # uncompyle6 version 3.9.3
@@ -3955,6 +3956,7 @@ class univCamMng(Screen):
             self.skin = UCM
         self.skin = _compact_cam_menu(self.skin)
         self.skin = _srv_skin(self.skin)
+        self.skin = _warder_cam.prepare(self.skin, globals())
         self.session = session
         Screen.__init__(self, session)
         self.nativeSoftcam = NativeSoftcam()
@@ -4027,6 +4029,7 @@ class univCamMng(Screen):
         except:
             self.chckOscamTimer.timeout.get().append(self.chckOscam)
 
+        _warder_cam.install(self, globals())
         self.onLayoutFinish.append(self.inicializeUCM)
         self.onLayoutFinish.append(self.setTitlenew)
         return
