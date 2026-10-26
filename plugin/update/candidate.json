@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r79",
-    "tag": "v13.40-r79",
-    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r79/enigma2-plugin-glasssysutil_13.40-r79_all.ipk",
-    "sha256": "89c60f288ac2ca91ff0f319eb8d43920080e751b0e1052d6785185b15f05d3b4",
-    "bytes": 3680280,
-    "notes": "GSU 13.40-r79\n\n- Malé ECM okno jemne rozšírené a prvý riadok CAM využíva širší pravý okraj bez predčasného skracovania názvu v parseri.\n- Názov stanice nad dvojicou piconov v malom ECM okne aj pravom paneli GSU, vo farbe a písme nadpisu Informácie ECM.\n- Picon stanice vedľa kódovania; pri nezmenenej stanici sa obrázok znovu nenačítava.\n- Zachované zarovnanie riadka Družica a ostatné schválené obrazovky.\n"
+    "version": "13.40-r80",
+    "tag": "v13.40-r80",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r80/enigma2-plugin-glasssysutil_13.40-r80_all.ipk",
+    "sha256": "5832acc6b180755e96c0287260fc7cfdd1836161c8dad3b9264ee65c10aa4a9b",
+    "bytes": 3680336,
+    "notes": "GSU 13.40-r80\n\n- Ručná ponuka novej verzie má jednoznačné tlačidlá: červené Nie a zelené Áno.\n- Bez novej verzie alebo pri chybe zostáva Naspäť.\n- Preklady Áno/Nie doplnené pre všetky podporované jazyky.\n- Obsahuje rozšírené ECM okno, picon stanice vedľa kódovania, názov stanice nad nimi a širší prvý riadok CAM z r77–r79.\n"
   }
 }
