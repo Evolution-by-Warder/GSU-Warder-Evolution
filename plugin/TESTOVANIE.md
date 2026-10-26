@@ -300,3 +300,7 @@ warder_right.py transformuje iba runtime skin hlavného menu: priehľadný root,
 Pôvodné swap/tools/diagnostic/create controllery sú headless, používajú vopred vytvorené widgety pravého panela a Session proxy pre vnorené Create/Diagnostic. Originálne operácie swap_store a diagnostický worker sa nemenia; busy blokuje návrat z operácie, onClose zatvára async výsledky. Vytvorenie swapu obsahuje pôvodné3 polia vpravo; konfiguračné výbery/editor a potvrdzovacie MessageBox sú ešte modal. Nástroje majú zoznam a popis vpravo, výsledok archívu ScrollLabel vpravo. Hore/dole posúva aktívny panel, doľava/doprava mení focus, červené obnoví predchádzajúci obsah/LiveTV. Zelené/žlté používajú originálne akcie modelu. Bez stop/playService. ECM ponecháva schválený parser/picon/legendu a iba prepína rovnaké glass podklady.
 
 343 testov Python3.14.7 prešlo, compileall/diff check OK. Nové testy používajú originálne controllery: Tools/Diagnostic návrat, Swap/Create busy, neotvorenie Session dialógu pre vložené stránky, ECM glass, obnova PIG bez preladenia a bounds HD/FHD/UHD. Skutočný natívny vzhľad r71 ešte čaká na prijímač; celý plugin zostáva receiver_tested=false.
+
+R71 publikované: zdroj0f2ca65296c479f04b2342fa7266c75ba4dd7774, CI40291132117 success vrátane čistého checkoutu a zhodných buildov/kontroly vydaných bajtov. Oba feedy overené na r71: 3674528 B, SHA256 86d13a1986a562d09bb1782e87b0fe6beca50633281790e4ae3c373cd24b3671.
+
+Nahradené r69/r70 odstránené workflow40291271244; API overilo iba v13.40-r71. Spolu47 odstránených vydaní, Git tagy a história zachované.
