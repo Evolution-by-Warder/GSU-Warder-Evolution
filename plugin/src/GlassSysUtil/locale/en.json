@@ -135,5 +135,6 @@
   "Start Time": "Start Time",
   "Details": "Details",
   "Menu": "Menu",
-  "Account enabled, but OSCam recovery failed.": "Account enabled, but OSCam recovery failed."
+  "Account enabled, but OSCam recovery failed.": "Account enabled, but OSCam recovery failed.",
+  "After enabling, please wait for the change and client list refresh. A local DVBAPI account restarts OSCam in the background.": "After enabling, please wait for the change and client list refresh. A local DVBAPI account restarts OSCam in the background."
 }

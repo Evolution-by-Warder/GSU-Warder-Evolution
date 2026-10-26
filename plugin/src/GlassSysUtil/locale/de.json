@@ -135,5 +135,6 @@
   "Start Time": "Startzeit",
   "Details": "Details",
   "Menu": "Menü",
-  "Account enabled, but OSCam recovery failed.": "Konto aktiviert, aber OSCam-Neustart oder Wiederverbindung fehlgeschlagen."
+  "Account enabled, but OSCam recovery failed.": "Konto aktiviert, aber OSCam-Neustart oder Wiederverbindung fehlgeschlagen.",
+  "After enabling, please wait for the change and client list refresh. A local DVBAPI account restarts OSCam in the background.": "Bitte nach dem Aktivieren kurz auf die Änderung und die aktualisierte Clientliste warten. Bei einem lokalen DVBAPI-Konto startet OSCam im Hintergrund neu."
 }
