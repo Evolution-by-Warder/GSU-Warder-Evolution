@@ -55,19 +55,16 @@
   "plugin_update_sha256": "2daac161e69e25e4e1ba94404ed5f179a36f07ea6d4d28e4b47c4e2a8bca69d6",
   "plugin_update_ui_sha256": "176c289f60774144f82b20ea4a0038b7751f9067aec796215e3717d91ec27f93",
   "latest_candidate": {
-    "version": "13.40-r65",
+    "version": "13.40-r66",
     "receiver_tested": false,
-    "status": "Published; CI and both update feeds verified; inline ECM display awaits receiver confirmation",
-    "bytes": 3667220,
-    "sha256": "d1ac6d5b093c81c9ec2296da604fa10c5fbcc170c60baf49d80fd991a375d373",
-    "source_commit": "94575bc1af68cf246a4a3f960a4e2b281eef76f1",
-    "ci_run": 40284135235,
-    "ci_conclusion": "success"
+    "status": "320 tests passed; publication pending",
+    "bytes": 3667024,
+    "sha256": "bd636876d7c23e893ce112ad90037be334d6f9c21c0db76aa3cb53572d1cda78"
   },
   "oscam_readers_ui_sha256": "88f2da2c4eba5a05db9b333b3d8de003ca4f6e6ad82d6e2c6eed41b6feb40865",
   "warder_tools_sha256": "ef23dab03508f12e73cc5c8196f04ebaa44fd1bf7bf0d357881acc49ac341563",
   "warder_tools_ui_sha256": "337e4b0ca69041d64a3104060c9c454a4cd26428c52abb7da6f9a2d1ba7b072e",
-  "notes": "r64 OSCam transparency, controls and wait notice receiver-approved. r65 embeds original ECM controller in the main right panel, with red restoring LiveTV; native display awaits receiver confirmation.",
+  "notes": "r65 ECM panel receiver screenshot confirms placement. User requests only English legend translation; black CAS picon explicitly approved. r66 preserves colons in translation keys, regression checks actual localized legend.",
   "warder_main_sha256": "2156fa0607b4986ab00f5223b3204776cc90ef96b214e5e9b625c2140aba6467",
   "warder_system_sha256": "932f968b76486d0ef4bba012752a6e8e9817b9902987491825885cb80ce3260a",
   "i18n_sha256": "85a45d5f6cf6d05674eb88f60996f12b2c90484eb1c3cc7aa1fe9386e31631ba",
@@ -87,6 +84,6 @@
     "confirmed": true,
     "evidence": "User explicitly reports local DVBAPI disable/re-enable recovery works after update, 26 October 2026."
   },
-  "warder_ecm_sha256": "75347ea5ee666e2c2c214be14d6f314d26d191b0e0fdff3b24e2edea48751866",
+  "warder_ecm_sha256": "71e03bbf1ffc7f37b01ac8346b8cc62fca20aa83bc79157a92b21d4caea950df",
   "oscam_r64_receiver_confirmed": true
 }

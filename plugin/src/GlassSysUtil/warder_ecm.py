@@ -47,7 +47,7 @@ class InlineECM:
             lines=[]
             for line in value.split('\n'):
                 name,separator,rest=line.partition(':')
-                lines.append(main.text(api,name)+separator+rest)
+                lines.append(main.text(api,name+separator)+rest)
             set_text('\n'.join(lines))
         labels.setText=translated;labels.setText(self.model.e)
         self.widgets=[screen[name] for name in ('inline_ecm_mask','inline_ecm_title',*FIELDS.values())]
