@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r56",
-    "tag": "v13.40-r56",
-    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r56/enigma2-plugin-glasssysutil_13.40-r56_all.ipk",
-    "sha256": "90aa221dc7c3fa1e7077240492e18819987209f9ce713cd0daec140981d34c9b",
-    "bytes": 3662346,
-    "notes": "GSU 13.40-r56\n\nInformácie o OSCame v spoločnom rozhraní Warder:\n- Ponuka zostáva vpravo; údaje, log aj konfiguračné súbory sa zobrazujú vľavo.\n- Úvodný prehľad zachováva prijímač, verziu OSCamu, čas spustenia a uptime.\n- Šípka doprava vyberá ponuku, doľava vracia ovládanie výsledkom.\n- Späť vráti úvodný prehľad; ďalšie Späť obnoví hlavné menu s LiveTV.\n- Pôvodné funkcie čítačiek, klientov a oprávnení zostávajú zachované.\n- Skryté časti nemajú aktívne časovače ani ovládanie.\n\nNové rozloženie potrebuje vizuálne overenie na prijímači.\n"
+    "version": "13.40-r57",
+    "tag": "v13.40-r57",
+    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r57/enigma2-plugin-glasssysutil_13.40-r57_all.ipk",
+    "sha256": "e97f9f0670497216b9bfd055eae3865525b327683915393d9aa36f5172ac5ae8",
+    "bytes": 3662198,
+    "notes": "GSU 13.40-r57\n\nOprava pádu pri otvorení Informácií o OSCame na OpenATV.\nÚvodné spustenie obrazovky používa viazanú metódu požadovanú natívnym Screen API.\nDoplnený regresný test kopíruje spôsob spúšťania onLayoutFinish v OpenATV.\nRozloženie OSCamu a všetky jeho funkcie zostávajú zachované.\n"
   }
 }
