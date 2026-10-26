@@ -1,6 +1,6 @@
 {
   "python": "3.14.7",
-  "host_checks": 297,
+  "host_checks": 299,
   "host_checks_passed": true,
   "receiver_tested": false,
   "source_sha256": "f33d044f7b3d806c80745c5e0af27aa27e7a363982372f5e2b4d1f225dda0864",
@@ -55,19 +55,16 @@
   "plugin_update_sha256": "2daac161e69e25e4e1ba94404ed5f179a36f07ea6d4d28e4b47c4e2a8bca69d6",
   "plugin_update_ui_sha256": "176c289f60774144f82b20ea4a0038b7751f9067aec796215e3717d91ec27f93",
   "latest_candidate": {
-    "version": "13.40-r60",
+    "version": "13.40-r61",
     "receiver_tested": false,
-    "status": "Published; both r60 feeds verified; receiver visual confirmation pending",
-    "bytes": 3662806,
-    "sha256": "ce297ce3a193c3a148dcffa24e1082b3ca288f22f34358e6695143a3cfa0af41",
-    "source_commit": "b825858a6b8548c2cfe3d78ec7bd197f7222fd7c",
-    "ci_run": 40275205808,
-    "ci_conclusion": "success"
+    "status": "299 tests and identical clean builds passed; publication pending",
+    "bytes": 3662832,
+    "sha256": "2fd4189f5ca92fe9942de68f83f1aed6829e39979df21b018345b6705593fdb0"
   },
   "oscam_readers_ui_sha256": "88f2da2c4eba5a05db9b333b3d8de003ca4f6e6ad82d6e2c6eed41b6feb40865",
   "warder_tools_sha256": "ef23dab03508f12e73cc5c8196f04ebaa44fd1bf7bf0d357881acc49ac341563",
   "warder_tools_ui_sha256": "337e4b0ca69041d64a3104060c9c454a4cd26428c52abb7da6f9a2d1ba7b072e",
-  "notes": "r59 reader navigation, entitlement scrolling and return confirmed by receiver screenshots. r60 sets opaque main-menu blue selection across all owned GSU list/config skins and offsets card fields from state icons. Receiver visual confirmation pending.",
+  "notes": "r60 receiver screenshots confirm opaque selection and entitlement icon/text spacing. Client view loads details but legacy OK action exited to intro. r61 consumes OK in read-only result panes, updates client/summary details, preserves actual readers/files child actions. Receiver confirmation pending.",
   "warder_main_sha256": "ce78e2ea4706d6a9c6c110dee1ca125de901d3cb6c22518ee2d087f05698bf7f",
   "warder_system_sha256": "932f968b76486d0ef4bba012752a6e8e9817b9902987491825885cb80ce3260a",
   "i18n_sha256": "85a45d5f6cf6d05674eb88f60996f12b2c90484eb1c3cc7aa1fe9386e31631ba",
@@ -80,5 +77,5 @@
     "verified_release_count": 1,
     "tags_unchanged": true
   },
-  "warder_oscam_sha256": "88c22a319526a8a47d4b36443c116eba641990038894016f1a616401ab1b88ac"
+  "warder_oscam_sha256": "6745ee01d94c8dc7c5ea58d0d7551207fd7c17c9aab3e59d53ed5f6c950c73ff"
 }

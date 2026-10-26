@@ -61,7 +61,7 @@ class WorkspaceTests(unittest.TestCase):
             self.assertEqual(self.host.move(1),1)
             self.host.left();enable.assert_called_with(True)
             self.assertEqual(self.host.move(1),1)
-            self.assertEqual(self.host.choose(),0)
+            self.assertEqual(self.host.choose(),1)
     def test_opening_results_keeps_right_menu_until_explicit_left_arrow(self):
         intro=self.host.panes['intro'].model
         intro['list'].moveToIndex(0);self.host.choose()
@@ -72,6 +72,23 @@ class WorkspaceTests(unittest.TestCase):
             self.host.left();self.host.move(1);down.assert_called_once()
             self.host.right();self.host.move(1);self.assertEqual(move.call_count,2)
             down.assert_called_once()
+
+    def test_ok_on_client_and_summary_updates_details_without_leaving(self):
+        for kind in ('users','summary'):
+            self.host.activate(kind);self.host.left()
+            pane=self.host.panes[kind]
+            with patch.object(pane.model,'reactivate') as details,patch.object(pane.model,'exit') as exit_screen:
+                self.assertEqual(self.host.choose(),1);details.assert_called_once()
+                exit_screen.assert_not_called()
+                self.assertEqual(self.host.current,kind);self.assertFalse(self.host.menu_focus)
+        self.session.open.assert_not_called()
+    def test_ok_keeps_readonly_results_but_passes_real_nested_actions(self):
+        for kind in ('log','file','entitlements'):
+            self.host.activate(kind);self.host.left()
+            self.assertEqual(self.host.choose(),1)
+            self.assertEqual(self.host.current,kind);self.assertFalse(self.host.menu_focus)
+        for kind in ('readers','files'):
+            self.host.activate(kind);self.host.left();self.assertEqual(self.host.choose(),0)
 
     def test_results_arrows_drive_only_the_selected_left_list(self):
         right=self.host.panes['intro'].model['list']
