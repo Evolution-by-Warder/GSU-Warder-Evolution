@@ -59,7 +59,7 @@ class ServerVisibilityTests(unittest.TestCase):
         self.assertEqual(len(screen.list),1);self.assertEqual(screen.title,'CAM Manager')
         for name in ('activSrv','SrvPic','txt7','srvArrowLeft','srvArrowRight'):self.assertFalse(screen[name].visible)
         self.assertEqual(screen['txt1'].text,'Download CAM')
-        self.assertEqual(screen['config']._size.height(),42)
+        self.assertEqual(screen['config']._size.height(),int(screen.srvLayout['config']['itemHeight'])+2)
         self.assertEqual(screen['txt8'].position().y(),int(screen.srvLayout['txt7']['position'].split(',')[1]))
         screen.idxAllFnc=6;screen.selectFnc();self.assertEqual(screen.idxAllFnc,8)
         screen.idxAllFnc=7
@@ -71,7 +71,7 @@ class ServerVisibilityTests(unittest.TestCase):
         with patch.object(plugin,'listDir',return_value=['NewCS_Srv.sh']):screen.CamSrvList()
         self.assertEqual(screen.numSrv,1);self.assertEqual(len(screen.list),2)
         self.assertEqual(screen.title,'CAM/SRV Manager');self.assertEqual(screen['txt1'].text,'Download CAM/SRV')
-        self.assertEqual(screen['config']._size.height(),82)
+        self.assertEqual(screen['config']._size.height(),int(screen.srvLayout['config']['size'].split(',')[1]))
         self.assertEqual(screen['txt8'].position().y(),int(screen.srvLayout['txt8']['position'].split(',')[1]))
         for name in ('activSrv','SrvPic','txt7','srvArrowLeft','srvArrowRight'):self.assertTrue(screen[name].visible)
         screen.idxAllFnc=6;screen.selectFnc();self.assertEqual(screen.idxAllFnc,7)

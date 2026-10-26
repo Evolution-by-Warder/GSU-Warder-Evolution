@@ -1,3 +1,9 @@
-GSU 13.40-r67
+GSU 13.40-r68
 
-ECM panel používa samostatné preložené popisy, obnovené pri otvorení aj každom načítaní údajov. Pôvodné interné popisy parsera zostávajú oddelené. Logo a ovládanie zachované.
+Správca CAM v spoločnom Warder vzhľade:
+- Spoločná hlavička s dátumom, časom a verziou.
+- Výber CAM a stav vľavo, akcie a nápoveda vpravo.
+- Doľava/doprava prepína panel, hore/dole pohyb v paneli.
+- OK vľavo otvorí výber CAM, OK vpravo vykoná vybranú akciu.
+- Zelené štart/reštart, červené stop, žlté aktivácia, modré ďalšia akcia.
+- Zachované pôvodné príkazy, kontrola CAM a podmienené SRV položky.
