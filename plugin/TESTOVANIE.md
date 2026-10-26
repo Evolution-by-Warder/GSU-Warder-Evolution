@@ -228,3 +228,7 @@ Nahradené r61–r63 odstránené workflow40280828196 success; API overilo iba r
 Používateľ schválil r64: OSCam priehľadnosť, ovládanie a hlášky sú OK. Na jeho ďalší pokyn Informácie o ECM nahrádzajú LiveTV v pravom paneli hlavného menu. Ľavá ponuka zostáva dostupná. Prvé červené obnoví LiveTV, ďalšie zavrie menu. Otvorenie inej obrazovky zastaví ECM timer a obnoví pripravenosť LiveTV bez zastavenia/preladenia kanála. Pôvodný ECM parser a 5-sekundové obnovovanie ostávajú zachované; malé rozlíšenia pod 1280 používajú pôvodný dialóg. Správca CAM sa teraz nemení.
 
 320 testov Python 3.14.7 prešlo aj v čistom checkoute, compileall a diff check OK. Dva nezávislé buildy sú zhodné: 3667220 B, SHA256 d1ac6d5b093c81c9ec2296da604fa10c5fbcc170c60baf49d80fd991a375d373. Natívny vzhľad ECM a návrat LiveTV musí ešte potvrdiť prijímač.
+
+R65 publikované: zdroj94575bc1af68cf246a4a3f960a4e2b281eef76f1, CI40284135235 success vrátane stiahnutia a kontroly vydaného balíka. Oba aktualizačné feedy overené na r65 s vyššie uvedenou veľkosťou a hashom.
+
+Nahradené r64 odstránené workflow40284220781; API overilo iba v13.40-r65 s IPK a SHA256. Spolu41 odstránených vydaní, Git tagy a história zachované.
