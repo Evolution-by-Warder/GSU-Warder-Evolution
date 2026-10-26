@@ -21,6 +21,17 @@ class WorkspaceTests(unittest.TestCase):
         intro=self.host.panes['intro'].model
         intro.status={kind:True for kind in ('summary','readers','users','log','files')}
         intro.list=[[kind] for kind in intro.status];intro['list'].l.setList(intro.list)
+    def test_openatv_native_layout_dispatch_accepts_all_registered_callbacks(self):
+        # OpenATV Screens/Screen.py createGUIScreen executes non-bound callbacks
+        # as source strings; a lambda raises the receiver's reported TypeError.
+        with patch.object(self.host._warder_header,'tick'),patch.object(self.host,'activate') as activate:
+            self.host.select_server=True
+            for method in self.host.onLayoutFinish:
+                if not isinstance(method,type(self.host.close)):
+                    exec(method,{}, {})
+                else:method()
+            activate.assert_called_once_with('servers')
+
     def test_all_primary_results_stay_in_one_screen_and_return(self):
         intro=self.host.panes['intro'].model
         for index,kind in enumerate(intro.status):

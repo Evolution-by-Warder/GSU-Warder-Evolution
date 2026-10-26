@@ -1,6 +1,6 @@
 {
   "python": "3.14.7",
-  "host_checks": 289,
+  "host_checks": 290,
   "host_checks_passed": true,
   "receiver_tested": false,
   "source_sha256": "6562050a7d5d1ce913ceebb9e97656527fe806508befd89c4ba0f8720fe49c75",
@@ -55,19 +55,16 @@
   "plugin_update_sha256": "2daac161e69e25e4e1ba94404ed5f179a36f07ea6d4d28e4b47c4e2a8bca69d6",
   "plugin_update_ui_sha256": "176c289f60774144f82b20ea4a0038b7751f9067aec796215e3717d91ec27f93",
   "latest_candidate": {
-    "version": "13.40-r56",
+    "version": "13.40-r57",
     "receiver_tested": false,
-    "status": "Published; both feeds verified r56; native receiver appearance/focus pending",
-    "bytes": 3662346,
-    "sha256": "90aa221dc7c3fa1e7077240492e18819987209f9ce713cd0daec140981d34c9b",
-    "source_commit": "88a4ffbe012c8abe1e3b0b10fd16ad04d82a98df",
-    "ci_run": 40271924200,
-    "ci_conclusion": "success"
+    "status": "290 tests, native layout dispatch regression and identical clean builds passed; publication pending",
+    "bytes": 3662198,
+    "sha256": "e97f9f0670497216b9bfd055eae3865525b327683915393d9aa36f5172ac5ae8"
   },
   "oscam_readers_ui_sha256": "88f2da2c4eba5a05db9b333b3d8de003ca4f6e6ad82d6e2c6eed41b6feb40865",
   "warder_tools_sha256": "ef23dab03508f12e73cc5c8196f04ebaa44fd1bf7bf0d357881acc49ac341563",
   "warder_tools_ui_sha256": "337e4b0ca69041d64a3104060c9c454a4cd26428c52abb7da6f9a2d1ba7b072e",
-  "notes": "r56: OSCam navigation and all result controllers share one native workspace. Native receiver rendering/focus still needs confirmation; r55 channel layout accepted.",
+  "notes": "r56 failed on receiver while creating OSCam workspace: OpenATV exec() received a lambda in onLayoutFinish. r57 registers a bound method; regression exercises the native dispatch contract.",
   "warder_main_sha256": "36e397f76cf5a94623a96d6bce593e5df975a65a5ad59b0e6c159e3233062fbe",
   "warder_system_sha256": "932f968b76486d0ef4bba012752a6e8e9817b9902987491825885cb80ce3260a",
   "i18n_sha256": "85a45d5f6cf6d05674eb88f60996f12b2c90484eb1c3cc7aa1fe9386e31631ba",
@@ -80,5 +77,5 @@
     "verified_release_count": 1,
     "tags_unchanged": true
   },
-  "warder_oscam_sha256": "9c71851b453ec16e07d95eebf4f0681815269e797481b7890841c6c07a221ba4"
+  "warder_oscam_sha256": "cadb969cc10677a1128a638ceb4d114fc7ab6cdf330501e3e64082b44c54563d"
 }
