@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r83",
-    "tag": "v13.40-r83",
-    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r83/enigma2-plugin-glasssysutil_13.40-r83_all.ipk",
-    "sha256": "d68a05dc6854a7f960f3c25f77b0d2db24fda6fce05aaa99e1adad5d3a43c1a4",
-    "bytes": 3680224,
-    "notes": "GSU 13.40-r83\n\n- Opravené zalamovanie dlhého názvu CAM v samostatnom ECM okne. Hodnoty zostávajú na svojich riadkoch; príliš dlhý text sa oreže na pravom okraji.\n- Vnorené ECM zobrazenie v GSU zostáva bez zmeny.\n"
+    "version": "13.40-r84",
+    "tag": "v13.40-r84",
+    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r84/enigma2-plugin-glasssysutil_13.40-r84_all.ipk",
+    "sha256": "8db99bb18509a611a071416fad76c6e0d5adff99e7452dae2ac13ee1bd567ef0",
+    "bytes": 3680348,
+    "notes": "GSU 13.40-r84\n\n- Samostatné ECM okno zobrazuje názov a verziu CAM bez dlhého identifikátora za znakom @.\n- Zalamovanie hodnôt je vypnuté: riadky ostávajú zarovnané aj pri dlhšom CAM.\n- Interné ECM zobrazenie ostáva bez zmeny.\n"
   }
 }
