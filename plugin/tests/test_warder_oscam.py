@@ -140,9 +140,23 @@ class WorkspaceTests(unittest.TestCase):
             values.append(pane.text(pos=(self.plugin.fhd(x),0),size=(450,38),font=1,text='value%d'%index))
         for index,value in enumerate(values):
             self.assertIn('value%d'%index,value['text'])
-            self.assertTrue(value['text'].startswith(pane.model.allLabelsCRD[index]+':'))
+            label={'TypeCRD':'Type','CAIDcrd':'CAID'}.get(pane.model.allLabelsCRD[index],pane.model.allLabelsCRD[index])
+            self.assertTrue(value['text'].startswith(self.ui.main.text(vars(self.plugin),label)+':'))
             self.assertLessEqual(value['pos'][0]+value['size'][0],1010)
             self.assertLessEqual(value['pos'][1]+value['size'][1],160)
+    def test_all_selection_backgrounds_are_opaque_and_card_icon_cannot_cover_text(self):
+        root=ET.fromstring(self.ui.skin(self.host))
+        for kind,pane in self.host.panes.items():
+            for name in ('list','log_info','entitlements_list'):
+                if name not in pane.widgets:continue
+                node=root.find("widget[@name='%s_%s']"%(kind,name))
+                self.assertEqual(node.get('backgroundColorSelected'),'#002a70ad')
+                self.assertEqual(node.get('transparent'),'0')
+        pane=self.host.panes['entitlements']
+        icon=pane.pixmap(pos=(0,self.plugin.fhd(3)),size=(self.plugin.fhd(15),self.plugin.fhd(16)),png=object())
+        text=pane.text(pos=(self.plugin.fhd(30),0),size=(450,38),font=1,text='chid')
+        self.assertGreater(text['pos'][0],icon['pos'][0]+icon['size'][0])
+
     def test_log_wrap_preserves_content_and_allows_reading(self):
         pane=self.host.panes['log'];value='long OSCam log message '*15
         row=pane.text(pos=(0,0),size=(1770,26),font=1,text=value)

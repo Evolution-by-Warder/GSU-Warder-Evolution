@@ -139,9 +139,9 @@ class Pane:
             columns=self.model.allLabelsCRD if getattr(self,'card',False) else self.model.allLabels
             if x in (base(20),base(30)):self.card=(x==base(30));self.field=0;columns=self.model.allLabelsCRD if self.card else self.model.allLabels
             index=getattr(self,'field',0);self.field=index+1
-            data.update(pos=(round((index%2)*500*self.host.sx),round((index//2)*30*self.host.sy)),
-                        size=(round(495*self.host.sx),round(30*self.host.sy)),font=0,
-                        text=columns[min(index,len(columns)-1)]+': '+str(data.get('text','')))
+            data.update(pos=(round((32+(index%2)*500)*self.host.sx),round((index//2)*30*self.host.sy)),
+                        size=(round(465*self.host.sx),round(30*self.host.sy)),font=0,
+                        text=main.text(self.host.api,{'TypeCRD':'Type','CAIDcrd':'CAID'}.get(columns[min(index,len(columns)-1)],columns[min(index,len(columns)-1)]))+': '+str(data.get('text','')))
         return self.host.api['MultiContentEntryText'](**data)
     def pixmap(self,**kwargs):
         data=dict(kwargs);scale=(690 if self.kind in ('intro','servers') else 1010)*self.host.sx/self.old_width
@@ -199,6 +199,7 @@ def skin(host):
                 n.set('foregroundColor',color);n.set('backgroundColor',main.BASE)
                 n.set('halign','center');n.set('font','Regular;%d'%round(26*sy))
             elif name in ('list','log_info','entitlements_list'):
+                n.set('backgroundColorSelected',main.SELECTION);n.set('foregroundColorSelected','#00ffffff')
                 if kind in ('intro','servers'):bounds=(1155,255,690,665)
                 elif kind in ('summary','users'):bounds=(75,255,1010,350)
                 elif kind=='readers':bounds=(75,255,1010,450)

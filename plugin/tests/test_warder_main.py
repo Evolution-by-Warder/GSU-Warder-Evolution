@@ -186,3 +186,32 @@ class WarderMainTests(unittest.TestCase):
             self.assertEqual(self.plugin.startViaMenu('setup')[0][0],ui.PLUGIN_NAME)
 
 if __name__=='__main__':unittest.main()
+
+
+class SelectionStyleTests(unittest.TestCase):
+    def test_all_owned_list_skins_share_main_selection_color_in_every_resolution(self):
+        expected=ET.fromstring(ui.main_skin()).find("widget[@name='list']").get('backgroundColorSelected')
+        self.assertEqual(expected,ui.SELECTION)
+        counts=[]
+        for suffix in ('','_FHD','_UHD'):
+            module=importlib.import_module('Plugins.Extensions.GlassSysUtil.GSU_skins'+suffix)
+            count=0
+            for name,value in vars(module).items():
+                if not isinstance(value,str) or not value.lstrip().startswith('<screen'):continue
+                styled=ET.fromstring(ui.style_list_skin(value))
+                original=ET.fromstring(value)
+                self.assertEqual(len(styled),len(original))
+                for node in styled.findall('widget'):
+                    if node.get('name') in ui.LIST_WIDGETS:
+                        self.assertEqual(node.get('backgroundColorSelected'),expected)
+                        self.assertEqual(node.get('foregroundColorSelected'),'#00ffffff')
+                        count+=1
+            self.assertGreater(count,20);counts.append(count)
+        self.assertEqual(counts[0],counts[1]);self.assertEqual(counts[1],counts[2])
+    def test_actual_plugin_exports_are_styled_before_screen_construction(self):
+        plugin=load(ROOT)
+        for name in ('oscam_Info','oscam_Readers_scr','ipkScript_center','oscam_start'):
+            root=ET.fromstring(getattr(plugin,name))
+            for node in root.findall('widget'):
+                if node.get('name') in ui.LIST_WIDGETS:
+                    self.assertEqual(node.get('backgroundColorSelected'),ui.SELECTION)

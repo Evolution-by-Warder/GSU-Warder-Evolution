@@ -162,6 +162,7 @@ elif FHD == 3840:
 else:
     from Plugins.Extensions.GlassSysUtil.GSU_skins import *
     FHD = 1
+_warder_main.style_lists(globals())
 E4X = False
 try:
     from enigma import eMediaDatabase

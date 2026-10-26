@@ -2,12 +2,15 @@
 from .i18n import for_api as _i18n_text, language as _i18n_language
 from datetime import datetime
 from xml.sax.saxutils import escape
+from xml.etree import ElementTree as ET
 
 PLUGIN_NAME = 'GSU Warder Evolution'
 BACKGROUND = '/usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/images/warder-main.png'
 BASE = '#00071627'
 PANEL = '#00102136'
 CYAN = '#003ee8ff'
+SELECTION = '#002a70ad'
+LIST_WIDGETS = {'list','config','devices','txt','log_info','entitlements_list'}
 DAYS = {
     'en': 'Monday Tuesday Wednesday Thursday Friday Saturday Sunday'.split(),
     'sk': 'Pondelok Utorok Streda Štvrtok Piatok Sobota Nedeľa'.split(),
@@ -150,3 +153,24 @@ def install(screen,api):
 def selection(screen,entry):
     if 'selection' in screen:
         screen['selection'].setText(str(entry[1]) if entry else '')
+
+
+def style_list_skin(value):
+    """Set GSU selection colors locally, leaving global image/skin styles alone."""
+    if not isinstance(value,str) or not value.lstrip().startswith('<screen'):return value
+    root=ET.fromstring(value)
+    changed=False
+    for node in root.findall('widget'):
+        if node.get('name') in LIST_WIDGETS:
+            node.set('backgroundColorSelected',SELECTION)
+            node.set('foregroundColorSelected','#00ffffff')
+            changed=True
+    return ET.tostring(root,encoding='unicode') if changed else value
+
+
+def style_lists(api):
+    # Imported legacy skins are also used by configuration, tools and CAM lists.
+    # Transform once at plugin import, before any Screen captures its skin.
+    for name,value in list(api.items()):
+        if isinstance(value,str) and value.lstrip().startswith('<screen'):
+            api[name]=style_list_skin(value)
