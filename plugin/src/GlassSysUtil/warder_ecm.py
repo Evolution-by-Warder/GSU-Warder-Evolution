@@ -2,7 +2,7 @@
 from types import FunctionType
 from . import warder_main as main
 
-FIELDS={'ecmlabels':'inline_ecm_labels','ecmValues':'inline_ecm_values','piccode':'inline_ecm_picon','picchannel':'inline_ecm_channel'}
+FIELDS={'ecmlabels':'inline_ecm_labels','ecmValues':'inline_ecm_values','piccode':'inline_ecm_picon','picchannel':'inline_ecm_channel','channel_name':'inline_ecm_channel_name'}
 
 class Signal:
     def __init__(self):self.callbacks=[]
@@ -115,20 +115,33 @@ def standalone_skin(original):
     width,height=map(int,root.get('size').split(','))
     code=root.find("widget[@name='piccode']")
     if code is None:return original
-    x,y=map(int,code.get('position').split(','));w,h=map(int,code.get('size').split(','))
+    old_width=width;scale=old_width/525
+    width+=round(100*scale);height+=round(45*scale)
+    root.set('size','%d,%d'%(width,height))
+    x,y=map(int,code.get('position').split(','));y+=round(20*scale)
+    w,h=round(180*scale),round(108*scale)
+    values=root.find("widget[@name='ecmValues']")
+    if values is not None:
+        vw,vh=map(int,values.get('size').split(','));values.set('size','%d,%d'%(vw+width-old_width,vh))
     for node in list(root):
         if node.tag=='ePixmap' and 'frame' in node.get('pixmap',''):root.remove(node)
-    gap=round(width*.055);start=(width-(2*w+gap))//2
-    code.set('position','%d,%d'%(start+w+gap,y));code.set('scale','1')
+    gap=round(35*scale);start=(width-(2*w+gap))//2
+    code.set('position','%d,%d'%(start+w+gap,y));code.set('size','%d,%d'%(w,h));code.set('scale','1')
     ET.SubElement(root,'widget',name='picchannel',position='%d,%d'%(start,y),size='%d,%d'%(w,h),scale='1',alphatest='blend',zPosition='4')
+    ET.SubElement(root,'widget',name='channel_name',position='%d,%d'%(round(25*scale),y-round(42*scale)),size='%d,%d'%(width-round(50*scale),round(34*scale)),font='Regular;%d'%round(28*scale),foregroundColor=main.CYAN,backgroundColor='#ff000000',transparent='1',halign='center',valign='center',noWrap='1',zPosition='4')
     return ET.tostring(root,encoding='unicode')
 
 
 def channel_picon(screen,api):
+    service=screen.session.nav.getCurrentService()
+    info=service and service.info()
+    value=info.getName() if info is not None and hasattr(info,'getName') else ''
+    screen['channel_name'].setText(value.replace('\x86','').replace('\x87','') if isinstance(value,str) else '')
     widget=screen['picchannel']
     if widget.instance is None:return
     ref=screen.session.nav.getCurrentlyPlayingServiceReference()
-    if ref is None:widget.hide();return
+    if ref is None:
+        screen._channel_picon_ref=None;widget.hide();return
     name='_'.join(ref.toString().split(':')[:10])
     if getattr(screen,'_channel_picon_ref',None)==name:return
     screen._channel_picon_ref=name
