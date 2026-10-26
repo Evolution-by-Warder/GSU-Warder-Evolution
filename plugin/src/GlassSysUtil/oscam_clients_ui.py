@@ -3,12 +3,14 @@ from .i18n import for_api as _i18n_text
 from twisted.internet.threads import deferToThread
 from xml.etree import ElementTree
 from .oscam_clients import EMPTY, COUNTERS, fetch_clients, set_enabled
+from .oscam_client_recovery import change_account, RecoveryError
 
 _SK = {
     'Loading clients...': 'Načítavam klientov...',
     'No clients or accounts found.': 'Nenašli sa žiadni klienti ani účty.',
     'Unable to load OSCam clients.': 'Nepodarilo sa načítať klientov OSCam-u.',
     'Account change failed.': 'Zmena stavu účtu zlyhala.',
+    'Account enabled, but OSCam recovery failed.':'Účet bol povolený, ale reštart alebo opätovné pripojenie OSCamu zlyhalo.',
 }
 
 
@@ -181,14 +183,18 @@ def change_state(screen, api):
         def done(result):
             screen.clientsBusy = False
             if not screen.clientsClosed:
-                request(screen, api)
+                if isinstance(result,dict) and result.get('restarted'):
+                    render(screen,api,result['records']);schedule(screen)
+                else:request(screen, api)
         def failed(failure):
             screen.clientsBusy = False
             if not screen.clientsClosed:
-                screen.session.open(box, tr(api, 'Account change failed.'), box.TYPE_ERROR)
+                value=getattr(failure,'value',failure)
+                message='Account enabled, but OSCam recovery failed.' if isinstance(value,RecoveryError) else 'Account change failed.'
+                screen.session.open(box, tr(api,message), box.TYPE_ERROR)
                 schedule(screen)
             return None
-        screen.clientsRequest = deferToThread(set_enabled, screen.url, screen.login, screen.passwd,
+        screen.clientsRequest = deferToThread(change_account, screen.url, screen.login, screen.passwd,
                                              api['getUrlData'], name, disabled)
         screen.clientsRequest.addCallback(done)
         screen.clientsRequest.addErrback(failed)

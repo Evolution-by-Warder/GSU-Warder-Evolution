@@ -264,7 +264,7 @@ class OscamWorkspace(Screen):
         self.activate('servers' if select_server else 'intro')
     def activate(self,kind):
         for pane in self.panes.values():pane.pause()
-        self.current=kind;self.menu_focus=kind not in ('file','entitlements')
+        self.current=kind;self.menu_focus=kind in ('intro','servers')
         self['pane_title'].setText(main.text(self.api,TITLES[kind]))
         pane=self.panes[kind];pane.resume()
         if self.current!=kind:return

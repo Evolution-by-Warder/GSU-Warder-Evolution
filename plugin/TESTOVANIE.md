@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r61 oprava OK publikovaná
+# Aktuálny checkpoint — 26. 10. 2026, r62 DVBAPI obnova pripravená
 
 ## Projekt a vydávanie
 
@@ -156,3 +156,28 @@ Prijímačové potvrdenie OK zatiaľ chýba.
 Publikované r61: zdroj b0fe5e758aa95ae199017c0bad20f2de33c21733, CI40275956332 success. Oba feedy overené r61 / 3662832 B / SHA256 vyššie.
 
 Nahradené r60 odstránené workflow40276053192 success; API overilo iba r61 (spolu37 odstránení). Spotrebovaný request zmazaný, tagy/história zachované.
+
+
+## r62 – lokálny DVBAPI re-enable a návrat k automatickému ľavému panelu
+
+Používateľ potvrdil OK klientov, log vrátane zachovania pozície pri obnovení,
+konfiguračné súbory/posun/návrat a obnovenie LiveTV po odchode. Sekcia r61 prejdená.
+Povoľovanie/zakazovanie čítačiek aj účtov overené. Snímky060516 ukazujú, že zákaz
+Gigablue prepne DVBAPI na anonymous; povolený účet zostáva offline až do reštartu.
+Používateľ výslovne schválil automatický reštart iba pri povolení lokálneho DVBAPI.
+Nový worker overuje loopback URL, skutočný zvolený bežiaci proces, jeho config-dir
+z argv (alebo PID-overeného oscam.version), [dvbapi] enabled/user a presný WebIF
+port/schéma. Najprv musí API potvrdiť povolenie, potom sa pod rovnakým command_lock
+ako CAM správca vykoná NativeSoftcam.restart_verified. Po spustení sa mimo GUI
+čaká najviac20s (+ timeout jednotlivého HTTP volania) na pôvodné DVBAPI meno,
+potom sa načíta čerstvý zoznam. Žiadne filtrovanie anonymous ani falošné dáta.
+Zakázanie, iné účty a vzdialené endpointy sa nereštartujú. Zmena výberu CAM alebo
+chyba/timelimit sa hlási ako už povolený účet s neúspešnou obnovou, nie úspešný reštart.
+Ovládanie podľa nového upresnenia používateľa: v CELEJ sekcii Informácie o OSCame
+OK vpravo automaticky aktivuje ľavý obsah, doprava vracia ponuku a doľava výsledky.
+To nahrádza pravidlo r59 (pravá ponuka ostáva po OK). Vnorené návraty zachovajú fokus.
+310 testov Python3.14.7 aj z čistého checkoutu. Dva identické buildy3664744 B,
+SHA256 ff83872e39c25981437850b2c88016483c77b1843d3e4ef04ce2d05db4188f24.
+Reštart/obnova potrebuje potvrdenie na prijímači. Celý plugin receiver_tested=false.
+Používateľ navrhol jemnú priehľadnosť oboch OSCam panelov; zatiaľ diskusia,
+v r62 bez zmeny pozadia. Odporúčané10% priehľadné tmavé panely, nepriehľadný výber.
