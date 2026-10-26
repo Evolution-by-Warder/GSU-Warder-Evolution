@@ -246,3 +246,7 @@ Nahradené r65 odstránené workflow40284856704; API overilo iba v13.40-r66. Spo
 ## r67 — oddelené ECM popisy
 
 Používateľ snímkou1(20261026-072259).jpg potvrdil anglické popisy aj po ďalšom GUI reštarte. Reštart sa už vykonáva automaticky; neopakovať tento návrh. Receiver diagnostika potvrdzuje r66 zdroj aj správne slovenské JSON hodnoty. Presná príčina na prijímači zatiaľ nie je dokázaná. R67 odstraňuje patchovanie setText zdieľaného Labelu: interný parserový Label zostáva súkromný, nový zobrazovací Label dostáva preložené popisy po otvorení aj po každom obnovení. Test používa reálny SK katalóg a overuje CHID aj nezmenenú internú predlohu. 321 testov prešlo; natívny výsledok musí potvrdiť box.
+
+R67 publikované: zdroj6c0a0bd0eb7c0188a6b208be7b0cbd22f29f2f34, CI40285869341 success vrátane zhodných buildov a kontroly vydaných bajtov. Oba feedy overené: 3667108 B, SHA256 5c32f52b0550e75cf74473d68b53215dd9968c46da4d78669ad3a58f03d28a90.
+
+Nahradené r66 odstránené workflow40285973189; API overilo iba v13.40-r67. Spolu43 odstránených vydaní; Git tagy a história zachované.
