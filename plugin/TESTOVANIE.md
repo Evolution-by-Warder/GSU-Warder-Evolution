@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r57 oprava pádu pripravená
+# Aktuálny checkpoint — 26. 10. 2026, r57 oprava pádu publikovaná
 
 ## Projekt a vydávanie
 
@@ -81,3 +81,7 @@ v atribúte. Regresný test vykonáva identické rozlišovanie všetkých callba
 checkoute prešlo, dva identické buildy:3662198 B, SHA256
 e97f9f0670497216b9bfd055eae3865525b327683915393d9aa36f5172ac5ae8.
 Prijímačové potvrdenie opravy zatiaľ chýba.
+
+Publikované r57: zdroj ea928644f332a566cc537aff128f7edc59fd4975, CI40272777670 success. Oba feedy overené: r57 / 3662198 B / zhodný SHA256 vyššie.
+
+Chybné vydanie r56 odstránené workflow40272834229 success. API overilo iba r57; spolu33 odstránených vydaní, tagy a história zachované. Spotrebovaný request zmazaný.
