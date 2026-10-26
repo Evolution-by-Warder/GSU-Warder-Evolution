@@ -75,10 +75,18 @@ class InlineECM:
             self.screen['selection'].hide();self.screen['info'].hide()
             for widget in self.widgets:widget.show()
         self.active=True
+        self.align_channel_name()
         self.screen['red'].setText(main.text(self.api,'Back'))
         self.model.runECMTimer=self.timer
         self.model.startSearchInfo()
         self.refresh_labels()
+    def align_channel_name(self):
+        from enigma import ePoint,eSize
+        size=self.api['getDesktop'](0).size()
+        widget=self.screen['inline_ecm_channel_name'].instance
+        if widget is not None:
+            widget.move(ePoint(round(1160*size.width()/1920),round(672*size.height()/1080)))
+            widget.resize(eSize(round(680*size.width()/1920),round(40*size.height()/1080)))
     def hide(self,restore_video=True):
         if not self.active:return
         self.active=False;self.timer.stop()
