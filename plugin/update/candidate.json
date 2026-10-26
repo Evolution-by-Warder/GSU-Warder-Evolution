@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r57",
-    "tag": "v13.40-r57",
-    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r57/enigma2-plugin-glasssysutil_13.40-r57_all.ipk",
-    "sha256": "e97f9f0670497216b9bfd055eae3865525b327683915393d9aa36f5172ac5ae8",
-    "bytes": 3662198,
-    "notes": "GSU 13.40-r57\n\nOprava pádu pri otvorení Informácií o OSCame na OpenATV.\nÚvodné spustenie obrazovky používa viazanú metódu požadovanú natívnym Screen API.\nDoplnený regresný test kopíruje spôsob spúšťania onLayoutFinish v OpenATV.\nRozloženie OSCamu a všetky jeho funkcie zostávajú zachované.\n"
+    "version": "13.40-r59",
+    "tag": "v13.40-r59",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r59/enigma2-plugin-glasssysutil_13.40-r59_all.ipk",
+    "sha256": "f77736521d21b97318be84ae26fc37e34c7f9bbd882f79319eb500d0687482fb",
+    "bytes": 3662394,
+    "notes": "GSU 13.40-r59\n\nJednoznačné ovládanie panelov v Informáciách o OSCame:\n- Predvolene je aktívna pravá ponuka aj po otvorení výsledkov.\n- Doľava aktivuje ľavý panel; hore/dole posúvajú jeho údaje.\n- Doprava aktivuje pravú ponuku; hore/dole vyberajú jej položky.\n- Zvýraznenie výberu má iba aktívny panel.\n- Súbor alebo oprávnenia otvorené z ľavého panelu zachovajú ovládanie vľavo.\nOpravené priame smerovanie šípok do zoznamov a posúvanie textu súborov.\n"
   }
 }

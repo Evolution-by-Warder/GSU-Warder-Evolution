@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r59 prepínanie panelov pripravené
+# Aktuálny checkpoint — 26. 10. 2026, r59 prepínanie panelov publikované
 
 ## Projekt a vydávanie
 
@@ -113,3 +113,7 @@ up/down z r58 a iba jeden zvýraznený zoznam. 294 testov Python3.14.7, dva iden
 Prijímačové potvrdenie ovládania zatiaľ chýba. r58 vydané zdrojom
 1c6fb01e71dc55691b6c93875837927ae0860ede, CI40273485815 success, oba feedy overené.
 Staré r57 odstránené workflow40273582391 success; API overilo iba r58 (spolu34 odstránení).
+
+Publikované r59: zdroj c1e868bcb43abd32b0e8107b74934976d86b34d9, CI40273740657 success. Oba feedy overené na r59 / 3662394 B / SHA256 vyššie.
+
+Nahradené r58 odstránené workflow40273822150 success; API overilo iba r59 (spolu35 odstránení). Spotrebovaný request zmazaný, tagy a história zachované.
