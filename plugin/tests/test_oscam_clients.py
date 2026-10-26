@@ -221,6 +221,30 @@ class ClientScreenTests(unittest.TestCase):
             pending.addCallback.call_args.args[0](True)
         refresh.assert_called_once()
 
+    def test_restart_completion_renders_fresh_clients_without_extra_request(self):
+        self.records[0]['disabled']=True
+        self.ui.render(self.screen,vars(self.plugin),self.records)
+        self.screen.chngState();confirmed=self.screen.session.openWithCallback.call_args.args[0]
+        pending=MagicMock()
+        with patch.object(self.ui,'deferToThread',return_value=pending) as worker:confirmed(True)
+        self.assertIs(worker.call_args.args[0],self.ui.change_account)
+        with patch.object(self.ui,'request') as request:
+            pending.addCallback.call_args.args[0]({'restarted':True,'records':self.records})
+        request.assert_not_called();self.assertFalse(self.screen.clientsBusy)
+        self.assertEqual(self.screen.list[0][0],self.records[0]['key'])
+        self.timer.start.assert_called_with(8000,True)
+    def test_partial_restart_failure_has_specific_message_and_rearms_refresh(self):
+        self.records[0]['disabled']=True
+        self.ui.render(self.screen,vars(self.plugin),self.records)
+        self.screen.chngState();confirmed=self.screen.session.openWithCallback.call_args.args[0]
+        pending=MagicMock()
+        with patch.object(self.ui,'deferToThread',return_value=pending):confirmed(True)
+        failure=types.SimpleNamespace(value=self.ui.RecoveryError('restart failed'))
+        pending.addErrback.call_args.args[0](failure)
+        self.assertFalse(self.screen.clientsBusy)
+        self.assertIn('OSCam',self.screen.session.open.call_args.args[1])
+        self.timer.start.assert_called_with(8000,True)
+
     def test_client_without_account_stats_has_no_enable_disable_action(self):
         self.ui.render(self.screen, vars(self.plugin), clients.merge(clients.parse_status(STATUS), []))
         self.assertEqual(self.screen['blue_button'].text, '')

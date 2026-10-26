@@ -1,7 +1,11 @@
-GSU 13.40-r61
+GSU 13.40-r62
 
-Oprava tlačidla OK v ľavom paneli OSCamu.
-- OK na klientovi ponechá klienta vybraného a zobrazí jeho podrobnosti pod zoznamom.
-- Súhrn, log, súbor a oprávnenia sa po OK nezatvoria.
-- OK na čítačke alebo v zozname súborov naďalej otvára príslušné oprávnenia/súbor.
-Návrat ovláda červené tlačidlo; prepnutie do pravej ponuky šípka doprava.
+OSCam – obnova lokálneho DVBAPI po povolení účtu:
+- Po úspešnom povolení účtu uvedeného v lokálnom [dvbapi] sa OSCam reštartuje na pozadí.
+- GSU počká na pripojenie pôvodného DVBAPI účtu a obnoví zoznam klientov.
+- Pri zákaze ani povolení iných účtov/vzdialených serverov sa automatický reštart nevykonáva.
+- Lokálny proces, konfigurácia, účet a WebIF port sa musia zhodovať; názov CAM sa neodhaduje.
+- Prípadná chyba reštartu je odlíšená od úspešného povolenia účtu.
+
+V celej sekcii Informácie o OSCame sa po výbere položky aktivuje ľavý obsah.
+Doprava prepne na pravú ponuku, doľava späť na výsledky.

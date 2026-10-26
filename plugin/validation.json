@@ -1,6 +1,6 @@
 {
   "python": "3.14.7",
-  "host_checks": 299,
+  "host_checks": 310,
   "host_checks_passed": true,
   "receiver_tested": false,
   "source_sha256": "f33d044f7b3d806c80745c5e0af27aa27e7a363982372f5e2b4d1f225dda0864",
@@ -55,19 +55,16 @@
   "plugin_update_sha256": "2daac161e69e25e4e1ba94404ed5f179a36f07ea6d4d28e4b47c4e2a8bca69d6",
   "plugin_update_ui_sha256": "176c289f60774144f82b20ea4a0038b7751f9067aec796215e3717d91ec27f93",
   "latest_candidate": {
-    "version": "13.40-r61",
+    "version": "13.40-r62",
     "receiver_tested": false,
-    "status": "Published; both r61 feeds verified; receiver OK confirmation pending",
-    "bytes": 3662832,
-    "sha256": "2fd4189f5ca92fe9942de68f83f1aed6829e39979df21b018345b6705593fdb0",
-    "source_commit": "b0fe5e758aa95ae199017c0bad20f2de33c21733",
-    "ci_run": 40275956332,
-    "ci_conclusion": "success"
+    "status": "310 tests and identical clean builds passed; publication pending",
+    "bytes": 3664744,
+    "sha256": "ff83872e39c25981437850b2c88016483c77b1843d3e4ef04ce2d05db4188f24"
   },
   "oscam_readers_ui_sha256": "88f2da2c4eba5a05db9b333b3d8de003ca4f6e6ad82d6e2c6eed41b6feb40865",
   "warder_tools_sha256": "ef23dab03508f12e73cc5c8196f04ebaa44fd1bf7bf0d357881acc49ac341563",
   "warder_tools_ui_sha256": "337e4b0ca69041d64a3104060c9c454a4cd26428c52abb7da6f9a2d1ba7b072e",
-  "notes": "r60 receiver screenshots confirm opaque selection and entitlement icon/text spacing. Client view loads details but legacy OK action exited to intro. r61 consumes OK in read-only result panes, updates client/summary details, preserves actual readers/files child actions. Receiver confirmation pending.",
+  "notes": "r61 OSCam walkthrough closed: client OK, file scrolling/back, live TV restoration and log position during refresh receiver-confirmed. r62 auto-selects left result pane throughout OSCam; verified local DVBAPI re-enable uses native CAM restart with shared operation lock, then waits for original identity and refreshes. Recovery receiver test pending.",
   "warder_main_sha256": "ce78e2ea4706d6a9c6c110dee1ca125de901d3cb6c22518ee2d087f05698bf7f",
   "warder_system_sha256": "932f968b76486d0ef4bba012752a6e8e9817b9902987491825885cb80ce3260a",
   "i18n_sha256": "85a45d5f6cf6d05674eb88f60996f12b2c90484eb1c3cc7aa1fe9386e31631ba",
@@ -80,5 +77,6 @@
     "verified_release_count": 1,
     "tags_unchanged": true
   },
-  "warder_oscam_sha256": "6745ee01d94c8dc7c5ea58d0d7551207fd7c17c9aab3e59d53ed5f6c950c73ff"
+  "warder_oscam_sha256": "338e871fee1df0ad762d9ca60b96ecc9a0b0bce7deaaaeaecde7decc24a8b0aa",
+  "oscam_client_recovery_sha256": "2ced51a8e7b994d1e72d60b33022a40bf389647d405c119d0d2b7e4c0f1bb479"
 }

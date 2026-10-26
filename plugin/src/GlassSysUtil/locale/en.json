@@ -134,5 +134,6 @@
   "Ip adress": "IP address",
   "Start Time": "Start Time",
   "Details": "Details",
-  "Menu": "Menu"
+  "Menu": "Menu",
+  "Account enabled, but OSCam recovery failed.": "Account enabled, but OSCam recovery failed."
 }

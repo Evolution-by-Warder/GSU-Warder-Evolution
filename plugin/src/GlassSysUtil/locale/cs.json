@@ -134,5 +134,6 @@
   "Ip adress": "IP adresa",
   "Start Time": "Čas spuštění",
   "Details": "Podrobnosti",
-  "Menu": "Nabídka"
+  "Menu": "Nabídka",
+  "Account enabled, but OSCam recovery failed.": "Účet byl povolen, ale restart nebo opětovné připojení OSCamu selhalo."
 }

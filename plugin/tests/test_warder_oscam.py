@@ -37,7 +37,7 @@ class WorkspaceTests(unittest.TestCase):
         for index,kind in enumerate(intro.status):
             intro['list'].moveToIndex(index);self.host.choose()
             self.assertEqual(self.host.current,kind)
-            self.assertTrue(self.host.menu_focus)
+            self.assertFalse(self.host.menu_focus)
             self.host.back();self.assertEqual(self.host.current,'intro')
         self.session.open.assert_not_called()
         with patch.object(self.host,'close') as close:self.host.back();close.assert_called_once()
@@ -62,16 +62,15 @@ class WorkspaceTests(unittest.TestCase):
             self.host.left();enable.assert_called_with(True)
             self.assertEqual(self.host.move(1),1)
             self.assertEqual(self.host.choose(),1)
-    def test_opening_results_keeps_right_menu_until_explicit_left_arrow(self):
+    def test_opening_results_automatically_controls_left_until_explicit_right(self):
         intro=self.host.panes['intro'].model
         intro['list'].moveToIndex(0);self.host.choose()
-        self.assertEqual(self.host.current,'summary');self.assertTrue(self.host.menu_focus)
+        self.assertEqual(self.host.current,'summary');self.assertFalse(self.host.menu_focus)
         left=self.host.panes['summary'].model['list'];right=intro['list']
         with patch.object(right,'moveToIndex') as move,patch.object(left,'down') as down:
-            self.host.move(1);move.assert_called_once();down.assert_not_called()
-            self.host.left();self.host.move(1);down.assert_called_once()
-            self.host.right();self.host.move(1);self.assertEqual(move.call_count,2)
-            down.assert_called_once()
+            self.host.move(1);down.assert_called_once();move.assert_not_called()
+            self.host.right();self.host.move(1);move.assert_called_once()
+            self.host.left();self.host.move(1);self.assertEqual(down.call_count,2)
 
     def test_ok_on_client_and_summary_updates_details_without_leaving(self):
         for kind in ('users','summary'):
@@ -110,7 +109,7 @@ class WorkspaceTests(unittest.TestCase):
     def test_only_current_panel_has_selection_enabled(self):
         right=self.host.panes['intro'].model['list'];left=self.host.panes['summary'].model['list']
         with patch.object(right,'selectionEnabled') as r,patch.object(left,'selectionEnabled') as l:
-            self.host.activate('summary');r.assert_called_with(1);l.assert_called_with(0)
+            self.host.activate('summary');r.assert_called_with(0);l.assert_called_with(1)
             self.host.right();r.assert_called_with(1);l.assert_called_with(0)
             self.host.left();r.assert_called_with(0);l.assert_called_with(1)
 

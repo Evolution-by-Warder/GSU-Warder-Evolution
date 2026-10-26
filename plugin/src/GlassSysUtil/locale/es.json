@@ -134,5 +134,6 @@
   "Ip adress": "Dirección IP",
   "Start Time": "Hora de inicio",
   "Details": "Detalles",
-  "Menu": "Menú"
+  "Menu": "Menú",
+  "Account enabled, but OSCam recovery failed.": "Cuenta habilitada, pero falló el reinicio o la reconexión de OSCam."
 }

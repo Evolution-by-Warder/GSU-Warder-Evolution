@@ -134,5 +134,6 @@
   "Ip adress": "IP-cím",
   "Start Time": "Indítás ideje",
   "Details": "Részletek",
-  "Menu": "Menü"
+  "Menu": "Menü",
+  "Account enabled, but OSCam recovery failed.": "A fiók engedélyezve, de az OSCam újraindítása vagy újracsatlakozása sikertelen."
 }
