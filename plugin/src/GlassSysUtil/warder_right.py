@@ -47,14 +47,21 @@ class Session:
     def openWithCallback(self,callback,target,*args,**kwargs):
         owner=self.owner
         if target in owner.targets:return owner.enter(owner.targets[target],args,child=True)
-        if callback:return owner.screen.session.openWithCallback(callback,target,*args,**kwargs)
-        return owner.screen.session.open(target,*args,**kwargs)
+        owner.modal+=1
+        def done(*values):
+            owner.modal=max(0,owner.modal-1)
+            if not owner.closed:
+                if callback:callback(*values)
+                owner.resume()
+        try:return owner.screen.session.openWithCallback(done,target,*args,**kwargs)
+        except Exception:
+            owner.modal=max(0,owner.modal-1);raise
 
 
 class Workspace:
     def __init__(self,screen,api):
-        self.screen,self.api=screen,api;self.model=None;self.kind=None;self.history=[];self.closed=False;self.focus_right=True
-        self.targets={api['swap_manager']:'swap',api['SwapCreate']:'create',tools_ui.ToolsScreen:'tools',tools_ui.DiagnosticScreen:'diagnostic'}
+        self.screen,self.api=screen,api;self.model=None;self.kind=None;self.history=[];self.closed=False;self.focus_right=True;self.modal=0;self.disposing=False
+        self.targets={api['swap_manager']:'swap',api['SwapCreate']:'create',tools_ui.ToolsScreen:'tools',tools_ui.DiagnosticScreen:'diagnostic',api['OSD_ECM_Menu']:'osd'}
         size=api['getDesktop'](0).size();self.sx,self.sy=size.width()/1920,size.height()/1080
         screen.skin,deco=prepare(screen.skin,size.width(),size.height())
         screen['right_header_art']=HeaderArtwork(size.width(),size.height())
@@ -68,7 +75,7 @@ class Workspace:
         self.widgets=[screen['right_'+n] for n in ('title','text','list','config','scroll')]
         for widget in self.widgets:widget.hide()
         screen['right_actions']=api['ActionMap'](['DirectionActions','SetupActions','ColorActions','WizardActions'],{'left':self.left,'right':self.right,'up':self.up,'down':self.down,'ok':self.choose,'green':self.green,'yellow':self.yellow,'red':self.back,'cancel':self.back,'back':self.back},-12)
-        screen.onHide.append(self.suspend);screen.onClose.append(self.shutdown)
+        screen.onHide.append(self.suspend);screen.onClose.append(self.shutdown);screen.onShown.append(self.resume)
     @property
     def active(self):return self.model is not None
     def glass(self,enabled):
@@ -117,7 +124,7 @@ class Workspace:
         self.screen['right_title'].show()
         for component in model.values():
             if isinstance(component,self.api['ActionMap']):component.setEnabled(False)
-        for source,target in (('list','list'),('config','config'),('descriptions','text'),('file_info','scroll')):
+        for source,target in (('list','list'),('config','config'),('descriptions','text'),('file_info','scroll'),('info','text')):
             if source not in model:continue
             old=model[source];widget=self.screen['right_'+target]
             if source in ('list','config'):
@@ -163,15 +170,35 @@ class Workspace:
         if not self.focus_right:
             if not getattr(self.model,'_swap_busy',False):self.screen.selectedmenuitem()
             return 1
-        if self.kind=='create':
+        if self.kind in ('create','osd'):
             current=self.model['config'].getCurrent()
             if current:
-                setting=current[1];raw=getattr(setting,'choices',None)
+                setting=current[1]
+                if self.kind=='osd':
+                    cfg=self.api['config'].plugins.GlassSysUtil
+                    if setting is cfg.par79:return self.action('ok')
+                    if type(setting.value) is bool:
+                        setting.value=not setting.value;self.model.chckSetup();self.model['config'].invalidateCurrent();return 1
+                    if type(setting.value) is int:
+                        model=self.model
+                        bounds=next((limits for key,limits in (('par4',(1,2000)),('par81',(2,12)),('par78',(50,450)),('par5',(4,15))) if setting is getattr(cfg,key)),None)
+                        def edited(value):
+                            if self.model is not model or value is None:return
+                            try:value=int(value)
+                            except ValueError:return
+                            if bounds and not bounds[0]<=value<=bounds[1]:return
+                            setting.value=value;model['config'].invalidateCurrent()
+                        Session(self).openWithCallback(edited,self.api['InputBox'],title=str(current[0]),text=str(setting.value),type=self.api['Input'].NUMBER)
+                        return 1
+                raw=getattr(setting,'choices',None)
                 if raw is not None:
                     choices=getattr(raw,'choices',raw);items=[(str(v[1]),v[0]) if isinstance(v,(tuple,list)) else (str(v),v) for v in choices]
                     def selected(answer):
-                        if answer and self.active and self.kind=='create':setting.value=answer[1];self.model['config'].invalidateCurrent()
-                    self.screen.session.openWithCallback(selected,self.api['ChoiceBox'],title=str(current[0]),list=items)
+                        if answer and self.active and self.kind in ('create','osd'):
+                            setting.value=answer[1]
+                            if self.kind=='osd':self.model.chckSetup()
+                            self.model['config'].invalidateCurrent()
+                    Session(self).openWithCallback(selected,self.api['ChoiceBox'],title=str(current[0]),list=items)
                 else:self.model['config'].handleKey(self.api['KEY_RIGHT'])
             return 1
         return self.action('ok')
@@ -189,13 +216,18 @@ class Workspace:
         if not self.active:return 0
         return self.action('yellow')
     def dispose(self,model):
+        if hasattr(model,'osdType') and getattr(model,'chckTimer',None) is not None:
+            self.disposing=True
+            try:model.exitCancel()
+            finally:self.disposing=False
         for fn in model.onClose:fn()
     def back(self):
         if not self.active:return 0
         if getattr(self.model,'_swap_busy',False):return 1
+        if self.kind=='osd':return self.action('red')
         self.leave();return 1
     def leave(self,restore=True):
-        if not self.active:return
+        if not self.active or self.disposing:return
         self.dispose(self.model)
         if self.history and restore:
             self.kind,self.model=self.history.pop();self.bind(self.model)
@@ -206,8 +238,12 @@ class Workspace:
         for widget in self.widgets:widget.hide()
         for name,value in self.saved_footer.items():self.screen[name].setText(value)
         self.glass(False);self.preview(True,restore);self.screen['list'].selectionEnabled(1)
-    def suspend(self):self.leave(restore=False)
-    def shutdown(self):self.closed=True;self.suspend()
+    def resume(self):
+        if self.active and not self.closed:self.preview(False);self.focus()
+    def suspend(self):
+        if not self.modal:self.leave(restore=False)
+    def shutdown(self):
+        self.closed=True;self.modal=0;self.suspend()
 
 
 def install(screen,api):
@@ -217,4 +253,5 @@ def install(screen,api):
 def show(screen,api,kind):
     if hasattr(screen,'_rightpane'):return screen._rightpane.enter(kind)
     if kind=='swap':return screen.session.open(api['swap_manager'])
+    if kind=='osd':return screen.session.open(api['OSD_ECM_Menu'])
     return tools_ui.open_tools(screen.session,api)
