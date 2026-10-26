@@ -114,6 +114,16 @@ def system_skin(original,width,height,translator=lambda value:value):
         x=55+index*610
         fill(x+195,996,200,2,color)
         ET.SubElement(root,'widget',name=name,position='%d,%d'%(round(x*sx),round(1006*sy)),size='%d,%d'%(round(590*sx),round(50*sy)),font='Regular;%d'%round(28*sy),foregroundColor=color,backgroundColor=main.BASE,transparent='0',halign='center',valign='center',zPosition='3',noWrap='1')
+    # Shift both right-hand scroll areas, headings and arrows as one group.
+    for node in root:
+        x,y=map(int,node.get('position','0,0').split(','));w,h=map(int,node.get('size','0,0').split(','))
+        if x>=round(850*sx) and round(180*sy)<=y<round(978*sy):
+            node.set('position','%d,%d'%(x+round(90*sx),y))
+            if node.get('name') in ('ProccessInfo','DmesgInfo') or node.get('text'):node.set('size','%d,%d'%(max(1,w-round(90*sx)),h))
+    from .warder_glass import apply
+    apply(root,width,height)
+    from .warder_system_help import prepare
+    prepare(root,width,height)
     return ET.tostring(root,encoding='unicode')
 
 
@@ -132,3 +142,9 @@ def install(screen,api):
     for name in ('day','date','clock','seconds','version_title','version'):
         screen[name]=api['Label']('')
     screen._warder_header=SystemHeader(screen,api)
+    if 'glass_header_art' in screen.skin:
+        from .warder_glass import HeaderArtwork
+        size=api['getDesktop'](0).size();screen['glass_header_art']=HeaderArtwork(size.width(),size.height())
+    if 'system_help_text' in screen.skin:
+        from .warder_system_help import install
+        install(screen,api)

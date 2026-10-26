@@ -55,6 +55,8 @@ class StartupUpdateCheck:
 
     def request(self,manual=False):
         if not self.alive:return False
+        if manual and hasattr(self.screen,'_rightpane'):
+            self.screen._rightpane.update_info(text(self.api,'Checking for plugin updates…'))
         if self.busy:
             self.manual=self.manual or manual
             return False
@@ -78,6 +80,18 @@ class StartupUpdateCheck:
         except queue.Empty:return
         self.timer.stop();self.busy=False
         if self.manual:self.screen.reactivate()
+        pane=getattr(self.screen,'_rightpane',None)
+        if self.manual and pane is not None:
+            if not pane.active or pane.kind!='update':return
+            if error:
+                pane.update_info(text(self.api,'Update check failed.')+'\n\n'+error)
+            elif release:
+                language=self.api['config'].osd.language.value.split('_')[0]
+                notes=release.notes_i18n.get(language,release.notes)
+                message='GSU Warder Evolution\n\n'+text(self.api,'New version: %s\nInstalled version: %s\n\n%s\n\nInstall the update?')%(release.version,self.screen.readVersion(),notes)
+                pane.update_info(message,release,self)
+            else:pane.update_info(text(self.api,'The plugin is up to date.'))
+            return
         if error:
             print('[GSU update] '+error)
             if self.manual:self.screen.session.open(MessageBox,text(self.api,'Update check failed.')+'\n\n'+error,type=MessageBox.TYPE_ERROR)

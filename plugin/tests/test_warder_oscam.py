@@ -193,7 +193,7 @@ class WorkspaceTests(unittest.TestCase):
     def test_native_header_scales_child_inside_clipped_header_parent(self):
         for width,height in ((1280,720),(1920,1080),(3840,2160)):
             parent=MagicMock();child=MagicMock();header=self.ui.HeaderArtwork(width,height)
-            with patch.object(self.ui,'ePixmap',return_value=child) as pixmap:
+            with patch.object(importlib.import_module('Plugins.Extensions.GlassSysUtil.warder_glass'),'ePixmap',return_value=child) as pixmap:
                 header.postWidgetCreate(parent)
             pixmap.assert_called_once_with(parent)
             full=child.resize.call_args.args[0]

@@ -1,9 +1,9 @@
 {
   "python": "3.14.7",
-  "host_checks": 349,
+  "host_checks": 354,
   "host_checks_passed": true,
   "receiver_tested": false,
-  "source_sha256": "bb3a1d43a5500cd88e057dcaf300145b95d305f0e27b505881b721de9074109f",
+  "source_sha256": "9823c1d4105b31886411add6a072bf8d112387802ba77848dafe9da729265f41",
   "original_named_classes": 62,
   "original_named_functions": 510,
   "compatibility_replaced_internal_closures": [
@@ -33,7 +33,7 @@
     "fill"
   ],
   "native_status_sha256": "6740323cea05d7b4d58d35d44ecf917436043600b2652f7e7b1f73183d3b3dac",
-  "osd_layout_sha256": "bcf90b2e9e33db87f9f8247852c70648babd8ec5e91a65b4dee439f714440fa5",
+  "osd_layout_sha256": "5cdcbe8bab6cb3ada1784a0f6e88ee3bbe56dadbf9d4d52cc9d8cfe840e334b1",
   "swap_ops_sha256": "f72dbdfbf62ce1ae68273c83274a897e7336fc4ff5ea96ae332620919705f770",
   "swap_ui_sha256": "c37b48a9668a3664477dd488f09b4557a95a162ec2283a8cc11a668ee8fe5e04",
   "intentionally_removed_original_classes": [
@@ -53,25 +53,22 @@
   "oscam_clients_sha256": "46a6c5c1dadedfe51584fec8c1dfd1b0b204092d672ca11420bfb0e0f25be679",
   "oscam_clients_ui_sha256": "20b1c9f3540fe7d1b0d3dbb5362bb1283f6ebb588443bdecd722bdb329f5b231",
   "plugin_update_sha256": "2daac161e69e25e4e1ba94404ed5f179a36f07ea6d4d28e4b47c4e2a8bca69d6",
-  "plugin_update_ui_sha256": "176c289f60774144f82b20ea4a0038b7751f9067aec796215e3717d91ec27f93",
+  "plugin_update_ui_sha256": "cb1daa436de5fc6bb6ccbe786426dc22a8d01ee0f5a6780a9b8cd80febd2bdbe",
   "latest_candidate": {
-    "version": "13.40-r74",
+    "version": "13.40-r75",
     "receiver_tested": false,
-    "status": "Published; CI and both feeds verified; lower editor native receiver confirmation pending",
-    "bytes": 3676008,
-    "sha256": "d81af3d70f4fe01660ff96873d96491b2e5cfbfea755b387d810c25bd153fe14",
-    "source_commit": "115eb288c728653aa79a2f3e09c336b3be5f6f94",
-    "ci_run": 40313766300,
-    "ci_conclusion": "success"
+    "status": "354 checks passed; publication pending; native layout confirmation required",
+    "bytes": 3679050,
+    "sha256": "88cfb502330d1f571ddcca4f3860da8402cead3569d1d3fd9a0819b5d20bdc95"
   },
   "oscam_readers_ui_sha256": "88f2da2c4eba5a05db9b333b3d8de003ca4f6e6ad82d6e2c6eed41b6feb40865",
   "warder_tools_sha256": "ef23dab03508f12e73cc5c8196f04ebaa44fd1bf7bf0d357881acc49ac341563",
   "warder_tools_ui_sha256": "337e4b0ca69041d64a3104060c9c454a4cd26428c52abb7da6f9a2d1ba7b072e",
-  "notes": "r73 screenshot confirms whole-pane replacement, which user explicitly rejects. r74 keeps upper OSD config visible and renders type/numeric editors below y560. Digits and arrows edit a temporary buffer, ranges enforced on confirm; red cancels. Position editor unchanged.",
+  "notes": "r74 lower editors receiver-approved. r75 batches explicit user requests: large translucent settings; system Help replaces entire body and restores original components; system processes/log shifted 90 FHD px; system/channel glass; manual update and About in right panel; editable OSD values marked; separate static OSD default at 68% width/50 FHD px, preserving migrated explicit user position. All native visual changes await receiver confirmation.",
   "warder_main_sha256": "2156fa0607b4986ab00f5223b3204776cc90ef96b214e5e9b625c2140aba6467",
-  "warder_system_sha256": "932f968b76486d0ef4bba012752a6e8e9817b9902987491825885cb80ce3260a",
+  "warder_system_sha256": "f9f00625b566bf38e3b6acd584a1e1ca13963e099a577515a36f186e67d65d81",
   "i18n_sha256": "85a45d5f6cf6d05674eb88f60996f12b2c90484eb1c3cc7aa1fe9386e31631ba",
-  "warder_channel_sha256": "130a41b4de7fcc4de4481b4abf2488f989cfd67d3ffe52f0e2aaf7087ec0222e",
+  "warder_channel_sha256": "605f98680ce6a0a1ed3968f9a67867fd85809ef524fe8b42fc888bc29ab45861",
   "release_cleanup": {
     "kept": "v13.40-r74",
     "removed": 50,
@@ -80,7 +77,7 @@
     "verified_release_count": 1,
     "tags_unchanged": true
   },
-  "warder_oscam_sha256": "d84447fb501c69d51da59a9e603652f8d8dc19211ae08618cb4923f4b4d97b18",
+  "warder_oscam_sha256": "ba32e2e4820de48f9d226d536b51d050a37bcd3834cfa891857666d1b58082de",
   "oscam_client_recovery_sha256": "1ff83c107aae4e8284b95ade54b9803300dfc1faf75735e9d7d29cb2d92a0501",
   "dvbapi_recovery_receiver": {
     "version": "13.40-r62",
@@ -93,5 +90,9 @@
   "ecm_r67_receiver_confirmed": true,
   "warder_cam_panes_sha256": "fb1bc9dfc1df65692667cb97f87bbc45843f12d31135752396829890cd520a0e",
   "cam_r69_visual_receiver_confirmed": true,
-  "warder_right_sha256": "03c05b060547b9c96a5677e02145c8ea2489ec8ad3c4b6e2f1714c30031691c0"
+  "warder_right_sha256": "c26bb144fa63517c0d168bad2ba2552d9fe51987401b42207ec22f832f4df18e",
+  "warder_glass_sha256": "d7f9970fae0045d73f9a903a0b05d71bc10b0da597c66dd2a288ccaf47fb3431",
+  "warder_system_help_sha256": "f297035b90c1e3c3877af641482ef2630bb35720a5684eb37d620ce1a0c3d9e3",
+  "warder_settings_sha256": "202ae5b3dd094c28bd1028cd24e51abbad4382ac98d43aea7e4631e2b600f335",
+  "warder_editable_sha256": "838ba47ea9f6dcb6acb3b6e19a0c9e661db5e2e18e94afbcf4e4c334c3347a8b"
 }

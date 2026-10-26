@@ -157,8 +157,10 @@ class WarderToolsUITests(unittest.TestCase):
         menu['list'].moveToIndex(0);menu.select()
         session.open.assert_called_with(self.ui.DiagnosticScreen,'bundle',vars(self.plugin))
         self.assertEqual(screen['blue'].text,'O plugine')
+        session.reset_mock()
         screen['actions'].actions['blue']()
-        session.open.assert_called_with(self.ui.AboutScreen,vars(self.plugin))
+        session.open.assert_not_called()
+        self.assertEqual(screen._rightpane.kind,'about')
         with self.assertRaises(ValueError):self.ui.DiagnosticScreen(session,'health',vars(self.plugin))
 
     def test_about_uses_installed_version_matching_local_notes_and_honest_attribution(self):
