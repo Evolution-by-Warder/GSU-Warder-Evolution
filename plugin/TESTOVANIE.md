@@ -437,3 +437,8 @@ Workflow40324557070 odstránil r80 po overení r81; API overilo iba v13.40-r81. 
 ## r82 — odstup nápovedy OSD ECM
 
 Po snímke124251: Stlač OK pre úpravu posunuté y520→562 FHD, jeden42px riadok. Pri spodnom vnorenom editore je táto nápoveda skrytá, aby nekolidovala s deliacou čiarou y560 a názvom výberu; návrat obnoví viditeľnosť existujúcim bind. Konfigurácia a ostatné súradnice sa nemenia.
+
+
+Publikované r82: zdroj036aef115648856ae24f342c3e4847bc3c929c0a, CI40325123174 success (358 testov), lokálne13 testov pravého panela OK + compileall + diffcheck. IPK3 680 236 bajtov, SHA256436153b460b55b8838d84800957915b2ef9f04026c636d2b690484d50d78ff3d. Oba feedy overené. Natívny vzhľad posunutej nápovedy ešte čaká na prijímač.
+
+Workflow40325257859 odstránil r81 po overení r82; API overilo iba v13.40-r82. Spolu58 odstránených vydaní; Git tagy a história zachované.
