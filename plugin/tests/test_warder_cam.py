@@ -48,12 +48,32 @@ class WarderCamTests(unittest.TestCase):
         self.session.openWithCallback.assert_not_called()
     def test_left_ok_selects_value_without_starting_cam_and_cancel_preserves_value(self):
         self.controls.left();self.controls.choose()
-        args=self.session.openWithCallback.call_args
-        self.assertEqual(args.kwargs['list'],[('First','first'),('Second','second')])
-        self.controls.selected(None);self.assertEqual(self.screen['config'].list[0][1].value,'first')
-        self.controls.selected(('Second','second'));self.assertEqual(self.screen['config'].list[0][1].value,'second')
+        self.session.openWithCallback.assert_not_called()
+        self.assertIsNotNone(self.screen._cam_panes.choice)
+        self.screen._cam_panes.close_choice(None)
+        self.assertEqual(self.screen['config'].list[0][1].value,'first')
+        self.controls.left();self.controls.choose()
+        self.screen._cam_panes.close_choice(('Second','second'))
+        self.assertEqual(self.screen['config'].list[0][1].value,'second')
     def test_legacy_color_buttons_keep_native_start_stop_and_activate_handlers(self):
         actions=self.screen['actions'].actions
         self.assertEqual(actions['green'],self.screen.start);self.assertEqual(actions['red'],self.screen.stop)
         self.assertEqual(actions['yellow'],self.screen.ActivateselectedFnc)
         self.assertEqual(actions['cancel'],self.screen.exit)
+
+    def test_glass_matches_oscam_and_has_no_opaque_panel_backing(self):
+        original=self.plugin._srv_skin(self.plugin._compact_cam_menu(self.plugin.UCM))
+        root=ET.fromstring(self.ui.cam_skin(original,1920,1080))
+        self.assertEqual(root.get('backgroundColor'),self.ui.CLEAR)
+        self.assertFalse(any(n.get('pixmap')==self.ui.main.BACKGROUND for n in root))
+        self.assertIsNotNone(root.find("widget[@name='header_art']"))
+        glass=[n for n in root if n.get('backgroundColor')==self.ui.PANEL_GLASS]
+        self.assertEqual(len(glass),2)
+        for name in ('config','helpTXT','fullEcmLine','CAID_info','activCam','txt0','focus_hint'):
+            n=root.find("widget[@name='%s']"%name)
+            self.assertEqual(n.get('backgroundColor'),self.ui.CLEAR)
+            self.assertEqual(n.get('transparent'),'1')
+        for n in root:
+            if n.tag=='eLabel' and n.get('backgroundColor') in (self.ui.main.BASE,self.ui.main.CYAN):
+                x,y=map(int,n.get('position').split(','));w,h=map(int,n.get('size').split(','))
+                self.assertFalse(x<1103 and x+w>57 and y<978 and y+h>182)

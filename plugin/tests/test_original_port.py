@@ -207,7 +207,9 @@ class OriginalPortTests(unittest.TestCase):
             screen.moreCamSrv()
         ftp.assert_not_called()
         session.open.assert_not_called()
-        session.openWithCallback.assert_called_once_with(screen.inicializeUCM,module.ftp_center,None)
+        session.openWithCallback.assert_not_called()
+        self.assertEqual(screen._cam_panes.kind,'download')
+        self.assertTrue(screen._cam_panes.model.feedMode)
 
     def test_cam_manager_lists_native_softcam_and_routes_buttons(self):
         from unittest.mock import MagicMock
@@ -398,7 +400,7 @@ class OriginalPortTests(unittest.TestCase):
         screen.enCommand=True;screen.close=MagicMock()
         screen.exit()
         screen.close.assert_called_once_with()
-        screen.session.openWithCallback.assert_not_called()
+        screen._cam_panes.actual_session.openWithCallback.assert_not_called()
 
     def test_session_start_leaves_image_infobar_untouched_with_old_shortcut_flag(self):
         from unittest.mock import MagicMock
