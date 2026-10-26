@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r64 informácia pri povolení pripravená
+# Aktuálny checkpoint — 26. 10. 2026, r64 informácia pri povolení publikovaná
 
 ## Projekt a vydávanie
 
@@ -217,3 +217,7 @@ DVBAPI účte sa na pozadí reštartuje OSCam.“ Pri zákaze sa nepridáva. Des
 313 testov Python3.14.7 aj z čistého checkoutu; dva identické buildy3666062 B,
 SHA256 b7843a7d1b0ce4c645890c06af55f680a5681610cc86d298e884f53c8f422aa3.
 Aktuálne treba iba vizuálne overenie priehľadnosti/banneru a novej správy.
+
+Publikované r64: zdroj 654a568489c0d1f82a01bf50f45914fc87344fec, CI40280660157 success. Oba feedy overené r64 / 3666062 B / SHA256 vyššie.
+
+Nahradené r61–r63 odstránené workflow40280828196 success; API overilo iba r64 (spolu40 odstránení). Spotrebovaný request zmazaný, tagy/história zachované.
