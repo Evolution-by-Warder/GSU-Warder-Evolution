@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r62 DVBAPI obnova pripravená
+# Aktuálny checkpoint — 26. 10. 2026, r63 jemná priehľadnosť pripravená
 
 ## Projekt a vydávanie
 
@@ -181,3 +181,25 @@ SHA256 ff83872e39c25981437850b2c88016483c77b1843d3e4ef04ce2d05db4188f24.
 Reštart/obnova potrebuje potvrdenie na prijímači. Celý plugin receiver_tested=false.
 Používateľ navrhol jemnú priehľadnosť oboch OSCam panelov; zatiaľ diskusia,
 v r62 bez zmeny pozadia. Odporúčané10% priehľadné tmavé panely, nepriehľadný výber.
+
+
+## r63 – jemne priehľadné OSCam panely
+
+r62 publikované zdrojom cd2febe5ddc260fb9e260091b4a1f943397f439d,
+CI40279007494 success; oba feedy overené. Používateľ následne výslovne potvrdil:
+„vyskusal to zakazovanie a povolovanie klinta dvbapi, pekne to funguje“.
+DVBAPI obnova je teda prijímačovo overená v r62; nereprodukovať tento test zbytočne.
+Používateľ schválil jemnú priehľadnosť oboch OSCam panelov. r63 má Enigma farbu
+#1a102136 (~10% priehľadnosť). Root je transparentný, za panelmi nie je plný
+nepriehľadný cyan obdĺžnik ani celoplošný obrázok; rámy sú štyri samostatné čiary.
+Widgety obsahu transparentné, výber/main.SELECTION nepriehľadný. Hlavička, okraje
+a spodné tlačidlá zostávajú plné. HeaderArtwork je natívny eWidget vysoký164 FHDpx,
+ktorý oreže svoj plnoobrazovkový škálovaný ePixmap potomok; pôvodné PNG sa nemení.
+Overené podľa OpenATV eWidgetDesktop.calcWidgetClipRegion (potomkovia sú orezaní
+viditeľnou oblasťou rodiča). PNG loader sám ignoruje požadované rozmery, preto
+sa škáluje pri kreslení, nie dekódovaním do menšieho header widgetu.
+Konfigurácia obnovy sa číta malým vlastným parserom; nevzniká závislosť na samostatne
+balenom configparser. Funkcie a databáza účtov sa nemenia.
+312 testov Python3.14.7 aj z čistého checkoutu, dva identické buildy3665352 B,
+SHA256 c074843fc4a8c2dbe0e12044782b5846dee826df5364e2d8ff2d618f1e1f0496.
+Čaká sa už len na vizuálne potvrdenie priehľadnosti/banneru na prijímači.
