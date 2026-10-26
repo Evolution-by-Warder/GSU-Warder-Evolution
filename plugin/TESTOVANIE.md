@@ -1,4 +1,4 @@
-# Aktuálny checkpoint — 26. 10. 2026, r72 nastavenia OSD ECM vpravo
+# Aktuálny checkpoint — 26. 10. 2026, r73 výbery v pravom paneli
 
 ## Projekt a vydávanie
 
@@ -319,3 +319,10 @@ Session proxy teraz rozlišuje dočasné modal editory/potvrdenia od skutočnéh
 R72 publikované: zdroj0fe1e856ed4aee01106fcb590a056708bb05999b, CI40292458200 success vrátane čistého checkoutu/deterministických buildov/kontroly vydaných bajtov. Oba feedy overené: 3674988 B, SHA256 fe47612b03b0f6176d24b3b971c85529cac68bd44199aa50b52722dec30842dd.
 
 Nahradené r71 odstránené workflow40292575618; API overilo iba v13.40-r72. Spolu48 odstránených vydaní; Git tagy a história zachované.
+
+
+## r73 — aj výber Typ v pravom paneli
+
+Prezreté0(20261026-083359).jpg a1(20261026-083400).jpg: nastavenia OSD ECM sú správne vpravo, ale ich Typ otvára starý modal ChoiceBox. Používateľ žiada upraviť aj výber. R73 mení zoznamové hodnoty pravého config panela na vlastný pravý list v rovnakej obrazovke, vrátane Statické/Rolované info a swapových výberov. Udržuje aktuálnu hodnotu označenú, OK/green potvrdzuje iba rozpracovanú hodnotu, red ruší bez zmeny. Vráti pôvodný model a footer Save; trvalé uloženie je stále samostatné. OSD hint timer sa počas výberu zastaví a po návrate obnoví. Pri prepnutí sekcie sa stav voľby zahodí.
+
+347 testov prešlo vrátane potvrdenia/zrušenia typu a dôkazu, že sa neotvára Session okno. Prvý nový test omylom použil v stuboch neimplementované setCurrentIndex; opravený na existujúce moveToIndex bez zmeny natívneho ovládania. Natívne zobrazenie výberu čaká na box.
