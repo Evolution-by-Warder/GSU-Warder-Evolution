@@ -1,11 +1,11 @@
-GSU 13.40-r62
+GSU 13.40-r63
 
-OSCam – obnova lokálneho DVBAPI po povolení účtu:
-- Po úspešnom povolení účtu uvedeného v lokálnom [dvbapi] sa OSCam reštartuje na pozadí.
-- GSU počká na pripojenie pôvodného DVBAPI účtu a obnoví zoznam klientov.
-- Pri zákaze ani povolení iných účtov/vzdialených serverov sa automatický reštart nevykonáva.
-- Lokálny proces, konfigurácia, účet a WebIF port sa musia zhodovať; názov CAM sa neodhaduje.
-- Prípadná chyba reštartu je odlíšená od úspešného povolenia účtu.
+Jemná priehľadnosť v sekcii Informácie o OSCame:
+- Oba tmavé panely prepúšťajú približne 10 % živého obrazu na pozadí.
+- Hlavička, spodné tlačidlá a modré zvýraznenie zostávajú nepriehľadné.
+- Rovnaký vzhľad majú súhrn, servery, klienti, log, súbory aj oprávnenia.
+- Zachovaný pôvodný banner bez zmeny grafiky; bez nových balíkových závislostí.
 
-V celej sekcii Informácie o OSCame sa po výbere položky aktivuje ľavý obsah.
-Doprava prepne na pravú ponuku, doľava späť na výsledky.
+Obsahuje aj obnovu lokálneho DVBAPI po povolení účtu z r62: overené povolenie,
+reštart lokálneho OSCamu na pozadí, čakanie na pôvodný účet a obnovenie zoznamu.
+V celej sekcii OK vpravo aktivuje ľavý obsah; doprava vráti pravú ponuku.

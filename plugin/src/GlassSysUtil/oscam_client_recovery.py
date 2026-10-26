@@ -4,7 +4,6 @@ All I/O runs in the clients' deferred worker. A restart is allowed only when the
 running image-selected process configuration identifies both this account and
 this exact local WebIF endpoint. Account changes elsewhere remain unchanged.
 """
-from configparser import ConfigParser, Error as ConfigError
 from pathlib import Path
 import time
 import subprocess
@@ -44,6 +43,23 @@ def config_paths(native,name):
         except (OSError,ValueError,KeyError):continue
 
 
+def read_config(path):
+    # Read only OSCam's simple section/key syntax. No extra receiver package
+    # dependency (some images split configparser out of python3-core).
+    with path.open() as handle:raw=handle.read(1024*1024+1)
+    if len(raw)>1024*1024:raise ValueError('OSCam configuration is too large')
+    values={};section=''
+    for raw_line in raw.splitlines():
+        line=raw_line.split('#',1)[0].split(';',1)[0].strip()
+        if not line:continue
+        if line.startswith('['):
+            section=line[1:-1].strip().lower() if line.endswith(']') else ''
+        elif '=' in line and section in ('dvbapi','webif'):
+            key,value=line.split('=',1)
+            values.setdefault(section,{})[key.strip().lower()]=value.strip()
+    return values
+
+
 def recovery_target(base,user,native):
     if not local_endpoint(base):return None
     selected=native.selected()
@@ -52,18 +68,17 @@ def recovery_target(base,user,native):
     try:port=endpoint.port or (443 if endpoint.scheme=='https' else 80)
     except ValueError:return None
     for path in config_paths(native,selected):
-        config=ConfigParser(interpolation=None,strict=False,inline_comment_prefixes=('#',';'))
         try:
             if not path.is_absolute():continue
-            with path.open() as handle:config.read_file(handle)
-            if config.get('dvbapi','enabled',fallback='0').strip()!='1':continue
-            if config.get('dvbapi','user',fallback='').strip()!=user:continue
-            webport=config.get('webif','httpport',fallback='').strip()
+            config=read_config(path)
+            if config.get('dvbapi',{}).get('enabled','0')!='1':continue
+            if config.get('dvbapi',{}).get('user','')!=user:continue
+            webport=config.get('webif',{}).get('httpport','')
             scheme='https' if webport.startswith('+') else 'http'
             if scheme!=endpoint.scheme or not webport.lstrip('+').isdigit():continue
             if int(webport.lstrip('+'))!=port:continue
             return selected
-        except (OSError,ConfigError):continue
+        except (OSError,ValueError):continue
     return None
 
 

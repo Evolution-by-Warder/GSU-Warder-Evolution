@@ -167,11 +167,43 @@ class WorkspaceTests(unittest.TestCase):
                 if name not in pane.widgets:continue
                 node=root.find("widget[@name='%s_%s']"%(kind,name))
                 self.assertEqual(node.get('backgroundColorSelected'),'#002a70ad')
-                self.assertEqual(node.get('transparent'),'0')
+                self.assertEqual(node.get('transparent'),'1')
         pane=self.host.panes['entitlements']
         icon=pane.pixmap(pos=(0,self.plugin.fhd(3)),size=(self.plugin.fhd(15),self.plugin.fhd(16)),png=object())
         text=pane.text(pos=(self.plugin.fhd(30),0),size=(450,38),font=1,text='chid')
         self.assertGreater(text['pos'][0],icon['pos'][0]+icon['size'][0])
+
+    def test_glass_panels_have_only_one_alpha_layer_and_no_opaque_art_beneath(self):
+        root=ET.fromstring(self.ui.skin(self.host))
+        self.assertEqual(root.get('backgroundColor'),self.ui.CLEAR)
+        self.assertFalse(root.findall('ePixmap'))
+        panels=[n for n in root if n.get('backgroundColor')==self.ui.PANEL_GLASS]
+        self.assertEqual(len(panels),2)
+        for panel in panels:
+            x,y=map(int,panel.get('position').split(','));w,h=map(int,panel.get('size').split(','))
+            for node in root:
+                if node is panel or node.get('name') or int(node.get('zPosition','0'))>=-1:continue
+                nx,ny=map(int,node.get('position').split(','));nw,nh=map(int,node.get('size').split(','))
+                self.assertFalse(nx<x+w and nx+nw>x and ny<y+h and ny+nh>y)
+        for name in ('intro_list','intro_server_name','summary_list','file_file_info','readers_list'):
+            node=root.find("widget[@name='%s']"%name)
+            self.assertEqual(node.get('backgroundColor'),self.ui.CLEAR)
+            self.assertEqual(node.get('transparent'),'1')
+        self.assertEqual(root.find("widget[@name='red']").get('transparent'),'0')
+    def test_native_header_scales_child_inside_clipped_header_parent(self):
+        for width,height in ((1280,720),(1920,1080),(3840,2160)):
+            parent=MagicMock();child=MagicMock();header=self.ui.HeaderArtwork(width,height)
+            with patch.object(self.ui,'ePixmap',return_value=child) as pixmap:
+                header.postWidgetCreate(parent)
+            pixmap.assert_called_once_with(parent)
+            full=child.resize.call_args.args[0]
+            self.assertEqual((full.width(),full.height()),(width,height))
+            child.setScale.assert_called_once_with(1)
+            child.setPixmapFromFile.assert_called_once_with(self.ui.main.BACKGROUND)
+            child.show.assert_called_once()
+            self.assertIs(header.GUI_WIDGET,self.ui.eWidget)
+            self.assertIs(header.picture,child)
+            header.preWidgetRemove(parent);self.assertIsNone(header.picture)
 
     def test_log_wrap_preserves_content_and_allows_reading(self):
         pane=self.host.panes['log'];value='long OSCam log message '*15

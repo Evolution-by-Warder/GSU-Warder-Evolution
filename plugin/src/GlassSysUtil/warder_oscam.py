@@ -9,6 +9,8 @@ from types import FunctionType
 from textwrap import wrap
 from xml.etree import ElementTree as ET
 from Screens.Screen import Screen
+from enigma import eSize, eWidget, ePixmap
+from Components.GUIComponent import GUIComponent
 from . import warder_main as main, warder_system
 
 CLASSES = {'intro':'oscamInfo','servers':'oscamInfoChoiceServer',
@@ -18,8 +20,25 @@ CLASSES = {'intro':'oscamInfo','servers':'oscamInfoChoiceServer',
 TITLES = dict(intro='OScam Information',servers='Select Server',summary='Summary Info',
               readers='Servers Status',users='Clients Status',log='Log view',
               files='Config Files',file='OScam File',entitlements='Entitlements')
+PANEL_GLASS = '#1a102136'  # Enigma alpha: 26/255 (~10%) transparent.
+CLEAR = '#ff000000'
+
 FOOTERS = {'red':(55,'#00ff526a'),'green':(665,'#0039ff59'),
            'blue':(1275,'#0045b9ff'),'blue_button':(1275,'#0045b9ff')}
+
+
+class HeaderArtwork(GUIComponent):
+    """Clip a full-desktop scaled picture inside a header-height native parent."""
+    GUI_WIDGET=eWidget
+    def __init__(self,width,height):
+        GUIComponent.__init__(self);self.width=width;self.height=height;self.picture=None
+    def postWidgetCreate(self,instance):
+        self.picture=ePixmap(instance)
+        self.picture.resize(eSize(self.width,self.height))
+        self.picture.setScale(1)
+        self.picture.setPixmapFromFile(main.BACKGROUND)
+        self.picture.show()
+    def preWidgetRemove(self,instance):self.picture=None
 
 
 class Signal:
@@ -177,26 +196,33 @@ def skin(host):
     header={'day','date','clock','seconds','version_title','version'}
     for node in list(root):
         if node.get('name') in header:continue
-        if node.tag=='ePixmap' and node.get('position')=='0,0':node.set('zPosition','-3');continue
+        if node.tag=='ePixmap' and node.get('position')=='0,0':root.remove(node);continue
         y=int(node.get('position','0,0').split(',')[1])
         if y>=round(164*sy):root.remove(node)
-    root.set('name','WarderOscamWorkspace')
+    root.set('name','WarderOscamWorkspace');root.set('backgroundColor',CLEAR)
     def box(node,x,y,w,h):
         node.set('position','%d,%d'%(round(x*sx),round(y*sy)))
         node.set('size','%d,%d'%(round(w*sx),round(h*sy)))
+    def fill(x,y,w,h,color,z=-2):
+        n=ET.SubElement(root,'eLabel',backgroundColor=color,zPosition=str(z));box(n,x,y,w,h)
+    n=ET.SubElement(root,'widget',name='header_art',zPosition='-3',backgroundColor=main.BASE);box(n,0,0,1920,164)
+    # Opaque margins/footer, but no opaque backing underneath either glass panel.
+    for bounds in ((0,164,1920,16),(0,180,55,800),(1105,180,30,800),(1865,180,55,800),(0,980,1920,100)):
+        fill(*bounds,main.BASE)
     for x,w in ((55,1050),(1135,730)):
-        for dx,dy,dw,dh,color,z in ((x,180,w,800,main.CYAN,-2),(x+2,182,w-4,796,main.PANEL,-1)):
-            n=ET.SubElement(root,'eLabel',backgroundColor=color,zPosition=str(z));box(n,dx,dy,dw,dh)
+        for bounds in ((x,180,w,2),(x,978,w,2),(x,182,2,796),(x+w-2,182,2,796)):
+            fill(*bounds,main.CYAN)
+        fill(x+2,182,w-4,796,PANEL_GLASS,-1)
     for kind,pane in host.panes.items():
         for source in pane.xml:
             name=source.get('name')
             if name not in pane.widgets:continue
             n=deepcopy(source);n.set('name',kind+'_'+name)
             for attribute in ('shadowColor','shadowOffset'):n.attrib.pop(attribute,None)
-            n.set('backgroundColor',main.PANEL);n.set('transparent','0');n.set('zPosition','3')
+            n.set('backgroundColor',CLEAR);n.set('transparent','1');n.set('zPosition','3')
             if name in FOOTERS:
                 x,color=FOOTERS[name];box(n,x,1006,590,50)
-                n.set('foregroundColor',color);n.set('backgroundColor',main.BASE)
+                n.set('foregroundColor',color);n.set('backgroundColor',main.BASE);n.set('transparent','0')
                 n.set('halign','center');n.set('font','Regular;%d'%round(26*sy))
             elif name in ('list','log_info','entitlements_list'):
                 n.set('backgroundColorSelected',main.SELECTION);n.set('foregroundColorSelected','#00ffffff')
@@ -229,7 +255,7 @@ def skin(host):
                 box(n,75,250,1,1)
             root.append(n)
     for name,x,y,w,h,color,font in (('pane_title',80,200,1000,42,main.CYAN,28),('menu_title',1160,200,680,42,main.CYAN,28),('focus_hint',1160,925,680,40,'#00d1e3f3',21),('red',55,1006,590,50,'#00ff526a',28),('green',665,1006,590,50,'#0039ff59',28)):
-        n=ET.SubElement(root,'widget',name=name,font='Regular;%d'%round(font*sy),foregroundColor=color,backgroundColor=main.BASE if y>980 else main.PANEL,transparent='0',zPosition='4',halign='center',valign='center');box(n,x,y,w,h)
+        n=ET.SubElement(root,'widget',name=name,font='Regular;%d'%round(font*sy),foregroundColor=color,backgroundColor=main.BASE if y>980 else CLEAR,transparent='0' if y>980 else '1',zPosition='4',halign='center',valign='center');box(n,x,y,w,h)
     for x,color in ((250,'#00ff526a'),(860,'#0039ff59'),(1470,'#0045b9ff')):
         n=ET.SubElement(root,'eLabel',backgroundColor=color,zPosition='2');box(n,x,996,200,2)
     return ET.tostring(root,encoding='unicode')
@@ -241,6 +267,7 @@ class OscamWorkspace(Screen):
         self.api=api;self.closed=False;self.ready=False;self.current='intro';self.history=[];self.menu_focus=True
         size=api['getDesktop'](0).size();self.width,self.height=size.width(),size.height();self.sx,self.sy=self.width/1920,self.height/1080
         self.panes={kind:Pane(self,kind) for kind in CLASSES}
+        self['header_art']=HeaderArtwork(self.width,self.height)
         for name in ('pane_title','menu_title','focus_hint','red','green'):self[name]=api['Label']('')
         self['red'].setText(main.text(api,'Back'));self['green'].setText(main.text(api,'Select with OK'))
         self['menu_title'].setText(main.text(api,'OScam Information'))

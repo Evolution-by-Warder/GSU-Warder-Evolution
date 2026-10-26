@@ -4,7 +4,7 @@ Plugin pre Enigma2: informácie o prijímači a kanáli, ECM/OSCam, správa CAM,
 
 ## Aktuálny projekt
 
-Jediný udržiavaný kód je v [`plugin/`](plugin/). Overovaná platforma je OpenATV 8 / Python 3.14.7; úplná funkčnosť na všetkých prijímačoch sa netvrdí. Aktuálna vydaná verzia je **13.40-r62**.
+Jediný udržiavaný kód je v [`plugin/`](plugin/). Overovaná platforma je OpenATV 8 / Python 3.14.7; úplná funkčnosť na všetkých prijímačoch sa netvrdí. Aktuálna vydaná verzia je **13.40-r63**.
 
 - [`plugin/src/GlassSysUtil/`](plugin/src/GlassSysUtil/): Python zdroje a grafika pre prijímač.
 - [`plugin/tests/`](plugin/tests/): regresné testy.
