@@ -1,5 +1,10 @@
 # Zmeny GSU Warder Evolution
 
+## 13.40-r88 — 27. 10. 2026 — oprava pádu
+
+- Informácie o kanáli: callback zarovnania družice je viazaná metóda, ktorú natívny OpenATV správne vykoná. Opravuje `TypeError: exec() arg 1 must be a string, bytes or code object` pri otvorení aj cez dlhé modré.
+- Regresný test kontroluje natívny typ callbackov a súradnice v troch rozlíšeniach. Overenie na prijímači po tejto oprave ešte čaká.
+
 ## 13.40-r87 — 26. 10. 2026 — stabilné vydanie
 
 - Spustenie ostrej prevádzky po schválení používateľom; zachovaný runtime a grafika r86.

@@ -1,6 +1,10 @@
 # Aktuálny stav — GSU Warder Evolution
 
-Aktualizované 26. 10. 2026. **Ostrá prevádzka je spustená od 13.40-r87.** Používateľ po r86 potvrdil dokončenie a výslovne autorizoval stabilné vydanie aj úplný zápis dokumentácie. Aktuálny runtime a rozloženie r86 sa v r87 nemenili; zmenili sa iba verzia, vydávacie metadáta, poznámky a dokumentácia.
+Aktualizované 27. 10. 2026.
+
+**r88:** oprava pádu Informácií o kanáli podľa dodaného crash logu. Natívny OpenATV vyžaduje v onLayoutFinish viazané metódy; zarovnanie družice teraz používa MethodType. Regresný test overuje callbacky aj súradnice v HD/FHD/UHD. Potvrdenie na prijímači čaká. Vydanie r88 publikované: CI40463980325 success, 362 testov na Python3.14.7, dva zhodné buildy, oba feedy overené; IPK3680444 bajtov, SHA256 05f94f49bb04ce1b949d2f5ddf5f98bd7889a9a1e54fb8e8e87cb2861e37b325.
+
+Historický stav r87: **Ostrá prevádzka je spustená od 13.40-r87.** Používateľ po r86 potvrdil dokončenie a výslovne autorizoval stabilné vydanie aj úplný zápis dokumentácie. Aktuálny runtime a rozloženie r86 sa v r87 nemenili; zmenili sa iba verzia, vydávacie metadáta, poznámky a dokumentácia.
 
 ## Repozitár a autoritatívne súbory
 

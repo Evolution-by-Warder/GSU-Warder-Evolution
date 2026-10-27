@@ -63,3 +63,19 @@ class ChannelLayoutTests(unittest.TestCase):
             self.assertEqual(screen['tp_values'].text,'')
             screen['tp_values'].setText('DVB-S2\n12207 MHz')
             self.assertEqual(screen['tp_values'].text,'DVB-S2\n12207 MHz')
+
+    def test_layout_callbacks_match_native_openatv_dispatch_and_align_satellite(self):
+        plugin=load(ROOT)
+        for width,height in ((1280,720),(1920,1080),(3840,2160)):
+            screen=plugin.channelInfoCenter(types.SimpleNamespace())
+            # OpenATV executes bound methods directly and passes other entries to exec.
+            for callback in screen.onLayoutFinish:
+                self.assertIsInstance(callback,type(screen.close))
+            callback=next(c for c in screen.onLayoutFinish if c.__name__=='align_satellite')
+            desktop=types.SimpleNamespace(size=lambda:types.SimpleNamespace(width=lambda:width,height=lambda:height))
+            with patch.object(plugin,'getDesktop',lambda index:desktop), patch('enigma.ePoint',lambda x,y:(x,y)), patch('enigma.eSize',lambda w,h:(w,h)):
+                callback()
+            for name in ('tp_lab_sat','tp_sat'):
+                x,y,w,h,_=plugin._warder_channel.SLOTS[name]
+                self.assertEqual(screen[name]._position,(round(x*width/1920),round(y*height/1080)))
+                self.assertEqual(screen[name]._size,(round(w*width/1920),round(h*height/1080)))
