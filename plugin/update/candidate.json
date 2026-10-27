@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r89",
-    "tag": "v13.40-r89",
-    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r89/enigma2-plugin-glasssysutil_13.40-r89_all.ipk",
-    "sha256": "ea87dfc9b35a17a2afa1caeaa581eacf9be008d30d5f57a4e2eb0c78b409f2ce",
-    "bytes": 3680558,
-    "notes": "GSU 13.40-r89\n\nInformácie o systéme\n\n- Nepriehľadné podklady všetkých dvanástich ukazovateľov pamäte, diskov a zaťaženia.\n- Jemná priehľadnosť okna a existujúce rozloženie zostávajú zachované.\n- Zachovaná oprava otvárania Informácií o kanáli z r88.\n"
+    "version": "13.40-r90",
+    "tag": "v13.40-r90",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r90/enigma2-plugin-glasssysutil_13.40-r90_all.ipk",
+    "sha256": "1eba855088448634b5ebf84daa66be48febe8bc9b9d581823fc2241a4add4101",
+    "bytes": 3680604,
+    "notes": "GSU 13.40-r90\n\nNepriehľadné ukazovatele\n\n- Informácie o systéme: nepriehľadné podklady všetkých dvanástich ukazovateľov.\n- Informácie o kanáli: rovnaká úprava ukazovateľov v časti Signál.\n- Jemná priehľadnosť oboch okien, merania a rozloženie zostávajú zachované.\n"
   }
 }
