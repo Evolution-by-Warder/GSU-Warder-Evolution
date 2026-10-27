@@ -55,16 +55,16 @@
   "plugin_update_sha256": "2daac161e69e25e4e1ba94404ed5f179a36f07ea6d4d28e4b47c4e2a8bca69d6",
   "plugin_update_ui_sha256": "e6db46d8f5db8ecd5a64a0f4a3a1eabebe33c3527875a2cdd979c3a0e244f31b",
   "latest_candidate": {
-    "version": "13.40-r88",
-    "tag": "v13.40-r88",
-    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r88/enigma2-plugin-glasssysutil_13.40-r88_all.ipk",
-    "sha256": "05f94f49bb04ce1b949d2f5ddf5f98bd7889a9a1e54fb8e8e87cb2861e37b325",
-    "bytes": 3680444,
-    "notes": "GSU 13.40-r88\n\nOprava informácií o kanáli\n\n- Opravený pád Enigmy pri otvorení Informácií o kanáli, aj cez dlhé modré tlačidlo.\n- Callback rozloženia používa viazanú metódu kompatibilnú s OpenATV.\n- Zachované rozloženie a zarovnanie údajov v HD, Full HD aj Ultra HD.\n",
+    "version": "13.40-r90",
+    "tag": "v13.40-r90",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r90/enigma2-plugin-glasssysutil_13.40-r90_all.ipk",
+    "sha256": "1eba855088448634b5ebf84daa66be48febe8bc9b9d581823fc2241a4add4101",
+    "bytes": 3680604,
+    "notes": "GSU 13.40-r90\n\nNepriehľadné ukazovatele\n\n- Informácie o systéme: nepriehľadné podklady všetkých dvanástich ukazovateľov.\n- Informácie o kanáli: rovnaká úprava ukazovateľov v časti Signál.\n- Jemná priehľadnosť oboch okien, merania a rozloženie zostávajú zachované.\n",
+    "status": "Stable system and channel meter background fix; receiver visual confirmation pending",
     "receiver_tested": false,
-    "status": "Published stable channel-information callback hotfix; receiver confirmation pending",
-    "source_commit": "912c6e98fec70611e583745682c96908c190acd0",
-    "ci_run": 40463980325,
+    "source_commit": "225f61583bc8c867f26212b4177391aaed5f6669",
+    "ci_run": 40469801853,
     "ci_conclusion": "success"
   },
   "oscam_readers_ui_sha256": "88f2da2c4eba5a05db9b333b3d8de003ca4f6e6ad82d6e2c6eed41b6feb40865",
@@ -113,7 +113,7 @@
     "published": true,
     "prerelease": false,
     "latest": true,
-    "release_id": 424266966
+    "release_id": 425161855
   },
   "channel_layout_hotfix": {
     "version": "13.40-r88",
