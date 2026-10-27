@@ -2,9 +2,9 @@
 
 Plugin pre Enigma2: informácie o prijímači a kanáli, ECM a OSCam, správa CAM, swap a diagnostika v spoločnom vzhľade Warder Evolution.
 
-**r88 opravuje pád Informácií o kanáli pri otvorení cez dlhé modré; potvrdenie opravy na prijímači čaká.**
+**r90 zjednocuje nepriehľadné podklady ukazovateľov v systémových a kanálových informáciách. Opravu pádu Informácií o kanáli z r88 používateľ potvrdil.**
 
-**Stabilné vydanie: 13.40-r88. Ostrá prevádzka od 26. októbra 2026.** Rozhranie a prejdené funkcie schválil používateľ na GigaBlue Quad 4K Pro s OpenATV 8. Vydanie je verejné **Latest**, bez označenia prerelease.
+**Stabilné vydanie: 13.40-r90. Ostrá prevádzka od 26. októbra 2026.** Rozhranie a prejdené funkcie schválil používateľ na GigaBlue Quad 4K Pro s OpenATV 8. Vydanie je verejné **Latest**, bez označenia prerelease.
 
 [Stiahnuť aktuálne vydanie](https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/latest) · [Používanie](docs/POUZIVANIE.md) · [Zmeny](CHANGELOG.md) · [Overenie a údržba](plugin/TESTOVANIE.md)
 
@@ -19,7 +19,7 @@ Plugin pre Enigma2: informácie o prijímači a kanáli, ECM a OSCam, správa CA
 
 ## Inštalácia a aktualizácia
 
-Z vydania stiahnite súbor `enigma2-plugin-glasssysutil_13.40-r88_all.ipk` a nainštalujte ho cez správcu lokálnych balíkov prijímača. Existujúce inštalácie použijú aktualizátor priamo v GSU. Inštalačná identita a adresár `Plugins/Extensions/GlassSysUtil` sa nemenia, aby zostali zachované nastavenia a existujúce vstupy do pluginu.
+Z vydania stiahnite súbor `enigma2-plugin-glasssysutil_13.40-r90_all.ipk` a nainštalujte ho cez správcu lokálnych balíkov prijímača. Existujúce inštalácie použijú aktualizátor priamo v GSU. Inštalačná identita a adresár `Plugins/Extensions/GlassSysUtil` sa nemenia, aby zostali zachované nastavenia a existujúce vstupy do pluginu.
 
 Aktualizátor overuje veľkosť, SHA256 a obsah balíka pred inštaláciou. Automatická aj ručná ponuka používa preložené potvrdenie **Nie / Áno**. Bez novej verzie alebo pri chybe zostáva **Naspäť**.
 

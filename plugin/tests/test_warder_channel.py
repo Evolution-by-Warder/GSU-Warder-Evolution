@@ -79,3 +79,21 @@ class ChannelLayoutTests(unittest.TestCase):
                 x,y,w,h,_=plugin._warder_channel.SLOTS[name]
                 self.assertEqual(screen[name]._position,(round(x*width/1920),round(y*height/1080)))
                 self.assertEqual(screen[name]._size,(round(w*width/1920),round(h*height/1080)))
+
+    def test_signal_meter_tracks_are_opaque_without_changing_live_sources(self):
+        plugin=load(ROOT)
+        for suffix,w,h in (('',1280,720),('_FHD',1920,1080),('_UHD',3840,2160)):
+            original=importlib.import_module('Plugins.Extensions.GlassSysUtil.GSU_skins'+suffix).channelInfo_Center
+            root=ET.fromstring(plugin._warder_channel.channel_skin(original,w,h))
+            meters=[n for n in root if n.get('source')=='session.FrontendStatus' and n.get('render')=='Progress']
+            self.assertEqual(len(meters),2)  # Native SNR/AGC; BER retains its native value label.
+            for meter in meters:
+                self.assertEqual(meter.get('transparent'),'0')
+                self.assertEqual(meter.get('backgroundColor'),'#00102136')
+                self.assertIsNotNone(meter.find('convert'))
+            backings=[n for n in root if Path(n.get('pixmap','')).name=='barmm_back.png']
+            self.assertEqual(len(backings),3)
+            for backing in backings:
+                self.assertEqual(backing.get('alphatest'),'off')
+                self.assertEqual(backing.get('backgroundColor'),'#00102136')
+            self.assertEqual(root.get('backgroundColor'),'#ff000000')

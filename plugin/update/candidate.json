@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r88",
-    "tag": "v13.40-r88",
-    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r88/enigma2-plugin-glasssysutil_13.40-r88_all.ipk",
-    "sha256": "05f94f49bb04ce1b949d2f5ddf5f98bd7889a9a1e54fb8e8e87cb2861e37b325",
-    "bytes": 3680444,
-    "notes": "GSU 13.40-r88\n\nOprava informácií o kanáli\n\n- Opravený pád Enigmy pri otvorení Informácií o kanáli, aj cez dlhé modré tlačidlo.\n- Callback rozloženia používa viazanú metódu kompatibilnú s OpenATV.\n- Zachované rozloženie a zarovnanie údajov v HD, Full HD aj Ultra HD.\n"
+    "version": "13.40-r90",
+    "tag": "v13.40-r90",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r90/enigma2-plugin-glasssysutil_13.40-r90_all.ipk",
+    "sha256": "1eba855088448634b5ebf84daa66be48febe8bc9b9d581823fc2241a4add4101",
+    "bytes": 3680604,
+    "notes": "GSU 13.40-r90\n\nNepriehľadné ukazovatele\n\n- Informácie o systéme: nepriehľadné podklady všetkých dvanástich ukazovateľov.\n- Informácie o kanáli: rovnaká úprava ukazovateľov v časti Signál.\n- Jemná priehľadnosť oboch okien, merania a rozloženie zostávajú zachované.\n"
   }
 }
