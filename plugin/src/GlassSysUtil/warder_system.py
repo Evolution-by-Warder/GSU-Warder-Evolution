@@ -131,6 +131,16 @@ def system_skin(original,width,height,translator=lambda value:value):
             node.set('scrollbarBorderColor','#00364b61')
     from .warder_glass import apply
     apply(root,width,height)
+    # Native progress tracks must not inherit the panel's transparency.
+    meters={'membar','swapbar','memtotalbar','rootbar','hddbar','usbbar',
+            'cfbar','sdbar','hddtempbar','hddstate','cpubar','tempDBbar'}
+    for node in root:
+        if node.get('name') in meters:
+            node.set('backgroundColor','#00102136')
+            node.set('transparent','0')
+        elif node.tag=='ePixmap' and Path(node.get('pixmap','')).name in ('bar_back.png','barm_back.png'):
+            node.set('backgroundColor','#00102136')
+            node.set('alphatest','off')
     from .warder_system_help import prepare
     prepare(root,width,height)
     return ET.tostring(root,encoding='unicode')

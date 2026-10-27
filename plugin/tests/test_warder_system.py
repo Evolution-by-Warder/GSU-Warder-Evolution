@@ -39,6 +39,23 @@ class SystemLayoutTests(unittest.TestCase):
                 self.assertEqual(n.get('transparent'),'1')
                 self.assertEqual(n.get('backgroundColor'),'#ff000000')
 
+    def test_all_twelve_meter_tracks_are_opaque_inside_the_glass_panel(self):
+        meters={'membar','swapbar','memtotalbar','rootbar','hddbar','usbbar',
+                'cfbar','sdbar','hddtempbar','hddstate','cpubar','tempDBbar'}
+        for suffix,w,h in (('',1280,720),('_FHD',1920,1080),('_UHD',3840,2160)):
+            source=importlib.import_module('Plugins.Extensions.GlassSysUtil.GSU_skins'+suffix).GlassSysInfo
+            root=ET.fromstring(self.ui.system_skin(source,w,h))
+            for name in meters:
+                meter=root.find("widget[@name='%s']"%name)
+                self.assertEqual(meter.get('transparent'),'0',name)
+                self.assertEqual(meter.get('backgroundColor'),'#00102136',name)
+            backs=[n for n in root if Path(n.get('pixmap','')).name in ('bar_back.png','barm_back.png')]
+            self.assertEqual(len(backs),12)
+            for backing in backs:
+                self.assertEqual(backing.get('alphatest'),'off')
+                self.assertEqual(backing.get('backgroundColor'),'#00102136')
+            self.assertEqual(root.get('backgroundColor'),'#ff000000')
+
     def test_device_icons_precede_their_data_and_lower_meters_share_bottoms(self):
         for suffix,w,h in (('',1280,720),('_FHD',1920,1080),('_UHD',3840,2160)):
             source=importlib.import_module('Plugins.Extensions.GlassSysUtil.GSU_skins'+suffix).GlassSysInfo

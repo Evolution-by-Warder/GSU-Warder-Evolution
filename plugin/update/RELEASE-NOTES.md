@@ -1,7 +1,7 @@
-GSU 13.40-r88
+GSU 13.40-r89
 
-Oprava informácií o kanáli
+Informácie o systéme
 
-- Opravený pád Enigmy pri otvorení Informácií o kanáli, aj cez dlhé modré tlačidlo.
-- Callback rozloženia používa viazanú metódu kompatibilnú s OpenATV.
-- Zachované rozloženie a zarovnanie údajov v HD, Full HD aj Ultra HD.
+- Nepriehľadné podklady všetkých dvanástich ukazovateľov pamäte, diskov a zaťaženia.
+- Jemná priehľadnosť okna a existujúce rozloženie zostávajú zachované.
+- Zachovaná oprava otvárania Informácií o kanáli z r88.

@@ -1,6 +1,6 @@
 # Zostavenie a vydávanie
 
-Aktuálna stabilná verzia: **13.40-r88**, základ runtime r86 s opravou natívneho callbacku informácií o kanáli v r88. Jediné aktívne jadro je `plugin/src/GlassSysUtil`. Inštalačný balík `enigma2-plugin-glasssysutil`, architektúra `all`; runtime adresár `Plugins/Extensions/GlassSysUtil` sa nemení.
+Aktuálna stabilná verzia: **13.40-r89**, základ runtime r86 s opravou natívneho callbacku informácií o kanáli v r88. Jediné aktívne jadro je `plugin/src/GlassSysUtil`. Inštalačný balík `enigma2-plugin-glasssysutil`, architektúra `all`; runtime adresár `Plugins/Extensions/GlassSysUtil` sa nemení.
 
 ## Overenie
 
