@@ -2,7 +2,7 @@
 
 Aktualizované 27. 10. 2026.
 
-**r90:** nepriehľadné podklady aj v časti Signál Informácií o kanáli; oba panely zostávajú jemne priehľadné.364 hostiteľských testov prešlo. Vizuálne potvrdenie r90 čaká. Vydanie je dostupné v oboch feedoch, CI40469801853 success,364 testov na Python3.14.7 a dva zhodné buildy; IPK3680604 bajtov, SHA256 1eba855088448634b5ebf84daa66be48febe8bc9b9d581823fc2241a4add4101.
+**r90:** nepriehľadné podklady aj v časti Signál Informácií o kanáli; oba panely zostávajú jemne priehľadné.364 hostiteľských testov prešlo. Používateľ27.10.2026 potvrdil vzhľad oboch okien v r90 ako OK. Vydanie je dostupné v oboch feedoch, CI40469801853 success,364 testov na Python3.14.7 a dva zhodné buildy; IPK3680604 bajtov, SHA256 1eba855088448634b5ebf84daa66be48febe8bc9b9d581823fc2241a4add4101.
 
 **r89:** všetkých12 zvislých ukazovateľov má nepriehľadný podklad, panel zostáva jemne priehľadný.363 hostiteľských testov prešlo; vizuálne potvrdenie čaká. Používateľ potvrdil r88 aj FullHDGlass1.0.26 a PiconHub0.1.25 ako OK.
 
