@@ -1,7 +1,7 @@
-GSU 13.40-r89
+GSU 13.40-r90
 
-Informácie o systéme
+Nepriehľadné ukazovatele
 
-- Nepriehľadné podklady všetkých dvanástich ukazovateľov pamäte, diskov a zaťaženia.
-- Jemná priehľadnosť okna a existujúce rozloženie zostávajú zachované.
-- Zachovaná oprava otvárania Informácií o kanáli z r88.
+- Informácie o systéme: nepriehľadné podklady všetkých dvanástich ukazovateľov.
+- Informácie o kanáli: rovnaká úprava ukazovateľov v časti Signál.
+- Jemná priehľadnosť oboch okien, merania a rozloženie zostávajú zachované.

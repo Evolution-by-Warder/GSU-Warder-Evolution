@@ -2,6 +2,8 @@
 
 Aktualizované 27. 10. 2026.
 
+**r90:** nepriehľadné podklady aj v časti Signál Informácií o kanáli; oba panely zostávajú jemne priehľadné.364 hostiteľských testov prešlo. Vizuálne potvrdenie r90 čaká.
+
 **r89:** všetkých12 zvislých ukazovateľov má nepriehľadný podklad, panel zostáva jemne priehľadný.363 hostiteľských testov prešlo; vizuálne potvrdenie čaká. Používateľ potvrdil r88 aj FullHDGlass1.0.26 a PiconHub0.1.25 ako OK.
 
 **r88:** oprava pádu Informácií o kanáli podľa dodaného crash logu. Natívny OpenATV vyžaduje v onLayoutFinish viazané metódy; zarovnanie družice teraz používa MethodType. Regresný test overuje callbacky aj súradnice v HD/FHD/UHD. Potvrdenie na prijímači čaká. Vydanie r88 publikované: CI40463980325 success, 362 testov na Python3.14.7, dva zhodné buildy, oba feedy overené; IPK3680444 bajtov, SHA256 05f94f49bb04ce1b949d2f5ddf5f98bd7889a9a1e54fb8e8e87cb2861e37b325.

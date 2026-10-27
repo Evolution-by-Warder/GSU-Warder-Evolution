@@ -75,6 +75,13 @@ def channel_skin(original,width,height,translator=lambda value:value):
     fill(860,996,200,2,'#00ff526a',3)
     from .warder_glass import apply
     apply(root,width,height)
+    for node in root:
+        if node.get('source')=='session.FrontendStatus' and node.get('render')=='Progress':
+            node.set('backgroundColor','#00102136')
+            node.set('transparent','0')
+        elif node.tag=='ePixmap' and Path(node.get('pixmap','')).name=='barmm_back.png':
+            node.set('backgroundColor','#00102136')
+            node.set('alphatest','off')
     return ET.tostring(root,encoding='unicode')
 
 

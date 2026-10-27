@@ -1,5 +1,9 @@
 # Zmeny GSU Warder Evolution
 
+## 13.40-r90 — 27. 10. 2026
+
+- Nepriehľadné podklady ukazovateľov v časti Signál v Informáciách o kanáli, zhodné so systémovými ukazovateľmi r89. Merania a jemná priehľadnosť okna zachované.
+
 ## 13.40-r89 — 27. 10. 2026
 
 - Nepriehľadné podklady všetkých 12 zvislých ukazovateľov Informácií o systéme v HD/FHD/UHD. Samotný panel zostáva jemne priehľadný.
