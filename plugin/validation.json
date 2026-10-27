@@ -67,11 +67,11 @@
   "oscam_readers_ui_sha256": "88f2da2c4eba5a05db9b333b3d8de003ca4f6e6ad82d6e2c6eed41b6feb40865",
   "warder_tools_sha256": "ef23dab03508f12e73cc5c8196f04ebaa44fd1bf7bf0d357881acc49ac341563",
   "warder_tools_ui_sha256": "337e4b0ca69041d64a3104060c9c454a4cd26428c52abb7da6f9a2d1ba7b072e",
-  "notes": "User explicitly confirmed all current work complete and authorized production. Stable r87 changes release metadata/publication and documentation only; approved runtime/layout preserved. Public stable GitHub releases, compatible feeds unchanged.",
+  "notes": "r88 fixes native OpenATV onLayoutFinish callback type for channel information, including long-Blue shortcut. Receiver confirmation pending; historical r87 production approval retained.",
   "warder_main_sha256": "0fbf58bc018580a81d65d1aa5787922a3b79562821176d68343bfc74166cc01c",
   "warder_system_sha256": "4cb25fcb2209d7cd709f1b53770abe9aa6a9fa1e5d345b05e1475a9662fc63d2",
   "i18n_sha256": "85a45d5f6cf6d05674eb88f60996f12b2c90484eb1c3cc7aa1fe9386e31631ba",
-  "warder_channel_sha256": "fbe65a0eaf2b21b664423bf51b13482ce53a3c2a91613cf396f6a255d8489856",
+  "warder_channel_sha256": "10e23d2864c7230f6121840f05be47a3147c7fcb3c124342ca861a2c5e512203",
   "release_cleanup": {
     "kept": "v13.40-r87",
     "removed": 63,
@@ -111,5 +111,15 @@
     "prerelease": false,
     "latest": true,
     "release_id": 424266966
+  },
+  "channel_layout_hotfix": {
+    "version": "13.40-r88",
+    "receiver_confirmed": false,
+    "native_dispatch_regression": true,
+    "resolutions": [
+      "1280x720",
+      "1920x1080",
+      "3840x2160"
+    ]
   }
 }
