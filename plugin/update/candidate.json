@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r87",
-    "tag": "v13.40-r87",
-    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r87/enigma2-plugin-glasssysutil_13.40-r87_all.ipk",
-    "sha256": "a981085699f22bb4b9fb97ddc6a2d3af4b452920fa8fe51c962ce16f70c73d6b",
-    "bytes": 3680642,
-    "notes": "GSU 13.40-r87\n\nStabilné vydanie\n\n- Ostrá prevádzka používateľom schváleného rozhrania a prejdených funkcií na OpenATV 8 / GigaBlue Quad 4K Pro.\n- Spoločný vzhľad Warder, živá TV, panelové ponuky a nastavenia, informácie systému a kanála, OSCam a správa CAM.\n- ECM v paneli aj cez dlhé modré: názov stanice, picon stanice a kódovania; externý CAM bez identifikátora za @ a bez zalamovania.\n- Automatická aj ručná kontrola aktualizácií, preložené potvrdenie Nie / Áno a reštart GUI tri sekundy po úspešnej inštalácii.\n- Stabilné vydanie na GitHube; zachovaná kompatibilita existujúcich inštalácií a ich nastavení.\n"
+    "version": "13.40-r88",
+    "tag": "v13.40-r88",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r88/enigma2-plugin-glasssysutil_13.40-r88_all.ipk",
+    "sha256": "05f94f49bb04ce1b949d2f5ddf5f98bd7889a9a1e54fb8e8e87cb2861e37b325",
+    "bytes": 3680444,
+    "notes": "GSU 13.40-r88\n\nOprava informácií o kanáli\n\n- Opravený pád Enigmy pri otvorení Informácií o kanáli, aj cez dlhé modré tlačidlo.\n- Callback rozloženia používa viazanú metódu kompatibilnú s OpenATV.\n- Zachované rozloženie a zarovnanie údajov v HD, Full HD aj Ultra HD.\n"
   }
 }
