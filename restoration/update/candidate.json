@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r90",
-    "tag": "v13.40-r90",
-    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r90/enigma2-plugin-glasssysutil_13.40-r90_all.ipk",
-    "sha256": "1eba855088448634b5ebf84daa66be48febe8bc9b9d581823fc2241a4add4101",
-    "bytes": 3680604,
-    "notes": "GSU 13.40-r90\n\nNepriehľadné ukazovatele\n\n- Informácie o systéme: nepriehľadné podklady všetkých dvanástich ukazovateľov.\n- Informácie o kanáli: rovnaká úprava ukazovateľov v časti Signál.\n- Jemná priehľadnosť oboch okien, merania a rozloženie zostávajú zachované.\n"
+    "version": "13.40-r92",
+    "tag": "v13.40-r92",
+    "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r92/enigma2-plugin-glasssysutil_13.40-r92_all.ipk",
+    "sha256": "9281d2cd3ffb15d7326a4e476ccc92ab2c3d6d1009e14d6d5085b7b626cca720",
+    "bytes": 3680636,
+    "notes": "GSU 13.40-r92\n\nTichá prevádzka a upratovanie\n\n- Automatické logy autostartu CAM-u, merania dátového toku a starý gsu.log sa nevytvárajú.\n- Výstup df/dmesg sa spracúva v pamäti bez tempinfo.tmp.\n- Aktualizátor pri nedostupnej sieti nevypisuje rutinné chyby do konzoly.\n- Inštalácia odstráni iba známe vlastné staré logy, bez nasledovania odkazov.\n- Ručne vyžiadaná diagnostika, nastavenia a funkcie zostávajú dostupné.\n\nProdukčné vydanie na výslovný pokyn vlastníka 29.10.2026. Riadna aktualizácia z r90 aj kandidáta r91; oba existujúce feedy zostávajú kompatibilné. Nové úplné fyzické overenie na všetkom hardvéri sa netvrdí.\n"
   }
 }
