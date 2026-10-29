@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "date": "2026-10-29",
+  "product": "gsu",
+  "candidate_version": "13.40-r91",
+  "source_commit": "8d8c17b5b5f8672083d966bd49625c8b3d1dcec2",
+  "branch": "fix/receiver-runtime-cleanup",
+  "release_url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/tag/runtime-cleanup-13.40-r91",
+  "release_tag": "runtime-cleanup-13.40-r91",
+  "prerelease": true,
+  "ipk": {
+    "filename": "enigma2-plugin-glasssysutil_13.40-r91_all.ipk",
+    "bytes": 3680570,
+    "sha256": "9a6c87bd4d9fbe0428e31dcc29efca05024dfb6daaa28bc9a6a28d535477fbbd",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/runtime-cleanup-13.40-r91/enigma2-plugin-glasssysutil_13.40-r91_all.ipk"
+  },
+  "verification": {
+    "ci_run": 40901771087,
+    "ci_conclusion": "success",
+    "independent_public_download_sha256_verified": true,
+    "all_uncompressed_control_and_payload_bytes_match_tested_build": true,
+    "tests_passed": 369,
+    "optional_unchanged_archive_check_skipped": 0,
+    "receiver_verified": false
+  },
+  "pull_request": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/pull/1",
+  "production_feed_activated": false
+}
