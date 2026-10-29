@@ -1,0 +1,42 @@
+name: Receiver runtime cleanup candidate
+on:
+  push:
+    branches: [fix/receiver-runtime-cleanup]
+    paths: ['plugin/**', '.github/workflows/runtime-cleanup-candidate.yml']
+permissions:
+  contents: write
+concurrency:
+  group: gsu-runtime-cleanup-candidate
+  cancel-in-progress: true
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14.7'
+      - run: python -m unittest discover -s plugin/tests -q
+      - name: Build twice and compare package bytes
+        run: |
+          python plugin/tools/build_ipk.py --output plugin/dist
+          cp plugin/dist/*.ipk /tmp/first.ipk
+          python plugin/tools/build_ipk.py --output plugin/dist
+          cmp /tmp/first.ipk plugin/dist/*.ipk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GSU-runtime-cleanup-candidate
+          path: plugin/dist/*
+          retention-days: 30
+      - name: Publish isolated prerelease without updating feeds
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          VERSION=$(cat plugin/src/GlassSysUtil/version)
+          test "$VERSION" = '13.40-r91'
+          gh release create "runtime-cleanup-${VERSION}" plugin/dist/*.ipk plugin/dist/*.sha256 \
+            --target "$GITHUB_SHA" --prerelease --latest=false \
+            --title "GSU ${VERSION}: receiver runtime cleanup" --notes-file plugin/update/RELEASE-NOTES.md

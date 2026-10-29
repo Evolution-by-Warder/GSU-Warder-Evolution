@@ -127,18 +127,8 @@ F_TMP = '/tmp/tmp.tmp'
 RM_TMP = 'rm -rf %s' % F_TMP
 
 def Writelog(txt):
-    log = GSU_PATH + 'gsu.log'
-    if os.path.isfile(log):
-        if os.path.getsize(log) > 1000000:
-            system('rm -rf ' + log)
-    try:
-        f = open(log, 'a')
-        f.write('%s\n' % str(txt))
-        f.close()
-    except IOError:
-        pass
-
-    return
+    """Production runtime does not write diagnostic logs."""
+    return None
 
 
 XCPU = 'mipsel'
@@ -201,6 +191,17 @@ def chckPckg():
 
 (PKGBIN, TYPE_DIR, PKG, LISTIPK) = chckPckg()
 ENA_D = TYPE_DIR == 'debpkg'
+
+def _commandLines(argv):
+    # Small read-only command output stays in RAM, never in /tmp/tempinfo.tmp.
+    import subprocess
+    try:
+        result = subprocess.run(argv, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                                text=True, timeout=10, check=False)
+        return result.stdout.splitlines() if result.returncode == 0 else []
+    except (OSError, subprocess.TimeoutExpired):
+        return []
+
 
 def chckPckgList():
     ttt = PKGBIN
@@ -1891,36 +1892,32 @@ class GlassSysInfoBrowser(Screen):
             self['hddstate'].setValue(100)
         self['hdddev'].setText(tt + ':\n' + isHdd)
         self['HDDTemperature'].setText(temperature)
-        os.system('df -h > /tmp/tempinfo.tmp')
         cfperc = usbperc = hddperc = sdperc = rootperc = 0
         rootsumm = cfsumm = sdsumm = usbsumm = hddsumm = '....\n....\n....\n....'
-        if fileExists('/tmp/tempinfo.tmp'):
-            f = open('/tmp/tempinfo.tmp', 'r')
-            for line in f.readlines():
-                line = line.replace('part1', ' ')
-                parts = line.strip().split()
-                totsp = len(parts) - 1
-                if parts[0] == '/dev/root' or parts[totsp] == '/':
-                    rootperc = parts[4]
-                    rootsumm = str(parts[1]) + 'B\n' + str(parts[3]) + 'B\n' + str(parts[2]) + 'B\n' + str(rootperc)
-                    rootperc = rootperc.replace('%', '')
-                if parts[totsp] == '/media/cf':
-                    cfperc = int(parts[totsp - 1].replace('%', ''))
-                    cfsumm = parts[totsp - 4] + 'B\n' + parts[totsp - 2] + 'B\n' + parts[totsp - 3] + 'B\n' + parts[totsp - 1]
-                if parts[totsp] == '/media/sd' or parts[totsp] == '/media/mmc' or parts[totsp] == '/media/ba' and parts[0] == '/dev/mmcblk1p1':
-                    sdperc = int(parts[totsp - 1].replace('%', ''))
-                    sdsumm = parts[totsp - 4] + 'B\n' + parts[totsp - 2] + 'B\n' + parts[totsp - 3] + 'B\n' + parts[totsp - 1]
-                if parts[totsp] == '/media/usb' or parts[totsp] == '/media/ba' and parts[0] == '/dev/sdb1':
-                    usbperc = int(parts[totsp - 1].replace('%', ''))
-                    usbsumm = parts[totsp - 4] + 'B\n' + parts[totsp - 2] + 'B\n' + parts[totsp - 3] + 'B\n' + parts[totsp - 1]
-                if parts[totsp] == '/media/hdd':
-                    strview = parts[totsp - 1].replace('%', '')
-                    if strview.isdigit():
-                        hddperc = int(parts[totsp - 1].replace('%', ''))
-                        hddsumm = parts[totsp - 4] + 'B\n' + parts[totsp - 2] + 'B\n' + parts[totsp - 3] + 'B\n' + parts[totsp - 1]
+        for line in _commandLines(['df', '-h']):
+            line = line.replace('part1', ' ')
+            parts = line.strip().split()
+            if len(parts) < 6: continue
+            totsp = len(parts) - 1
+            if parts[0] == '/dev/root' or parts[totsp] == '/':
+                rootperc = parts[4]
+                rootsumm = str(parts[1]) + 'B\n' + str(parts[3]) + 'B\n' + str(parts[2]) + 'B\n' + str(rootperc)
+                rootperc = rootperc.replace('%', '')
+            if parts[totsp] == '/media/cf':
+                cfperc = int(parts[totsp - 1].replace('%', ''))
+                cfsumm = parts[totsp - 4] + 'B\n' + parts[totsp - 2] + 'B\n' + parts[totsp - 3] + 'B\n' + parts[totsp - 1]
+            if parts[totsp] == '/media/sd' or parts[totsp] == '/media/mmc' or parts[totsp] == '/media/ba' and parts[0] == '/dev/mmcblk1p1':
+                sdperc = int(parts[totsp - 1].replace('%', ''))
+                sdsumm = parts[totsp - 4] + 'B\n' + parts[totsp - 2] + 'B\n' + parts[totsp - 3] + 'B\n' + parts[totsp - 1]
+            if parts[totsp] == '/media/usb' or parts[totsp] == '/media/ba' and parts[0] == '/dev/sdb1':
+                usbperc = int(parts[totsp - 1].replace('%', ''))
+                usbsumm = parts[totsp - 4] + 'B\n' + parts[totsp - 2] + 'B\n' + parts[totsp - 3] + 'B\n' + parts[totsp - 1]
+            if parts[totsp] == '/media/hdd':
+                strview = parts[totsp - 1].replace('%', '')
+                if strview.isdigit():
+                    hddperc = int(parts[totsp - 1].replace('%', ''))
+                    hddsumm = parts[totsp - 4] + 'B\n' + parts[totsp - 2] + 'B\n' + parts[totsp - 3] + 'B\n' + parts[totsp - 1]
 
-            f.close()
-            os.remove('/tmp/tempinfo.tmp')
         self['root'].setText('Root:\n' + rootsumm)
         self['cf'].setText('CF:\n' + cfsumm)
         self['sd'].setText('SD:\n' + sdsumm)
@@ -1947,16 +1944,7 @@ class GlassSysInfoBrowser(Screen):
         return process
 
     def getDmesg(self):
-        dmesg = ''
-        os.system('dmesg > /tmp/tempinfo.tmp')
-        if fileExists('/tmp/tempinfo.tmp'):
-            f = open('/tmp/tempinfo.tmp', 'r')
-            for line in f.readlines():
-                dmesg += line.strip() + '\n'
-
-            f.close()
-            os.remove('/tmp/tempinfo.tmp')
-        return dmesg
+        return ''.join(line.strip() + '\n' for line in _commandLines(['dmesg']))
 
     def getServicesInfo(self):
         if fileExists('/etc/inetd.conf'):
@@ -2354,7 +2342,6 @@ class channelInfoCenter(Screen):
         self.runBitTimer1.stop()
         self._bitrate_buffer = ''
         self._bitrate_rows = []
-        self._bitrate_samples = 0
         if not ENAEBTR:
             self.container = eConsoleAppContainer()
             self.container.dataAvail.append(self.dataAvail)
@@ -2365,11 +2352,7 @@ class channelInfoCenter(Screen):
             serviceinfo = service.info()
             vpid = serviceinfo.getInfo(iServiceInformation.sVideoPID)
             apid = serviceinfo.getInfo(iServiceInformation.sAudioPID)
-            try:
-                with open('/tmp/gsu-bitrate.log', 'w') as handle:
-                    handle.write('engine=%s vpid=%d apid=%d\n' % ('native' if ENAEBTR else 'python-tsdemux', vpid, apid))
-            except OSError:
-                pass
+            pass  # No automatic bitrate diagnostic file.
             if ENAEBTR:
                 ref = self.session.nav.getCurrentlyPlayingServiceReference()
                 if not ref.getPath():
@@ -2426,11 +2409,7 @@ class channelInfoCenter(Screen):
                 worker = GSU_PATH + 'bitrate_worker.py'
                 python = shutil.which('python3') or '/usr/bin/python3'
                 cmd = '%s -u %s %d %d %d %d' % (python, worker, adapter, demux, vpid, apid)
-                try:
-                    with open('/tmp/gsu-bitrate.log', 'a') as handle:
-                        handle.write('engine=python-tsdemux\n' + cmd + '\n')
-                except OSError:
-                    pass
+                pass  # No automatic bitrate diagnostic file.
                 self.isBit = self.container.execute(cmd) == 0
         return
 
@@ -2456,13 +2435,6 @@ class channelInfoCenter(Screen):
 
     def dataAvail(self, str):
         text = str.decode('ascii', 'replace') if isinstance(str, bytes) else str
-        if getattr(self, '_bitrate_samples', 0) < 6:
-            self._bitrate_samples = getattr(self, '_bitrate_samples', 0) + 1
-            try:
-                with open('/tmp/gsu-bitrate.log', 'a') as handle:
-                    handle.write(repr(text[:512]) + '\n')
-            except OSError:
-                pass
         self._bitrate_buffer = getattr(self, '_bitrate_buffer', '') + text
         rows = self._bitrate_buffer.split('\n')
         self._bitrate_buffer = rows.pop()[-1024:]

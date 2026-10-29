@@ -39,18 +39,8 @@ def guard_valid(token,periodic=False):
 
 
 def log_event(event):
-    line='%.3f %s\n' % (time.monotonic(),event)
-    print('[GSU autostart] '+line.rstrip(),flush=True)
-    # Diagnostic output must never prevent CAM operation or follow a tmp symlink.
-    try:
-        fd=os.open('/tmp/gsu-softcam-autostart.log',os.O_WRONLY|os.O_CREAT|os.O_APPEND|os.O_NOFOLLOW|os.O_NONBLOCK,0o600)
-        try:
-            details=os.fstat(fd)
-            if stat.S_ISREG(details.st_mode) and details.st_uid==os.geteuid():
-                if details.st_size>32768:os.ftruncate(fd,0)
-                os.write(fd,line.encode('utf-8'))
-        finally:os.close(fd)
-    except OSError:pass
+    """Production runtime does not write diagnostic logs."""
+    return None
 
 
 def start_if_needed(native,expected,guard=None,periodic=False):

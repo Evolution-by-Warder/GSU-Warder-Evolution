@@ -73,6 +73,9 @@ set -e
 [ -z "$D" ] || exit 0
 p=/usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil
 rm -rf "$p/__pycache__"
+for log in "$p/gsu.log" /tmp/gsu-softcam-autostart.log /tmp/gsu-bitrate.log; do
+    if [ -f "$log" ] && [ ! -L "$log" ]; then rm -f "$log"; fi
+done
 for name in remote_servers nfs_cifs; do
     [ -e "/etc/$name.cfg" ] || cp "$p/defaults/$name-def.cfg" "/etc/$name.cfg"
 done

@@ -97,7 +97,6 @@ class StartupUpdateCheck:
             else:pane.update_info('GSU Warder Evolution\n'+self.screen.readVersion()+'\n\n'+text(self.api,'The plugin is up to date.'))
             return
         if error:
-            print('[GSU update] '+error)
             if self.manual:self.screen.session.open(MessageBox,text(self.api,'Update check failed.')+'\n\n'+error,type=MessageBox.TYPE_ERROR)
         elif release:
             language=self.api['config'].osd.language.value.split('_')[0]
