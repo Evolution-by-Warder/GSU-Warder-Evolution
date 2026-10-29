@@ -1,3 +1,7 @@
+# 13.40-r92 — 29.10.2026
+
+Produkčné vydanie tichej prevádzky z kandidáta r91: bez automatických gsu.log, CAM autostart a bitrate diagnostík; df/dmesg v RAM; upratovanie známych vlastných starých logov pri inštalácii. Nastavenia, potrebné súbory, ručne vyžiadaná diagnostika a schválená grafika zachované. Existujúce aktualizátory dostanú r92 z oboch kompatibilných feedov.
+
 # Zmeny GSU Warder Evolution
 
 ## 13.40-r90 — 27. 10. 2026

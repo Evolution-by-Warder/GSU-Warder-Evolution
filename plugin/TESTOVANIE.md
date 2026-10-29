@@ -1,6 +1,8 @@
 # Aktuálny stav — GSU Warder Evolution
 
-Aktualizované 27. 10. 2026.
+Aktualizované 29. 10. 2026.
+
+**r92:** vlastník výslovne schválil ostrú prevádzku cleanup kandidáta r91. Opravy automatických logov a dočasných súborov, bez zmeny schváleného rozhrania. Sada 369 testov, dvojité deterministické zostavenie a porovnanie verejného IPK; presný výsledok CI, zdroj, veľkosť a SHA256 sú v [aktuálnom produkčnom zázname](../PRODUCTION.json). Oba update feedy zachovávajú kompatibilitu; verzia r92 je vyššia než kandidát r91. Nový úplný fyzický test sa netvrdí.
 
 **r90:** nepriehľadné podklady aj v časti Signál Informácií o kanáli; oba panely zostávajú jemne priehľadné.364 hostiteľských testov prešlo. Používateľ27.10.2026 potvrdil vzhľad oboch okien v r90 ako OK. Vydanie je dostupné v oboch feedoch, CI40469801853 success,364 testov na Python3.14.7 a dva zhodné buildy; IPK3680604 bajtov, SHA256 1eba855088448634b5ebf84daa66be48febe8bc9b9d581823fc2241a4add4101.
 

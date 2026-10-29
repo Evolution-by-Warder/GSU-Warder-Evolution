@@ -2,9 +2,9 @@
 
 Plugin pre Enigma2: informácie o prijímači a kanáli, ECM a OSCam, správa CAM, swap a diagnostika v spoločnom vzhľade Warder Evolution.
 
-**r90 zjednocuje nepriehľadné podklady ukazovateľov v systémových a kanálových informáciách. Opravu pádu Informácií o kanáli z r88 používateľ potvrdil.**
+**r92 prináša tichú prevádzku: bez automatických gsu.log, autostart a bitrate logov; df/dmesg sa spracúva v pamäti. Zachováva schválené rozhranie a funkcie r90.**
 
-**Stabilné vydanie: 13.40-r90. Ostrá prevádzka od 26. októbra 2026.** Rozhranie a prejdené funkcie schválil používateľ na GigaBlue Quad 4K Pro s OpenATV 8. Vydanie je verejné **Latest**, bez označenia prerelease.
+**Stabilné vydanie: 13.40-r92. Produkčné povýšenie cleanup kandidáta schválil vlastník 29. októbra 2026.** Rozhranie a prejdené funkcie schválil používateľ na GigaBlue Quad 4K Pro s OpenATV 8. Vydanie je verejné **Latest**, bez označenia prerelease.
 
 [Stiahnuť aktuálne vydanie](https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/latest) · [Používanie](docs/POUZIVANIE.md) · [Zmeny](CHANGELOG.md) · [Overenie a údržba](plugin/TESTOVANIE.md)
 

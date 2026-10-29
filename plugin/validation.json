@@ -1,9 +1,9 @@
 {
   "python": "3.14.7",
-  "host_checks": 364,
+  "host_checks": 369,
   "host_checks_passed": true,
   "receiver_tested": false,
-  "source_sha256": "9cea3de1266bf77b317b8a619af699e373f2cfe13268b56f30dbaca6e679fe67",
+  "source_sha256": "6c60f03b59ff8e120b968991ddf0f1519727960faf04ad740730acece333fea4",
   "original_named_classes": 62,
   "original_named_functions": 510,
   "compatibility_replaced_internal_closures": [
@@ -139,5 +139,198 @@
     "version": "13.40-r90",
     "receiver_confirmed": true,
     "opaque_backings": 3
-  }
+  },
+  "version": "13.40-r92",
+  "production_approved_on": "2026-10-29",
+  "production_authorization": "vsetky verzie uved do ostrej prevadzky a zapis vsetko kam treba",
+  "runtime_source": [
+    {
+      "path": "plugin/converters/GSUAgcConv.py",
+      "sha256": "20cb8c871aa3e30a9d7d601e662ee7f7e74cb47afb2cd2fd04c2fdc01b4a3213"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/GSU_skins.py",
+      "sha256": "77bde76cd4d851096db7431b87a357ddc12a3c55cbba259580d575206b20fb24"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/GSU_skins_FHD.py",
+      "sha256": "ff0837fdbeb82504cad53e7a6d0e8a6b552687636df3385faae7a9e9a582732e"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/GSU_skins_UHD.py",
+      "sha256": "a3e32ae395e26e71acf2b65dcced416945011a6b4797e284cb1f3d301078ac57"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/bitrate_worker.py",
+      "sha256": "b44d016d9900242a98e1afb753abe36225a9cfdcfa50bfc21be677fc6536fcdd"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/cam_feed.py",
+      "sha256": "9d51dcf0a58cbc26255122e8c0857231e6983c9b0c13c3144671ea3c9076bff7"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/cam_feed_ui.py",
+      "sha256": "989969798608205b47486f014c4c55bc2bed2972f5c36bf52cc663dbd455992b"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/cam_menu.py",
+      "sha256": "c466c008e25674717824847c48fd2bc3ba7b517d6f4a9b0a1b229954187cb8a0"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/cam_package_actions.py",
+      "sha256": "bde67638c86652bfc5a73580f464cf0e816f6f856b3e2e836464f13974fee7a8"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/cccam_transport.py",
+      "sha256": "525043721e6e2c552ba5964646b34b710ded95e6744b893c4f6020630d360c8d"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/editInput.py",
+      "sha256": "872d56abaa918c43062d96344355438984f6ccb6edb27d2d31e33c1898ee7fc4"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/editInputBox.py",
+      "sha256": "fe9b9e006b32123496a5923913ac47c7dbfd30b39dd7974765f3ec7bddd048be"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/event_info.py",
+      "sha256": "b9d1367ea1c9e116100d01ab7a428a5a207b534216f09df875cb2862c3d64022"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/i18n.py",
+      "sha256": "85a45d5f6cf6d05674eb88f60996f12b2c90484eb1c3cc7aa1fe9386e31631ba"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/native_autostart.py",
+      "sha256": "cbde228afdc7e0f0ec7d9234fbb5f50255ffae4e639332f2082b42de8657d879"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/native_softcam.py",
+      "sha256": "3a4452151a4e7436c426b8245b07e7c77bce5b398e5a0eb422e331f403c7cd7a"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/native_start_config.py",
+      "sha256": "831f6f37e8f6c4e61204cc547be278fb6f450dbca37ab33235da025d05c655e8"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/native_start_config_ui.py",
+      "sha256": "325e0fa8a3298fdc065ca4738d088c6ea5dfddb72d683ac0275fe73a061c1fd8"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/native_status.py",
+      "sha256": "6740323cea05d7b4d58d35d44ecf917436043600b2652f7e7b1f73183d3b3dac"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/oscam_client_recovery.py",
+      "sha256": "1ff83c107aae4e8284b95ade54b9803300dfc1faf75735e9d7d29cb2d92a0501"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/oscam_clients.py",
+      "sha256": "46a6c5c1dadedfe51584fec8c1dfd1b0b204092d672ca11420bfb0e0f25be679"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/oscam_clients_ui.py",
+      "sha256": "20b1c9f3540fe7d1b0d3dbb5362bb1283f6ebb588443bdecd722bdb329f5b231"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/oscam_readers_parser.py",
+      "sha256": "dfac5fba47e8181bd3d4f2cb55f026c06d107e73307b9401c0deea229c8d3a85"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/oscam_readers_ui.py",
+      "sha256": "88f2da2c4eba5a05db9b333b3d8de003ca4f6e6ad82d6e2c6eed41b6feb40865"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/osd_layout.py",
+      "sha256": "5cdcbe8bab6cb3ada1784a0f6e88ee3bbe56dadbf9d4d52cc9d8cfe840e334b1"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/plugin.py",
+      "sha256": "6c60f03b59ff8e120b968991ddf0f1519727960faf04ad740730acece333fea4"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/plugin_update.py",
+      "sha256": "2daac161e69e25e4e1ba94404ed5f179a36f07ea6d4d28e4b47c4e2a8bca69d6"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/plugin_update_ui.py",
+      "sha256": "a04c25adb3f9fbaf926705daef69b138a00e843fd4cc3102cc991d2c7d185de9"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/softcam_feed_setup.py",
+      "sha256": "b5cc171f59a90ea35a199edb2f7792ee09b8d6361f61fe76d23918382aacb6d7"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/srv_visibility.py",
+      "sha256": "efde540867d18547014cf8b75ea7a926377cea61011704844e6ee63a565c8566"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/swap_ops.py",
+      "sha256": "f72dbdfbf62ce1ae68273c83274a897e7336fc4ff5ea96ae332620919705f770"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/swap_ui.py",
+      "sha256": "c37b48a9668a3664477dd488f09b4557a95a162ec2283a8cc11a668ee8fe5e04"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/warder_cam.py",
+      "sha256": "eda09cdddf0db7706cfccfc5402f48f2999ee820645266d00ea941bb9ee3b131"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/warder_cam_panes.py",
+      "sha256": "fb1bc9dfc1df65692667cb97f87bbc45843f12d31135752396829890cd520a0e"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/warder_channel.py",
+      "sha256": "698eb5dfae7cf72c18562afd1a5b2c061549bfc6f5822ad109b5f9d69136f1e0"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/warder_ecm.py",
+      "sha256": "5b8235767135f06927a2f4377b8a3a4f93cea77c7638b8bfb3dc33fa169c2d66"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/warder_editable.py",
+      "sha256": "838ba47ea9f6dcb6acb3b6e19a0c9e661db5e2e18e94afbcf4e4c334c3347a8b"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/warder_glass.py",
+      "sha256": "d7f9970fae0045d73f9a903a0b05d71bc10b0da597c66dd2a288ccaf47fb3431"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/warder_main.py",
+      "sha256": "0fbf58bc018580a81d65d1aa5787922a3b79562821176d68343bfc74166cc01c"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/warder_oscam.py",
+      "sha256": "ba32e2e4820de48f9d226d536b51d050a37bcd3834cfa891857666d1b58082de"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/warder_right.py",
+      "sha256": "7186b610788f36b8dfd2c86c987b97ce75455bde7d2193280ea543c2fc421eef"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/warder_settings.py",
+      "sha256": "202ae5b3dd094c28bd1028cd24e51abbad4382ac98d43aea7e4631e2b600f335"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/warder_system.py",
+      "sha256": "663bfce4d5ed5eae5f57b93e4a3fd46f65ecf51f0b85a01ab2d3972b75d3faf1"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/warder_system_help.py",
+      "sha256": "f297035b90c1e3c3877af641482ef2630bb35720a5684eb37d620ce1a0c3d9e3"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/warder_tools.py",
+      "sha256": "ef23dab03508f12e73cc5c8196f04ebaa44fd1bf7bf0d357881acc49ac341563"
+    },
+    {
+      "path": "plugin/src/GlassSysUtil/warder_tools_ui.py",
+      "sha256": "337e4b0ca69041d64a3104060c9c454a4cd26428c52abb7da6f9a2d1ba7b072e"
+    }
+  ]
 }

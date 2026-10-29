@@ -1,4 +1,4 @@
-GSU 13.40-r91
+GSU 13.40-r92
 
 Tichá prevádzka a upratovanie
 
@@ -8,4 +8,4 @@ Tichá prevádzka a upratovanie
 - Inštalácia odstráni iba známe vlastné staré logy, bez nasledovania odkazov.
 - Ručne vyžiadaná diagnostika, nastavenia a funkcie zostávajú dostupné.
 
-Izolovaný kandidát na overenie v prijímači; produkčný feed sa týmto nemení.
+Produkčné vydanie na výslovný pokyn vlastníka 29.10.2026. Riadna aktualizácia z r90 aj kandidáta r91; oba existujúce feedy zostávajú kompatibilné. Nové úplné fyzické overenie na všetkom hardvéri sa netvrdí.

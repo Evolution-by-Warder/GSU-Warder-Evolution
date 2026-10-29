@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "date": "2026-10-29",
+  "version": "13.40-r92",
+  "authorization": "vsetky verzie uved do ostrej prevadzky a zapis vsetko kam treba",
+  "baseline_candidate": "13.40-r91",
+  "baseline_source_commit": "8d8c17b5b5f8672083d966bd49625c8b3d1dcec2",
+  "scope": "Stable production promotion of runtime cleanup with both original-python314 update feeds. Preserve approved graphics, receiver configuration and manual diagnostics.",
+  "version_policy": "r92 sorts above production r90 and candidate r91.",
+  "receiver_tested": false
+}

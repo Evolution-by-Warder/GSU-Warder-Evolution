@@ -1,5 +1,7 @@
 # GSU Warder Evolution — plugin
 
+Aktuálne produkčné povýšenie: **13.40-r92**, schválené 29.10.2026. Tichá prevádzka a cleanup z kandidáta r91, bez zmeny používateľského rozhrania. [Presný produkčný záznam](../PRODUCTION.json).
+
 Jediné aktívne jadro je `src/GlassSysUtil/`. Balík sa inštaluje ako `enigma2-plugin-glasssysutil` do `/usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/`; identita a konfigurácia zostávajú kompatibilné s existujúcimi inštaláciami.
 
 Z koreňa repozitára:
