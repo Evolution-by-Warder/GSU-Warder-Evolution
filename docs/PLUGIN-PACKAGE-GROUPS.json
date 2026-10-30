@@ -22,5 +22,11 @@
       "display_name": "fullhdglass-warder-evolution"
     }
   ],
-  "old_gsu_category": ""
+  "old_gsu_category": "",
+  "status": "PRODUCTION_LIVE",
+  "gsu_activation_commit": "af5fa2c22a735db86b60a99b2687da2f1e6dcabb",
+  "gsu_successful_workflow": 41018889228,
+  "gsu_unit_tests": 375,
+  "gsu_real_opkg_and_prerm_hook_verified": true,
+  "physical_receiver_test": false
 }

@@ -19,7 +19,7 @@ Plugin pre Enigma2: informácie o prijímači a kanáli, ECM a OSCam, správa CA
 
 ## Inštalácia a aktualizácia
 
-Z vydania stiahnite súbor `enigma2-plugin-extensions-gsu_13.40-r94_all.ipk` a nainštalujte ho cez správcu lokálnych balíkov prijímača. Existujúce inštalácie použijú aktualizátor priamo v GSU. Inštalačná identita a adresár `Plugins/Extensions/GlassSysUtil` sa nemenia, aby zostali zachované nastavenia a existujúce vstupy do pluginu.
+Pri novej inštalácii stiahnite `enigma2-plugin-extensions-gsu_13.40-r94_all.ipk` a použite správcu lokálnych balíkov. Pri existujúcej GSU použite vstavaný aktualizátor a prechod r93 → reštart GUI → r94. Existujúce inštalácie použijú aktualizátor priamo v GSU. Inštalačná identita a adresár `Plugins/Extensions/GlassSysUtil` sa nemenia, aby zostali zachované nastavenia a existujúce vstupy do pluginu.
 
 Aktualizátor overuje veľkosť, SHA256 a obsah balíka pred inštaláciou. Automatická aj ručná ponuka používa preložené potvrdenie **Nie / Áno**. Bez novej verzie alebo pri chybe zostáva **Naspäť**.
 

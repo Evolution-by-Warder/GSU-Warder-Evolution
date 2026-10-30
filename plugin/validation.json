@@ -1,6 +1,6 @@
 {
   "python": "3.14.7",
-  "host_checks": 369,
+  "host_checks": 375,
   "host_checks_passed": true,
   "receiver_tested": false,
   "source_sha256": "6c60f03b59ff8e120b968991ddf0f1519727960faf04ad740730acece333fea4",
@@ -332,5 +332,13 @@
       "path": "plugin/src/GlassSysUtil/warder_tools_ui.py",
       "sha256": "337e4b0ca69041d64a3104060c9c454a4cd26428c52abb7da6f9a2d1ba7b072e"
     }
-  ]
+  ],
+  "package_identity_validation": {
+    "version": "13.40-r94",
+    "date": "2026-10-30",
+    "workflow_run": 41018889228,
+    "unit_tests": 375,
+    "real_offline_opkg_and_prerm_checks": true,
+    "physical_receiver_test": false
+  }
 }

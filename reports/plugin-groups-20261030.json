@@ -1,5 +1,5 @@
 {
-  "status": "PUBLIC_RELEASES_VERIFIED",
+  "status": "PRODUCTION_LIVE",
   "package_id": "enigma2-plugin-extensions-gsu-warder-evolution",
   "plugin_browser_category": "extensions",
   "plugin_browser_name": "gsu-warder-evolution",
@@ -26,5 +26,11 @@
   "actual_prerm_hook_chroot_verified": true,
   "opkg_compatibility_test_source": "shr-project/opkg@eed3359acfff5cb90cd8e91949df32f089db50be",
   "physical_receiver_test": false,
-  "workflow_run": 41018889228
+  "workflow_run": 41018889228,
+  "activation_commit": "af5fa2c22a735db86b60a99b2687da2f1e6dcabb",
+  "verified_live_feeds": {
+    "plugin/update/candidate.json": "13.40-r93",
+    "restoration/update/candidate.json": "13.40-r93",
+    "plugin/update/stable.json": "13.40-r94"
+  }
 }
