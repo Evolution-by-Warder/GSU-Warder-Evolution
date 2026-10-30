@@ -52,7 +52,7 @@
   "runtime_named_classes": 51,
   "oscam_clients_sha256": "46a6c5c1dadedfe51584fec8c1dfd1b0b204092d672ca11420bfb0e0f25be679",
   "oscam_clients_ui_sha256": "20b1c9f3540fe7d1b0d3dbb5362bb1283f6ebb588443bdecd722bdb329f5b231",
-  "plugin_update_sha256": "73679ae86fb4a93e1b06998a89689b5d530bb7b607c9026af0a1041cb87ea2c4",
+  "plugin_update_sha256": "55af9b0417141538aaa8a3c6724147e58ffe943083bf53f757c160f14db24e44",
   "plugin_update_ui_sha256": "a04c25adb3f9fbaf926705daef69b138a00e843fd4cc3102cc991d2c7d185de9",
   "latest_candidate": {
     "version": "13.40-r90",

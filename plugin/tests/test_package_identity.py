@@ -52,7 +52,10 @@ class PackageIdentityTests(unittest.TestCase):
             flag=Path(folder)/'state/rename'
             def runner(command,**kwargs):
                 calls.append(command[:2])
-                if command[1]=='status':return types.SimpleNamespace(returncode=0,stdout='Package: '+update.LEGACY_PACKAGE_ID+'\nVersion: '+legacy_version+'\nStatus: install ok installed\n')
+                if command[1]=='status':
+                    identity=command[2]
+                    version=legacy_version if identity==update.LEGACY_PACKAGE_ID else '13.40-r94'
+                    return types.SimpleNamespace(returncode=0,stdout='Package: '+identity+'\nVersion: '+version+'\nStatus: install ok installed\n')
                 self.assertTrue(flag.is_file())
                 self.assertEqual(flag.read_text(),'13.40-r94\n')
                 return types.SimpleNamespace(returncode=returncode,stdout='opkg result')
@@ -64,7 +67,7 @@ class PackageIdentityTests(unittest.TestCase):
         return calls
 
     def test_rename_preserves_cam_settings_during_opkg_and_removes_temporary_marker(self):
-        self.assertEqual(self.install('13.40-r93'),[['opkg','status'],['opkg','install']])
+        self.assertEqual(self.install('13.40-r93'),[['opkg','status'],['opkg','install'],['opkg','status'],['opkg','status'],['opkg','remove']])
 
     def test_marker_is_removed_when_opkg_reports_failure(self):
         self.install('13.40-r93',1)

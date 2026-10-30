@@ -44,6 +44,10 @@ with tempfile.TemporaryDirectory(prefix='gsu-opkg-migration-') as folder:
     picon=root/'usr/share/enigma2/picon/user.png';picon.parent.mkdir(parents=True,exist_ok=True);picon.write_bytes(b'user-owned')
     run('install',str(current))
     installed=run('list-installed')
+    if update.LEGACY_PACKAGE_ID+' -' in installed:
+        # Same guarded compatibility cleanup used by the actual updater.
+        run('remove',update.LEGACY_PACKAGE_ID)
+        installed=run('list-installed')
     assert update.PACKAGE_ID+' - 13.40-r94' in installed,installed
     assert update.LEGACY_PACKAGE_ID+' -' not in installed,installed
     assert settings.read_bytes()==b'config.plugins.glasssysutil.preserve=yes\n' and picon.read_bytes()==b'user-owned'

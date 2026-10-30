@@ -207,6 +207,21 @@ def install_release(release, opener=_open, runner=subprocess.run):
         try:
             result = runner(["opkg", "install", str(path)], stdout=subprocess.PIPE,
                             stderr=subprocess.STDOUT, text=True, timeout=300)
+            if result.returncode == 0 and migrating:
+                # Some older opkg builds transfer file ownership but retain
+                # the old package record. Remove that record through opkg only
+                # after the replacement is installed, with CAM restoration guarded.
+                status = runner(["opkg", "status", PACKAGE_ID], stdout=subprocess.PIPE,
+                                stderr=subprocess.STDOUT, text=True, timeout=30)
+                fields = dict(line.split(": ", 1) for line in status.stdout.splitlines() if ": " in line)
+                if fields.get("Version") != release.version or fields.get("Status", "").split()[-1:] != ["installed"]:
+                    raise UpdateError("Replacement package is not installed; legacy package was retained")
+                status = runner(["opkg", "status", LEGACY_PACKAGE_ID], stdout=subprocess.PIPE,
+                                stderr=subprocess.STDOUT, text=True, timeout=30)
+                fields = dict(line.split(": ", 1) for line in status.stdout.splitlines() if ": " in line)
+                if fields.get("Package") == LEGACY_PACKAGE_ID and fields.get("Status", "").split()[-1:] == ["installed"]:
+                    result = runner(["opkg", "remove", LEGACY_PACKAGE_ID], stdout=subprocess.PIPE,
+                                    stderr=subprocess.STDOUT, text=True, timeout=300)
         finally:
             if migrating:
                 MIGRATION_FLAG.unlink(missing_ok=True)
