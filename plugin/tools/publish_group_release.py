@@ -24,14 +24,13 @@ def public(item):
     assert len(data)==item['bytes'] and hashlib.sha256(data).hexdigest()==item['sha256']
 
 
-def release(path,version,notes,latest,aliases=()):
+def release(path,version,notes,latest):
     document=manifest(path,version,notes)
     offered=update.parse_release(json.dumps(document),'0.0-r0');update.validate_ipk(path,offered)
     tag='v'+version
     releases=json.loads(run('gh','api','repos/'+update.REPOSITORY+'/releases','--paginate','--slurp'))
     existing=next((r for page in releases for r in page if r['tag_name']==tag),None)
     paths=[path,path.with_suffix('.ipk.sha256')]
-    for alias in aliases:paths.extend([alias,alias.with_suffix('.ipk.sha256')])
     if existing is None:
         run('gh','release','create',tag,*(str(p) for p in paths),'--repo',update.REPOSITORY,
             '--target',os.environ['GITHUB_SHA'],'--latest' if latest else '--latest=false',
@@ -65,7 +64,7 @@ def publish():
         bridge_doc=old_feed
         assert bridge_doc['release']['version']=='13.40-r93'
         public(bridge_doc['release'])
-    document=release(canonical,version,notes,True,[canonical.with_name(update.PACKAGE_ID+'_'+version+'_all.ipk')])
+    document=release(canonical,version,notes,True)
     compatibility=copy.deepcopy(bridge_doc)
     compatibility['release']['url']=compatibility['release']['url'].replace(update.REPOSITORY,'Evolution-by-Warder/Glass-System-Utility-Warder-Evolution',1)
     files={BASE/'update/stable.json':document,BASE/'update/candidate.json':bridge_doc,ROOT/'restoration/update/candidate.json':compatibility}
