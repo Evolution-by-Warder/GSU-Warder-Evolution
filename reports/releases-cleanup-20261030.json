@@ -1,0 +1,50 @@
+{
+  "status": "COMPLETED",
+  "repository": "Evolution-by-Warder/GSU-Warder-Evolution",
+  "authorization": "ok, skontroluj to a premaz",
+  "deleted_releases": [
+    {
+      "id": 428165344,
+      "tag": "v13.40-r92"
+    },
+    {
+      "id": 428046593,
+      "tag": "runtime-cleanup-13.40-r91"
+    },
+    {
+      "id": 425161855,
+      "tag": "v13.40-r90"
+    },
+    {
+      "id": 425159441,
+      "tag": "v13.40-r89"
+    },
+    {
+      "id": 425118560,
+      "tag": "v13.40-r88"
+    },
+    {
+      "id": 424266966,
+      "tag": "v13.40-r87"
+    }
+  ],
+  "deleted_release_count": 6,
+  "already_absent_release_ids": [],
+  "deleted_auxiliary_ipk_assets": [],
+  "kept_releases": [
+    {
+      "id": 428744854,
+      "tag": "v13.40-r94"
+    },
+    {
+      "id": 428744827,
+      "tag": "v13.40-r93"
+    }
+  ],
+  "remaining_release_count": 2,
+  "all_live_feeds_unchanged": true,
+  "all_protected_public_downloads_verified": true,
+  "git_tags_unchanged": true,
+  "source_and_ipks_in_git_unchanged": true,
+  "workflow_run": 41021314923
+}
