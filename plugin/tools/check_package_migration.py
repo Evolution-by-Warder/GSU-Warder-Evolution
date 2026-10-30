@@ -14,6 +14,7 @@ import tempfile
 BASE=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(BASE/'src/GlassSysUtil'))
 import plugin_update as update
+import build_ipk
 
 opkg=Path(sys.argv[1]).resolve()
 bridge=BASE/'dist/bridge/enigma2-plugin-glasssysutil_13.40-r93_all.ipk'
@@ -25,12 +26,23 @@ with tempfile.TemporaryDirectory(prefix='gsu-opkg-migration-') as folder:
     (root/'usr/lib/opkg').mkdir(parents=True)
     def run(*args):
         p=subprocess.run([str(opkg),'-f',str(config),'-o',str(root),*args],stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
+        print('OPKG',args, p.stdout,flush=True)
         if p.returncode:raise RuntimeError(p.stdout)
         return p.stdout
-    run('--force-depends','install',str(bridge))
+    with tarfile.open(fileobj=io.BytesIO(update._control_archive(bridge)),mode='r:*') as control:
+        text=control.extractfile(next(m for m in control if m.name.lstrip('./')=='control')).read().decode()
+    deps=next(line.split(': ',1)[1] for line in text.splitlines() if line.startswith('Depends:'))
+    metadata=('Package: gsu-test-prerequisites\nVersion: 1.0\nArchitecture: all\nProvides: '+deps+'\nDescription: isolated receiver dependency fixture\n').encode()
+    data=bytearray(b'!<arch>\n')
+    for name,raw in [('debian-binary',b'2.0\n'),('control.tar.gz',build_ipk.archive([('control',metadata,0o644)])),('data.tar.gz',build_ipk.archive([]))]:
+        data.extend(('%-16s%-12s%-6s%-6s%-8s%-10s`\n' % (name+'/',0,0,0,'100644',len(raw))).encode());data.extend(raw)
+        if len(raw)%2:data.extend(b'\n')
+    fixture=folder/'prerequisites.ipk';fixture.write_bytes(data)
+    run('install',str(fixture))
+    run('install',str(bridge))
     settings=root/'etc/enigma2/settings';settings.parent.mkdir(parents=True,exist_ok=True);settings.write_bytes(b'config.plugins.glasssysutil.preserve=yes\n')
     picon=root/'usr/share/enigma2/picon/user.png';picon.parent.mkdir(parents=True,exist_ok=True);picon.write_bytes(b'user-owned')
-    run('--force-depends','install',str(current))
+    run('install',str(current))
     installed=run('list-installed')
     assert update.PACKAGE_ID+' - 13.40-r94' in installed,installed
     assert update.LEGACY_PACKAGE_ID+' -' not in installed,installed
