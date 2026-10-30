@@ -45,6 +45,7 @@ def main():
     def commit(parent,base_tree,entries,message):
         made=request('POST','/git/trees',{'base_tree':base_tree,'tree':entries})
         return request('POST','/git/commits',{'parents':[parent],'tree':made['sha'],'message':message})['sha']
+    assert head('maintenance/short-only-packages-20261030')==os.environ['GITHUB_SHA'],'Superseded maintenance source'
     # All branch, file, active-feed and byte checks precede every deletion.
     state={}
     for branch,expected in cfg['targets'].items():

@@ -11,7 +11,9 @@
     "plugin/tools/build_ipk.py": "2cb83a1e332db1835f68c57b5e55662d46ee15b8",
     "plugin/tools/publish_group_release.py": "450c3b21b3c6dfd1cd1de847de08c673c58900dd",
     "plugin/tools/publish_update.py": "71b3aff0c2b0b77732ba6a294283dad76bbbbe8e",
-    "docs/INSTALLATION-PACKAGE-NAMES.md": null
+    "docs/INSTALLATION-PACKAGE-NAMES.md": null,
+    "plugin/tools/cleanup_releases.py": "4c2950d23c2347820796b50ccd579da6a3ce2be1",
+    "plugin/tests/test_release_cleanup.py": "c24058a2011b898a1055149a65e2c4c4addbf208"
   },
   "protected_files": {
     "plugin/update/stable.json": "608f00845c1fb11bcfd02d435ae7d07e3457415d",

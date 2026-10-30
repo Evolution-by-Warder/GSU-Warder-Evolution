@@ -7,10 +7,10 @@ permissions:
   contents: write
 concurrency:
   group: short-only-publication-20261030
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   verify-and-clean:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       PYTHONDONTWRITEBYTECODE: '1'
     steps:
