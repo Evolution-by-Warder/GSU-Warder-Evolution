@@ -34,6 +34,7 @@ jobs:
           git clone https://github.com/shr-project/opkg.git /tmp/gsu-opkg
           git -C /tmp/gsu-opkg checkout eed3359acfff5cb90cd8e91949df32f089db50be
           cd /tmp/gsu-opkg
+          sed -i '/AC_CONFIG_MACRO_DIR(\[m4\])/d' configure.ac
           autoreconf -fi
           ./configure --disable-curl --disable-gpg --disable-openssl --disable-ssl-curl --disable-sha256 CFLAGS='-include sys/sysmacros.h'
           make -j2

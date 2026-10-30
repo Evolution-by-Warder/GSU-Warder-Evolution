@@ -4,7 +4,7 @@ Plugin pre Enigma2: informácie o prijímači a kanáli, ECM a OSCam, správa CA
 
 **r92 prináša tichú prevádzku: bez automatických gsu.log, autostart a bitrate logov; df/dmesg sa spracúva v pamäti. Zachováva schválené rozhranie a funkcie r90.**
 
-**Stabilné vydanie: 13.40-r92. Produkčné povýšenie cleanup kandidáta schválil vlastník 29. októbra 2026.** Rozhranie a prejdené funkcie schválil používateľ na GigaBlue Quad 4K Pro s OpenATV 8. Vydanie je verejné **Latest**, bez označenia prerelease.
+**Stabilné vydanie: 13.40-r94. Produkčné povýšenie cleanup kandidáta schválil vlastník 29. októbra 2026.** Rozhranie a prejdené funkcie schválil používateľ na GigaBlue Quad 4K Pro s OpenATV 8. Vydanie je verejné **Latest**, bez označenia prerelease.
 
 [Stiahnuť aktuálne vydanie](https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/latest) · [Používanie](docs/POUZIVANIE.md) · [Zmeny](CHANGELOG.md) · [Overenie a údržba](plugin/TESTOVANIE.md)
 
@@ -19,7 +19,7 @@ Plugin pre Enigma2: informácie o prijímači a kanáli, ECM a OSCam, správa CA
 
 ## Inštalácia a aktualizácia
 
-Z vydania stiahnite súbor `enigma2-plugin-glasssysutil_13.40-r90_all.ipk` a nainštalujte ho cez správcu lokálnych balíkov prijímača. Existujúce inštalácie použijú aktualizátor priamo v GSU. Inštalačná identita a adresár `Plugins/Extensions/GlassSysUtil` sa nemenia, aby zostali zachované nastavenia a existujúce vstupy do pluginu.
+Z vydania stiahnite súbor `enigma2-plugin-extensions-gsu_13.40-r94_all.ipk` a nainštalujte ho cez správcu lokálnych balíkov prijímača. Existujúce inštalácie použijú aktualizátor priamo v GSU. Inštalačná identita a adresár `Plugins/Extensions/GlassSysUtil` sa nemenia, aby zostali zachované nastavenia a existujúce vstupy do pluginu.
 
 Aktualizátor overuje veľkosť, SHA256 a obsah balíka pred inštaláciou. Automatická aj ručná ponuka používa preložené potvrdenie **Nie / Áno**. Bez novej verzie alebo pri chybe zostáva **Naspäť**.
 
@@ -43,3 +43,7 @@ CI spúšťa testy, porovná dva buildy a overí skutočné bajty vydaného IPK 
 ## Autorstvo
 
 Projekt vychádza z Glass System Utility 13.20. Pôvodné autorstvo a potrebné pôvodné zdroje zostávajú zachované; Warder Evolution označuje pokračovanie, údržbu a úpravy. Výrobné grafické podklady sú v `plugin/artwork/` a do prijímača sa neinštalujú.
+
+## Zaradenie v správcovi pluginov — 30. október 2026
+
+**Balíčky s rozšíreniami → gsu-warder-evolution**. Inštalačný súbor: `enigma2-plugin-extensions-gsu_13.40-r94_all.ipk`. Staršie verzie cez vstavaný aktualizátor najskôr nainštalujú kompatibilný r93; po reštarte GUI nasleduje r94. [Prechod, zachovanie nastavení a overenie](docs/PACKAGE-GROUP-MIGRATION.md). [Kontrola všetkých troch skupín](docs/PLUGIN-PACKAGE-GROUPS.json).

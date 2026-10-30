@@ -1,0 +1,26 @@
+{
+  "source": "https://github.com/openatv/enigma2/blob/master/lib/python/Screens/PluginBrowser.py",
+  "source_sha256": "2d9a0813e7eba8cfc6d63b922fea1f9f87854d2a026f3da6f5508fffe0b140f6",
+  "method": "Executed actual getPackageInfo function from retrieved upstream source",
+  "packages": [
+    {
+      "product": "GSU",
+      "package_id": "enigma2-plugin-extensions-gsu-warder-evolution",
+      "category": "extensions",
+      "display_name": "gsu-warder-evolution"
+    },
+    {
+      "product": "PiconHub",
+      "package_id": "enigma2-plugin-extensions-piconhub-warder-evolution",
+      "category": "extensions",
+      "display_name": "piconhub-warder-evolution"
+    },
+    {
+      "product": "FullHDGlass",
+      "package_id": "enigma2-plugin-skins-fullhdglass-warder-evolution",
+      "category": "skins",
+      "display_name": "fullhdglass-warder-evolution"
+    }
+  ],
+  "old_gsu_category": ""
+}

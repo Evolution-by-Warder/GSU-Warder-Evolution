@@ -39,4 +39,10 @@ jobs:
         if: github.ref == 'refs/heads/original-python314'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python plugin/tools/publish_group_release.py
+        run: |
+          python plugin/tools/publish_group_release.py
+          git add plugin/update/candidate.json plugin/update/stable.json restoration/update/candidate.json PRODUCTION.json reports/plugin-groups-20261030.json
+          if ! git diff --cached --quiet; then
+            git -c user.name='Warder release automation' -c user.email='warder-release@users.noreply.github.com' commit -m 'Record verified GSU release and compatible update feeds'
+            git push origin HEAD:original-python314
+          fi
