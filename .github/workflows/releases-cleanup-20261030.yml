@@ -1,0 +1,44 @@
+name: Remove owner-approved obsolete releases
+on:
+  push:
+    branches: [cleanup/releases-20261030]
+    paths: ['.github/workflows/releases-cleanup-20261030.yml', '.github/releases-cleanup-20261030.json', 'tools/cleanup-releases-20261030.py']
+permissions:
+  contents: write
+concurrency:
+  group: releases-cleanup-20261030
+  cancel-in-progress: false
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github
+            tools
+            reports
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify live files, delete exact obsolete release IDs and read back survivors
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python tools/cleanup-releases-20261030.py
+      - name: Commit completed cleanup evidence
+        run: |
+          git config user.name 'Warder release cleanup'
+          git config user.email 'warder-release@users.noreply.github.com'
+          git add --sparse reports/releases-cleanup-20261030.json
+          git diff --cached --check
+          git commit -m 'Record completed obsolete release cleanup and verified live update downloads'
+          git push origin HEAD:cleanup/releases-20261030
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: releases-cleanup-verification-20261030
+          path: reports/releases-cleanup-20261030.json
+          if-no-files-found: warn

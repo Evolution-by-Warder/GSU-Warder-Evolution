@@ -1,0 +1,259 @@
+{
+  "schema": 1,
+  "repository": "Evolution-by-Warder/GSU-Warder-Evolution",
+  "authorization": "ok, skontroluj to a premaz",
+  "date": "2026-10-30",
+  "keep": [
+    {
+      "id": 428744854,
+      "tag_name": "v13.40-r94",
+      "name": "GSU Warder Evolution 13.40-r94",
+      "draft": false,
+      "prerelease": false,
+      "assets": [
+        {
+          "id": 691284387,
+          "name": "enigma2-plugin-extensions-gsu-warder-evolution_13.40-r94_all.ipk",
+          "size": 3681404,
+          "digest": "sha256:040266f3f6c8dd425e277fc5556a452cb3057194c093abe26b9aaa0d8e264a0b",
+          "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r94/enigma2-plugin-extensions-gsu-warder-evolution_13.40-r94_all.ipk"
+        },
+        {
+          "id": 691284383,
+          "name": "enigma2-plugin-extensions-gsu-warder-evolution_13.40-r94_all.ipk.sha256",
+          "size": 131,
+          "digest": "sha256:8fa5f18aabb7778d8599dc212e2d68e733a15c8ecb7a9f0636424b4b7b1e0f86",
+          "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r94/enigma2-plugin-extensions-gsu-warder-evolution_13.40-r94_all.ipk.sha256"
+        },
+        {
+          "id": 691284385,
+          "name": "enigma2-plugin-extensions-gsu_13.40-r94_all.ipk",
+          "size": 3681404,
+          "digest": "sha256:040266f3f6c8dd425e277fc5556a452cb3057194c093abe26b9aaa0d8e264a0b",
+          "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r94/enigma2-plugin-extensions-gsu_13.40-r94_all.ipk"
+        },
+        {
+          "id": 691284384,
+          "name": "enigma2-plugin-extensions-gsu_13.40-r94_all.ipk.sha256",
+          "size": 114,
+          "digest": "sha256:d64e00313e2df603e4abdc2c4cdb8204ed81ee5a2d61c0046443a7ed138a88a8",
+          "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r94/enigma2-plugin-extensions-gsu_13.40-r94_all.ipk.sha256"
+        }
+      ]
+    },
+    {
+      "id": 428744827,
+      "tag_name": "v13.40-r93",
+      "name": "GSU Warder Evolution 13.40-r93",
+      "draft": false,
+      "prerelease": false,
+      "assets": [
+        {
+          "id": 691284190,
+          "name": "enigma2-plugin-glasssysutil_13.40-r93_all.ipk",
+          "size": 3681378,
+          "digest": "sha256:5f4d969f0253dfcf530e5a26037f7200033d262e36810d2c583635ded0025ee1",
+          "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r93/enigma2-plugin-glasssysutil_13.40-r93_all.ipk"
+        },
+        {
+          "id": 691284201,
+          "name": "enigma2-plugin-glasssysutil_13.40-r93_all.ipk.sha256",
+          "size": 112,
+          "digest": "sha256:496247b74eabc9ed18ea054cfd1c9f225115ed462af440a6714245adb9c0e117",
+          "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r93/enigma2-plugin-glasssysutil_13.40-r93_all.ipk.sha256"
+        }
+      ]
+    }
+  ],
+  "delete": [
+    {
+      "id": 428165344,
+      "tag_name": "v13.40-r92",
+      "name": "GSU Warder Evolution 13.40-r92",
+      "draft": false,
+      "prerelease": false,
+      "assets": [
+        {
+          "id": 689284189,
+          "name": "enigma2-plugin-glasssysutil_13.40-r92_all.ipk",
+          "size": 3680636,
+          "digest": "sha256:9281d2cd3ffb15d7326a4e476ccc92ab2c3d6d1009e14d6d5085b7b626cca720",
+          "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r92/enigma2-plugin-glasssysutil_13.40-r92_all.ipk"
+        },
+        {
+          "id": 689284190,
+          "name": "enigma2-plugin-glasssysutil_13.40-r92_all.ipk.sha256",
+          "size": 112,
+          "digest": "sha256:c1ffd651328a594a0d97d5ccfd089a5827e74ab87b6ad03fbe715e745d32905a",
+          "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r92/enigma2-plugin-glasssysutil_13.40-r92_all.ipk.sha256"
+        }
+      ]
+    },
+    {
+      "id": 428046593,
+      "tag_name": "runtime-cleanup-13.40-r91",
+      "name": "GSU 13.40-r91: receiver runtime cleanup",
+      "draft": false,
+      "prerelease": true,
+      "assets": [
+        {
+          "id": 688993727,
+          "name": "enigma2-plugin-glasssysutil_13.40-r91_all.ipk",
+          "size": 3680570,
+          "digest": "sha256:9a6c87bd4d9fbe0428e31dcc29efca05024dfb6daaa28bc9a6a28d535477fbbd",
+          "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/runtime-cleanup-13.40-r91/enigma2-plugin-glasssysutil_13.40-r91_all.ipk"
+        },
+        {
+          "id": 688993730,
+          "name": "enigma2-plugin-glasssysutil_13.40-r91_all.ipk.sha256",
+          "size": 112,
+          "digest": "sha256:631df57442ef38a5a761d7dd19f543c9fe5fff78be71ed0389c43580376a1be5",
+          "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/runtime-cleanup-13.40-r91/enigma2-plugin-glasssysutil_13.40-r91_all.ipk.sha256"
+        }
+      ]
+    },
+    {
+      "id": 425161855,
+      "tag_name": "v13.40-r90",
+      "name": "GSU Warder Evolution 13.40-r90",
+      "draft": false,
+      "prerelease": false,
+      "assets": [
+        {
+          "id": 680866831,
+          "name": "enigma2-plugin-glasssysutil_13.40-r90_all.ipk",
+          "size": 3680604,
+          "digest": "sha256:1eba855088448634b5ebf84daa66be48febe8bc9b9d581823fc2241a4add4101",
+          "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r90/enigma2-plugin-glasssysutil_13.40-r90_all.ipk"
+        },
+        {
+          "id": 680866837,
+          "name": "enigma2-plugin-glasssysutil_13.40-r90_all.ipk.sha256",
+          "size": 112,
+          "digest": "sha256:b791c07b0b379bc44d4cbd16d35a87fc70a93fc9bdccf2f6d0736c407174bb33",
+          "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r90/enigma2-plugin-glasssysutil_13.40-r90_all.ipk.sha256"
+        }
+      ]
+    },
+    {
+      "id": 425159441,
+      "tag_name": "v13.40-r89",
+      "name": "GSU Warder Evolution 13.40-r89",
+      "draft": false,
+      "prerelease": false,
+      "assets": [
+        {
+          "id": 680859790,
+          "name": "enigma2-plugin-glasssysutil_13.40-r89_all.ipk",
+          "size": 3680558,
+          "digest": "sha256:ea87dfc9b35a17a2afa1caeaa581eacf9be008d30d5f57a4e2eb0c78b409f2ce",
+          "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r89/enigma2-plugin-glasssysutil_13.40-r89_all.ipk"
+        },
+        {
+          "id": 680859791,
+          "name": "enigma2-plugin-glasssysutil_13.40-r89_all.ipk.sha256",
+          "size": 112,
+          "digest": "sha256:4477833df4b074c6aa177164275f433b7f2a6c78ce19cbdc8e444036b7e1230a",
+          "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r89/enigma2-plugin-glasssysutil_13.40-r89_all.ipk.sha256"
+        }
+      ]
+    },
+    {
+      "id": 425118560,
+      "tag_name": "v13.40-r88",
+      "name": "GSU Warder Evolution 13.40-r88",
+      "draft": false,
+      "prerelease": false,
+      "assets": [
+        {
+          "id": 680742266,
+          "name": "enigma2-plugin-glasssysutil_13.40-r88_all.ipk",
+          "size": 3680444,
+          "digest": "sha256:05f94f49bb04ce1b949d2f5ddf5f98bd7889a9a1e54fb8e8e87cb2861e37b325",
+          "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r88/enigma2-plugin-glasssysutil_13.40-r88_all.ipk"
+        },
+        {
+          "id": 680742265,
+          "name": "enigma2-plugin-glasssysutil_13.40-r88_all.ipk.sha256",
+          "size": 112,
+          "digest": "sha256:12ea4fe633b8bf804aad0e27c40f940b1ea383937dfff8ae9d269c8a82a18241",
+          "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r88/enigma2-plugin-glasssysutil_13.40-r88_all.ipk.sha256"
+        }
+      ]
+    },
+    {
+      "id": 424266966,
+      "tag_name": "v13.40-r87",
+      "name": "GSU Warder Evolution 13.40-r87",
+      "draft": false,
+      "prerelease": false,
+      "assets": [
+        {
+          "id": 678209309,
+          "name": "enigma2-plugin-glasssysutil_13.40-r87_all.ipk",
+          "size": 3680642,
+          "digest": "sha256:a981085699f22bb4b9fb97ddc6a2d3af4b452920fa8fe51c962ce16f70c73d6b",
+          "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r87/enigma2-plugin-glasssysutil_13.40-r87_all.ipk"
+        },
+        {
+          "id": 678209308,
+          "name": "enigma2-plugin-glasssysutil_13.40-r87_all.ipk.sha256",
+          "size": 112,
+          "digest": "sha256:e79f89b070b248e5c4a88383a028788137ccd46670ac6519c8d7b12de17939a1",
+          "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r87/enigma2-plugin-glasssysutil_13.40-r87_all.ipk.sha256"
+        }
+      ]
+    }
+  ],
+  "current_release_id": 428744854,
+  "feeds": [
+    {
+      "slug": "gsu",
+      "url": "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/plugin/update/stable.json",
+      "version": "13.40-r94",
+      "sha256": "040266f3f6c8dd425e277fc5556a452cb3057194c093abe26b9aaa0d8e264a0b",
+      "package_url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r94/enigma2-plugin-extensions-gsu_13.40-r94_all.ipk"
+    },
+    {
+      "slug": "gsu",
+      "url": "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/plugin/update/candidate.json",
+      "version": "13.40-r93",
+      "sha256": "5f4d969f0253dfcf530e5a26037f7200033d262e36810d2c583635ded0025ee1",
+      "package_url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r93/enigma2-plugin-glasssysutil_13.40-r93_all.ipk"
+    },
+    {
+      "slug": "gsu",
+      "url": "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/restoration/update/candidate.json",
+      "version": "13.40-r93",
+      "sha256": "5f4d969f0253dfcf530e5a26037f7200033d262e36810d2c583635ded0025ee1",
+      "package_url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r93/enigma2-plugin-glasssysutil_13.40-r93_all.ipk"
+    }
+  ],
+  "verify_downloads": [
+    {
+      "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r94/enigma2-plugin-extensions-gsu-warder-evolution_13.40-r94_all.ipk",
+      "bytes": 3681404,
+      "sha256": "040266f3f6c8dd425e277fc5556a452cb3057194c093abe26b9aaa0d8e264a0b"
+    },
+    {
+      "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r94/enigma2-plugin-extensions-gsu_13.40-r94_all.ipk",
+      "sha256": "040266f3f6c8dd425e277fc5556a452cb3057194c093abe26b9aaa0d8e264a0b"
+    },
+    {
+      "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r93/enigma2-plugin-glasssysutil_13.40-r93_all.ipk",
+      "sha256": "5f4d969f0253dfcf530e5a26037f7200033d262e36810d2c583635ded0025ee1"
+    },
+    {
+      "url": "https://github.com/Evolution-by-Warder/Glass-System-Utility-Warder-Evolution/releases/download/v13.40-r93/enigma2-plugin-glasssysutil_13.40-r93_all.ipk",
+      "sha256": "5f4d969f0253dfcf530e5a26037f7200033d262e36810d2c583635ded0025ee1"
+    }
+  ],
+  "remove_auxiliary_ipks": [],
+  "rename": [
+    {
+      "id": 428744827,
+      "name": "GSU 13.40-r93 — potrebný prechod na r94",
+      "make_latest": "false"
+    }
+  ]
+}
