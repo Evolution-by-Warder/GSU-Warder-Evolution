@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "repository": "Evolution-by-Warder/GSU-Warder-Evolution",
+  "targets": {
+    "main": "3f5329d5a54f0d3e05bf2a709ad7f0779891b8d1",
+    "original-python314": "80dff8dfb02252cd9bfc0c139f05516428760d5a"
+  },
+  "original_files": {
+    "plugin/tests/test_package_identity.py": "7693f4916106ea85ec73cf0f11ca4e1f89feff1c",
+    "plugin/tests/test_plugin_update.py": "50b0c9446b1218ee10b3503c7eb9ae06baa07562",
+    "plugin/tools/build_ipk.py": "2cb83a1e332db1835f68c57b5e55662d46ee15b8",
+    "plugin/tools/publish_group_release.py": "450c3b21b3c6dfd1cd1de847de08c673c58900dd",
+    "plugin/tools/publish_update.py": "71b3aff0c2b0b77732ba6a294283dad76bbbbe8e",
+    "docs/INSTALLATION-PACKAGE-NAMES.md": null
+  },
+  "protected_files": {
+    "plugin/update/stable.json": "608f00845c1fb11bcfd02d435ae7d07e3457415d",
+    "plugin/update/candidate.json": "3032f0f69b9926c5dab7193afdf1a4348e2ec3b1",
+    "restoration/update/candidate.json": "b2ff4433a40637db2a41cdd7ad5e47bbd86a271b",
+    "plugin/src/GlassSysUtil/plugin_update.py": "c01488dcf5dfae2c167dd02cfb94b160b9a7c9e4",
+    "plugin/src/GlassSysUtil/version": "f8820c5bec22741d21e4a05202f5367326535940",
+    "plugin/resources.tar.gz": "bfac1f50cd9d6768d81479307f36e3acfcf423d5"
+  },
+  "feeds": [
+    {
+      "url": "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/plugin/update/stable.json",
+      "sha256": "9aaeff5e1dab8955e50929b9e5bf462ac551f85e1acff6fb7e15793b8953e604"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/plugin/update/candidate.json",
+      "sha256": "914bb915b91d3ffeb4f59f09f12d56aa983a7f4eb79454ef9fb5703ae8511983"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/restoration/update/candidate.json",
+      "sha256": "81e5ddd0692c7b16eb7b9d64dcc52dab36ab8fe2893aba9011c3665437c51175"
+    }
+  ],
+  "releases": [
+    {
+      "tag": "v13.40-r94",
+      "short": "enigma2-plugin-extensions-gsu_13.40-r94_all.ipk",
+      "long": "enigma2-plugin-extensions-gsu-warder-evolution_13.40-r94_all.ipk",
+      "sha256": "040266f3f6c8dd425e277fc5556a452cb3057194c093abe26b9aaa0d8e264a0b",
+      "bytes": 3681404
+    }
+  ],
+  "remove_paths": []
+}

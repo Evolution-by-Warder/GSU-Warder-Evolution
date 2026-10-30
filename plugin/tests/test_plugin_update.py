@@ -92,7 +92,7 @@ class PublishUpdateTests(unittest.TestCase):
         (root/'update/release-request').write_text('13.40-r37')
         (root/'update/RELEASE-NOTES.md').write_text('Opravy')
         (root/'update/candidate.json').write_text('original-feed')
-        (root/'dist'/('%s_13.40-r37_all.ipk' % update.PACKAGE_ID)).write_bytes(ipk())
+        (root/'dist'/('%s_13.40-r37_all.ipk' % update.DOWNLOAD_PREFIX)).write_bytes(ipk())
         return root
 
     def test_wrong_branch_cannot_publish(self):
@@ -107,7 +107,7 @@ class PublishUpdateTests(unittest.TestCase):
                 commands.append(args)
                 if args[:2]==('gh','api'):return '[[]]'
                 if args[:3]==('gh','release','download'):
-                    (Path(args[-1])/(update.PACKAGE_ID+'_13.40-r37_all.ipk')).write_bytes(ipk())
+                    (Path(args[-1])/(update.DOWNLOAD_PREFIX+'_13.40-r37_all.ipk')).write_bytes(ipk())
                 return ''
             with patch.object(publish_update,'BASE',root),patch.object(publish_update,'run',side_effect=run),patch.dict('os.environ',{'GITHUB_REF':'refs/heads/original-python314','GITHUB_SHA':'approved-source'}):
                 publish_update.publish()
@@ -125,7 +125,7 @@ class PublishUpdateTests(unittest.TestCase):
                     if args[:3]==('gh','release','download'):
                         if not any(command[0]=='git' for command in commands):
                             self.assertEqual((root/'update/candidate.json').read_text(),'original-feed')
-                        (Path(args[-1])/(update.PACKAGE_ID+'_13.40-r37_all.ipk')).write_bytes(ipk() if valid else b'wrong')
+                        (Path(args[-1])/(update.DOWNLOAD_PREFIX+'_13.40-r37_all.ipk')).write_bytes(ipk() if valid else b'wrong')
                     return ''
                 with patch.object(publish_update,'BASE',root),patch.object(publish_update,'run',side_effect=run),patch.dict('os.environ',{'GITHUB_REF':'refs/heads/original-python314'}):
                     if valid:

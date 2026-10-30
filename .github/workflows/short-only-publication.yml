@@ -1,0 +1,43 @@
+name: Verify and retire duplicate long IPK filenames
+on:
+  push:
+    branches: [maintenance/short-only-packages-20261030]
+    paths: ['docs/short-only-publication-20261030.json', '.github/workflows/short-only-publication.yml']
+permissions:
+  contents: write
+concurrency:
+  group: short-only-publication-20261030
+  cancel-in-progress: false
+jobs:
+  verify-and-clean:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            source
+            tools
+            plugin
+            docs
+            design
+            reports
+            restoration
+            .github
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14.7"
+      - name: Verify short-only packaging and existing updater compatibility
+        run: |
+          python -m unittest discover -s plugin/tests -q
+          python plugin/tools/build_ipk.py --output /tmp/warder-short-build
+          test "$(find /tmp/warder-short-build -name '*.ipk' | wc -l)" -eq 1
+      - name: Verify public bytes, promote tooling, then remove only proven duplicates
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python plugin/tools/retire_long_ipk_aliases.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: short-only-publication-proof
+          path: reports/short-only-publication-20261030.json

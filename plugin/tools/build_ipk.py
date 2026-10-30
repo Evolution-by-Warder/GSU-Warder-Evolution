@@ -103,12 +103,10 @@ exit 0
         result.extend(('%-16s%-12s%-6s%-6s%-8s%-10s`\n'%(name+'/',0,0,0,'100644',len(data))).encode());result.extend(data)
         if len(data)%2:result.extend(b'\n')
     destination=pathlib.Path(destination);destination.mkdir(parents=True,exist_ok=True)
-    path=destination/(package+'_'+version+'_all.ipk');path.write_bytes(result)
+    filename_prefix=LEGACY_PACKAGE if bridge else 'enigma2-plugin-extensions-gsu'
+    path=destination/(filename_prefix+'_'+version+'_all.ipk');path.write_bytes(result)
     digest=hashlib.sha256(result).hexdigest();path.with_suffix('.ipk.sha256').write_text(digest+'  '+path.name+'\n')
-    download=destination/(('enigma2-plugin-glasssysutil' if bridge else 'enigma2-plugin-extensions-gsu')+'_'+version+'_all.ipk')
-    download.write_bytes(result)
-    download.with_suffix('.ipk.sha256').write_text(digest+'  '+download.name+'\n')
-    print(download);print(len(result),'bytes SHA256',digest)
+    print(path);print(len(result),'bytes SHA256',digest)
     return path
 
 
