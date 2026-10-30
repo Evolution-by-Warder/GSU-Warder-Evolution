@@ -1,0 +1,26 @@
+{
+  "status": "PRODUCTION_VERIFIED",
+  "repository": "Evolution-by-Warder/GSU-Warder-Evolution",
+  "source_commit": "c112e447e1d80f7d5700a81f633fd4cf1eab6824",
+  "workflow_run": 41100405459,
+  "releases": [
+    {
+      "tag": "v13.40-r94",
+      "short": "enigma2-plugin-extensions-gsu_13.40-r94_all.ipk",
+      "long": "enigma2-plugin-extensions-gsu-warder-evolution_13.40-r94_all.ipk",
+      "sha256": "040266f3f6c8dd425e277fc5556a452cb3057194c093abe26b9aaa0d8e264a0b",
+      "bytes": 3681404,
+      "short_public_bytes_verified": true
+    }
+  ],
+  "removed_release_assets": [
+    "enigma2-plugin-extensions-gsu-warder-evolution_13.40-r94_all.ipk",
+    "enigma2-plugin-extensions-gsu-warder-evolution_13.40-r94_all.ipk.sha256"
+  ],
+  "removed_repository_paths": [],
+  "active_feeds_unchanged": true,
+  "runtime_unchanged": true,
+  "internal_package_identity_unchanged": true,
+  "new_ipk_required": false,
+  "trezor_accessed": false
+}
