@@ -1,0 +1,30 @@
+{
+  "status": "PUBLIC_RELEASES_VERIFIED",
+  "package_id": "enigma2-plugin-extensions-gsu-warder-evolution",
+  "plugin_browser_category": "extensions",
+  "plugin_browser_name": "gsu-warder-evolution",
+  "bridge": {
+    "version": "13.40-r93",
+    "tag": "v13.40-r93",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r93/enigma2-plugin-glasssysutil_13.40-r93_all.ipk",
+    "sha256": "5f4d969f0253dfcf530e5a26037f7200033d262e36810d2c583635ded0025ee1",
+    "bytes": 3681378,
+    "notes": "GSU 13.40-r93\n\nSprávne zaradenie v správcovi pluginov\n\n- GSU patrí do Balíčkov s rozšíreniami a zobrazuje sa ako gsu-warder-evolution.\n- Nová identita: enigma2-plugin-extensions-gsu-warder-evolution.\n- Krátky súbor na stiahnutie: enigma2-plugin-extensions-gsu_13.40-r94_all.ipk.\n- Staršie inštalácie dostanú najskôr kompatibilný prechod r93; po reštarte GUI aktualizátor ponúkne r94.\n- Prechod zachováva nastavenia aj spravované štartovanie CAM-u. Picony a skin sa nemenia.\n\nZmenu zaradenia a názvu výslovne požadoval vlastník 30.10.2026. Automatizované overenie nenahrádza fyzický test prijímača.\n"
+  },
+  "release": {
+    "version": "13.40-r94",
+    "tag": "v13.40-r94",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r94/enigma2-plugin-extensions-gsu_13.40-r94_all.ipk",
+    "sha256": "040266f3f6c8dd425e277fc5556a452cb3057194c093abe26b9aaa0d8e264a0b",
+    "bytes": 3681404,
+    "notes": "GSU 13.40-r94\n\nSprávne zaradenie v správcovi pluginov\n\n- GSU patrí do Balíčkov s rozšíreniami a zobrazuje sa ako gsu-warder-evolution.\n- Nová identita: enigma2-plugin-extensions-gsu-warder-evolution.\n- Krátky súbor na stiahnutie: enigma2-plugin-extensions-gsu_13.40-r94_all.ipk.\n- Staršie inštalácie dostanú najskôr kompatibilný prechod r93; po reštarte GUI aktualizátor ponúkne r94.\n- Prechod zachováva nastavenia aj spravované štartovanie CAM-u. Picony a skin sa nemenia.\n\nZmenu zaradenia a názvu výslovne požadoval vlastník 30.10.2026. Automatizované overenie nenahrádza fyzický test prijímača.\n"
+  },
+  "legacy_updater_r92_accepts_actual_bridge": true,
+  "updated_bridge_accepts_actual_canonical_package": true,
+  "cam_start_configuration_preserved_during_automatic_rename": true,
+  "real_offline_opkg_replacement_and_removal_verified": true,
+  "actual_prerm_hook_chroot_verified": true,
+  "opkg_compatibility_test_source": "shr-project/opkg@eed3359acfff5cb90cd8e91949df32f089db50be",
+  "physical_receiver_test": false,
+  "workflow_run": 41018889228
+}

@@ -2,40 +2,43 @@
   "schema": 1,
   "product": "GSU Warder Evolution",
   "status": "production-update-active",
-  "approved_on": "2026-10-29",
-  "approval": "vsetky verzie uved do ostrej prevadzky a zapis vsetko kam treba",
+  "approved_on": "2026-10-30",
+  "approval": "GSU nech sa tam zobrazuju ako gsu-warder-evolution",
   "source_branch": "original-python314",
-  "source_commit": "09062a70355528a257ee604ef2dd8b36c3999621",
+  "source_commit": "7104d886e8549a3378267f21cc7eaeddff44fd05",
   "activation_commit": "0df6b6e56e9afa0e72c0b0f7ae5544eaf113bd1b",
   "release": {
-    "version": "13.40-r92",
-    "tag": "v13.40-r92",
-    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r92/enigma2-plugin-glasssysutil_13.40-r92_all.ipk",
-    "bytes": 3680636,
-    "sha256": "9281d2cd3ffb15d7326a4e476ccc92ab2c3d6d1009e14d6d5085b7b626cca720",
-    "release_url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/tag/v13.40-r92"
+    "version": "13.40-r94",
+    "tag": "v13.40-r94",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r94/enigma2-plugin-extensions-gsu_13.40-r94_all.ipk",
+    "sha256": "040266f3f6c8dd425e277fc5556a452cb3057194c093abe26b9aaa0d8e264a0b",
+    "bytes": 3681404,
+    "notes": "GSU 13.40-r94\n\nSprávne zaradenie v správcovi pluginov\n\n- GSU patrí do Balíčkov s rozšíreniami a zobrazuje sa ako gsu-warder-evolution.\n- Nová identita: enigma2-plugin-extensions-gsu-warder-evolution.\n- Krátky súbor na stiahnutie: enigma2-plugin-extensions-gsu_13.40-r94_all.ipk.\n- Staršie inštalácie dostanú najskôr kompatibilný prechod r93; po reštarte GUI aktualizátor ponúkne r94.\n- Prechod zachováva nastavenia aj spravované štartovanie CAM-u. Picony a skin sa nemenia.\n\nZmenu zaradenia a názvu výslovne požadoval vlastník 30.10.2026. Automatizované overenie nenahrádza fyzický test prijímača.\n",
+    "release_url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/tag/v13.40-r94"
   },
-  "package_id": "enigma2-plugin-glasssysutil",
+  "package_id": "enigma2-plugin-extensions-gsu-warder-evolution",
   "installation_directory": "/usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/",
   "update_feeds": [
+    "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/plugin/update/stable.json",
     "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/plugin/update/candidate.json",
     "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/restoration/update/candidate.json"
   ],
   "validation": {
-    "python": "3.14.7",
-    "workflow_run": 40918609135,
-    "workflow_conclusion": "success",
-    "unit_tests": 369,
-    "deterministic_builds_verified": true,
+    "workflow_run": 41018889228,
+    "unit_tests": 375,
     "public_ipk_size_and_sha256_verified": true,
-    "all_uncompressed_control_and_payload_bytes_match_tested_local_build": true,
-    "public_update_feeds_verified": true,
     "receiver_tested": false,
-    "notes": "The local Python 3.12 and CI Python 3.14 gzip headers differ; every uncompressed control and installed payload byte matches. Prior receiver UI acceptance is preserved; no new exhaustive device test is claimed."
+    "limits": "Automated package/control/update/migration checks; no physical receiver test claimed."
   },
   "accepted_candidate": {
     "version": "13.40-r91",
     "source_commit": "8d8c17b5b5f8672083d966bd49625c8b3d1dcec2"
   },
-  "version_policy": "13.40-r92 upgrades normally from production r90 and candidate r91."
+  "version_policy": "13.40-r92 upgrades normally from production r90 and candidate r91.",
+  "identity_transition": {
+    "bridge_version": "13.40-r93",
+    "target_version": "13.40-r94",
+    "legacy_feed_frozen": true,
+    "steps": "Update to r93, restart GUI, then update to r94"
+  }
 }
