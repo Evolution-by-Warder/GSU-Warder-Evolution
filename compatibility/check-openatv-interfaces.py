@@ -77,7 +77,9 @@ def inspect_contract(tree, contract):
     if contract['kind'] == 'display':
         return {'components': display_contract(node), 'mandatory_widgets': required_widgets(node)}
     method = next(n for n in node.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)) and n.name == contract['method'])
-    return ast.dump(method.args, include_attributes=False)
+    # ast.dump started omitting empty fields by default in Python 3.13.
+    # The source signature stays comparable across our 3.9/3.14 CI runtimes.
+    return ast.unparse(method.args)
 
 
 def main():
