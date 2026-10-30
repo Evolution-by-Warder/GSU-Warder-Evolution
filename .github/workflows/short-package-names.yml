@@ -1,0 +1,43 @@
+name: Publish short installation package name
+on:
+  push:
+    branches: [release/short-package-names-20261030]
+    paths: ['.github/workflows/short-package-names.yml', 'tools/publish-short-package-name.py', 'docs/short-package-name-20261030.json']
+permissions:
+  contents: write
+concurrency:
+  group: short-package-names-20261030
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            tools
+            docs
+            .github
+            plugin
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14.7'
+      - name: Check release publication compatibility
+        run: |
+          python -m unittest discover -s plugin/tests -q
+      - name: Publish identical verified production bytes under shorter name
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python tools/publish-short-package-name.py
+      - name: Record public verification and optional updater download
+        run: |
+          git config user.name 'Warder release automation'
+          git config user.email 'warder-release@users.noreply.github.com'
+          git add --sparse -f reports/short-package-name-20261030.json
+          git diff --cached --check
+          if ! git diff --cached --quiet; then
+            git commit -m 'Record verified short production IPK name with unchanged package bytes'
+            git push origin HEAD:release/short-package-names-20261030
+          fi

@@ -102,7 +102,10 @@ exit 0
     destination=pathlib.Path(destination);destination.mkdir(parents=True,exist_ok=True)
     path=destination/(PACKAGE+'_'+version+'_all.ipk');path.write_bytes(result)
     digest=hashlib.sha256(result).hexdigest();path.with_suffix('.ipk.sha256').write_text(digest+'  '+path.name+'\n')
-    print(path);print(len(result),'bytes SHA256',digest)
+    download=destination/('enigma2-plugin-extensions-gsu_'+version+'_all.ipk')
+    download.write_bytes(result)
+    download.with_suffix('.ipk.sha256').write_text(digest+'  '+download.name+'\n')
+    print(download);print(len(result),'bytes SHA256',digest)
     return path
 
 

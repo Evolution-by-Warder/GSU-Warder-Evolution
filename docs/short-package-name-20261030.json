@@ -1,0 +1,11 @@
+{
+  "repository": "Evolution-by-Warder/GSU-Warder-Evolution",
+  "version": "13.40-r92",
+  "tag": "v13.40-r92",
+  "previous_filename": "enigma2-plugin-glasssysutil_13.40-r92_all.ipk",
+  "download_filename": "enigma2-plugin-extensions-gsu_13.40-r92_all.ipk",
+  "package_id": "enigma2-plugin-glasssysutil",
+  "control_version": "13.40-r92",
+  "bytes": 3680636,
+  "sha256": "9281d2cd3ffb15d7326a4e476ccc92ab2c3d6d1009e14d6d5085b7b626cca720"
+}
