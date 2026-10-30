@@ -188,44 +188,63 @@ def validate_ipk(path, release):
 
 
 def install_release(release, opener=_open, runner=subprocess.run):
-    """Called only after the UI accepts installation; never force or reboot."""
+    """Stage and validate both packages before a guarded identity replacement."""
     with tempfile.TemporaryDirectory(prefix="gsu-plugin-update-") as temporary:
-        path = download_release(release, pathlib.Path(temporary) / "update.ipk", opener)
+        work = pathlib.Path(temporary)
+        path = download_release(release, work / "update.ipk", opener)
         validate_ipk(path, release)
         migrating = False
+        rollback_path = None
         if release.package_id == PACKAGE_ID and version_key(release.version) >= version_key("13.40-r94"):
             status = runner(["opkg", "status", LEGACY_PACKAGE_ID], stdout=subprocess.PIPE,
                             stderr=subprocess.STDOUT, text=True, timeout=30)
             fields = dict(line.split(": ", 1) for line in status.stdout.splitlines() if ": " in line)
             if fields.get("Package") == LEGACY_PACKAGE_ID and fields.get("Status", "").split()[-1:] == ["installed"]:
-                if version_key(fields.get("Version", "")) < version_key("13.40-r93"):
+                if fields.get("Version") != "13.40-r93":
                     raise UpdateError("Install the compatible r93 transition update first")
+                legacy_feed = "https://raw.githubusercontent.com/" + REPOSITORY + "/original-python314/plugin/update/candidate.json"
+                with opener(legacy_feed) as response:
+                    payload = response.read(65537)
+                if len(payload) > 65536:
+                    raise UpdateError("Legacy recovery manifest is too large")
+                previous = parse_release(payload, "0.0-r0")
+                if previous is None or previous.package_id != LEGACY_PACKAGE_ID or previous.version != fields["Version"]:
+                    raise UpdateError("Compatible recovery package is unavailable; installed GSU was retained")
+                rollback_path = download_release(previous, work / "rollback.ipk", opener)
+                validate_ipk(rollback_path, previous)
                 MIGRATION_FLAG.parent.mkdir(parents=True, exist_ok=True)
                 with MIGRATION_FLAG.open("x") as flag:
                     flag.write(release.version + "\n")
                 migrating = True
         try:
-            result = runner(["opkg", "install", str(path)], stdout=subprocess.PIPE,
-                            stderr=subprocess.STDOUT, text=True, timeout=300)
-            if result.returncode == 0 and migrating:
-                # Some older opkg builds transfer file ownership but retain
-                # the old package record. Remove that record through opkg only
-                # after the replacement is installed, with CAM restoration guarded.
-                status = runner(["opkg", "status", PACKAGE_ID], stdout=subprocess.PIPE,
-                                stderr=subprocess.STDOUT, text=True, timeout=30)
-                fields = dict(line.split(": ", 1) for line in status.stdout.splitlines() if ": " in line)
-                if fields.get("Version") != release.version or fields.get("Status", "").split()[-1:] != ["installed"]:
-                    raise UpdateError("Replacement package is not installed; legacy package was retained")
-                status = runner(["opkg", "status", LEGACY_PACKAGE_ID], stdout=subprocess.PIPE,
-                                stderr=subprocess.STDOUT, text=True, timeout=30)
-                fields = dict(line.split(": ", 1) for line in status.stdout.splitlines() if ": " in line)
-                if fields.get("Package") == LEGACY_PACKAGE_ID and fields.get("Status", "").split()[-1:] == ["installed"]:
-                    result = runner(["opkg", "remove", LEGACY_PACKAGE_ID], stdout=subprocess.PIPE,
-                                    stderr=subprocess.STDOUT, text=True, timeout=300)
+            if migrating:
+                removed = runner(["opkg", "remove", LEGACY_PACKAGE_ID], stdout=subprocess.PIPE,
+                                 stderr=subprocess.STDOUT, text=True, timeout=300)
+                if removed.returncode != 0:
+                    raise UpdateError("Legacy package could not be removed: " + removed.stdout[-2000:])
+            try:
+                result = runner(["opkg", "install", str(path)], stdout=subprocess.PIPE,
+                                stderr=subprocess.STDOUT, text=True, timeout=300)
+                if result.returncode != 0:
+                    raise UpdateError("opkg failed (%s): %s" % (result.returncode, result.stdout[-2000:]))
+            except Exception as failure:
+                if rollback_path is not None:
+                    try:
+                        cleared = runner(["opkg", "remove", PACKAGE_ID], stdout=subprocess.PIPE,
+                                         stderr=subprocess.STDOUT, text=True, timeout=300)
+                        if cleared.returncode != 0:
+                            raise UpdateError("Incomplete replacement could not be removed")
+                        restored = runner(["opkg", "install", str(rollback_path)], stdout=subprocess.PIPE,
+                                          stderr=subprocess.STDOUT, text=True, timeout=300)
+                        if restored.returncode != 0:
+                            raise UpdateError("Recovery installation failed")
+                    except Exception as recovery:
+                        saved = MIGRATION_FLAG.parent / "recovery-r93.ipk"
+                        saved.write_bytes(rollback_path.read_bytes())
+                        raise UpdateError("Update and recovery failed; verified recovery IPK retained at " + str(saved)) from recovery
+                    raise UpdateError("Update failed; previous GSU was restored") from failure
+                raise
         finally:
             if migrating:
                 MIGRATION_FLAG.unlink(missing_ok=True)
-        if result.returncode != 0:
-            raise UpdateError("opkg failed (%s): %s" % (result.returncode, result.stdout[-2000:]))
     return release.version
-

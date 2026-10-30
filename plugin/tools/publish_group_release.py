@@ -77,7 +77,7 @@ def publish():
     record.update(package_id=update.PACKAGE_ID,approved_on='2026-10-30',approval='GSU nech sa tam zobrazuju ako gsu-warder-evolution',source_commit=os.environ['GITHUB_SHA'])
     record['release']=dict(document['release'],release_url='https://github.com/'+update.REPOSITORY+'/releases/tag/v'+version)
     record['identity_transition']=dict(bridge_version='13.40-r93',target_version=version,legacy_feed_frozen=True,steps='Update to r93, restart GUI, then update to r94')
-    record['validation']=dict(workflow_run=int(os.environ['GITHUB_RUN_ID']),unit_tests=374,public_ipk_size_and_sha256_verified=True,receiver_tested=False,limits='Automated package/control/update/migration checks; no physical receiver test claimed.')
+    record['validation']=dict(workflow_run=int(os.environ['GITHUB_RUN_ID']),unit_tests=375,public_ipk_size_and_sha256_verified=True,receiver_tested=False,limits='Automated package/control/update/migration checks; no physical receiver test claimed.')
     record['update_feeds'].insert(0,update.FEED_URL) if update.FEED_URL not in record['update_feeds'] else None
     (ROOT/'PRODUCTION.json').write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n')
     print('VERIFIED GSU extensions group: compatible bridge r93 and canonical '+version)

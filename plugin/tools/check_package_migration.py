@@ -42,17 +42,24 @@ with tempfile.TemporaryDirectory(prefix='gsu-opkg-migration-') as folder:
     run('install',str(bridge))
     settings=root/'etc/enigma2/settings';settings.parent.mkdir(parents=True,exist_ok=True);settings.write_bytes(b'config.plugins.glasssysutil.preserve=yes\n')
     picon=root/'usr/share/enigma2/picon/user.png';picon.parent.mkdir(parents=True,exist_ok=True);picon.write_bytes(b'user-owned')
+    # Both packages are staged before the updater removes the legacy identity.
+    # Removing it first avoids older opkg deleting files of an overlapping IPK.
+    run('remove',update.LEGACY_PACKAGE_ID)
     run('install',str(current))
     installed=run('list-installed')
-    if update.LEGACY_PACKAGE_ID+' -' in installed:
-        # Same guarded compatibility cleanup used by the actual updater.
-        run('remove',update.LEGACY_PACKAGE_ID)
-        installed=run('list-installed')
     assert update.PACKAGE_ID+' - 13.40-r94' in installed,installed
     assert update.LEGACY_PACKAGE_ID+' -' not in installed,installed
     assert settings.read_bytes()==b'config.plugins.glasssysutil.preserve=yes\n' and picon.read_bytes()==b'user-owned'
     plugin=root/'usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/plugin.py'
     assert plugin.exists()
+    # The recovery order removes an incomplete target before reinstalling the
+    # already-verified bridge. Exercise that reverse ownership transfer too.
+    run('remove',update.PACKAGE_ID)
+    run('install',str(bridge))
+    assert plugin.exists() and update.LEGACY_PACKAGE_ID+' - 13.40-r93' in run('list-installed')
+    run('remove',update.LEGACY_PACKAGE_ID)
+    run('install',str(current))
+    assert plugin.exists() and update.LEGACY_PACKAGE_ID+' -' not in run('list-installed')
     run('remove',update.PACKAGE_ID)
     assert not plugin.exists()
     assert settings.exists() and picon.exists()

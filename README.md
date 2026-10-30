@@ -4,7 +4,7 @@ Plugin pre Enigma2: informácie o prijímači a kanáli, ECM a OSCam, správa CA
 
 **r92 prináša tichú prevádzku: bez automatických gsu.log, autostart a bitrate logov; df/dmesg sa spracúva v pamäti. Zachováva schválené rozhranie a funkcie r90.**
 
-**Stabilné vydanie: 13.40-r94. Produkčné povýšenie cleanup kandidáta schválil vlastník 29. októbra 2026.** Rozhranie a prejdené funkcie schválil používateľ na GigaBlue Quad 4K Pro s OpenATV 8. Vydanie je verejné **Latest**, bez označenia prerelease.
+**Stabilné vydanie: 13.40-r94. Zaradenie GSU do rozšírení a názov gsu-warder-evolution požadoval vlastník 30. októbra 2026.** Rozhranie a prejdené funkcie schválil používateľ na GigaBlue Quad 4K Pro s OpenATV 8. Vydanie je verejné **Latest**, bez označenia prerelease.
 
 [Stiahnuť aktuálne vydanie](https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/latest) · [Používanie](docs/POUZIVANIE.md) · [Zmeny](CHANGELOG.md) · [Overenie a údržba](plugin/TESTOVANIE.md)
 

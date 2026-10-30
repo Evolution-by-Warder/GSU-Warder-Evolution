@@ -48,6 +48,10 @@ class PackageIdentityTests(unittest.TestCase):
 
     def install(self,legacy_version,returncode=0):
         data=self.current.read_bytes();calls=[]
+        def opener(url,**kwargs):
+            if url.endswith('candidate.json'):return io.BytesIO(json.dumps(self.bridge_doc).encode())
+            if url==self.bridge_doc['release']['url']:return io.BytesIO(self.bridge.read_bytes())
+            return io.BytesIO(data)
         with tempfile.TemporaryDirectory() as folder:
             flag=Path(folder)/'state/rename'
             def runner(command,**kwargs):
@@ -61,16 +65,34 @@ class PackageIdentityTests(unittest.TestCase):
                 return types.SimpleNamespace(returncode=returncode,stdout='opkg result')
             with patch.object(update,'MIGRATION_FLAG',flag):
                 if returncode or legacy_version=='13.40-r92':
-                    with self.assertRaises(update.UpdateError):update.install_release(self.release,lambda *a,**k:io.BytesIO(data),runner)
-                else:self.assertEqual(update.install_release(self.release,lambda *a,**k:io.BytesIO(data),runner),'13.40-r94')
+                    with self.assertRaises(update.UpdateError):update.install_release(self.release,opener,runner)
+                else:self.assertEqual(update.install_release(self.release,opener,runner),'13.40-r94')
             self.assertFalse(flag.exists())
         return calls
 
     def test_rename_preserves_cam_settings_during_opkg_and_removes_temporary_marker(self):
-        self.assertEqual(self.install('13.40-r93'),[['opkg','status'],['opkg','install'],['opkg','status'],['opkg','status'],['opkg','remove']])
+        self.assertEqual(self.install('13.40-r93'),[['opkg','status'],['opkg','remove'],['opkg','install']])
 
     def test_marker_is_removed_when_opkg_reports_failure(self):
         self.install('13.40-r93',1)
 
     def test_installed_pre_bridge_cannot_be_renamed_directly(self):
         self.assertEqual(self.install('13.40-r92'),[['opkg','status']])
+
+    def test_failed_new_install_restores_verified_legacy_package_before_clearing_marker(self):
+        calls=[]
+        with tempfile.TemporaryDirectory() as folder:
+            flag=Path(folder)/'state/rename'
+            def opener(url,**kwargs):
+                if url.endswith('candidate.json'):return io.BytesIO(json.dumps(self.bridge_doc).encode())
+                return io.BytesIO(self.bridge.read_bytes() if url==self.bridge_doc['release']['url'] else self.current.read_bytes())
+            def runner(command,**kwargs):
+                calls.append(command[:2])
+                if command[1]=='status':return types.SimpleNamespace(returncode=0,stdout='Package: '+update.LEGACY_PACKAGE_ID+'\nVersion: 13.40-r93\nStatus: install ok installed\n')
+                self.assertTrue(flag.is_file())
+                failed=command[1]=='install' and command[2].endswith('update.ipk')
+                return types.SimpleNamespace(returncode=1 if failed else 0,stdout='fixture')
+            with patch.object(update,'MIGRATION_FLAG',flag),self.assertRaisesRegex(update.UpdateError,'previous GSU was restored'):
+                update.install_release(self.release,opener,runner)
+            self.assertFalse(flag.exists())
+        self.assertEqual(calls,[['opkg','status'],['opkg','remove'],['opkg','install'],['opkg','remove'],['opkg','install']])
