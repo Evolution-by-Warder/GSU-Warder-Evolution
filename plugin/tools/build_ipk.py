@@ -11,7 +11,8 @@ from xml.etree import ElementTree
 
 BASE=pathlib.Path(__file__).resolve().parents[1]
 PLUGIN='usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil'
-PACKAGE='enigma2-plugin-glasssysutil'
+PACKAGE='enigma2-plugin-extensions-gsu-warder-evolution'
+LEGACY_PACKAGE='enigma2-plugin-glasssysutil'
 
 
 def archive(entries):
@@ -28,9 +29,10 @@ def archive(entries):
     return gzip.compress(raw.getvalue(),mtime=0)
 
 
-def build(destination):
+def build(destination, bridge=False):
     runtime=BASE/'src/GlassSysUtil'
-    version=(runtime/'version').read_text().strip()
+    version='13.40-r93' if bridge else (runtime/'version').read_text().strip()
+    package=LEGACY_PACKAGE if bridge else PACKAGE
     resources=BASE/'resources.tar.gz'
     manifest=json.loads((BASE/'resources.json').read_text())
     assert hashlib.sha256(resources.read_bytes()).hexdigest()==manifest['archive_sha256']
@@ -58,6 +60,7 @@ def build(destination):
         entries.append((PLUGIN+'/locale/'+path.name,path.read_bytes(),0o644))
     entries.append((PLUGIN+'/version',(version+'\n').encode(),0o644))
     notes=(BASE/'update/RELEASE-NOTES.md').read_text()
+    if bridge:notes=notes.replace('GSU 13.40-r94','GSU 13.40-r93',1)
     assert notes.splitlines()[0]=='GSU '+version,'Release notes do not match runtime version'
     entries.append((PLUGIN+'/release-notes.txt',notes.encode('utf-8'),0o644))
     for path in sorted((BASE/'converters').glob('*.py')):
@@ -67,7 +70,7 @@ def build(destination):
     # Existing receiver configuration and custom scripts are never overwritten.
     for path in sorted((BASE/'defaults').iterdir()):
         entries.append((PLUGIN+'/defaults/'+path.name,path.read_bytes(),0o644))
-    control=('Package: '+PACKAGE+'\nVersion: '+version+'\nArchitecture: all\nSection: extra\nPriority: optional\nMaintainer: Warder Evolution\nDepends: enigma2, python3-core, python3-xml, python3-netclient, python3-compression, python3-fcntl, python3-json, python3-threading, ca-certificates\nDescription: GSU Warder Evolution: receiver information, CAM/ECM management and diagnostics\n').encode()
+    control=('Package: '+package+'\nVersion: '+version+'\nArchitecture: all\nSection: '+('extra' if bridge else 'extensions')+'\nPriority: optional\nMaintainer: Warder Evolution\nDepends: enigma2, python3-core, python3-xml, python3-netclient, python3-compression, python3-fcntl, python3-json, python3-threading, ca-certificates\nDescription: GSU Warder Evolution: receiver information, CAM/ECM management and diagnostics\n'+('' if bridge else 'Provides: '+LEGACY_PACKAGE+'\nReplaces: '+LEGACY_PACKAGE+'\nConflicts: '+LEGACY_PACKAGE+'\n')).encode()
     postinst='''#!/bin/sh
 set -e
 [ -z "$D" ] || exit 0
@@ -88,7 +91,7 @@ exit 0
     prerm=b"""#!/bin/sh
 set -e
 [ -z "$D" ] || exit 0
-if [ "$1" = remove ]; then
+if [ "$1" = remove ] && [ ! -f /var/lib/warder-gsu/package-rename-in-progress ]; then
     helper=/usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/native_start_config.py
     if [ -f "$helper" ]; then /usr/bin/python3 "$helper" --restore-all; fi
 fi
@@ -100,11 +103,14 @@ exit 0
         result.extend(('%-16s%-12s%-6s%-6s%-8s%-10s`\n'%(name+'/',0,0,0,'100644',len(data))).encode());result.extend(data)
         if len(data)%2:result.extend(b'\n')
     destination=pathlib.Path(destination);destination.mkdir(parents=True,exist_ok=True)
-    path=destination/(PACKAGE+'_'+version+'_all.ipk');path.write_bytes(result)
+    path=destination/(package+'_'+version+'_all.ipk');path.write_bytes(result)
     digest=hashlib.sha256(result).hexdigest();path.with_suffix('.ipk.sha256').write_text(digest+'  '+path.name+'\n')
-    print(path);print(len(result),'bytes SHA256',digest)
+    download=destination/(('enigma2-plugin-glasssysutil' if bridge else 'enigma2-plugin-extensions-gsu')+'_'+version+'_all.ipk')
+    download.write_bytes(result)
+    download.with_suffix('.ipk.sha256').write_text(digest+'  '+download.name+'\n')
+    print(download);print(len(result),'bytes SHA256',digest)
     return path
 
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser();parser.add_argument('--output',default=str(BASE/'dist'));args=parser.parse_args();build(args.output)
+    parser=argparse.ArgumentParser();parser.add_argument('--output',default=str(BASE/'dist'));parser.add_argument('--bridge',action='store_true');args=parser.parse_args();build(args.output,args.bridge)

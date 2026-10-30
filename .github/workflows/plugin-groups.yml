@@ -1,0 +1,62 @@
+name: Verify and publish GSU plugin group migration
+on:
+  push:
+    branches: [release/plugin-groups-20261030]
+    paths: ['plugin/**', '.github/workflows/plugin-groups.yml']
+permissions:
+  contents: write
+concurrency:
+  group: gsu-package-group-migration
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14.7'
+      - name: Test legacy and new updaters, metadata and CAM state preservation
+        run: python -m unittest discover -s plugin/tests -q
+      - name: Build both identity stages deterministically
+        run: |
+          python plugin/tools/build_ipk.py --output plugin/dist
+          cp plugin/dist/enigma2-plugin-extensions-gsu_13.40-r94_all.ipk /tmp/first.ipk
+          python plugin/tools/build_ipk.py --output plugin/dist
+          cmp /tmp/first.ipk plugin/dist/enigma2-plugin-extensions-gsu_13.40-r94_all.ipk
+          python plugin/tools/build_ipk.py --bridge --output plugin/dist/bridge
+      - name: Build pinned compatibility opkg and test actual replacement and removal
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq autoconf automake libtool pkg-config
+          git clone https://github.com/shr-project/opkg.git /tmp/gsu-opkg
+          git -C /tmp/gsu-opkg checkout eed3359acfff5cb90cd8e91949df32f089db50be
+          cd /tmp/gsu-opkg
+          autoreconf -fi
+          ./configure --disable-curl --disable-gpg --disable-openssl --disable-ssl-curl --disable-sha256 CFLAGS='-include sys/sysmacros.h'
+          make -j2
+          cd "$GITHUB_WORKSPACE"
+          sudo "$(command -v python)" plugin/tools/check_package_migration.py /tmp/gsu-opkg/src/opkg-cl
+      - name: Publish verified bridge and canonical package, then stage separate feeds
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python plugin/tools/publish_group_release.py
+      - name: Record verified publication on isolated branch
+        run: |
+          git config user.name 'Warder release automation'
+          git config user.email 'warder-release@users.noreply.github.com'
+          git add plugin/update/candidate.json plugin/update/stable.json restoration/update/candidate.json PRODUCTION.json reports/plugin-groups-20261030.json
+          git diff --cached --check
+          if ! git diff --cached --quiet; then
+            git commit -m 'Record verified GSU identity bridge and extensions-group production package'
+            git push origin HEAD:release/plugin-groups-20261030
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GSU-package-group-migration
+          path: |
+            plugin/dist/*
+            reports/plugin-groups-20261030.json

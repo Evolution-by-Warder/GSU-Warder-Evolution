@@ -13,9 +13,12 @@ from dataclasses import dataclass, field
 from urllib.request import Request, urlopen
 
 REPOSITORY = "Evolution-by-Warder/GSU-Warder-Evolution"
-PACKAGE_ID = "enigma2-plugin-glasssysutil"
+PACKAGE_ID = "enigma2-plugin-extensions-gsu-warder-evolution"
+LEGACY_PACKAGE_ID = "enigma2-plugin-glasssysutil"
+DOWNLOAD_PREFIX = "enigma2-plugin-extensions-gsu"
+MIGRATION_FLAG = pathlib.Path("/var/lib/warder-gsu/package-rename-in-progress")
 # The recovered runtime has its own feed; production dashboards never enter it.
-FEED_URL = "https://raw.githubusercontent.com/" + REPOSITORY + "/original-python314/plugin/update/candidate.json"
+FEED_URL = "https://raw.githubusercontent.com/" + REPOSITORY + "/original-python314/plugin/update/stable.json"
 MAX_IPK_BYTES = 128 * 1024 * 1024
 
 
@@ -40,6 +43,7 @@ class Release:
     bytes: int
     notes: str = ""
     notes_i18n: dict = field(default_factory=dict)
+    package_id: str = PACKAGE_ID
 
 
 def parse_release(payload, current_version):
@@ -64,8 +68,12 @@ def parse_release(payload, current_version):
     tag = item.get("tag")
     if tag not in (item["version"], "v" + item["version"]):
         raise UpdateError("Release tag does not match version")
-    expected = "https://github.com/" + REPOSITORY + "/releases/download/" + tag + "/" + PACKAGE_ID + "_" + item["version"] + "_all.ipk"
-    if item.get("url") != expected:
+    root = "https://github.com/" + REPOSITORY + "/releases/download/" + tag + "/"
+    suffix = "_" + item["version"] + "_all.ipk"
+    allowed = {root + prefix + suffix: identity for prefix, identity in (
+        (PACKAGE_ID, PACKAGE_ID), (DOWNLOAD_PREFIX, PACKAGE_ID), (LEGACY_PACKAGE_ID, LEGACY_PACKAGE_ID))}
+    expected = item.get("url")
+    if expected not in allowed:
         raise UpdateError("Unexpected plugin package URL")
     digest, size, notes = item.get("sha256"), item.get("bytes"), item.get("notes", "")
     if not isinstance(digest, str) or not re.fullmatch(r"[a-f0-9]{64}", digest):
@@ -81,7 +89,7 @@ def parse_release(payload, current_version):
         raise UpdateError("Invalid translated release notes")
     if remote <= current:
         return None
-    return Release(item["version"], expected, digest, size, notes, translated_notes)
+    return Release(item["version"], expected, digest, size, notes, translated_notes, allowed[expected])
 
 
 def _open(url, timeout=6):
@@ -175,7 +183,7 @@ def validate_ipk(path, release):
             if key in fields:
                 raise UpdateError("Duplicate IPK control field")
             fields[key] = value.strip()
-    if fields.get("Package") != PACKAGE_ID or fields.get("Version") != release.version or fields.get("Architecture") != "all":
+    if fields.get("Package") != release.package_id or fields.get("Version") != release.version or fields.get("Architecture") != "all":
         raise UpdateError("IPK package identity, version or architecture mismatch")
 
 
@@ -184,8 +192,24 @@ def install_release(release, opener=_open, runner=subprocess.run):
     with tempfile.TemporaryDirectory(prefix="gsu-plugin-update-") as temporary:
         path = download_release(release, pathlib.Path(temporary) / "update.ipk", opener)
         validate_ipk(path, release)
-        result = runner(["opkg", "install", str(path)], stdout=subprocess.PIPE,
-                        stderr=subprocess.STDOUT, text=True, timeout=300)
+        migrating = False
+        if release.package_id == PACKAGE_ID and version_key(release.version) >= version_key("13.40-r94"):
+            status = runner(["opkg", "status", LEGACY_PACKAGE_ID], stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT, text=True, timeout=30)
+            fields = dict(line.split(": ", 1) for line in status.stdout.splitlines() if ": " in line)
+            if fields.get("Package") == LEGACY_PACKAGE_ID and fields.get("Status", "").split()[-1:] == ["installed"]:
+                if version_key(fields.get("Version", "")) < version_key("13.40-r93"):
+                    raise UpdateError("Install the compatible r93 transition update first")
+                MIGRATION_FLAG.parent.mkdir(parents=True, exist_ok=True)
+                with MIGRATION_FLAG.open("x") as flag:
+                    flag.write(release.version + "\n")
+                migrating = True
+        try:
+            result = runner(["opkg", "install", str(path)], stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT, text=True, timeout=300)
+        finally:
+            if migrating:
+                MIGRATION_FLAG.unlink(missing_ok=True)
         if result.returncode != 0:
             raise UpdateError("opkg failed (%s): %s" % (result.returncode, result.stdout[-2000:]))
     return release.version

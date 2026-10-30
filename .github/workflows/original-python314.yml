@@ -25,9 +25,11 @@ jobs:
       - name: Build receiver candidate twice and compare
         run: |
           python plugin/tools/build_ipk.py --output plugin/dist
-          cp plugin/dist/*.ipk /tmp/first.ipk
+          VERSION=$(cat plugin/src/GlassSysUtil/version)
+          PACKAGE="plugin/dist/enigma2-plugin-extensions-gsu_${VERSION}_all.ipk"
+          cp "$PACKAGE" /tmp/first.ipk
           python plugin/tools/build_ipk.py --output plugin/dist
-          cmp /tmp/first.ipk plugin/dist/*.ipk
+          cmp /tmp/first.ipk "$PACKAGE"
       - uses: actions/upload-artifact@v4
         with:
           name: GSU-Warder-Evolution-IPK
@@ -37,4 +39,4 @@ jobs:
         if: github.ref == 'refs/heads/original-python314'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python plugin/tools/publish_update.py
+        run: python plugin/tools/publish_group_release.py
