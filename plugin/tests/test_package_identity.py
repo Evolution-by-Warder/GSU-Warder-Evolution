@@ -35,6 +35,11 @@ class PackageIdentityTests(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):cls.folder.cleanup()
 
+    def test_only_short_filename_is_built_with_unchanged_package_identity(self):
+        self.assertEqual(self.current.name,'enigma2-plugin-extensions-gsu_13.40-r94_all.ipk')
+        self.assertEqual(list(self.current.parent.glob('*.ipk')),[self.current])
+        update.validate_ipk(self.current,self.release)
+
     def test_original_r92_accepts_actual_bridge_bytes_and_rejects_new_identity(self):
         offered=old.parse_release(json.dumps(self.bridge_doc),'13.40-r92')
         old.validate_ipk(self.bridge,offered)

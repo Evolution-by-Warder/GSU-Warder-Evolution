@@ -29,13 +29,7 @@ def publish():
     version=(BASE/'src/GlassSysUtil/version').read_text().strip()
     if (BASE/'update/release-request').read_text().strip()!=version:
         raise RuntimeError('Explicit release request does not match runtime version')
-    path=BASE/'dist'/('%s_%s_all.ipk' % (PACKAGE_ID,version))
-    download=BASE/'dist'/('enigma2-plugin-extensions-gsu_%s_all.ipk' % version)
-    if not download.exists():
-        download.write_bytes(path.read_bytes())
-        download.with_suffix('.ipk.sha256').write_text(hashlib.sha256(path.read_bytes()).hexdigest()+'  '+download.name+'\n')
-    if download.read_bytes()!=path.read_bytes():
-        raise RuntimeError('Short download differs from the update-compatible package')
+    path=BASE/'dist'/('enigma2-plugin-extensions-gsu_%s_all.ipk' % version)
     notes=(BASE/'update/RELEASE-NOTES.md').read_text()
     document=manifest(path,version,notes)
     release=parse_release(json.dumps(document),'0.0-r0')
@@ -45,7 +39,7 @@ def publish():
     tag='v'+version
     existing=next((item for page in releases for item in page if item['tag_name']==tag),None)
     if existing is None:
-        run('gh','release','create',tag,str(download),str(download)+'.sha256',str(path),str(path)+'.sha256','--repo',REPOSITORY,'--target',os.environ['GITHUB_SHA'],
+        run('gh','release','create',tag,str(path),str(path)+'.sha256','--repo',REPOSITORY,'--target',os.environ['GITHUB_SHA'],
             '--latest','--title','GSU Warder Evolution '+version,'--notes-file',str(BASE/'update/RELEASE-NOTES.md'))
     elif existing.get('draft'):
         raise RuntimeError('Stable release must be public')
