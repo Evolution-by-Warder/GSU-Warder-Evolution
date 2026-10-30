@@ -26,5 +26,5 @@
   "actual_prerm_hook_chroot_verified": true,
   "opkg_compatibility_test_source": "shr-project/opkg@eed3359acfff5cb90cd8e91949df32f089db50be",
   "physical_receiver_test": false,
-  "workflow_run": 41018889228
+  "workflow_run": 41019090607
 }

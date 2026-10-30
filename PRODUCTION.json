@@ -5,7 +5,7 @@
   "approved_on": "2026-10-30",
   "approval": "GSU nech sa tam zobrazuju ako gsu-warder-evolution",
   "source_branch": "original-python314",
-  "source_commit": "7104d886e8549a3378267f21cc7eaeddff44fd05",
+  "source_commit": "af5fa2c22a735db86b60a99b2687da2f1e6dcabb",
   "activation_commit": "0df6b6e56e9afa0e72c0b0f7ae5544eaf113bd1b",
   "release": {
     "version": "13.40-r94",
@@ -24,7 +24,7 @@
     "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/restoration/update/candidate.json"
   ],
   "validation": {
-    "workflow_run": 41018889228,
+    "workflow_run": 41019090607,
     "unit_tests": 375,
     "public_ipk_size_and_sha256_verified": true,
     "receiver_tested": false,
