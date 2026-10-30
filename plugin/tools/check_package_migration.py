@@ -22,6 +22,7 @@ with tempfile.TemporaryDirectory(prefix='gsu-opkg-migration-') as folder:
     folder=Path(folder);root=folder/'root';root.mkdir()
     config=folder/'opkg.conf';config.write_text('dest root /\narch all 10\n')
     (root/'var/lock').mkdir(parents=True)
+    (root/'usr/lib/opkg').mkdir(parents=True)
     def run(*args):
         p=subprocess.run([str(opkg),'-f',str(config),'-o',str(root),*args],stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
         if p.returncode:raise RuntimeError(p.stdout)
@@ -43,7 +44,7 @@ with tempfile.TemporaryDirectory(prefix='gsu-opkg-migration-') as folder:
     shell=Path('/bin/sh').resolve();dest=root/'bin/sh';dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(shell,dest);dest.chmod(0o755)
     libraries=subprocess.check_output(['ldd',str(shell)],text=True)
     for name in set(re.findall(r'/[^\s()]+',libraries)):
-        src=Path(name);target=root/src.relative_to('/');target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(src,target)
+        src=Path(name);target=root/src.relative_to('/');target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(src,target)
     helper=root/'usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/native_start_config.py';helper.parent.mkdir(parents=True,exist_ok=True);helper.write_text('hook fixture')
     python=root/'usr/bin/python3';python.parent.mkdir(parents=True,exist_ok=True);python.write_text('#!/bin/sh\nprintf "%s\\n" "$*" >> /restore-called\n');python.chmod(0o755)
     with tarfile.open(fileobj=io.BytesIO(update._control_archive(bridge)),mode='r:*') as archive:

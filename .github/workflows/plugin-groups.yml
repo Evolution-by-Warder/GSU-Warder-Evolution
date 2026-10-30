@@ -36,7 +36,7 @@ jobs:
           cd /tmp/gsu-opkg
           sed -i '/AC_CONFIG_MACRO_DIR(\[m4\])/d' configure.ac
           autoreconf -fi
-          ./configure --disable-curl --disable-gpg --disable-openssl --disable-ssl-curl --disable-sha256 CFLAGS='-include sys/sysmacros.h'
+          ./configure --disable-curl --disable-gpg --disable-openssl --disable-ssl-curl --disable-sha256 CFLAGS='-include sys/sysmacros.h -fcommon'
           make -j2
           cd "$GITHUB_WORKSPACE"
           sudo "$(command -v python)" plugin/tools/check_package_migration.py /tmp/gsu-opkg/src/opkg-cl

@@ -70,7 +70,7 @@ def publish():
     compatibility['release']['url']=compatibility['release']['url'].replace(update.REPOSITORY,'Evolution-by-Warder/Glass-System-Utility-Warder-Evolution',1)
     files={BASE/'update/stable.json':document,BASE/'update/candidate.json':bridge_doc,ROOT/'restoration/update/candidate.json':compatibility}
     for p,value in files.items():p.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n')
-    evidence=dict(status='PUBLIC_RELEASES_VERIFIED',package_id=update.PACKAGE_ID,plugin_browser_category='extensions',plugin_browser_name='gsu-warder-evolution',bridge=bridge_doc['release'],release=document['release'],legacy_updater_r92_accepts_actual_bridge=True,updated_bridge_accepts_actual_canonical_package=True,cam_start_configuration_preserved_during_automatic_rename=True,physical_receiver_test=False,workflow_run=int(os.environ['GITHUB_RUN_ID']))
+    evidence=dict(status='PUBLIC_RELEASES_VERIFIED',package_id=update.PACKAGE_ID,plugin_browser_category='extensions',plugin_browser_name='gsu-warder-evolution',bridge=bridge_doc['release'],release=document['release'],legacy_updater_r92_accepts_actual_bridge=True,updated_bridge_accepts_actual_canonical_package=True,cam_start_configuration_preserved_during_automatic_rename=True,real_offline_opkg_replacement_and_removal_verified=True,actual_prerm_hook_chroot_verified=True,opkg_compatibility_test_source='shr-project/opkg@eed3359acfff5cb90cd8e91949df32f089db50be',physical_receiver_test=False,workflow_run=int(os.environ['GITHUB_RUN_ID']))
     (ROOT/'reports').mkdir(exist_ok=True)
     (ROOT/'reports/plugin-groups-20261030.json').write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+'\n')
     record=json.loads((ROOT/'PRODUCTION.json').read_text())
