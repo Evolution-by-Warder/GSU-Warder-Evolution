@@ -1,0 +1,23 @@
+name: Verify OpenATV interfaces
+on:
+  schedule:
+    - cron: '25 5 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main, original-python314]
+    paths: [compatibility/**, plugin/src/**/*.py, .github/workflows/verify-openatv-compatibility.yml]
+permissions:
+  contents: read
+jobs:
+  compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: compatibility
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Check current official image interfaces without receiver diagnostics
+        run: python compatibility/check-openatv-interfaces.py --manifest compatibility/interfaces.json
