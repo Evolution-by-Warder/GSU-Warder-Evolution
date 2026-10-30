@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "date": "2026-10-30",
+  "upstream_repository": "https://github.com/openatv/enigma2",
+  "baseline": "13e055d3e172679c4c3fb16da1b0462d0bd8b660",
+  "head": "26544b4af938b462c251135810e229e897689bc2",
+  "commits": 417,
+  "changed_files": 617,
+  "changed_python_ast_files": 332,
+  "import_sites_examined": 500,
+  "directly_affected_python_modules": 33,
+  "automation": {
+    "location": "GitHub Actions only",
+    "daily_interface_checks": true,
+    "receiver_workers_timers_or_logs_added": false
+  },
+  "limits": [
+    "Source/static/API and mocked GUI validation; no physical Enigma2 receiver in this environment.",
+    "Future changes outside the explicitly covered contracts still require review."
+  ],
+  "protected_resources": "Trezor was not accessed or changed.",
+  "project": "GSU",
+  "result": {
+    "runtime": "ea4f27d3f4d8a7d8c9945d9e631121c6074debc4",
+    "version": "13.40-r94",
+    "unit_tests": 377,
+    "runtime_changes": []
+  },
+  "runtime_payload_changed": false,
+  "new_ipk_required": false,
+  "full_audit": "https://github.com/Evolution-by-Warder/FullHDGlass-Warder-Evolution/blob/main/reports/openatv-compatibility-20261030.json",
+  "latest_followup_commits": [
+    "7613653",
+    "26544b4"
+  ],
+  "latest_followup_review": "EPG descriptor bounds/reference/memory fixes and position gauge resize are native fixes without public API changes. Harddisk medium detection still returns the same six-value tuple. MultiBoot changes only unknown-device labels. Existing plugin calls and skins remain compatible."
+}
