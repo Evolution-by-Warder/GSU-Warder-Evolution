@@ -29,7 +29,7 @@ def plan(request,canonical,compatibility,releases):
             raise ValueError('Live feeds disagree; no releases may be removed')
     keeper=next((r for r in releases if r['tag_name']==keep),None)
     if keeper is None or keeper.get('draft'):raise ValueError('The protected release is not public')
-    required=PACKAGE_ID+'_'+release.version+'_all.ipk'
+    required=release.url.rsplit('/',1)[-1]
     if not any(a['name']==required and a['size']==release.bytes for a in keeper.get('assets',[])):
         raise ValueError('The protected release lacks the expected IPK')
     entries=request.get('delete')
@@ -60,7 +60,7 @@ def cleanup(request_path):
     compatibility=json.loads((BASE.parent/'restoration/update/candidate.json').read_text())
     pages=json.loads(run('gh','api','repos/'+REPOSITORY+'/releases','--paginate','--slurp'))
     release,selected=plan(request,canonical,compatibility,[r for page in pages for r in page])
-    filename=PACKAGE_ID+'_'+release.version+'_all.ipk'
+    filename=release.url.rsplit('/',1)[-1]
     with tempfile.TemporaryDirectory(prefix='gsu-retained-release-') as folder:
         run('gh','release','download','v'+release.version,'--repo',REPOSITORY,'--pattern',filename,'--dir',folder)
         path=Path(folder)/filename

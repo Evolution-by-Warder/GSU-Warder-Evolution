@@ -69,6 +69,14 @@ class ReleaseCleanupTests(unittest.TestCase):
                 deletes=[c for c in calls if 'DELETE' in c]
                 self.assertEqual(deletes,[('gh','api','--method','DELETE','repos/'+cleanup.REPOSITORY+'/releases/10')] if valid else [])
 
+    def test_protected_asset_name_comes_from_validated_feed_including_short_filename(self):
+        short='enigma2-plugin-extensions-gsu_13.40-r52_all.ipk'
+        feed=copy.deepcopy(self.feed);feed['release']['url']=feed['release']['url'].rsplit('/',1)[0]+'/'+short
+        releases=copy.deepcopy(self.releases);releases[0]['assets'][0]['name']=short
+        release,selected=cleanup.plan(self.request,feed,feed,releases)
+        self.assertEqual(release.url.rsplit('/',1)[-1],short)
+        self.assertEqual([r['id'] for r in selected],[10])
+
     def test_other_branches_cannot_delete_releases(self):
         with patch.dict(os.environ,GITHUB_REF='refs/heads/main'),patch.object(cleanup,'run') as run:
             with self.assertRaises(RuntimeError):cleanup.cleanup('unused')

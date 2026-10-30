@@ -22,5 +22,11 @@
   "runtime_unchanged": true,
   "internal_package_identity_unchanged": true,
   "new_ipk_required": false,
-  "trezor_accessed": false
+  "trezor_accessed": false,
+  "retention_uses_validated_feed_filename": true,
+  "validation": {
+    "local_unit_tests_passed": 377,
+    "retention_guard_tests_passed": 6,
+    "physical_receiver_test_required_for_filename_cleanup": false
+  }
 }
