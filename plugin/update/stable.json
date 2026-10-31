@@ -3,11 +3,11 @@
   "product": "Glass System Utility Warder Evolution",
   "channel": "original-python314",
   "release": {
-    "version": "13.40-r94",
-    "tag": "v13.40-r94",
-    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r94/enigma2-plugin-extensions-gsu_13.40-r94_all.ipk",
-    "sha256": "040266f3f6c8dd425e277fc5556a452cb3057194c093abe26b9aaa0d8e264a0b",
-    "bytes": 3681404,
-    "notes": "GSU 13.40-r94\n\nSprávne zaradenie v správcovi pluginov\n\n- GSU patrí do Balíčkov s rozšíreniami a zobrazuje sa ako gsu-warder-evolution.\n- Nová identita: enigma2-plugin-extensions-gsu-warder-evolution.\n- Krátky súbor na stiahnutie: enigma2-plugin-extensions-gsu_13.40-r94_all.ipk.\n- Staršie inštalácie dostanú najskôr kompatibilný prechod r93; po reštarte GUI aktualizátor ponúkne r94.\n- Prechod zachováva nastavenia aj spravované štartovanie CAM-u. Picony a skin sa nemenia.\n\nZmenu zaradenia a názvu výslovne požadoval vlastník 30.10.2026. Automatizované overenie nenahrádza fyzický test prijímača.\n"
+    "version": "13.40-r95",
+    "tag": "v13.40-r95",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r95/enigma2-plugin-extensions-gsu_13.40-r95_all.ipk",
+    "sha256": "370e6a26fed222616944f226d50dc30c1de66b44debb606468efc288058904a3",
+    "bytes": 3689270,
+    "notes": "GSU 13.40-r95\n\nOpravený prechod z pôvodnej verzie 13.20, pri ktorom inštalátor hlásil chyby pri odstraňovaní už chýbajúcich súborov. Doplnená kontrola úplnosti nainštalovaných súborov a úspešného dokončenia aktualizácie. Prehľadná, preložená história posledných štyroch vydaní; existujúce nastavenia zostávajú zachované.\n\nStaršie verzie aktualizátora môžu najskôr ponúknuť prechodovú verziu r93. Po reštarte GUI pokračujte na r95. Po aktualizácii reštartujte GUI.\n"
   }
 }

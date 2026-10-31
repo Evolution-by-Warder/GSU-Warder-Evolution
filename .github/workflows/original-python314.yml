@@ -40,6 +40,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          if ! python -c "import json,pathlib,sys; sys.path.insert(0,'plugin/src/GlassSysUtil'); from plugin_update import version_key; sys.exit(0 if version_key(pathlib.Path('plugin/src/GlassSysUtil/version').read_text().strip()) >= version_key(json.loads(pathlib.Path('plugin/update/stable.json').read_text())['release']['version']) else 1)"; then
+            echo 'Preserving the newer verified stable release; this source build cannot downgrade the feed.'
+            exit 0
+          fi
           python plugin/tools/publish_group_release.py
           git add plugin/update/candidate.json plugin/update/stable.json restoration/update/candidate.json PRODUCTION.json reports/plugin-groups-20261030.json
           if ! git diff --cached --quiet; then
