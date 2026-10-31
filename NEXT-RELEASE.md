@@ -7,6 +7,7 @@ Requested by the repository owner on 31 October 2026.
 - Give every entry a clear version/date heading and a visible separator.
 - Keep each description brief (at most 3 properly wrapped display lines), so the list fits cleanly on screen.
 - Follow the active environment language for UI labels.
+- Show only general user-facing changes; omit internal filenames, paths, implementation details, diagnostic/testing notes and working conversations.
 - Preserve the full historical source and Git history; the limit applies only to the UI view.
 - Preserve installer/result output and its existing actions; do not apply the 4-entry history limit to operational results.
 
