@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "date": "2026-10-31",
+  "status": "REPAIR_PACKAGE_VERIFIED_PHYSICAL_RETEST_PENDING",
+  "product": "GSU",
+  "version": "13.40-r95",
+  "release": {
+    "tag": "v13.40-r95",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/tag/v13.40-r95",
+    "prerelease": true,
+    "assets": [
+      {
+        "name": "enigma2-plugin-extensions-gsu_13.40-r95_all.ipk",
+        "bytes": 3689270,
+        "digest": "sha256:370e6a26fed222616944f226d50dc30c1de66b44debb606468efc288058904a3",
+        "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r95/enigma2-plugin-extensions-gsu_13.40-r95_all.ipk"
+      },
+      {
+        "name": "enigma2-plugin-extensions-gsu_13.40-r95_all.ipk.sha256",
+        "bytes": 114,
+        "digest": "sha256:0748f4171f373b2e67fe00d98bbb992ce7b965a660f4be309e56a26c707bad84",
+        "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r95/enigma2-plugin-extensions-gsu_13.40-r95_all.ipk.sha256"
+      }
+    ]
+  },
+  "source": {
+    "packaged_commit": "a2052b46ddc54fd3ae9150b895ebaaa08645f539",
+    "integrated_head": "aaedacd226242055992d6ce8c319b72645b97aaf",
+    "branch": "fix/receiver-repairs-20261031",
+    "pull_request": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/pull/2",
+    "integration_changes": "Current reports, release status and non-runtime review preview only; packaged code unchanged."
+  },
+  "validation": {
+    "workflow_run": 41239187568,
+    "workflow_conclusion": "success",
+    "public_package": {
+      "product": "GSU",
+      "version": "13.40-r95",
+      "file": "enigma2-plugin-extensions-gsu_13.40-r95_all.ipk",
+      "bytes": 3689270,
+      "sha256": "370e6a26fed222616944f226d50dc30c1de66b44debb606468efc288058904a3",
+      "source_python_modules_match": 48,
+      "packaged_health_and_history_checked": true,
+      "receiver_retest": false
+    },
+    "current_version_upgrade": {
+      "product": "GSU",
+      "old_package": "enigma2-plugin-extensions-gsu_13.40-r94_all.ipk",
+      "new_package": "enigma2-plugin-extensions-gsu_13.40-r95_all.ipk",
+      "opkg_exit": 0,
+      "fully_installed": true,
+      "all_non_conffile_payload_bytes_match": true,
+      "user_settings_preserved": true,
+      "force_reinstall_or_overwrite": false,
+      "offline_inert_hooks_enabled": true
+    },
+    "current_version_upgrade_scope": "Real opkg version/ownership transitions with complete public payloads; dependencies omitted and maintainer hooks inert in disposable offline roots; --force-postinstall only enables those inert hooks in offline opkg. Native hooks have separate tests; this is not a physical receiver test.",
+    "unit_tests": 393,
+    "original_13_20_transition": {
+      "original_ipk_sha256": "81aea6eb25b5ed519e904af87a3d7bece5d32ae6886a1690dac8ab47306fe3f7",
+      "opkg_version": "opkg version 0.10.0 (libsolv 0.7.40)",
+      "before": {
+        "preparation_enabled": false,
+        "opkg_exit": 0,
+        "obsolete_file_errors": 12,
+        "final_package_installed": true,
+        "all_new_payload_bytes_match": true,
+        "settings_preserved": true
+      },
+      "fixed": {
+        "preparation_enabled": true,
+        "opkg_exit": 0,
+        "obsolete_file_errors": 0,
+        "final_package_installed": true,
+        "all_new_payload_bytes_match": true,
+        "settings_preserved": true
+      },
+      "limits": "Isolated host test: original legacy hook/inventory with minimal old file contents, complete new payload; not a receiver test."
+    }
+  },
+  "stable_update_feeds_changed": false,
+  "published_old_ipks_changed": false,
+  "limits": [
+    "New repair package physical receiver retest is pending.",
+    "Original forum first-failure causes are not generalized beyond the verified evidence."
+  ],
+  "implemented_repairs": [
+    "Pinned legacy 13.20 postinst and ownership preparation without overwriting existing files/links",
+    "Upgrade and renamed-install invocation support without nested opkg queries",
+    "All core Python file hashes and version checked",
+    "Fresh final verifier requires exact package/version/fully-installed status before updater success",
+    "Four short history entries localized in ten languages"
+  ]
+}
