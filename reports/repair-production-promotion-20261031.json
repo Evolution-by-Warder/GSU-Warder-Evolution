@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-31",
+  "authorization": "Owner requested activating all three existing-version update channels and short web descriptions.",
+  "package_bytes_unchanged": true,
+  "owner_receiver_evidence": {
+    "batch_gui_installation_completed": true,
+    "settings_preserved_banner": true,
+    "numberzap_picon_visible_without_crash": true,
+    "device": "GigaBlue Quad4KPro",
+    "image": "OpenATV 8.0.1",
+    "original_forum_octagon_retest": false,
+    "all_features_tested": false
+  },
+  "limits": [
+    "PiconHub 0.1.32 requires one manual short-name IPK install; no long filename alias is created.",
+    "Legacy FullHDGlass 1.0.18 and GSU r93 identity bridge feeds remain unchanged.",
+    "FullHDGlass updater accepts raw repository package URLs, so the byte-identical IPK is also published there."
+  ],
+  "product": "gsu",
+  "release": {
+    "version": "13.40-r95",
+    "tag": "v13.40-r95",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r95/enigma2-plugin-extensions-gsu_13.40-r95_all.ipk",
+    "sha256": "370e6a26fed222616944f226d50dc30c1de66b44debb606468efc288058904a3",
+    "bytes": 3689270,
+    "notes": "GSU 13.40-r95\n\nOpravený prechod z pôvodnej verzie 13.20, pri ktorom inštalátor hlásil chyby pri odstraňovaní už chýbajúcich súborov. Doplnená kontrola úplnosti nainštalovaných súborov a úspešného dokončenia aktualizácie. Prehľadná, preložená história posledných štyroch vydaní; existujúce nastavenia zostávajú zachované.\n\nStaršie verzie aktualizátora môžu najskôr ponúknuť prechodovú verziu r93. Po reštarte GUI pokračujte na r95. Po aktualizácii reštartujte GUI.\n"
+  },
+  "active_feed_branch": "original-python314",
+  "packaged_source_commit": "a2052b46ddc54fd3ae9150b895ebaaa08645f539"
+}

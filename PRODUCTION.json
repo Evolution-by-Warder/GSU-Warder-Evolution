@@ -2,19 +2,18 @@
   "schema": 1,
   "product": "GSU Warder Evolution",
   "status": "production-update-active",
-  "approved_on": "2026-10-30",
-  "approval": "GSU nech sa tam zobrazuju ako gsu-warder-evolution",
-  "source_branch": "original-python314",
-  "source_commit": "7104d886e8549a3378267f21cc7eaeddff44fd05",
-  "activation_commit": "0df6b6e56e9afa0e72c0b0f7ae5544eaf113bd1b",
+  "approved_on": "2026-10-31",
+  "approval": "Owner: tak to vsetko sprav (activate all three verified repair update channels).",
+  "source_branch": "fix/receiver-repairs-20261031",
+  "source_commit": "a2052b46ddc54fd3ae9150b895ebaaa08645f539",
   "release": {
-    "version": "13.40-r94",
-    "tag": "v13.40-r94",
-    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r94/enigma2-plugin-extensions-gsu_13.40-r94_all.ipk",
-    "sha256": "040266f3f6c8dd425e277fc5556a452cb3057194c093abe26b9aaa0d8e264a0b",
-    "bytes": 3681404,
-    "notes": "GSU 13.40-r94\n\nSprávne zaradenie v správcovi pluginov\n\n- GSU patrí do Balíčkov s rozšíreniami a zobrazuje sa ako gsu-warder-evolution.\n- Nová identita: enigma2-plugin-extensions-gsu-warder-evolution.\n- Krátky súbor na stiahnutie: enigma2-plugin-extensions-gsu_13.40-r94_all.ipk.\n- Staršie inštalácie dostanú najskôr kompatibilný prechod r93; po reštarte GUI aktualizátor ponúkne r94.\n- Prechod zachováva nastavenia aj spravované štartovanie CAM-u. Picony a skin sa nemenia.\n\nZmenu zaradenia a názvu výslovne požadoval vlastník 30.10.2026. Automatizované overenie nenahrádza fyzický test prijímača.\n",
-    "release_url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/tag/v13.40-r94"
+    "version": "13.40-r95",
+    "tag": "v13.40-r95",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r95/enigma2-plugin-extensions-gsu_13.40-r95_all.ipk",
+    "sha256": "370e6a26fed222616944f226d50dc30c1de66b44debb606468efc288058904a3",
+    "bytes": 3689270,
+    "notes": "GSU 13.40-r95\n\nOpravený prechod z pôvodnej verzie 13.20, pri ktorom inštalátor hlásil chyby pri odstraňovaní už chýbajúcich súborov. Doplnená kontrola úplnosti nainštalovaných súborov a úspešného dokončenia aktualizácie. Prehľadná, preložená história posledných štyroch vydaní; existujúce nastavenia zostávajú zachované.\n\nStaršie verzie aktualizátora môžu najskôr ponúknuť prechodovú verziu r93. Po reštarte GUI pokračujte na r95. Po aktualizácii reštartujte GUI.\n",
+    "release_url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/tag/v13.40-r95"
   },
   "package_id": "enigma2-plugin-extensions-gsu-warder-evolution",
   "installation_directory": "/usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/",
@@ -24,21 +23,24 @@
     "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/restoration/update/candidate.json"
   ],
   "validation": {
-    "workflow_run": 41018889228,
-    "unit_tests": 375,
+    "unit_tests": 393,
+    "ci": "passed",
     "public_ipk_size_and_sha256_verified": true,
-    "receiver_tested": false,
-    "limits": "Automated package/control/update/migration checks; no physical receiver test claimed."
+    "receiver_gui_batch_installation_completed": true,
+    "receiver_all_features_tested": false,
+    "receiver_device": "GigaBlue Quad4KPro / OpenATV 8.0.1",
+    "original_forum_octagon_retest": false
   },
   "accepted_candidate": {
     "version": "13.40-r91",
     "source_commit": "8d8c17b5b5f8672083d966bd49625c8b3d1dcec2"
   },
-  "version_policy": "13.40-r92 upgrades normally from production r90 and candidate r91.",
+  "version_policy": "13.40-r95 upgrades normally from r93 and r94; earlier updater identities retain the frozen r93 bridge.",
   "identity_transition": {
     "bridge_version": "13.40-r93",
-    "target_version": "13.40-r94",
+    "target_version": "13.40-r95",
     "legacy_feed_frozen": true,
-    "steps": "Update to r93, restart GUI, then update to r94"
-  }
+    "steps": "Update to r93 when offered, restart GUI, then update to r95"
+  },
+  "package_source_commit": "a2052b46ddc54fd3ae9150b895ebaaa08645f539"
 }
