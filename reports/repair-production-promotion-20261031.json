@@ -16,15 +16,98 @@
     "Legacy FullHDGlass 1.0.18 and GSU r93 identity bridge feeds remain unchanged.",
     "FullHDGlass updater accepts raw repository package URLs, so the byte-identical IPK is also published there."
   ],
-  "product": "gsu",
-  "release": {
-    "version": "13.40-r95",
-    "tag": "v13.40-r95",
-    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r95/enigma2-plugin-extensions-gsu_13.40-r95_all.ipk",
-    "sha256": "370e6a26fed222616944f226d50dc30c1de66b44debb606468efc288058904a3",
-    "bytes": 3689270,
-    "notes": "GSU 13.40-r95\n\nOpravený prechod z pôvodnej verzie 13.20, pri ktorom inštalátor hlásil chyby pri odstraňovaní už chýbajúcich súborov. Doplnená kontrola úplnosti nainštalovaných súborov a úspešného dokončenia aktualizácie. Prehľadná, preložená história posledných štyroch vydaní; existujúce nastavenia zostávajú zachované.\n\nStaršie verzie aktualizátora môžu najskôr ponúknuť prechodovú verziu r93. Po reštarte GUI pokračujte na r95. Po aktualizácii reštartujte GUI.\n"
+  "status": "PRODUCTION_UPDATE_FEEDS_ACTIVE_AND_PUBLICLY_VERIFIED",
+  "live_feeds": {
+    "full": {
+      "url": "https://raw.githubusercontent.com/Evolution-by-Warder/FullHDGlass-Warder-Evolution/main/update-production.json",
+      "version": "1.0.51"
+    },
+    "full_test": {
+      "url": "https://raw.githubusercontent.com/Evolution-by-Warder/FullHDGlass-Warder-Evolution/warder-modernization-work/update-test.json",
+      "version": "1.0.51"
+    },
+    "picon": {
+      "url": "https://raw.githubusercontent.com/Evolution-by-Warder/PiconHub-Warder-Evolution/plugin/futuristic-rebuild/plugin/update/stable.json",
+      "version": "0.1.35"
+    },
+    "gsu": {
+      "url": "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/plugin/update/stable.json",
+      "version": "13.40-r95"
+    },
+    "full_bridge": {
+      "url": "https://raw.githubusercontent.com/Evolution-by-Warder/FullHDGlass-Warder-Evolution/main/update.json",
+      "version": "1.0.18"
+    },
+    "gsu_bridge": {
+      "url": "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/plugin/update/candidate.json",
+      "version": "13.40-r93"
+    }
   },
-  "active_feed_branch": "original-python314",
-  "packaged_source_commit": "a2052b46ddc54fd3ae9150b895ebaaa08645f539"
+  "updater_validation": [
+    {
+      "product": "picon",
+      "accepted_from": [
+        "0.1.33",
+        "0.1.34-rc1"
+      ],
+      "version": "0.1.35",
+      "actual_ipk_validated": true,
+      "no_repeat_update": true,
+      "sha256": "52cc24b4af666262f2faa70cb80b25c2c0a72c9bf13a3d744950c45a8c1c14b0"
+    },
+    {
+      "product": "gsu",
+      "accepted_from": [
+        "13.40-r93",
+        "13.40-r94"
+      ],
+      "version": "13.40-r95",
+      "actual_ipk_validated": true,
+      "no_repeat_update": true,
+      "sha256": "370e6a26fed222616944f226d50dc30c1de66b44debb606468efc288058904a3"
+    },
+    {
+      "product": "FullHDGlass",
+      "accepted_from": [
+        "1.0.18",
+        "1.0.19",
+        "1.0.49",
+        "1.0.50-test4"
+      ],
+      "version": "1.0.51",
+      "packaged_updater_url_allowlist_passed": true,
+      "version_ordering_passed": true,
+      "sha256": "499ef0eaf5785c7a07eea4e52911350b3bb14fc251b5236b391fff1a8c6b266a"
+    }
+  ],
+  "release": {
+    "tag": "v13.40-r95",
+    "packaged_source_commit": "a2052b46ddc54fd3ae9150b895ebaaa08645f539",
+    "assets": [
+      {
+        "name": "enigma2-plugin-extensions-gsu_13.40-r95_all.ipk",
+        "bytes": 3689270,
+        "sha256": "370e6a26fed222616944f226d50dc30c1de66b44debb606468efc288058904a3"
+      },
+      {
+        "name": "enigma2-plugin-extensions-gsu_13.40-r95_all.ipk.sha256",
+        "bytes": 114,
+        "sha256": "0748f4171f373b2e67fe00d98bbb992ce7b965a660f4be309e56a26c707bad84"
+      }
+    ],
+    "github_stable_latest_verified": true
+  },
+  "workflow_runs": {
+    "fullhdglass_immutable_promotion": 41243025971,
+    "piconhub_immutable_promotion": 41242758514,
+    "piconhub_production_record": 41243097930,
+    "gsu_immutable_promotion": 41242762824,
+    "gsu_feed_preservation": 41243106931
+  },
+  "legacy_updater_compatibility": {
+    "piconhub_0_1_33_accepts_actual_0_1_35_ipk": true,
+    "gsu_r94_accepts_actual_r95_ipk": true,
+    "fullhdglass_packaged_raw_url_allowlist": true
+  },
+  "source_repairs_merged": true
 }
