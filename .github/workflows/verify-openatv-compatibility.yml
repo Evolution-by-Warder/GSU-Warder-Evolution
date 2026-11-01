@@ -6,18 +6,37 @@ on:
   push:
     branches: [main, original-python314]
     paths: [compatibility/**, plugin/src/**/*.py, .github/workflows/verify-openatv-compatibility.yml]
+  pull_request:
+    paths: [compatibility/**, plugin/src/**/*.py, .github/workflows/verify-openatv-compatibility.yml]
 permissions:
   contents: read
 jobs:
   compatibility:
     runs-on: ubuntu-latest
+    name: OpenATV ${{ matrix.upstream_ref }}
+    strategy:
+      fail-fast: false
+      matrix:
+        upstream_ref: ["8.0", 8.0-next, master]
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
         with:
-          sparse-checkout: compatibility
+          sparse-checkout: |
+            compatibility
+            plugin/src
+      - uses: actions/checkout@v4
+        with:
+          repository: openatv/enigma2
+          ref: ${{ matrix.upstream_ref }}
+          path: upstream/enigma2
+          sparse-checkout: lib/python
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.14'
       - name: Check current official image interfaces without receiver diagnostics
-        run: python compatibility/check-openatv-interfaces.py --manifest compatibility/interfaces.json
+        run: |
+          python compatibility/check-openatv-interfaces.py --manifest compatibility/interfaces.json --ref "${{ matrix.upstream_ref }}" --upstream upstream/enigma2/lib/python
+          python compatibility/test-skin-binding-audit.py -v
+          python compatibility/audit-openatv-skin-bindings.py --upstream upstream/enigma2/lib/python --plugin-root plugin/src
