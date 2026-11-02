@@ -282,7 +282,7 @@ class ClientScreenTests(unittest.TestCase):
         self.screen.prepareClients()
         for index in range(3):
             for kind in ('labels', 'values'):
-                self.screen['status_' + kind + '_' + str(index)].instance.setWrap.assert_called_once_with(0)
+                self.screen['status_' + kind + '_' + str(index)].instance.setNoWrap.assert_called_once_with(1)
 
     def test_receiver_long_protocol_keeps_five_detail_lines_and_full_description_in_list(self):
         self.records[0]['protocol'] = 'dvbapi (client: Enigma2, protocol version: 3)'

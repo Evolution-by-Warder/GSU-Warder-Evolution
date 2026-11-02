@@ -1,19 +1,31 @@
 {
   "schema": 1,
-  "product": "GSU Warder Evolution",
+  "product": "GSU",
   "status": "production-update-active",
-  "approved_on": "2026-10-31",
-  "approval": "Owner: tak to vsetko sprav (activate all three verified repair update channels).",
-  "source_branch": "fix/receiver-repairs-20261031",
-  "source_commit": "a2052b46ddc54fd3ae9150b895ebaaa08645f539",
+  "approved_on": "2026-11-02",
+  "approval": "Owner explicitly requested all latest repairs in all our plugins as normal full releases and all required records; this supersedes the earlier publishing pause.",
+  "source_branch": "main",
+  "source_commit": "f31640f486fe739ed05bfe4de5a25d99738ba986",
   "release": {
-    "version": "13.40-r95",
-    "tag": "v13.40-r95",
-    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r95/enigma2-plugin-extensions-gsu_13.40-r95_all.ipk",
-    "sha256": "370e6a26fed222616944f226d50dc30c1de66b44debb606468efc288058904a3",
-    "bytes": 3689270,
-    "notes": "GSU 13.40-r95\n\nOpravený prechod z pôvodnej verzie 13.20, pri ktorom inštalátor hlásil chyby pri odstraňovaní už chýbajúcich súborov. Doplnená kontrola úplnosti nainštalovaných súborov a úspešného dokončenia aktualizácie. Prehľadná, preložená história posledných štyroch vydaní; existujúce nastavenia zostávajú zachované.\n\nStaršie verzie aktualizátora môžu najskôr ponúknuť prechodovú verziu r93. Po reštarte GUI pokračujte na r95. Po aktualizácii reštartujte GUI.\n",
-    "release_url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/tag/v13.40-r95"
+    "version": "13.41-r4",
+    "tag": "v13.41-r4",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.41-r4/enigma2-plugin-extensions-gsu_13.41-r4_all.ipk",
+    "sha256": "48d8f90a6f1665f28e777b615f4dd25b1b8afc0b85128685965d44b66134acb2",
+    "bytes": 3692762,
+    "notes": "Spoločná verzia pre OpenPLi a OpenATV. Opravený štart aktualizátora bez modulu dataclasses a pád ECM panela na OpenPLi; rovnaké volania sú opravené aj v informáciách o kanáli a klientoch OSCam. Zahrnuté sú úpravy zoznamov, rozlíšení HD/FHD/WQHD/UHD a kompatibility OpenATV 8.1/GLES. Nastavenia a spravované štartovanie CAM-u zostávajú zachované. Po aktualizácii reštartujte GUI.",
+    "notes_i18n": {
+      "cs": "Společné vydání pro OpenPLi a OpenATV. Opravy instalace, kompatibility a zobrazení; dosavadní nastavení zůstávají zachována. Po aktualizaci restartujte GUI.",
+      "de": "Gemeinsame Ausgabe für OpenPLi und OpenATV. Korrekturen an Installation, Kompatibilität und Darstellung; vorhandene Einstellungen bleiben erhalten. Nach dem Update die GUI neu starten.",
+      "pl": "Wspólne wydanie dla OpenPLi i OpenATV. Poprawki instalacji, zgodności i wyświetlania; dotychczasowe ustawienia pozostają zachowane. Po aktualizacji uruchom ponownie GUI.",
+      "hu": "Közös kiadás OpenPLi és OpenATV rendszerekhez. Telepítési, kompatibilitási és megjelenítési javítások; a meglévő beállítások megmaradnak. Frissítés után indítsd újra a GUI-t.",
+      "ru": "Общий выпуск для OpenPLi и OpenATV. Исправлены установка, совместимость и отображение; существующие настройки сохраняются. После обновления перезапустите GUI.",
+      "fr": "Version commune pour OpenPLi et OpenATV. Corrections d’installation, de compatibilité et d’affichage ; les réglages existants sont conservés. Redémarrez l’interface après la mise à jour.",
+      "it": "Versione comune per OpenPLi e OpenATV. Correzioni di installazione, compatibilità e visualizzazione; le impostazioni esistenti vengono conservate. Riavviare la GUI dopo l’aggiornamento.",
+      "es": "Versión común para OpenPLi y OpenATV. Correcciones de instalación, compatibilidad y visualización; se conservan los ajustes existentes. Reinicie la interfaz tras actualizar.",
+      "sk": "Spoločná verzia pre OpenPLi a OpenATV. Opravený štart aktualizátora bez modulu dataclasses a pád ECM panela na OpenPLi; rovnaké volania sú opravené aj v informáciách o kanáli a klientoch OSCam. Zahrnuté sú úpravy zoznamov, rozlíšení HD/FHD/WQHD/UHD a kompatibility OpenATV 8.1/GLES. Nastavenia a spravované štartovanie CAM-u zostávajú zachované. Po aktualizácii reštartujte GUI.",
+      "en": "Common OpenPLi and OpenATV release. Removes the updater dataclasses dependency and fixes the OpenPLi ECM OSD startup crash, channel information and OSCam client labels. Includes list fitting, HD/FHD/WQHD/UHD layouts and OpenATV 8.1/GLES compatibility. Settings and managed CAM startup are preserved. Restart the GUI after updating."
+    },
+    "release_url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/tag/v13.41-r4"
   },
   "package_id": "enigma2-plugin-extensions-gsu-warder-evolution",
   "installation_directory": "/usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/",
@@ -23,24 +35,53 @@
     "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/restoration/update/candidate.json"
   ],
   "validation": {
-    "unit_tests": 393,
-    "ci": "passed",
-    "public_ipk_size_and_sha256_verified": true,
-    "receiver_gui_batch_installation_completed": true,
-    "receiver_all_features_tested": false,
-    "receiver_device": "GigaBlue Quad4KPro / OpenATV 8.0.1",
-    "original_forum_octagon_retest": false
+    "version": "13.41-r4",
+    "package_source_commit": "f31640f486fe739ed05bfe4de5a25d99738ba986",
+    "workflow_run": "41501208830",
+    "public_ipk_sha256_verified": true,
+    "public_ipk_sidecar_verified": true,
+    "sha256": "48d8f90a6f1665f28e777b615f4dd25b1b8afc0b85128685965d44b66134acb2",
+    "bytes": 3692762,
+    "candidate_sha256": "32c4d284767b1a4fb59df65dba828f97f1a1dac8478194a4553a2a1631fe6fd5",
+    "candidate_python_files_compared": 52,
+    "only_generated_version_labels_changed": true,
+    "OpenPLi_refs": [
+      "release-9.2",
+      "develop"
+    ],
+    "OpenATV_refs": [
+      "8.0",
+      "8.0-next",
+      "master"
+    ],
+    "matrices_passed": true,
+    "physical_receiver_all_features_verified": false,
+    "custom_font_settings_preserved": true
   },
   "accepted_candidate": {
-    "version": "13.40-r91",
-    "source_commit": "8d8c17b5b5f8672083d966bd49625c8b3d1dcec2"
+    "version": "13.41-r3",
+    "sha256": "32c4d284767b1a4fb59df65dba828f97f1a1dac8478194a4553a2a1631fe6fd5"
   },
-  "version_policy": "13.40-r95 upgrades normally from r93 and r94; earlier updater identities retain the frozen r93 bridge.",
+  "version_policy": "Normal 13.41-r4 upgrades from r95 and all 13.41 TEST revisions; the legacy r93 bridge remains frozen.",
   "identity_transition": {
     "bridge_version": "13.40-r93",
-    "target_version": "13.40-r95",
+    "target_version": "13.41-r4",
     "legacy_feed_frozen": true,
-    "steps": "Update to r93 when offered, restart GUI, then update to r95"
+    "steps": "Update to frozen r93 when offered, restart GUI, then update to 13.41-r4"
   },
-  "package_source_commit": "a2052b46ddc54fd3ae9150b895ebaaa08645f539"
+  "package_source_commit": "f31640f486fe739ed05bfe4de5a25d99738ba986",
+  "previous_release": {
+    "version": "13.40-r95",
+    "tag": "v13.40-r95",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.40-r95/enigma2-plugin-extensions-gsu_13.40-r95_all.ipk",
+    "sha256": "370e6a26fed222616944f226d50dc30c1de66b44debb606468efc288058904a3",
+    "bytes": 3689270,
+    "notes": "GSU 13.40-r95\n\nOpravený prechod z pôvodnej verzie 13.20, pri ktorom inštalátor hlásil chyby pri odstraňovaní už chýbajúcich súborov. Doplnená kontrola úplnosti nainštalovaných súborov a úspešného dokončenia aktualizácie. Prehľadná, preložená história posledných štyroch vydaní; existujúce nastavenia zostávajú zachované.\n\nStaršie verzie aktualizátora môžu najskôr ponúknuť prechodovú verziu r93. Po reštarte GUI pokračujte na r95. Po aktualizácii reštartujte GUI.\n",
+    "release_url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/tag/v13.40-r95"
+  },
+  "peer_production": {
+    "fullhdglass": "1.0.62",
+    "gsu": "13.41-r4",
+    "piconhub": "0.1.40"
+  }
 }

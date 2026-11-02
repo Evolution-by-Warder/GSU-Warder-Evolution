@@ -55,7 +55,7 @@ def prepare(screen):
         for kind in ('labels', 'values'):
             widget = screen['status_' + kind + '_' + str(index)]
             if widget.instance is not None:
-                widget.instance.setWrap(0)
+                widget.instance.setNoWrap(1)
 
 
 def stop(screen):

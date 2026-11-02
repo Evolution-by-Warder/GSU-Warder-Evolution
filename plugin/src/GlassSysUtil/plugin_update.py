@@ -9,7 +9,7 @@ import ssl
 import subprocess
 import tarfile
 import tempfile
-from dataclasses import dataclass, field
+from collections import namedtuple
 from urllib.request import Request, urlopen
 
 REPOSITORY = "Evolution-by-Warder/GSU-Warder-Evolution"
@@ -29,21 +29,25 @@ class UpdateError(ValueError):
 def version_key(value):
     if not isinstance(value, str):
         raise UpdateError("Invalid plugin version")
-    match = re.fullmatch(r"(\d+)\.(\d+)-r(\d+)", value)
+    match = re.fullmatch(r"(\d+)\.(\d+)-r(\d+)(?:-test([1-9]\d*))?", value)
     if not match:
         raise UpdateError("Invalid restoration version")
-    return tuple(int(part) for part in match.groups())
+    major, minor, revision, test = match.groups()
+    # opkg splits at the last hyphen: legacy -testN adds an upstream
+    # component, so no same-minor plain rNN release is a native upgrade.
+    return (int(major), int(minor), int(test is not None), int(revision), int(test or 0))
 
 
-@dataclass(frozen=True)
-class Release:
-    version: str
-    url: str
-    sha256: str
-    bytes: int
-    notes: str = ""
-    notes_i18n: dict = field(default_factory=dict)
-    package_id: str = PACKAGE_ID
+# Use a core-Python immutable record: some receiver images split or omit
+# dataclasses even when the Python version normally includes that module.
+_DEFAULT_NOTES = object()
+
+
+class Release(namedtuple('_Release', 'version url sha256 bytes notes notes_i18n package_id')):
+    __slots__ = ()
+
+    def __new__(cls, version, url, sha256, bytes, notes="", notes_i18n=_DEFAULT_NOTES, package_id=PACKAGE_ID):
+        return super().__new__(cls, version, url, sha256, bytes, notes, {} if notes_i18n is _DEFAULT_NOTES else notes_i18n, package_id)
 
 
 def parse_release(payload, current_version):
@@ -65,6 +69,8 @@ def parse_release(payload, current_version):
     if not isinstance(item, dict):
         raise UpdateError("Invalid release entry")
     remote = version_key(item.get("version"))
+    if remote[2] != 0:
+        raise UpdateError("Test build in production channel")
     tag = item.get("tag")
     if tag not in (item["version"], "v" + item["version"]):
         raise UpdateError("Release tag does not match version")
@@ -187,7 +193,17 @@ def validate_ipk(path, release):
         raise UpdateError("IPK package identity, version or architecture mismatch")
 
 
-def install_release(release, opener=_open, runner=subprocess.run):
+def verify_installation(expected_version, package_id=PACKAGE_ID, runner=subprocess.run):
+    # Use the newly installed helper, even while the old GUI remains in memory.
+    helper = pathlib.Path(__file__).parent / 'install_health.py'
+    result = runner(['/usr/bin/python3', str(helper), '--expected-version',
+                     expected_version, '--package', package_id], stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT, text=True, timeout=30)
+    if result.returncode != 0:
+        raise UpdateError('GSU installation verification failed: ' + result.stdout[-2000:])
+
+
+def install_release(release, opener=_open, runner=subprocess.run, verifier=None):
     """Stage and validate both packages before a guarded identity replacement."""
     with tempfile.TemporaryDirectory(prefix="gsu-plugin-update-") as temporary:
         work = pathlib.Path(temporary)
@@ -227,6 +243,7 @@ def install_release(release, opener=_open, runner=subprocess.run):
                                 stderr=subprocess.STDOUT, text=True, timeout=300)
                 if result.returncode != 0:
                     raise UpdateError("opkg failed (%s): %s" % (result.returncode, result.stdout[-2000:]))
+                (verifier or verify_installation)(release.version, package_id=release.package_id, runner=runner)
             except Exception as failure:
                 if rollback_path is not None:
                     try:

@@ -42,6 +42,22 @@ class PluginUpdateTests(unittest.TestCase):
         self.document['release']=None
         self.assertIsNone(self.release())
 
+    def test_installed_test_version_accepts_checks_without_downgrade_or_beta_feed(self):
+        self.assertGreater(update.version_key('13.40-r95-test3'),update.version_key('13.40-r95-test2'))
+        self.assertGreater(update.version_key('13.40-r95-test1'),update.version_key('13.40-r95'))
+        self.assertIsNone(update.parse_release(json.dumps(self.document),'13.40-r95-test3'))
+        for version in ('13.40-r95-test0','13.40-r95-test','13.40-r95-test3;reboot'):
+            with self.assertRaises(update.UpdateError):update.version_key(version)
+        self.item['version']='13.40-r96-test1'
+        with self.assertRaisesRegex(update.UpdateError,'Test build in production channel'):
+            update.parse_release(json.dumps(self.document),'13.40-r95-test3')
+        self.item.update(version='13.40-r96',tag='v13.40-r96',
+            url='https://github.com/'+update.REPOSITORY+'/releases/download/v13.40-r96/'+update.DOWNLOAD_PREFIX+'_13.40-r96_all.ipk')
+        self.assertIsNone(update.parse_release(json.dumps(self.document),'13.40-r95-test3'))
+        self.item.update(version='13.41-r1',tag='v13.41-r1',
+            url='https://github.com/'+update.REPOSITORY+'/releases/download/v13.41-r1/'+update.DOWNLOAD_PREFIX+'_13.41-r1_all.ipk')
+        self.assertEqual(update.parse_release(json.dumps(self.document),'13.40-r95-test3').version,'13.41-r1')
+
     def test_other_products_channels_versions_urls_and_invalid_metadata_rejected(self):
         for field,value in [('product','PiconHub Warder Evolution'),('channel','stable')]:
             document=dict(self.document);document[field]=value

@@ -4,7 +4,7 @@ from Components.ActionMap import ActionMap
 from Components.ConfigList import ConfigListScreen
 from Components.Label import Label
 from Components.config import ConfigDirectory, ConfigInteger, ConfigSelection, ConfigText, ConfigYesNo, getConfigListEntry
-from Screens.Screen import Screen
+from .warder_screen import Screen
 from twisted.internet.threads import deferToThread
 from .native_start_config import StartConfigStore
 

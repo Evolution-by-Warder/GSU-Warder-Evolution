@@ -16,7 +16,7 @@ class WarderCamTests(unittest.TestCase):
         for name in ('select_pict','txt0','txt1','txt2','txt3','txt4','txt6','txt7','txt8'):
             self.screen[name].instance=MagicMock()
     def test_layout_keeps_all_backend_components_and_common_header_in_three_resolutions(self):
-        for width,height in ((1280,720),(1920,1080),(3840,2160)):
+        for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
             original=self.plugin._srv_skin(self.plugin._compact_cam_menu(self.plugin.UCM))
             root=ET.fromstring(self.ui.cam_skin(original,width,height))
             names={n.get('name') for n in root if n.get('name')}

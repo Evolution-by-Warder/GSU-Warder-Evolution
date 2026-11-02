@@ -66,7 +66,7 @@ class ChannelLayoutTests(unittest.TestCase):
 
     def test_layout_callbacks_match_native_openatv_dispatch_and_align_satellite(self):
         plugin=load(ROOT)
-        for width,height in ((1280,720),(1920,1080),(3840,2160)):
+        for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
             screen=plugin.channelInfoCenter(types.SimpleNamespace())
             # OpenATV executes bound methods directly and passes other entries to exec.
             for callback in screen.onLayoutFinish:

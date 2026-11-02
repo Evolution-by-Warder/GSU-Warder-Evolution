@@ -30,7 +30,7 @@ from Components.Sources.StaticText import StaticText
 from Plugins.Plugin import PluginDescriptor
 from Tools.Directories import fileExists
 from xml.etree.cElementTree import parse
-from Screens.Screen import Screen
+from .warder_screen import Screen
 from Components.MenuList import MenuList
 from Components.Label import Label
 from Components.ActionMap import ActionMap, HelpableActionMap
@@ -146,16 +146,22 @@ try:
 except:
     pass
 
-FHD = getDesktop(0).size().width()
-if FHD == 1920:
-    from Plugins.Extensions.GlassSysUtil.GSU_skins_FHD import *
-    FHD = 1.5
-elif FHD == 3840:
+_GSU_DESKTOP = getDesktop(0).size()
+_GSU_WIDTH, _GSU_HEIGHT = _GSU_DESKTOP.width(), _GSU_DESKTOP.height()
+if _GSU_WIDTH >= 3840:
     from Plugins.Extensions.GlassSysUtil.GSU_skins_UHD import *
     FHD = 3
+    _GSU_BASE = (3840, 2160)
+elif _GSU_WIDTH >= 1920:
+    from Plugins.Extensions.GlassSysUtil.GSU_skins_FHD import *
+    FHD = 1.5
+    _GSU_BASE = (1920, 1080)
 else:
     from Plugins.Extensions.GlassSysUtil.GSU_skins import *
     FHD = 1
+    _GSU_BASE = (1280, 720)
+from Plugins.Extensions.GlassSysUtil.warder_resolution import adapt_skins as _adapt_skins
+_adapt_skins(globals(), _GSU_BASE, (_GSU_WIDTH, _GSU_HEIGHT))
 _warder_main.style_lists(globals())
 E4X = False
 try:
@@ -263,7 +269,7 @@ A_TM = '/tmp/a.tmp'
 RM_A_TMP = 'rm -rf %s' % A_TM
 
 def fhd(t):
-    return int(t * FHD)
+    return int(t * _GSU_HEIGHT / 720.0)
 
 
 def generatePS():
@@ -2106,7 +2112,7 @@ class channelInfoCenter(Screen):
         return
 
     def startInfo(self):
-        self['ecmValues'].instance.setWrap(0)
+        self['ecmValues'].instance.setNoWrap(1)
         for x in ('picprov', 'picsat', 'picchannel', 'piccode', 'piccam'):
             self[x].instance.setScale(1)
 
@@ -6084,6 +6090,12 @@ class oscam_logInfo(Screen):
                 item.append(MultiContentEntryText(pos=(0, 0), size=(fhd(1180), fhd(17)), font=1, text=txt, color=int(clr, 16)))
                 self.list.append(item)
 
+        from Plugins.Extensions.GlassSysUtil.warder_log_rows import rows as _log_rows
+        self.list = _log_rows(self.list, MultiContentEntryText,
+                              getattr(self, '_warder_log_width', fhd(1180)),
+                              getattr(self, '_warder_log_font', fhd(15)),
+                              getattr(self, '_warder_log_row', fhd(24)))
+        self['log_info'].l.setItemHeight(getattr(self, '_warder_log_row', fhd(24)))
         self['log_info'].l.setList(self.list)
         self['log_info'].selectionEnabled(0)
         self.refreshTimer.startLongTimer(int(config.plugins.GlassSysUtil.par61.value))
@@ -7138,7 +7150,7 @@ class OnScreenEcmScreen(Screen):
     def prepareOsd(self):
         for name in ('OSD_Ecm_info', 'ecm_items'):
             if name in self:
-                self[name].instance.setWrap(0)
+                self[name].instance.setNoWrap(1)
 
 
 class OnScreenEcmMain():

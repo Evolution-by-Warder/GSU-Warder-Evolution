@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-02",
+  "version": "13.41-r3",
+  "source_commit": "7b1cbb3a90997010382ef3de25a3d7d8c81287ac",
+  "ci_run": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/actions/runs/41481808266",
+  "ci_conclusion": "success",
+  "bytes": 3691996,
+  "sha256": "32c4d284767b1a4fb59df65dba828f97f1a1dac8478194a4553a2a1631fe6fd5",
+  "public_ipk_downloaded": true,
+  "sha256_sidecar_verified": true,
+  "actual_packaged_ecm_layout_strict_openpli_label_passed": true,
+  "actual_packaged_clients_layout_strict_openpli_label_passed": true,
+  "old_r2_failure_reproduced": true,
+  "shipped_file_verifier_passed": true,
+  "updater_without_dataclasses_passed": true,
+  "source_tests": 415,
+  "native_cpp_label_contracts_verified": [
+    "OpenPLi release-9.2",
+    "OpenPLi develop",
+    "OpenATV"
+  ],
+  "production_feeds_changed": false,
+  "receiver_validation": "pending"
+}

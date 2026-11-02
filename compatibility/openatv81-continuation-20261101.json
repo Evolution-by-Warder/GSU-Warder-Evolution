@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-01",
+  "project": "gsu",
+  "upstreams": [
+    {
+      "ref": "8.0",
+      "commit": "c1b227eaa7226a3b15d1670461af69fcbe4623d7"
+    },
+    {
+      "ref": "8.0-next",
+      "commit": "266beaa50c464f1a6983a3a64133f6047482aee8"
+    },
+    {
+      "ref": "master",
+      "commit": "f219f5754c748a68f6dc5e99b1ce742df3d4c383"
+    }
+  ],
+  "runtime_changed": false,
+  "version_bumped": false,
+  "update_feeds_changed": false,
+  "published_package_changed": false,
+  "interfaces": {
+    "exports": 40,
+    "modules": 29,
+    "contracts": 33
+  },
+  "literal_bindings_report": "compatibility/openatv81-bindings-20261101.json",
+  "all_generated_layouts_or_hardware_validation_claimed": false,
+  "existing_plugin_unit_tests": 393,
+  "unit_tests_result": "passed"
+}

@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "literal_or_imported_templates_checked": 153,
+  "typed_widget_bindings_checked": 837,
+  "unresolved_or_dynamic_widget_bindings": 2,
+  "unresolved_bindings": [
+    {
+      "controller": "GlassSysUtil.plugin.dirBrowser",
+      "field": "filelist"
+    },
+    {
+      "controller": "GlassSysUtil.plugin.univCamMng",
+      "field": "txt9"
+    }
+  ],
+  "dynamic_skin_controllers_requiring_separate_tests": [
+    "GlassSysUtil.native_start_config_ui.NativeStartConfigScreen",
+    "GlassSysUtil.plugin.ECMInfo",
+    "GlassSysUtil.plugin.GlassSysInfoBrowser",
+    "GlassSysUtil.plugin.OnScreenEcmScreen",
+    "GlassSysUtil.plugin.SelectPosition",
+    "GlassSysUtil.plugin.SysUtilMngMain",
+    "GlassSysUtil.plugin.channelInfoCenter",
+    "GlassSysUtil.plugin.oscam_Users",
+    "GlassSysUtil.plugin.univCamMng",
+    "GlassSysUtil.plugin_update_ui.PluginInstallScreen",
+    "GlassSysUtil.plugin_update_ui.UpdateOffer",
+    "GlassSysUtil.warder_oscam.OscamWorkspace",
+    "GlassSysUtil.warder_tools_ui.AboutScreen",
+    "GlassSysUtil.warder_tools_ui.DiagnosticScreen",
+    "GlassSysUtil.warder_tools_ui.ToolsScreen"
+  ],
+  "parse_errors": [],
+  "binding_errors": [],
+  "limitations": "Literal/imported XML includes conditional resolution imports; generator calls, helper-assigned fields and actual GUI rendering still require separate validation."
+}

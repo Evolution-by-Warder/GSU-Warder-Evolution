@@ -65,6 +65,16 @@ class RightWorkspaceTests(unittest.TestCase):
                 x,y=map(int,node.get('position').split(','));w,h=map(int,node.get('size').split(','))
                 self.assertGreaterEqual(x,round(1137*width/1920));self.assertLessEqual(x+w,round(1863*width/1920))
                 self.assertGreaterEqual(y,round(182*height/1080));self.assertLessEqual(y+h,round(978*height/1080))
+    def test_embedded_lists_keep_whole_rows_with_controller_heights(self):
+        ui=importlib.import_module('Plugins.Extensions.GlassSysUtil.warder_right')
+        for width,height in ((1280,720),(1366,768),(1920,1080),(2560,1440),(3840,2160)):
+            xml,_=ui.prepare(ui.main.main_skin(width,height),width,height);root=ET.fromstring(xml)
+            for name,base in (('right_list',40),('right_config',42),('right_editor_list',40)):
+                node=root.find("widget[@name='%s']"%name)
+                h=int(node.get('size').split(',')[1]);step=round(base*height/1080)
+                self.assertEqual(int(node.get('itemHeight')),step)
+                self.assertEqual(h % step,0,(name,width,height))
+
     def test_osd_menu_is_embedded_toggles_fields_and_cancel_stops_timer(self):
         cfg=self.plugin.config.plugins.GlassSysUtil;cfg.par0.value=False
         self.view.enter('osd');model=self.view.model;timer=model.chckTimer

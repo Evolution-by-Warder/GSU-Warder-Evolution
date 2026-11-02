@@ -61,8 +61,10 @@ def clock_values(now, lang):
 
 def main_skin(width=1920, height=1080, api=None):
     sx, sy = width/1920.0, height/1080.0
-    def box(x,y,w,h):
-        return 'position="%d,%d" size="%d,%d"' % (round(x*sx),round(y*sy),round(w*sx),round(h*sy))
+    row_height = round(58*sy)
+    list_height = round(759*sy)//row_height*row_height
+    def box(x,y,w,h,pixel_height=None):
+        return 'position="%d,%d" size="%d,%d"' % (round(x*sx),round(y*sy),round(w*sx),round(h*sy) if pixel_height is None else pixel_height)
     def fill(x,y,w,h,color):
         return '<eLabel %s backgroundColor="%s" zPosition="1" />' % (box(x,y,w,h),color)
     def label(name,x,y,w,h,font=28,color='#00ffffff',align='left',wrap=False):
@@ -77,7 +79,7 @@ def main_skin(width=1920, height=1080, api=None):
     out += [fill(1392,25,2,84,CYAN),fill(1664,25,2,84,CYAN)]
     for x,w in ((55,1050),(1135,730)):
         out += [fill(x,180,w,800,CYAN),fill(x+2,182,w-4,796,PANEL)]
-    out += ['<widget name="list" %s scrollbarMode="showOnDemand" backgroundColor="%s" foregroundColor="#00ffffff" foregroundColorSelected="#00ffffff" backgroundColorSelected="#002a70ad" transparent="0" zPosition="3" />' % (box(75,203,1010,759),PANEL),
+    out += ['<widget name="list" %s scrollbarMode="showOnDemand" backgroundColor="%s" foregroundColor="#00ffffff" foregroundColorSelected="#00ffffff" backgroundColorSelected="#002a70ad" transparent="0" zPosition="3" />' % (box(75,203,1010,759,pixel_height=list_height),PANEL),
             fill(1178,203,644,364,CYAN),
             '<widget source="session.VideoPicture" render="Pig" %s backgroundColor="#ff000000" zPosition="2" />' % box(1180,205,640,360),
             label('selection',1170,590,660,80,30,CYAN,wrap=True),fill(1170,683,660,2,'#00314b65'),

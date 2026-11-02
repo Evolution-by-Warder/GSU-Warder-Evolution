@@ -1,0 +1,113 @@
+{
+  "version": "13.41-r4",
+  "notes": {
+    "cs": "Společné vydání pro OpenPLi a OpenATV. Opravy instalace, kompatibility a zobrazení; dosavadní nastavení zůstávají zachována. Po aktualizaci restartujte GUI.",
+    "de": "Gemeinsame Ausgabe für OpenPLi und OpenATV. Korrekturen an Installation, Kompatibilität und Darstellung; vorhandene Einstellungen bleiben erhalten. Nach dem Update die GUI neu starten.",
+    "pl": "Wspólne wydanie dla OpenPLi i OpenATV. Poprawki instalacji, zgodności i wyświetlania; dotychczasowe ustawienia pozostają zachowane. Po aktualizacji uruchom ponownie GUI.",
+    "hu": "Közös kiadás OpenPLi és OpenATV rendszerekhez. Telepítési, kompatibilitási és megjelenítési javítások; a meglévő beállítások megmaradnak. Frissítés után indítsd újra a GUI-t.",
+    "ru": "Общий выпуск для OpenPLi и OpenATV. Исправлены установка, совместимость и отображение; существующие настройки сохраняются. После обновления перезапустите GUI.",
+    "fr": "Version commune pour OpenPLi et OpenATV. Corrections d’installation, de compatibilité et d’affichage ; les réglages existants sont conservés. Redémarrez l’interface après la mise à jour.",
+    "it": "Versione comune per OpenPLi e OpenATV. Correzioni di installazione, compatibilità e visualizzazione; le impostazioni esistenti vengono conservate. Riavviare la GUI dopo l’aggiornamento.",
+    "es": "Versión común para OpenPLi y OpenATV. Correcciones de instalación, compatibilidad y visualización; se conservan los ajustes existentes. Reinicie la interfaz tras actualizar.",
+    "sk": "Spoločná verzia pre OpenPLi a OpenATV. Opravený štart aktualizátora bez modulu dataclasses a pád ECM panela na OpenPLi; rovnaké volania sú opravené aj v informáciách o kanáli a klientoch OSCam. Zahrnuté sú úpravy zoznamov, rozlíšení HD/FHD/WQHD/UHD a kompatibility OpenATV 8.1/GLES. Nastavenia a spravované štartovanie CAM-u zostávajú zachované. Po aktualizácii reštartujte GUI.",
+    "en": "Common OpenPLi and OpenATV release. Removes the updater dataclasses dependency and fixes the OpenPLi ECM OSD startup crash, channel information and OSCam client labels. Includes list fitting, HD/FHD/WQHD/UHD layouts and OpenATV 8.1/GLES compatibility. Settings and managed CAM startup are preserved. Restart the GUI after updating."
+  },
+  "entries": [
+    {
+      "version": "13.41-r4",
+      "date": "02.11.2026",
+      "notes": {
+        "cs": "Společné vydání pro OpenPLi a OpenATV. Opravy instalace, kompatibility a zobrazení; dosavadní nastavení zůstávají zachována. Po aktualizaci restartujte GUI.",
+        "de": "Gemeinsame Ausgabe für OpenPLi und OpenATV. Korrekturen an Installation, Kompatibilität und Darstellung; vorhandene Einstellungen bleiben erhalten. Nach dem Update die GUI neu starten.",
+        "pl": "Wspólne wydanie dla OpenPLi i OpenATV. Poprawki instalacji, zgodności i wyświetlania; dotychczasowe ustawienia pozostają zachowane. Po aktualizacji uruchom ponownie GUI.",
+        "hu": "Közös kiadás OpenPLi és OpenATV rendszerekhez. Telepítési, kompatibilitási és megjelenítési javítások; a meglévő beállítások megmaradnak. Frissítés után indítsd újra a GUI-t.",
+        "ru": "Общий выпуск для OpenPLi и OpenATV. Исправлены установка, совместимость и отображение; существующие настройки сохраняются. После обновления перезапустите GUI.",
+        "fr": "Version commune pour OpenPLi et OpenATV. Corrections d’installation, de compatibilité et d’affichage ; les réglages existants sont conservés. Redémarrez l’interface après la mise à jour.",
+        "it": "Versione comune per OpenPLi e OpenATV. Correzioni di installazione, compatibilità e visualizzazione; le impostazioni esistenti vengono conservate. Riavviare la GUI dopo l’aggiornamento.",
+        "es": "Versión común para OpenPLi y OpenATV. Correcciones de instalación, compatibilidad y visualización; se conservan los ajustes existentes. Reinicie la interfaz tras actualizar.",
+        "sk": "Spoločná verzia pre OpenPLi a OpenATV. Opravený štart aktualizátora bez modulu dataclasses a pád ECM panela na OpenPLi; rovnaké volania sú opravené aj v informáciách o kanáli a klientoch OSCam. Zahrnuté sú úpravy zoznamov, rozlíšení HD/FHD/WQHD/UHD a kompatibility OpenATV 8.1/GLES. Nastavenia a spravované štartovanie CAM-u zostávajú zachované. Po aktualizácii reštartujte GUI.",
+        "en": "Common OpenPLi and OpenATV release. Removes the updater dataclasses dependency and fixes the OpenPLi ECM OSD startup crash, channel information and OSCam client labels. Includes list fitting, HD/FHD/WQHD/UHD layouts and OpenATV 8.1/GLES compatibility. Settings and managed CAM startup are preserved. Restart the GUI after updating."
+      }
+    },
+    {
+      "version": "13.40-r95",
+      "date": "31.10.2026",
+      "notes": {
+        "sk": "Spoľahlivejšia inštalácia a prechod zo staršej verzie.",
+        "cs": "Spolehlivější instalace a přechod ze starší verze.",
+        "en": "More reliable installation and upgrades from older versions.",
+        "de": "Zuverlässigere Installation und Aktualisierung älterer Versionen.",
+        "pl": "Pewniejsza instalacja i aktualizacja starszych wersji.",
+        "hu": "Megbízhatóbb telepítés és frissítés a régebbi verziókról.",
+        "ru": "Надёжнее установка и обновление старых версий.",
+        "fr": "Installation et mise à jour des anciennes versions plus fiables.",
+        "it": "Installazione e aggiornamento delle vecchie versioni più affidabili.",
+        "es": "Instalación y actualización de versiones anteriores más fiables."
+      }
+    },
+    {
+      "version": "13.40-r94",
+      "date": "30.10.2026",
+      "notes": {
+        "sk": "Jednoduchšie vyhľadanie pluginu medzi rozšíreniami.",
+        "cs": "Snazší nalezení pluginu mezi rozšířeními.",
+        "en": "Easier to find the plugin among extensions.",
+        "de": "Das Plugin ist unter Erweiterungen leichter zu finden.",
+        "pl": "Łatwiejsze wyszukiwanie wtyczki w rozszerzeniach.",
+        "hu": "A bővítmény könnyebben megtalálható.",
+        "ru": "Плагин проще найти среди расширений.",
+        "fr": "Le plugin est plus facile à trouver parmi les extensions.",
+        "it": "Il plugin è più facile da trovare tra le estensioni.",
+        "es": "El complemento es más fácil de encontrar entre las extensiones."
+      }
+    },
+    {
+      "version": "13.40-r93",
+      "date": "30.10.2026",
+      "notes": {
+        "sk": "Spoľahlivejšia aktualizácia so zachovaním nastavení.",
+        "cs": "Spolehlivější aktualizace se zachováním nastavení.",
+        "en": "More reliable updates that preserve settings.",
+        "de": "Zuverlässigere Updates mit Erhalt der Einstellungen.",
+        "pl": "Pewniejsze aktualizacje z zachowaniem ustawień.",
+        "hu": "Megbízhatóbb frissítés a beállítások megőrzésével.",
+        "ru": "Надёжнее обновления с сохранением настроек.",
+        "fr": "Mises à jour plus fiables avec conservation des réglages.",
+        "it": "Aggiornamenti più affidabili che conservano le impostazioni.",
+        "es": "Actualizaciones más fiables que conservan los ajustes."
+      }
+    },
+    {
+      "version": "13.40-r92",
+      "date": "29.10.2026",
+      "notes": {
+        "sk": "Stabilnejšia prevádzka a upratovanie dočasných údajov.",
+        "cs": "Stabilnější provoz a úklid dočasných dat.",
+        "en": "More stable operation and temporary data cleanup.",
+        "de": "Stabilerer Betrieb und Bereinigung temporärer Daten.",
+        "pl": "Stabilniejsza praca i porządkowanie danych tymczasowych.",
+        "hu": "Stabilabb működés és az ideiglenes adatok tisztítása.",
+        "ru": "Более стабильная работа и очистка временных данных.",
+        "fr": "Fonctionnement plus stable et nettoyage des données temporaires.",
+        "it": "Funzionamento più stabile e pulizia dei dati temporanei.",
+        "es": "Funcionamiento más estable y limpieza de datos temporales."
+      }
+    },
+    {
+      "version": "13.40-r91",
+      "date": "29.10.2026",
+      "notes": {
+        "sk": "Vylepšená stabilita a odozva pluginu.",
+        "cs": "Vylepšená stabilita a odezva pluginu.",
+        "en": "Improved plugin stability and responsiveness.",
+        "de": "Verbesserte Stabilität und Reaktionsfähigkeit.",
+        "pl": "Poprawiona stabilność i szybkość działania wtyczki.",
+        "hu": "Jobb stabilitás és gyorsabb reakció.",
+        "ru": "Повышена стабильность и отзывчивость плагина.",
+        "fr": "Stabilité et réactivité améliorées.",
+        "it": "Stabilità e reattività migliorate.",
+        "es": "Mayor estabilidad y capacidad de respuesta."
+      }
+    }
+  ]
+}

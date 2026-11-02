@@ -138,7 +138,7 @@ class WorkspaceTests(unittest.TestCase):
         pane.loaded=False;self.host.activate('intro');callback.assert_called_once()
         self.host.navigate('summary','http://192.0.2.1/','','');self.host.back();callback.assert_called_once()
     def test_shared_header_no_video_and_every_widget_is_bound_and_inside_screen(self):
-        for width,height in ((1280,720),(1920,1080),(3840,2160)):
+        for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
             self.host.width,self.host.height=width,height;self.host.sx,self.host.sy=width/1920,height/1080
             root=ET.fromstring(self.ui.skin(self.host))
             self.assertFalse(root.findall("widget[@render='Pig']"))
@@ -191,7 +191,7 @@ class WorkspaceTests(unittest.TestCase):
             self.assertEqual(node.get('transparent'),'1')
         self.assertEqual(root.find("widget[@name='red']").get('transparent'),'0')
     def test_native_header_scales_child_inside_clipped_header_parent(self):
-        for width,height in ((1280,720),(1920,1080),(3840,2160)):
+        for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
             parent=MagicMock();child=MagicMock();header=self.ui.HeaderArtwork(width,height)
             with patch.object(importlib.import_module('Plugins.Extensions.GlassSysUtil.warder_glass'),'ePixmap',return_value=child) as pixmap:
                 header.postWidgetCreate(parent)
@@ -207,10 +207,13 @@ class WorkspaceTests(unittest.TestCase):
 
     def test_log_wrap_preserves_content_and_allows_reading(self):
         pane=self.host.panes['log'];value='long OSCam log message '*15
-        row=pane.text(pos=(0,0),size=(1770,26),font=1,text=value)
-        self.assertEqual(row['text'].replace('\n',''),value)
-        self.assertLessEqual(row['size'][0],1010)
-        self.assertGreater(row['size'][1],42)
+        log=importlib.import_module('Plugins.Extensions.GlassSysUtil.warder_log_rows')
+        row=pane.text(pos=(0,0),size=(1770,26),font=1,text=value,color=0xff3300)
+        result=log.rows([[value,row]],pane.text,1010,18,24)
+        self.assertEqual(''.join(item[1]['text'] for item in result),value)
+        self.assertGreater(len(result),1)
+        self.assertTrue(all(item[1]['size'][1]==24 for item in result))
+        self.assertTrue(all(item[1]['color']==0xff3300 for item in result))
     def test_original_reader_renderer_and_identity_are_retained(self):
         pane=self.host.panes['readers']
         pane.old_width=1290
