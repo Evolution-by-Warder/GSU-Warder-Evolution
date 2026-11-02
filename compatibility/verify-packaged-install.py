@@ -63,8 +63,11 @@ with tempfile.TemporaryDirectory(prefix='warder-install-gate-') as temp:
     # dataclasses. Preload standard-library dependencies first, because newer
     # desktop Python versions may internally use it for unrelated modules.
     minimal_code = """
-import builtins, hashlib, io, json, pathlib, re, runpy, ssl, subprocess, sys, tarfile, tempfile
+import argparse, builtins, hashlib, io, json, pathlib, re, runpy, ssl, subprocess, sys, tarfile, tempfile
 from urllib.request import Request, urlopen
+# Python 3.14 argparse lazily imports its own dataclass-based color theme.
+# Warm only the host stdlib before blocking plugin imports.
+argparse.ArgumentParser().format_help()
 original_import = builtins.__import__
 def minimal_import(name, *args, **kwargs):
     if name == 'dataclasses' or name.startswith('dataclasses.'):
