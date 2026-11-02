@@ -1,0 +1,36 @@
+{
+  "product": "GSU",
+  "version": "13.41-r4",
+  "public_ipk_bytes": 3692762,
+  "sha256": "48d8f90a6f1665f28e777b615f4dd25b1b8afc0b85128685965d44b66134acb2",
+  "main_feed_matches_live": true,
+  "live_feed_branch": "original-python314",
+  "parser_checks": [
+    {
+      "updater": "current",
+      "from": "13.41-r3",
+      "offers": "13.41-r4",
+      "validates_new_ipk": true,
+      "no_self_offer": true
+    },
+    {
+      "updater": "approved-test",
+      "from": "13.41-r3",
+      "offers": "13.41-r4",
+      "validates_new_ipk": true,
+      "no_self_offer": true
+    },
+    {
+      "updater": "previous-stable",
+      "from": "13.40-r95",
+      "offers": "13.41-r4",
+      "validates_new_ipk": true,
+      "no_self_offer": true
+    }
+  ],
+  "legacy_bridges_unchanged": {
+    "plugin/update/candidate.json": "914bb915b91d3ffeb4f59f09f12d56aa983a7f4eb79454ef9fb5703ae8511983",
+    "restoration/update/candidate.json": "81e5ddd0692c7b16eb7b9d64dcc52dab36ab8fe2893aba9011c3665437c51175"
+  },
+  "physical_installation_performed": false
+}
