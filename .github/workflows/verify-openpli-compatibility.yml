@@ -1,0 +1,55 @@
+name: Verify OpenPLi compatibility
+on:
+  push:
+    branches: [compat/openpli9-20261102]
+  pull_request:
+    paths: [source/**, plugin/**, tools/**, compatibility/**, design/openpli-compatibility/**, .github/workflows/verify-openpli-compatibility.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        upstream_ref: [release-9.2, develop]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: OpenPLi/enigma2
+          ref: ${{ matrix.upstream_ref }}
+          path: upstream/enigma2
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Check imports and real native call signatures
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+          PYTHONWARNINGS: ignore
+        run: |
+          python compatibility/test-openpli-interface-guard.py -q
+          python compatibility/check-openpli-interfaces.py --plugin-root plugin/src --upstream upstream/enigma2/lib/python --report /tmp/openpli-interfaces.json
+          python compatibility/audit-openatv-skin-bindings.py --upstream upstream/enigma2/lib/python --plugin-root plugin/src --report /tmp/openpli-bindings.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gsu-OpenPLi-${{ matrix.upstream_ref }}
+          path: /tmp/openpli-*.json
+  regression:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.9', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - env:
+          PYTHONPATH: plugin/src
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python -m unittest discover -s plugin/tests -q

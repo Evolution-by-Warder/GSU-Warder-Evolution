@@ -1,0 +1,11 @@
+{
+  "source_files": 51,
+  "import_statements": 49,
+  "calls_checked": 674,
+  "dynamic_calls": 1,
+  "missing_imports": [],
+  "guarded_imports": [],
+  "inactive_legacy_imports": [],
+  "invalid_calls": [],
+  "limitations": "Static Python imports and directly imported callable shapes; dynamic dispatch, wildcard names and C++ exports/ABI require separate validation. No receiver execution."
+}

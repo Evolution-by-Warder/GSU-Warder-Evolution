@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-02",
+  "supported_review_scope": "OpenPLi 9.2 and Python 3 development branch; Python 2 images excluded",
+  "upstream_repository": "https://github.com/OpenPLi/enigma2",
+  "upstream": {
+    "release-9.2": "65dc39356b2863915745176a16a562ec1aa366b4",
+    "develop": "144715639b83c258b35b0f1ec0c52c819f9d95bd"
+  },
+  "reviewed_source": "f7b9726bb81cdd872146004c6e20e978f9bf96c5",
+  "physical_receiver_verified": false,
+  "production_feeds_changed": false,
+  "static_audit_limitations": "Does not prove C++ ABI, external plugins, package feed dependency availability, CAM commands on receiver, networking or physical/GLES rendering."
+}
