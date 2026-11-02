@@ -1,12 +1,12 @@
-name: GSU OpenPLi minimal Python repair 13.41-r2
+name: GSU OpenPLi ECM label crash repair 13.41-r3
 on:
   push:
-    branches: [fix/openpli-stdlib-20261102]
+    branches: [fix/openpli-crashes-20261102]
     paths: [plugin/**, compatibility/**, .github/workflows/openpli-stdlib-candidate.yml, .github/workflows/verify-openatv-compatibility.yml]
 permissions:
   contents: read
 concurrency:
-  group: gsu-openpli-stdlib-candidate
+  group: gsu-openpli-crashes-candidate
   cancel-in-progress: true
 jobs:
   compatibility:
@@ -34,12 +34,12 @@ jobs:
           python compatibility/prepare-openpli-stdlib-candidate.py
           python plugin/tools/build_ipk.py --output /tmp/candidate-a
           python plugin/tools/build_ipk.py --output /tmp/candidate-b
-          cmp /tmp/candidate-a/enigma2-plugin-extensions-gsu_13.41-r2_all.ipk /tmp/candidate-b/enigma2-plugin-extensions-gsu_13.41-r2_all.ipk
+          cmp /tmp/candidate-a/enigma2-plugin-extensions-gsu_13.41-r3_all.ipk /tmp/candidate-b/enigma2-plugin-extensions-gsu_13.41-r3_all.ipk
       - name: Execute the shipped postinst verifier and installed-version parser
-        run: python compatibility/verify-packaged-install.py /tmp/candidate-a/enigma2-plugin-extensions-gsu_13.41-r2_all.ipk --product gsu --version 13.41-r2 --report /tmp/candidate-a/install-verification.json
+        run: python compatibility/verify-packaged-install.py /tmp/candidate-a/enigma2-plugin-extensions-gsu_13.41-r3_all.ipk --product gsu --version 13.41-r3 --report /tmp/candidate-a/install-verification.json
       - uses: actions/upload-artifact@v4
         with:
-          name: GSU-13.41-r2
+          name: GSU-13.41-r3
           path: /tmp/candidate-a/*
           retention-days: 30
       - name: Publish immutable isolated prerelease without changing production feeds
@@ -47,12 +47,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          PACKAGE=/tmp/candidate-a/enigma2-plugin-extensions-gsu_13.41-r2_all.ipk
-          TAG=v13.41-r2
+          PACKAGE=/tmp/candidate-a/enigma2-plugin-extensions-gsu_13.41-r3_all.ipk
+          TAG=v13.41-r3
           if gh release view "$TAG" >/dev/null 2>&1; then
             mkdir -p /tmp/immutable
             gh release download "$TAG" --pattern "$(basename "$PACKAGE")" --dir /tmp/immutable
             cmp "$PACKAGE" "/tmp/immutable/$(basename "$PACKAGE")"
           else
-            gh release create "$TAG" "$PACKAGE" "$PACKAGE.sha256" --target "$GITHUB_SHA" --prerelease --latest=false --title 'GSU 13.41-r2 — OpenATV 8.1 OpenPLi minimal Python TEST' --notes-file compatibility/OPENPLI-STDLIB-20261102.md
+            gh release create "$TAG" "$PACKAGE" "$PACKAGE.sha256" --target "$GITHUB_SHA" --prerelease --latest=false --title 'GSU 13.41-r3 — OpenATV 8.1 OpenPLi minimal Python TEST' --notes-file compatibility/OPENPLI-STDLIB-20261102.md
           fi

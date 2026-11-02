@@ -2112,7 +2112,7 @@ class channelInfoCenter(Screen):
         return
 
     def startInfo(self):
-        self['ecmValues'].instance.setWrap(0)
+        self['ecmValues'].instance.setNoWrap(1)
         for x in ('picprov', 'picsat', 'picchannel', 'piccode', 'piccam'):
             self[x].instance.setScale(1)
 
@@ -7150,7 +7150,7 @@ class OnScreenEcmScreen(Screen):
     def prepareOsd(self):
         for name in ('OSD_Ecm_info', 'ecm_items'):
             if name in self:
-                self[name].instance.setWrap(0)
+                self[name].instance.setNoWrap(1)
 
 
 class OnScreenEcmMain():

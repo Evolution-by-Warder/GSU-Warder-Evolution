@@ -32,6 +32,7 @@ jobs:
           PYTHONDONTWRITEBYTECODE: '1'
           PYTHONWARNINGS: ignore
         run: |
+          python compatibility/check-native-label-api.py --upstream upstream/enigma2/lib/python
           python compatibility/test-openpli-interface-guard.py -q
           python compatibility/check-openpli-interfaces.py --plugin-root plugin/src --upstream upstream/enigma2/lib/python --report /tmp/openpli-interfaces.json
           python compatibility/audit-openatv-skin-bindings.py --upstream upstream/enigma2/lib/python --plugin-root plugin/src --report /tmp/openpli-bindings.json
