@@ -29,10 +29,10 @@ class UpdateError(ValueError):
 def version_key(value):
     if not isinstance(value, str):
         raise UpdateError("Invalid plugin version")
-    match = re.fullmatch(r"(\d+)\.(\d+)-r(\d+)", value)
+    match = re.fullmatch(r"(\d+)\.(\d+)-r(\d+)(?:-test([1-9]\d*))?", value)
     if not match:
         raise UpdateError("Invalid restoration version")
-    return tuple(int(part) for part in match.groups())
+    return tuple(int(part or 0) for part in match.groups())
 
 
 @dataclass(frozen=True)
@@ -65,6 +65,8 @@ def parse_release(payload, current_version):
     if not isinstance(item, dict):
         raise UpdateError("Invalid release entry")
     remote = version_key(item.get("version"))
+    if remote[3] != 0:
+        raise UpdateError("Test build in production channel")
     tag = item.get("tag")
     if tag not in (item["version"], "v" + item["version"]):
         raise UpdateError("Release tag does not match version")

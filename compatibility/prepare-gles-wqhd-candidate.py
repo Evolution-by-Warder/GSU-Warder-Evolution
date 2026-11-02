@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-VERSION='13.40-r95-test2'
+VERSION='13.40-r95-test3'
 NAME='GSU'
 RUNTIME=ROOT/'plugin/src/GlassSysUtil'
 notes={"sk":"OpenATV 8.1: WQHD škálovanie, celé riadky ponúk a história piatich verzií. Testovacia zostava; fyzický GLES test čaká.",

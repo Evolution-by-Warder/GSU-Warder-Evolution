@@ -6,6 +6,7 @@ import hashlib
 import io
 import json
 import pathlib
+import runpy
 import tarfile
 from xml.etree import ElementTree
 
@@ -32,6 +33,7 @@ def archive(entries):
 def build(destination, bridge=False):
     runtime=BASE/'src/GlassSysUtil'
     version='13.40-r93' if bridge else (runtime/'version').read_text().strip()
+    runpy.run_path(str(runtime/'plugin_update.py'))['version_key'](version)
     package=LEGACY_PACKAGE if bridge else PACKAGE
     resources=BASE/'resources.tar.gz'
     manifest=json.loads((BASE/'resources.json').read_text())

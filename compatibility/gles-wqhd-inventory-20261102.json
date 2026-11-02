@@ -113,7 +113,7 @@
     },
     {
       "path": "plugin/src/GlassSysUtil/plugin_update.py",
-      "sha256": "3f8d34e624e8f80dc4cabc5545eea4fd9fdb99150f9062a47edc06e29e9cc0e4"
+      "sha256": "e58623e54355d5e847d2cbb6d130e185445a78ff5a038526b29147ac26ca7971"
     },
     {
       "path": "plugin/src/GlassSysUtil/plugin_update_ui.py",
