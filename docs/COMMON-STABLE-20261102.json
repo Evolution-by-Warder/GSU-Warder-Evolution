@@ -17,7 +17,7 @@
   "source_branch": "release/common-stable-20261102",
   "package_id": "enigma2-plugin-extensions-gsu-warder-evolution",
   "peers": {
-    "fullhdglass": "1.0.62",
+    "fullhdglass": "1.0.63",
     "gsu": "13.41-r4",
     "piconhub": "0.1.40"
   },

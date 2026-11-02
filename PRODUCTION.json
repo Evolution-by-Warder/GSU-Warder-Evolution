@@ -56,7 +56,8 @@
     ],
     "matrices_passed": true,
     "physical_receiver_all_features_verified": false,
-    "custom_font_settings_preserved": true
+    "custom_font_settings_preserved": true,
+    "live_updater_report": "reports/common-stable/live-updater.json"
   },
   "accepted_candidate": {
     "version": "13.41-r3",
@@ -80,8 +81,9 @@
     "release_url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/tag/v13.40-r95"
   },
   "peer_production": {
-    "fullhdglass": "1.0.62",
+    "fullhdglass": "1.0.63",
     "gsu": "13.41-r4",
     "piconhub": "0.1.40"
-  }
+  },
+  "live_updater_activation_commit": "42a189d9be82e77f3ad037692d095760f7af3c5c"
 }
