@@ -53,7 +53,10 @@ class PluginUpdateTests(unittest.TestCase):
             update.parse_release(json.dumps(self.document),'13.40-r95-test3')
         self.item.update(version='13.40-r96',tag='v13.40-r96',
             url='https://github.com/'+update.REPOSITORY+'/releases/download/v13.40-r96/'+update.DOWNLOAD_PREFIX+'_13.40-r96_all.ipk')
-        self.assertEqual(update.parse_release(json.dumps(self.document),'13.40-r95-test3').version,'13.40-r96')
+        self.assertIsNone(update.parse_release(json.dumps(self.document),'13.40-r95-test3'))
+        self.item.update(version='13.41-r1',tag='v13.41-r1',
+            url='https://github.com/'+update.REPOSITORY+'/releases/download/v13.41-r1/'+update.DOWNLOAD_PREFIX+'_13.41-r1_all.ipk')
+        self.assertEqual(update.parse_release(json.dumps(self.document),'13.40-r95-test3').version,'13.41-r1')
 
     def test_other_products_channels_versions_urls_and_invalid_metadata_rejected(self):
         for field,value in [('product','PiconHub Warder Evolution'),('channel','stable')]:

@@ -33,7 +33,8 @@ def archive(entries):
 def build(destination, bridge=False):
     runtime=BASE/'src/GlassSysUtil'
     version='13.40-r93' if bridge else (runtime/'version').read_text().strip()
-    runpy.run_path(str(runtime/'plugin_update.py'))['version_key'](version)
+    version_key=runpy.run_path(str(runtime/'plugin_update.py'))['version_key']
+    version_key(version)
     package=LEGACY_PACKAGE if bridge else PACKAGE
     resources=BASE/'resources.tar.gz'
     manifest=json.loads((BASE/'resources.json').read_text())
@@ -69,7 +70,7 @@ def build(destination, bridge=False):
     history['version']=version
     if bridge:
         history['entries']=[entry for entry in history['entries']
-                            if int(entry['version'].rsplit('r',1)[1])<=93]
+                            if version_key(entry['version'])<=version_key('13.40-r93')]
     entries.append((PLUGIN+'/release-history.json',
                     (json.dumps(history,ensure_ascii=False,indent=2)+'\n').encode(),0o644))
     for path in sorted((BASE/'converters').glob('*.py')):

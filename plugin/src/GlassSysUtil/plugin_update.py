@@ -32,7 +32,10 @@ def version_key(value):
     match = re.fullmatch(r"(\d+)\.(\d+)-r(\d+)(?:-test([1-9]\d*))?", value)
     if not match:
         raise UpdateError("Invalid restoration version")
-    return tuple(int(part or 0) for part in match.groups())
+    major, minor, revision, test = match.groups()
+    # opkg splits at the last hyphen: legacy -testN adds an upstream
+    # component, so no same-minor plain rNN release is a native upgrade.
+    return (int(major), int(minor), int(test is not None), int(revision), int(test or 0))
 
 
 @dataclass(frozen=True)
@@ -65,7 +68,7 @@ def parse_release(payload, current_version):
     if not isinstance(item, dict):
         raise UpdateError("Invalid release entry")
     remote = version_key(item.get("version"))
-    if remote[3] != 0:
+    if remote[2] != 0:
         raise UpdateError("Test build in production channel")
     tag = item.get("tag")
     if tag not in (item["version"], "v" + item["version"]):
