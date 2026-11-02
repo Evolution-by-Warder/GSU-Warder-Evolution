@@ -1,0 +1,37 @@
+{
+  "product": "GSU",
+  "repo": "GSU-Warder-Evolution",
+  "version": "13.41-r4",
+  "candidate": "13.41-r3",
+  "candidate_sha": "32c4d284767b1a4fb59df65dba828f97f1a1dac8478194a4553a2a1631fe6fd5",
+  "prefix": "enigma2-plugin-extensions-gsu",
+  "expected_main": "47d5ecd296754da07781ac59fd4054d2965acc99",
+  "tool_dir": "compatibility",
+  "package": "plugin/dist/enigma2-plugin-extensions-gsu_13.41-r4_all.ipk",
+  "runtime": "plugin/src/GlassSysUtil",
+  "notes_sk": "Spoločná verzia pre OpenPLi a OpenATV. Opravený štart aktualizátora bez modulu dataclasses a pád ECM panela na OpenPLi; rovnaké volania sú opravené aj v informáciách o kanáli a klientoch OSCam. Zahrnuté sú úpravy zoznamov, rozlíšení HD/FHD/WQHD/UHD a kompatibility OpenATV 8.1/GLES. Nastavenia a spravované štartovanie CAM-u zostávajú zachované.",
+  "notes_en": "Common OpenPLi and OpenATV release. Removes the updater dataclasses dependency and fixes the OpenPLi ECM OSD startup crash, channel information and OSCam client labels. Includes list fitting, HD/FHD/WQHD/UHD layouts and OpenATV 8.1/GLES compatibility. Settings and managed CAM startup are preserved.",
+  "key": "gsu",
+  "date": "2026-11-02",
+  "authorization": "Owner explicitly requested all latest repairs in all our plugins as normal full releases and all required records; this supersedes the earlier publishing pause.",
+  "source_branch": "release/common-stable-20261102",
+  "package_id": "enigma2-plugin-extensions-gsu-warder-evolution",
+  "peers": {
+    "fullhdglass": "1.0.62",
+    "gsu": "13.41-r4",
+    "piconhub": "0.1.40"
+  },
+  "notes_i18n": {
+    "cs": "Společné vydání pro OpenPLi a OpenATV. Opravy instalace, kompatibility a zobrazení; dosavadní nastavení zůstávají zachována. Po aktualizaci restartujte GUI.",
+    "de": "Gemeinsame Ausgabe für OpenPLi und OpenATV. Korrekturen an Installation, Kompatibilität und Darstellung; vorhandene Einstellungen bleiben erhalten. Nach dem Update die GUI neu starten.",
+    "pl": "Wspólne wydanie dla OpenPLi i OpenATV. Poprawki instalacji, zgodności i wyświetlania; dotychczasowe ustawienia pozostają zachowane. Po aktualizacji uruchom ponownie GUI.",
+    "hu": "Közös kiadás OpenPLi és OpenATV rendszerekhez. Telepítési, kompatibilitási és megjelenítési javítások; a meglévő beállítások megmaradnak. Frissítés után indítsd újra a GUI-t.",
+    "ru": "Общий выпуск для OpenPLi и OpenATV. Исправлены установка, совместимость и отображение; существующие настройки сохраняются. После обновления перезапустите GUI.",
+    "fr": "Version commune pour OpenPLi et OpenATV. Corrections d’installation, de compatibilité et d’affichage ; les réglages existants sont conservés. Redémarrez l’interface après la mise à jour.",
+    "it": "Versione comune per OpenPLi e OpenATV. Correzioni di installazione, compatibilità e visualizzazione; le impostazioni esistenti vengono conservate. Riavviare la GUI dopo l’aggiornamento.",
+    "es": "Versión común para OpenPLi y OpenATV. Correcciones de instalación, compatibilidad y visualización; se conservan los ajustes existentes. Reinicie la interfaz tras actualizar.",
+    "sk": "Spoločná verzia pre OpenPLi a OpenATV. Opravený štart aktualizátora bez modulu dataclasses a pád ECM panela na OpenPLi; rovnaké volania sú opravené aj v informáciách o kanáli a klientoch OSCam. Zahrnuté sú úpravy zoznamov, rozlíšení HD/FHD/WQHD/UHD a kompatibility OpenATV 8.1/GLES. Nastavenia a spravované štartovanie CAM-u zostávajú zachované. Po aktualizácii reštartujte GUI.",
+    "en": "Common OpenPLi and OpenATV release. Removes the updater dataclasses dependency and fixes the OpenPLi ECM OSD startup crash, channel information and OSCam client labels. Includes list fitting, HD/FHD/WQHD/UHD layouts and OpenATV 8.1/GLES compatibility. Settings and managed CAM startup are preserved. Restart the GUI after updating."
+  },
+  "candidate_url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.41-r3/enigma2-plugin-extensions-gsu_13.41-r3_all.ipk"
+}

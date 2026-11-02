@@ -1,0 +1,76 @@
+name: Common stable release GSU 13.41-r4
+on:
+  push:
+    branches: [release/common-stable-20261102]
+permissions:
+  contents: read
+concurrency:
+  group: common-stable-20261102
+  cancel-in-progress: false
+jobs:
+  openpli:
+    uses: ./.github/workflows/verify-openpli-compatibility.yml
+  openatv:
+    uses: ./.github/workflows/verify-openatv-compatibility.yml
+  package:
+    needs: [openpli, openatv]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Prepare authorized stable versions and history
+        run: python compatibility/prepare-common-stable.py
+      - name: Build stable IPK and execute shipped installation checks
+        run: |
+          python plugin/tools/build_ipk.py --output plugin/dist
+          cp plugin/dist/enigma2-plugin-extensions-gsu_13.41-r4_all.ipk /tmp/first-stable.ipk
+          python plugin/tools/build_ipk.py --output plugin/dist
+          cmp /tmp/first-stable.ipk plugin/dist/enigma2-plugin-extensions-gsu_13.41-r4_all.ipk
+          python compatibility/verify-packaged-install.py plugin/dist/enigma2-plugin-extensions-gsu_13.41-r4_all.ipk --product gsu --version 13.41-r4 --report reports/common-stable/final-install.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GSU-13.41-r4-final-package
+          path: |
+            plugin/dist/enigma2-plugin-extensions-gsu_13.41-r4_all.ipk
+            plugin/dist/enigma2-plugin-extensions-gsu_13.41-r4_all.ipk.sha256
+            reports/common-stable/*.json
+          retention-days: 90
+      - name: Publish immutable stable package
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          PACKAGE=plugin/dist/enigma2-plugin-extensions-gsu_13.41-r4_all.ipk
+          TAG=v13.41-r4
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            mkdir -p /tmp/immutable
+            gh release download "$TAG" --pattern "$(basename "$PACKAGE")" --dir /tmp/immutable
+            cmp "$PACKAGE" "/tmp/immutable/$(basename "$PACKAGE")"
+          else
+            gh release create "$TAG" "$PACKAGE" "$PACKAGE.sha256" --target "$GITHUB_SHA" --latest=false --title 'GSU 13.41-r4' --notes-file docs/COMMON-STABLE-20261102.md
+          fi
+      - name: Verify public download, compare candidate runtime and stage production records
+        run: python compatibility/activate-common-stable.py
+      - name: Fast-forward main with release sources, records and verified feed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          EXPECTED=$(python -c 'import json; print(json.load(open("docs/COMMON-STABLE-20261102.json"))["expected_main"])')
+          test "$(git rev-parse origin/main)" = "$EXPECTED"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A -- . ':!upstream' ':!packages/test' ':!plugin/build' ':!plugin/dist' ':!reports/common-stable/candidate.ipk'
+          git commit -m 'Release GSU 13.41-r4: verified common OpenPLi and OpenATV stable [skip ci]'
+          git push origin HEAD:main
+          gh release edit v13.41-r4 --latest

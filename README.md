@@ -1,5 +1,9 @@
 # GSU Warder Evolution
 
+## Spoločné ostré vydanie — 2. november 2026
+
+**GSU 13.41-r4** pre OpenPLi a OpenATV. [Poznámky k vydaniu](docs/COMMON-STABLE-20261102.md). [Stiahnuť IPK](https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.41-r4/enigma2-plugin-extensions-gsu_13.41-r4_all.ipk).
+
 Plugin pre Enigma2: informácie o prijímači a kanáli, ECM a OSCam, správa CAM, swap a diagnostika v spoločnom vzhľade Warder Evolution.
 
 **r92 prináša tichú prevádzku: bez automatických gsu.log, autostart a bitrate logov; df/dmesg sa spracúva v pamäti. Zachováva schválené rozhranie a funkcie r90.**
