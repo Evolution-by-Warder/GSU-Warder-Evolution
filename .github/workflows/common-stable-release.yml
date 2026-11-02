@@ -70,7 +70,13 @@ jobs:
           test "$(git rev-parse origin/main)" = "$EXPECTED"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A -- . ':!upstream' ':!packages/test' ':!plugin/build' ':!plugin/dist' ':!reports/common-stable/candidate.ipk'
+          git add -u
+          python - <<'PYADD'
+          import subprocess
+          paths=subprocess.check_output(['git','ls-files','--others','--exclude-standard','-z']).decode().split('\0')
+          paths=[p for p in paths if p and not p.startswith(('upstream/','packages/test/','plugin/build/','plugin/dist/')) and p!='reports/common-stable/candidate.ipk']
+          if paths:subprocess.run(['git','add','--']+paths,check=True)
+          PYADD
           git commit -m 'Release GSU 13.41-r4: verified common OpenPLi and OpenATV stable [skip ci]'
           git push origin HEAD:main
           gh release edit v13.41-r4 --latest

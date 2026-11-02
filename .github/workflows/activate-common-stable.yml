@@ -1,0 +1,64 @@
+name: Activate verified common stable GSU 13.41-r4
+on:
+  push:
+    branches: [release/activate-common-stable-20261102]
+permissions:
+  contents: read
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PACKAGE_SOURCE_SHA: f31640f486fe739ed05bfe4de5a25d99738ba986
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Confirm previous package checks and native matrices passed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api repos/$GITHUB_REPOSITORY/actions/runs/41500663320/jobs --paginate > /tmp/verified-jobs.json
+          python - <<'PYGATE'
+          import json
+          jobs=json.load(open('/tmp/verified-jobs.json'))['jobs']
+          assert jobs and all(j['conclusion']=='success' for j in jobs if j['name']!='package')
+          package=next(j for j in jobs if j['name']=='package')
+          passed={s['name'] for s in package['steps'] if s['conclusion']=='success'}
+          assert {'Build stable IPK and execute shipped installation checks','Publish immutable stable package','Verify public download, compare candidate runtime and stage production records'} <= passed
+          PYGATE
+      - name: Prepare exact approved stable sources and history
+        run: python compatibility/prepare-common-stable.py
+      - name: Reuse immutable verified release without rebuilding
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p plugin/dist
+          gh release download v13.41-r4 --pattern 'enigma2-plugin-extensions-gsu_13.41-r4_all.ipk*' --dir plugin/dist
+          python compatibility/activate-common-stable.py
+      - name: Commit release sources and production records
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          EXPECTED=$(python -c 'import json; print(json.load(open("docs/COMMON-STABLE-20261102.json"))["expected_main"])')
+          test "$(git rev-parse origin/main)" = "$EXPECTED"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -u
+          python - <<'PYADD'
+          import subprocess
+          paths=subprocess.check_output(['git','ls-files','--others','--exclude-standard','-z']).decode().split('\0')
+          paths=[p for p in paths if p and not p.startswith(('upstream/','packages/test/','plugin/build/','plugin/dist/')) and p!='reports/common-stable/candidate.ipk']
+          if paths:subprocess.run(['git','add','--']+paths,check=True)
+          PYADD
+          git commit -m 'Activate GSU 13.41-r4: verified common stable sources and records [skip ci]'
+          git push origin HEAD:main
+          gh release edit v13.41-r4 --latest

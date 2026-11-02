@@ -36,7 +36,7 @@ def main():
         assert content==other,'Runtime differs from approved candidate: '+name
         compared.append(name)
     rel={'version':version,'tag':'v'+version,'url':url,'sha256':sha,'bytes':len(raw),'notes':C['notes_i18n']['sk'],'notes_i18n':C['notes_i18n'],'release_url':'https://github.com/'+repo+'/releases/tag/v'+version}
-    report={'version':version,'package_source_commit':os.environ.get('GITHUB_SHA'),'workflow_run':os.environ.get('GITHUB_RUN_ID'),'public_ipk_sha256_verified':True,'public_ipk_sidecar_verified':True,'sha256':sha,'bytes':len(raw),'candidate_sha256':C['candidate_sha'],'candidate_python_files_compared':len(compared),'only_generated_version_labels_changed':True,'OpenPLi_refs':['release-9.2','develop'],'OpenATV_refs':['8.0','8.0-next','master'],'matrices_passed':True,'physical_receiver_all_features_verified':False,'custom_font_settings_preserved':True}
+    report={'version':version,'package_source_commit':os.environ.get('PACKAGE_SOURCE_SHA',os.environ.get('GITHUB_SHA')),'workflow_run':os.environ.get('GITHUB_RUN_ID'),'public_ipk_sha256_verified':True,'public_ipk_sidecar_verified':True,'sha256':sha,'bytes':len(raw),'candidate_sha256':C['candidate_sha'],'candidate_python_files_compared':len(compared),'only_generated_version_labels_changed':True,'OpenPLi_refs':['release-9.2','develop'],'OpenATV_refs':['8.0','8.0-next','master'],'matrices_passed':True,'physical_receiver_all_features_verified':False,'custom_font_settings_preserved':True}
     out=ROOT/'reports/common-stable';put(out/'public-verification.json',report)
     if C['key']=='full':
         frozen=(ROOT/'update.json').read_bytes()
@@ -64,7 +64,7 @@ def main():
             project.update(status='production-authorized',runtime_status='production',production_approved_on=C['date'],production_authorization=C['authorization'],receiver_validation=report)
             put(project_path,project)
         record['peer_production']=C['peers']
-    record.update(product=C['product'],status='production-update-active',approved_on=C['date'],approval=C['authorization'],source_branch='main',source_commit=os.environ.get('GITHUB_SHA'),package_source_commit=os.environ.get('GITHUB_SHA'),validation=report,accepted_candidate={'version':C['candidate'],'sha256':C['candidate_sha']})
+    record.update(product=C['product'],status='production-update-active',approved_on=C['date'],approval=C['authorization'],source_branch='main',source_commit=os.environ.get('PACKAGE_SOURCE_SHA',os.environ.get('GITHUB_SHA')),package_source_commit=os.environ.get('PACKAGE_SOURCE_SHA',os.environ.get('GITHUB_SHA')),validation=report,accepted_candidate={'version':C['candidate'],'sha256':C['candidate_sha']})
     put(path,record)
     current='# '+C['product']+' '+version+'\n\nAktívne ostré vydanie pre OpenPLi a OpenATV.\n\n'+C['notes_i18n']['sk']+'\n\n[Stiahnuť IPK]('+url+')\n\nSHA-256: `'+sha+'`\n\nOverené verejné bajty, dodané inštalačné kontroly a natívne rozhrania OpenPLi/OpenATV. Úplné fyzické testovanie všetkých modelov a rozlíšení sa netvrdí.\n'
     (ROOT/'docs/CURRENT-RELEASE.md').write_text(current)
