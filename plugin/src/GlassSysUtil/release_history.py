@@ -16,7 +16,7 @@ def load_notes(path, version, language):
         entries = document.get('entries')
         if isinstance(entries, list):
             blocks = []
-            for entry in entries[:4]:
+            for entry in entries[:5]:
                 if not isinstance(entry, dict) or not isinstance(entry.get('version'), str):
                     continue
                 translated = entry.get('notes', {})
@@ -25,8 +25,8 @@ def load_notes(path, version, language):
                 text = translated.get(code) or translated.get('en', '')
                 if isinstance(text, str) and text.strip():
                     lines = textwrap.wrap(' '.join(text.split()), 72)
-                    if len(lines) > 3:
-                        lines = lines[:3]
+                    if len(lines) > 2:
+                        lines = lines[:2]
                         lines[-1] = lines[-1][:71] + '…'
                     date = entry.get('date', '')
                     heading = 'GSU ' + entry['version'] + (' — ' + date if isinstance(date, str) and date else '')

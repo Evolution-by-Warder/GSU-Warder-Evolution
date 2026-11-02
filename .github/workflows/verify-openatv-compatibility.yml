@@ -40,3 +40,25 @@ jobs:
           python compatibility/check-openatv-interfaces.py --manifest compatibility/interfaces.json --ref "${{ matrix.upstream_ref }}" --upstream upstream/enigma2/lib/python
           python compatibility/test-skin-binding-audit.py -v
           python compatibility/audit-openatv-skin-bindings.py --upstream upstream/enigma2/lib/python --plugin-root plugin/src
+
+  generated-layouts:
+    runs-on: ubuntu-latest
+    name: Generated layouts / Python ${{ matrix.python }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.9", "3.14"]
+    timeout-minutes: 8
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONPATH: plugin/src
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            plugin
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Check generated layouts, controller transitions and existing plugin behavior
+        run: python -m unittest discover -s plugin/tests -q

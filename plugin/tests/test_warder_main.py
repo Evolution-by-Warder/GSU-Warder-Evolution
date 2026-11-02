@@ -45,6 +45,17 @@ class WarderMainTests(unittest.TestCase):
                 self.assertEqual(widgets[name].get('transparent'),'0')
                 self.assertEqual(widgets[name].get('backgroundColor'),ui.PANEL)
 
+    def test_main_and_settings_lists_end_on_complete_rows_after_pixel_rounding(self):
+        settings=importlib.import_module('Plugins.Extensions.GlassSysUtil.warder_settings')
+        for width,height in ((1280,720),(1366,768),(1920,1080),(2560,1440),(3840,2160),(1920,1200)):
+            for xml,name,step,budget in ((ui.main_skin(width,height),'list',round(58*height/1080),759),
+                                         (settings.skin(width,height),'config',round(48*height/1080),650)):
+                node=ET.fromstring(xml).find("widget[@name='%s']"%name)
+                h=int(node.get('size').split(',')[1])
+                self.assertEqual(h % step,0,(width,height,name))
+                self.assertLessEqual(h,round(budget*height/1080))
+                self.assertLess(round(budget*height/1080)-h,step)
+
     def test_live_video_uses_native_current_decoder_source_and_keeps_details_below(self):
         for width,height in ((1280,720),(1920,1080),(3840,2160)):
             root=ET.fromstring(ui.main_skin(width,height))

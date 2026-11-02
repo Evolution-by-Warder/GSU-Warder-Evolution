@@ -35,13 +35,19 @@ def prepare(skin,width,height):
     for name,bounds,font in (('title',(1160,200,680,45),28),('list',(1155,265,690,410),23),('config',(1155,265,690,540),22),('text',(1160,700,680,255),23),('scroll',(1160,265,680,680),23),('edit_hint',(1160,562,680,30),20)):
         node=ET.SubElement(root,'widget',name='right_'+name,font='Regular;%d'%round(font*sy),backgroundColor=CLEAR,transparent='1',foregroundColor=main.CYAN if name=='title' else '#00ffffff',zPosition='6',scrollbarMode='showOnDemand')
         if name in ('list','config'):
-            node.set('backgroundColorSelected',main.SELECTION);node.set('foregroundColorSelected','#00ffffff');node.set('itemHeight',str(round(42*sy)))
+            node.set('backgroundColorSelected',main.SELECTION);node.set('foregroundColorSelected','#00ffffff');node.set('itemHeight',str(round((40 if name=='list' else 42)*sy)))
         box(node,*bounds)
+        if name in ('list','config'):
+            row_height=int(node.get('itemHeight'));w,h=map(int,node.get('size').split(','))
+            node.set('size','%d,%d'%(w,h//row_height*row_height))
     for name,bounds,font in (('line',(1160,560,680,2),1),('title',(1160,580,680,40),24),('list',(1155,635,690,240),23),('value',(1160,650,680,80),40),('help',(1160,890,680,65),21)):
         node=ET.SubElement(root,'widget',name='right_editor_'+name,font='Regular;%d'%round(font*sy),backgroundColor=main.CYAN if name=='line' else CLEAR,transparent='0' if name=='line' else '1',foregroundColor=main.CYAN if name in ('title','value') else '#00ffffff',zPosition='8',scrollbarMode='showOnDemand')
         if name=='list':node.set('backgroundColorSelected',main.SELECTION);node.set('foregroundColorSelected','#00ffffff')
         if name=='value':node.set('halign','center');node.set('valign','center')
         box(node,*bounds)
+        if name=='list':
+            row_height=round(40*sy);w,h=map(int,node.get('size').split(','))
+            node.set('itemHeight',str(row_height));node.set('size','%d,%d'%(w,h//row_height*row_height))
     return ET.tostring(root,encoding='unicode'),decorations
 
 
