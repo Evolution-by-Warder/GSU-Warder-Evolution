@@ -9,7 +9,7 @@ import ssl
 import subprocess
 import tarfile
 import tempfile
-from dataclasses import dataclass, field
+from collections import namedtuple
 from urllib.request import Request, urlopen
 
 REPOSITORY = "Evolution-by-Warder/GSU-Warder-Evolution"
@@ -38,15 +38,16 @@ def version_key(value):
     return (int(major), int(minor), int(test is not None), int(revision), int(test or 0))
 
 
-@dataclass(frozen=True)
-class Release:
-    version: str
-    url: str
-    sha256: str
-    bytes: int
-    notes: str = ""
-    notes_i18n: dict = field(default_factory=dict)
-    package_id: str = PACKAGE_ID
+# Use a core-Python immutable record: some receiver images split or omit
+# dataclasses even when the Python version normally includes that module.
+_DEFAULT_NOTES = object()
+
+
+class Release(namedtuple('_Release', 'version url sha256 bytes notes notes_i18n package_id')):
+    __slots__ = ()
+
+    def __new__(cls, version, url, sha256, bytes, notes="", notes_i18n=_DEFAULT_NOTES, package_id=PACKAGE_ID):
+        return super().__new__(cls, version, url, sha256, bytes, notes, {} if notes_i18n is _DEFAULT_NOTES else notes_i18n, package_id)
 
 
 def parse_release(payload, current_version):

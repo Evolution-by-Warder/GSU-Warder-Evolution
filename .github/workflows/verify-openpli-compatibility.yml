@@ -1,5 +1,6 @@
 name: Verify OpenPLi compatibility
 on:
+  workflow_call:
   push:
     branches: [compat/openpli9-20261102]
   pull_request:

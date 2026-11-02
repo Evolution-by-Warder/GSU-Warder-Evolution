@@ -59,7 +59,32 @@ with tempfile.TemporaryDirectory(prefix='warder-install-gate-') as temp:
     env=dict(os.environ,PYTHONDONTWRITEBYTECODE='1')
     result=subprocess.run([sys.executable,str(runtime/verifier),switch],env=env,capture_output=True,text=True)
     assert result.returncode==0,'Shipped postinst verifier failed: '+result.stdout+result.stderr
+    # Reproduce minimal receiver images: the updater must cold-import without
+    # dataclasses. Preload standard-library dependencies first, because newer
+    # desktop Python versions may internally use it for unrelated modules.
+    minimal_code = """
+import builtins, hashlib, io, json, pathlib, re, runpy, ssl, subprocess, sys, tarfile, tempfile
+from urllib.request import Request, urlopen
+original_import = builtins.__import__
+def minimal_import(name, *args, **kwargs):
+    if name == 'dataclasses' or name.startswith('dataclasses.'):
+        raise ModuleNotFoundError("No module named 'dataclasses'")
+    return original_import(name, *args, **kwargs)
+builtins.__import__ = minimal_import
+script, switch = sys.argv[1:]
+if switch == 'startup':
+    updater = runpy.run_path(script)
+    record = updater['Release']('1', 'url', 'a' * 64, 1)
+    assert record.notes_i18n == {}
+else:
+    sys.argv = [script, switch]
+    runpy.run_path(script, run_name='__main__')
+"""
+    minimal=subprocess.run([sys.executable,'-c',minimal_code,str(runtime/verifier),switch],env=env,capture_output=True,text=True)
+    assert minimal.returncode==0,'Minimal-Python postinst failed: '+minimal.stdout+minimal.stderr
     module_file='warder_update.py' if args.product=='piconhub' else 'plugin_update.py'
+    startup=subprocess.run([sys.executable,'-c',minimal_code,str(runtime/module_file),'startup'],env=env,capture_output=True,text=True)
+    assert startup.returncode==0,'Minimal-Python updater import failed: '+startup.stdout+startup.stderr
     spec=importlib.util.spec_from_file_location('extracted_install_version_gate',runtime/module_file)
     updater=importlib.util.module_from_spec(spec);sys.modules[spec.name]=updater;spec.loader.exec_module(updater)
     updater.version_key(args.version)
@@ -67,7 +92,7 @@ with tempfile.TemporaryDirectory(prefix='warder-install-gate-') as temp:
     channel='stable' if args.product=='piconhub' else 'original-python314'
     assert updater.parse_release(json.dumps({'schema':1,'product':product,'channel':channel,'release':None}),args.version) is None
 report={'version':args.version,'package':identity,'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),
-        'shipped_postinst_verifier_exit':0,'installed_version_parser_passed':True,'updater_empty_feed_passed':True}
+        'shipped_postinst_verifier_exit':0,'installed_version_parser_passed':True,'updater_empty_feed_passed':True,'minimal_python_without_dataclasses_passed':True}
 if args.report:
     args.report.parent.mkdir(parents=True,exist_ok=True);args.report.write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps(report))
