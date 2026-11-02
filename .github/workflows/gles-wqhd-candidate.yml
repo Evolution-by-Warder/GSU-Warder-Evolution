@@ -1,0 +1,54 @@
+name: GSU OpenATV 8.1 GLES WQHD candidate
+on:
+  push:
+    branches: [fix/generated-list-rows-20261102]
+    paths: [plugin/**, compatibility/**, .github/workflows/gles-wqhd-candidate.yml, .github/workflows/verify-openatv-compatibility.yml]
+permissions:
+  contents: read
+concurrency:
+  group: gsu-gles-wqhd-candidate
+  cancel-in-progress: true
+jobs:
+  compatibility:
+    uses: ./.github/workflows/verify-openatv-compatibility.yml
+  package:
+    needs: compatibility
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            plugin
+            compatibility
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Stage isolated candidate and verify repeatable package bytes
+        run: |
+          python compatibility/prepare-gles-wqhd-candidate.py
+          python plugin/tools/build_ipk.py --output /tmp/candidate-a
+          python plugin/tools/build_ipk.py --output /tmp/candidate-b
+          cmp /tmp/candidate-a/enigma2-plugin-extensions-gsu_13.40-r95-test1_all.ipk /tmp/candidate-b/enigma2-plugin-extensions-gsu_13.40-r95-test1_all.ipk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GSU-13.40-r95-test1
+          path: /tmp/candidate-a/*
+          retention-days: 30
+      - name: Publish immutable isolated prerelease without changing production feeds
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          PACKAGE=/tmp/candidate-a/enigma2-plugin-extensions-gsu_13.40-r95-test1_all.ipk
+          TAG=v13.40-r95-test1
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            mkdir -p /tmp/immutable
+            gh release download "$TAG" --pattern "$(basename "$PACKAGE")" --dir /tmp/immutable
+            cmp "$PACKAGE" "/tmp/immutable/$(basename "$PACKAGE")"
+          else
+            gh release create "$TAG" "$PACKAGE" "$PACKAGE.sha256" --target "$GITHUB_SHA" --prerelease --latest=false --title 'GSU 13.40-r95-test1 — OpenATV 8.1 GLES WQHD TEST' --notes-file compatibility/GLES-WQHD-20261102.md
+          fi

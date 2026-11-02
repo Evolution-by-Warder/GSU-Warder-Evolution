@@ -6,7 +6,7 @@ import threading
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.ScrollLabel import ScrollLabel
-from Screens.Screen import Screen
+from .warder_screen import Screen
 from Screens.MessageBox import MessageBox
 from enigma import eTimer, getDesktop
 

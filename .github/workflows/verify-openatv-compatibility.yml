@@ -1,5 +1,6 @@
 name: Verify OpenATV interfaces
 on:
+  workflow_call:
   schedule:
     - cron: '25 5 * * *'
   workflow_dispatch:

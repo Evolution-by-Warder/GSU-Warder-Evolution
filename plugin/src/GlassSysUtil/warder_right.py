@@ -349,7 +349,7 @@ def show(screen,api,kind):
     return tools_ui.open_tools(screen.session,api)
 
 
-from Screens.Screen import Screen
+from .warder_screen import Screen
 from .warder_main import text as _update_display
 
 class UpdateInfo(Screen):

@@ -1,3 +1,9 @@
+# Superseded by the complete GLES/WQHD candidate — 2 November 2026
+
+The follow-up source changes and isolated receiver candidate are documented in GLES-WQHD-20261102.md. The previous remaining CAM/OSCam work below is now included there. Production feeds remain unchanged.
+
+---
+
 # Generated plugin list fixes — 2 November 2026
 
 These are new source changes after the 1 November compatibility work. FullHDGlass 1.0.61 remains the production skin; 1.0.62-test1 is unchanged. This branch is not a published plugin release and does not change installed versions, production feeds, package identities or artwork.

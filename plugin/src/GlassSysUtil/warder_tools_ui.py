@@ -4,7 +4,7 @@ from pathlib import Path
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.ScrollLabel import ScrollLabel
-from Screens.Screen import Screen
+from .warder_screen import Screen
 from twisted.internet.threads import deferToThread
 from .warder_tools import run_task
 from .warder_main import PLUGIN_NAME

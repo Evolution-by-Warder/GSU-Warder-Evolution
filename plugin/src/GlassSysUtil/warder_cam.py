@@ -72,6 +72,10 @@ def cam_skin(original,width,height,translator=lambda value:value):
         fill(x+195,996,200,2,color,3)
         node=ET.SubElement(root,'widget',name=name,foregroundColor=color,backgroundColor=main.BASE,halign='center',valign='center',zPosition='3',noWrap='1')
         place(node,x,1006,590,50,28)
+    for node in root.findall('widget'):
+        if node.get('itemHeight'):
+            wide,high=map(int,node.get('size').split(','));row_height=int(node.get('itemHeight'))
+            node.set('size','%d,%d'%(wide,high//row_height*row_height))
     return ET.tostring(root,encoding='unicode')
 
 
@@ -101,8 +105,9 @@ class Controls:
             {'left':self.left,'right':self.right,'up':self.up,'down':self.down,'ok':self.choose,'blue':self.ignore_blue,'green':self.green,'red':self.red,'yellow':self.choose,'cancel':self.back,'back':self.back},-10)
         screen.onLayoutFinish.append(self.begin)
     def begin(self):
-        self.screen['workspace_list'].l.setFont(0,self.api['gFont']('Regular',self.api['fhd'](25)))
-        self.screen['workspace_list'].l.setItemHeight(self.api['fhd'](42))
+        scale=self.api['getDesktop'](0).size().height()/1080
+        self.screen['workspace_list'].l.setFont(0,self.api['gFont']('Regular',round(25*scale)))
+        self.screen['workspace_list'].l.setItemHeight(round(42*scale))
         self.focus(True)
     def green(self):
         panes=self.screen._cam_panes

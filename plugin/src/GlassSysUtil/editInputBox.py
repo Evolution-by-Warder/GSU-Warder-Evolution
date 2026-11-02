@@ -1,5 +1,5 @@
 from enigma import getPrevAsciiCode, getDesktop
-from Screens.Screen import Screen
+from .warder_screen import Screen
 from Components.ActionMap import NumberActionMap
 from Components.Label import Label
 import os

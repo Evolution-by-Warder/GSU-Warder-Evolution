@@ -8,7 +8,7 @@ from copy import deepcopy
 from types import FunctionType
 from textwrap import wrap
 from xml.etree import ElementTree as ET
-from Screens.Screen import Screen
+from .warder_screen import Screen
 from enigma import eSize, eWidget, ePixmap
 from Components.GUIComponent import GUIComponent
 from . import warder_main as main, warder_system
@@ -100,6 +100,10 @@ class Pane:
         elif kind=='entitlements':args=('http://127.0.0.1:8888/','','','')
         else:args=('http://127.0.0.1:8888/','','')
         self.model=controller(proxy,*args)
+        if kind=='log':
+            self.model._warder_log_width=round(1010*host.sx)
+            self.model._warder_log_font=round(18*host.sy)
+            self.model._warder_log_row=round(24*host.sy)
         self.xml=ET.fromstring(self.model.skin)
         self.list_node=next((n for n in self.xml if n.get('name') in ('list','log_info','entitlements_list')),None)
         self.old_width=int(self.list_node.get('size').split(',')[0]) if self.list_node is not None else host.width
@@ -132,13 +136,6 @@ class Pane:
         data['pos']=(round(x*scale),y)
         available=round((690 if self.kind in ('intro','servers') else 1010)*self.host.sx)-data['pos'][0]
         data['size']=(max(1,min(round(w*scale),available)),h)
-        if self.kind=='log':
-            lines=wrap(str(data.get('text','')),width=100,replace_whitespace=False,drop_whitespace=False) or ['']
-            data['text']='\n'.join(lines);data['font']=1
-            height=round(max(42,len(lines)*24)*self.host.sy)
-            self.log_height=max(getattr(self,'log_height',0),height)
-            self.model['log_info'].l.setItemHeight(self.log_height)
-            data['size']=(data['size'][0],height)
         if self.kind=='entitlements':
             base=self.host.api['fhd']
             # Original rows have eight or nine fields. Reflow into readable cards.
@@ -219,6 +216,9 @@ def skin(host):
                 elif kind=='entitlements':bounds=(75,360,1010,600)
                 else:bounds=(75,255,1010,700)
                 box(n,*bounds)
+                row_height=round((160 if kind=='entitlements' else 24 if kind=='log' else 42)*sy)
+                wide,high=map(int,n.get('size').split(','))
+                n.set('itemHeight',str(row_height));n.set('size','%d,%d'%(wide,high//row_height*row_height))
             elif name=='server_name':box(n,90,255,980,300);n.set('font','Regular;%d'%round(28*sy))
             elif name=='logo':box(n,450,575,220,132);n.set('scale','1')
             elif name=='info':box(n,90,760,980,190);n.set('font','Regular;%d'%round(23*sy))
@@ -273,7 +273,7 @@ class OscamWorkspace(Screen):
                 if name in pane.widgets:
                     widget=pane.widgets[name]
                     for index in (0,1):widget.l.setFont(index,self.api['gFont']('Regular',round((20 if pane.kind=='entitlements' else 26)*self.sy)))
-                    widget.l.setItemHeight(round((160 if pane.kind=='entitlements' else 42)*self.sy))
+                    widget.l.setItemHeight(round((160 if pane.kind=='entitlements' else 24 if pane.kind=='log' else 42)*self.sy))
                     if pane.kind=='log':widget.l.setFont(1,self.api['gFont']('Regular',round(18*self.sy)))
         self.activate('servers' if select_server else 'intro')
     def activate(self,kind):

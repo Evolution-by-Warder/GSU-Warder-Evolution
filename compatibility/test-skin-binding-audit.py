@@ -68,5 +68,40 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(result['unresolved_or_dynamic_widget_bindings'], 1)
 
 
+    def inline(self, files):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            files=dict(files, **{'Components/GUIComponent.py':'class GUIComponent: pass',
+                                'Components/Element.py':'class Element: pass',
+                                'Components/Sources/StaticText.py':'from Components.Element import Element\nclass StaticText(Element): pass'})
+            for path,text in files.items():
+                target=root/path;target.parent.mkdir(parents=True,exist_ok=True);target.write_text(text)
+            return audit.audit_inline(root,[root])
+
+    def test_relative_inheritance_and_imported_xml_are_resolved(self):
+        result=self.inline({'own/source.py':'from Components.Sources.StaticText import StaticText\nclass Caption(StaticText): pass',
+          'own/layout.py':'LAYOUT = \'<screen><widget source="text" render="Label"/></screen>\'',
+          'own/plugin.py':'from .source import Caption\nfrom .layout import LAYOUT\nclass Dialog:\n skin=LAYOUT\n def __init__(self): self["text"]=Caption()'})
+        self.assertEqual(result['typed_widget_bindings_checked'],1)
+        self.assertFalse(result['binding_errors']);self.assertFalse(result['parse_errors'])
+
+    def test_all_conditional_wildcard_resolution_templates_are_checked(self):
+        result=self.inline({'own/hd.py':'LAYOUT = \'<screen><widget source="text" render="Label"/></screen>\'',
+          'own/qhd.py':'LAYOUT = \'<screen><widget name="text"/></screen>\'',
+          'own/plugin.py':'from Components.Sources.StaticText import StaticText\nif desktop_width>1920:\n from .qhd import *\nelse:\n from .hd import *\nclass Dialog:\n skin=LAYOUT\n def __init__(self): self["text"]=StaticText()'})
+        self.assertEqual(result['typed_widget_bindings_checked'],2)
+        self.assertEqual(len(result['binding_errors']),1)
+
+    def test_finite_loop_fields_keep_actual_source_types(self):
+        result=self.inline({'own/plugin.py':'from Components.Sources.StaticText import StaticText\nclass Dialog:\n skin=\'<screen><widget source="red" render="Label"/><widget name="blue"/></screen>\'\n def __init__(self):\n  for name in ("red","blue"):\n   self[name]=StaticText()'})
+        self.assertEqual(result['typed_widget_bindings_checked'],2)
+        self.assertEqual(result['binding_errors'][0]['field'],'blue')
+
+    def test_generator_calls_remain_explicitly_unresolved(self):
+        result=self.inline({'own/plugin.py':'class Dialog:\n skin=make_layout(2560,1440)'})
+        self.assertEqual(result['literal_or_imported_templates_checked'],0)
+        self.assertEqual(result['dynamic_skin_controllers_requiring_separate_tests'],['own.plugin.Dialog'])
+
+
 if __name__ == '__main__':
     unittest.main()
