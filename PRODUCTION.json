@@ -85,5 +85,14 @@
     "gsu": "13.41-r4",
     "piconhub": "0.1.40"
   },
-  "live_updater_activation_commit": "42a189d9be82e77f3ad037692d095760f7af3c5c"
+  "live_updater_activation_commit": "42a189d9be82e77f3ad037692d095760f7af3c5c",
+  "documentation_checkpoint": {
+    "date": "2026-11-02",
+    "status": "stable-publication-and-session-records-complete",
+    "web_copy": "docs/CURRENT-RELEASE.md",
+    "web_copy_language": "sk",
+    "web_copy_archived": true,
+    "separate_website_publication_performed": false,
+    "continuation": "Current main is the release baseline. Preserve published IPKs and settings; prepare further implementation changes as separate candidates."
+  }
 }
