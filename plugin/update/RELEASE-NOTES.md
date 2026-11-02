@@ -1,11 +1,5 @@
-GSU 13.40-r94
+GSU 13.41-r4
 
-Správne zaradenie v správcovi pluginov
+Spoločná verzia pre OpenPLi a OpenATV. Opravený štart aktualizátora bez modulu dataclasses a pád ECM panela na OpenPLi; rovnaké volania sú opravené aj v informáciách o kanáli a klientoch OSCam. Zahrnuté sú úpravy zoznamov, rozlíšení HD/FHD/WQHD/UHD a kompatibility OpenATV 8.1/GLES. Nastavenia a spravované štartovanie CAM-u zostávajú zachované. Po aktualizácii reštartujte GUI.
 
-- GSU patrí do Balíčkov s rozšíreniami a zobrazuje sa ako gsu-warder-evolution.
-- Nová identita: enigma2-plugin-extensions-gsu-warder-evolution.
-- Krátky súbor na stiahnutie: enigma2-plugin-extensions-gsu_13.40-r94_all.ipk.
-- Staršie inštalácie dostanú najskôr kompatibilný prechod r93; po reštarte GUI aktualizátor ponúkne r94.
-- Prechod zachováva nastavenia aj spravované štartovanie CAM-u. Picony a skin sa nemenia.
-
-Zmenu zaradenia a názvu výslovne požadoval vlastník 30.10.2026. Automatizované overenie nenahrádza fyzický test prijímača.
+Common OpenPLi and OpenATV release. Removes the updater dataclasses dependency and fixes the OpenPLi ECM OSD startup crash, channel information and OSCam client labels. Includes list fitting, HD/FHD/WQHD/UHD layouts and OpenATV 8.1/GLES compatibility. Settings and managed CAM startup are preserved. Restart the GUI after updating.
