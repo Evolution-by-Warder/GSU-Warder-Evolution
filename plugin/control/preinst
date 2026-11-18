@@ -2,6 +2,22 @@
 set -e
 [ -z "${D:-}" ] || exit 0
 
+# Print status only; keep legacy migration checks unchanged.
+case "${1:-}" in
+    install|upgrade)
+        echo "******************************************************************"
+        echo "                    GSU Warder Evolution"
+        echo "******************************************************************"
+        if [ "${1:-}" = upgrade ]; then
+            echo "Preparing GSU Warder Evolution upgrade/reinstall..."
+        else
+            echo "Preparing GSU Warder Evolution installation/reinstall..."
+        fi
+        echo "Existing GSU settings and custom configuration will be preserved."
+        echo "******************************************************************"
+        ;;
+esac
+
 # The verified 13.20 postinst deletes payload files still owned by opkg.
 # Prepare only missing, still-owned entries for native obsolete-file pruning.
 case "${1:-}" in install|upgrade) ;; *) exit 0 ;; esac
