@@ -1,4 +1,5 @@
 name: Verify Warder IPK lifecycle messages (no package build)
+# This workflow executes pure hook tests only, with no archive creation or publishing.
 on:
   pull_request:
     paths:
