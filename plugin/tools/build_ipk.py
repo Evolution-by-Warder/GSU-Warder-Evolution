@@ -102,19 +102,53 @@ done
 [ -e /etc/hddtemp.db ] || cp "$p/defaults/hddtemp-def.db" /etc/hddtemp.db
 [ -e /etc/oscam_version ] || cp "$p/defaults/oscam_version" /etc/oscam_version
 /usr/bin/python3 "$p/install_health.py" --files-only
-printf '%s\\n' 'GSU files verified. Restart the GUI after installation completes.'
+echo "******************************************************************"
+echo "Install/upgrade/reinstall finished: GSU Warder Evolution"
+echo "Existing GSU settings and custom configuration were preserved."
+echo "Please restart GUI to activate changes."
+echo "******************************************************************"
 exit 0
 '''.encode()
     prerm=b"""#!/bin/sh
 set -e
 [ -z "$D" ] || exit 0
-if [ "$1" = remove ] && [ ! -f /var/lib/warder-gsu/package-rename-in-progress ]; then
+if [ "${1:-}" = remove ] && [ ! -f /var/lib/warder-gsu/package-rename-in-progress ]; then
     helper=/usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/native_start_config.py
     if [ -f "$helper" ]; then /usr/bin/python3 "$helper" --restore-all; fi
 fi
+# A package-rename operation is not a genuine uninstall.
+case "${1:-}" in
+    remove|purge)
+        if [ ! -f /var/lib/warder-gsu/package-rename-in-progress ]; then
+            echo "******************************************************************"
+            echo "                    GSU Warder Evolution"
+            echo "******************************************************************"
+            echo "Removing GSU Warder Evolution plugin files..."
+            echo "Saved GSU settings and custom configuration will remain intact."
+            echo "******************************************************************"
+        fi
+        ;;
+esac
 exit 0
 """
-    sections=[('debian-binary',b'2.0\n'),('control.tar.gz',archive([('control',control,0o644),('preinst',preinst,0o755),('postinst',postinst,0o755),('prerm',prerm,0o755)])),('data.tar.gz',archive(entries))]
+    postrm=b"""#!/bin/sh
+set -e
+[ -z "${D:-}" ] || exit 0
+# Never announce uninstall on upgrade or package-rename.
+case "${1:-}" in
+    remove|purge)
+        if [ ! -f /var/lib/warder-gsu/package-rename-in-progress ]; then
+            echo "******************************************************************"
+            echo "Removal finished: GSU Warder Evolution"
+            echo "Saved GSU settings and custom configuration were left intact."
+            echo "Please restart GUI to activate changes."
+            echo "******************************************************************"
+        fi
+        ;;
+esac
+exit 0
+"""
+    sections=[('debian-binary',b'2.0\n'),('control.tar.gz',archive([('control',control,0o644),('preinst',preinst,0o755),('postinst',postinst,0o755),('prerm',prerm,0o755),('postrm',postrm,0o755)])),('data.tar.gz',archive(entries))]
     result=bytearray(b'!<arch>\n')
     for name,data in sections:
         result.extend(('%-16s%-12s%-6s%-6s%-8s%-10s`\n'%(name+'/',0,0,0,'100644',len(data))).encode());result.extend(data)

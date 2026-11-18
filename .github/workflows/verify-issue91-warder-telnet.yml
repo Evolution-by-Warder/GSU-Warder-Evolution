@@ -1,0 +1,25 @@
+name: Verify Warder IPK lifecycle messages (no package build)
+# This workflow executes pure hook tests only, with no archive creation or publishing.
+on:
+  pull_request:
+    paths:
+      - 'plugin/tests/test_issue91_messages.py'
+      - 'plugin/control/preinst'
+      - 'plugin/tools/build_ipk.py'
+      - '.github/workflows/verify-issue91-warder-telnet.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  hooks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate messages, hook syntax and opkg phase guards only
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 -m unittest discover -s plugin/tests -p 'test_issue91_messages.py' -v
