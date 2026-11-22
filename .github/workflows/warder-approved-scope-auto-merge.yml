@@ -1,0 +1,75 @@
+name: Warder approved-scope merge after verified CI
+
+on:
+  issue_comment:
+    types: [created]
+  workflow_run:
+    workflows:
+      - "Verify OpenATV interfaces"
+      - "Verify OpenPLi compatibility"
+    types: [completed]
+  workflow_dispatch:
+  schedule:
+    - cron: '29 4 * * *'
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: read
+  checks: read
+  statuses: read
+
+concurrency:
+  group: warder-approved-scope-merge
+  cancel-in-progress: false
+
+jobs:
+  merge-approved:
+    if: github.repository_owner == 'Evolution-by-Warder'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Merge only owner-approved exact-SHA PRs with successful checks
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            if (owner !== 'Evolution-by-Warder') throw Error('Unexpected owner');
+            const prs = await github.paginate(github.rest.pulls.list, { owner, repo, state: 'open', per_page: 100 });
+            for (const pr of prs) {
+              if (pr.draft || pr.base.ref !== 'main' || pr.head.repo?.full_name !== owner + '/' + repo) continue;
+              const files = await github.paginate(github.rest.pulls.listFiles, { owner, repo, pull_number: pr.number, per_page: 100 });
+              // Security/policy changes always require manual merge.
+              if (files.some(f => f.filename === 'AGENTS.md' || f.filename.startsWith('.github/workflows/'))) continue;
+              // An owner-authored exact SHA marker records the already granted scope approval.
+              // A subsequent source commit invalidates the old marker without asking the owner again:
+              // the assistant must review the changed scope and refresh the marker if still approved.
+              const marker = '<!-- WARDER_APPROVED_SCOPE_SHA:' + pr.head.sha + ' -->';
+              const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number: pr.number, per_page: 100 });
+              const approved = comments.some(c => c.user?.login === owner &&
+                typeof c.body === 'string' && c.body.split(/\r?\n/).some(line => line.trim() === marker));
+              if (!approved) continue;
+              const runs = await github.paginate(github.rest.checks.listForRef, { owner, repo, ref: pr.head.sha, per_page: 100 });
+              // Never consider an unchecked PR as safe for unattended merge.
+              if (!runs.some(r => r.status === 'completed' && r.conclusion === 'success')) continue;
+              if (runs.some(r => r.status !== 'completed' || !['success', 'neutral', 'skipped'].includes(r.conclusion))) continue;
+              const combined = await github.rest.repos.getCombinedStatusForRef({ owner, repo, ref: pr.head.sha });
+              if (combined.data.statuses.length && combined.data.state !== 'success') continue;
+              const { data: latest } = await github.rest.pulls.get({ owner, repo, pull_number: pr.number });
+              if (latest.head.sha !== pr.head.sha || latest.mergeable !== true || latest.mergeable_state !== 'clean') continue;
+              try {
+                const merged = await github.rest.pulls.merge({
+                  owner, repo, pull_number: pr.number, sha: pr.head.sha, merge_method: 'squash'
+                });
+                if (merged.data.merged) core.info('Merged approved and verified PR #' + pr.number + ': ' + merged.data.sha);
+                else core.warning('GitHub did not merge PR #' + pr.number);
+              } catch (err) {
+                core.warning('PR #' + pr.number + ' blocked by GitHub rules: ' + err.message);
+              }
+            }
+
+# An approval comment must be posted on the PR by Evolution-by-Warder:
+# <!-- WARDER_APPROVED_SCOPE_SHA:<exact-current-40-character-head-sha> -->
+# This workflow never builds/publishes binaries itself. Existing per-repo
+# publishing workflows independently verify each production artifact.
