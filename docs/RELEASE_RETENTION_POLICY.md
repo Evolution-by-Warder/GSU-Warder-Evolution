@@ -1,24 +1,18 @@
-# GitHub Releases – retention and safe cleanup
+# GSU Warder Evolution — retencia vydaní (23.11.2026)
 
-Status as of 2026-11-09. This policy is part of the cross-project Warder release hygiene programme. **It does not authorize blind automatic deletions.**
+**Záväzné pravidlo vlastníka:** ponechať aktuálnu ostrú verziu a maximálne tri predchádzajúce ostré verzie. Žiadne rozšírenie na päť vydaní. Maž iba súbory či Releases bez aktívnych aktualizačných odkazov a po overení obnovy; historické commity/tagy, schválené podklady a používateľské údaje sa neprepisujú.
 
-## Inventory
-- Repository: `Evolution-by-Warder/GSU-Warder-Evolution`
-- Observed GitHub Releases: **10**
-- Latest observed tag: `v13.41-r4`
+## Ostré vydania, ktoré zostávajú
 
-## Policy
-1. Keep at least the **five most recent stable production releases** in each actively distributed project, plus specifically identified historical milestones and any supported rollback version.
-2. Keep **every release currently referenced** by an updater, feed, installer, plugin catalog, README, documentation, published package manifest or an active user-facing URL, regardless of age.
-3. Identify stale TEST/RC builds separately; never count them as production rollback releases. A candidate can be removed only after its source and test evidence are retained and all relevant refs have been checked.
-4. Before removing a Release or its asset, inventory versions/tags/URLs and run repository-wide searches for references, validate that a currently supported installed version can still update or reinstall, and preserve a verified recovery copy.
-5. Deletion of a GitHub Release, deletion of an asset and deletion of a Git tag are **separate operations**. Never rewrite release artifacts or silently remove tags. Record actions and exact identifiers in the project progress register.
-6. Apply the policy after each new stable publication and periodically review accumulated TEST assets. Publishing automation must not delete previous versions as a side effect.
+- `v13.41-r4` (aktuálne)
+- `v13.40-r95`
+- `v13.40-r94`
+- `v13.40-r93`
 
-## Pending cleanup
+Sú to presne štyri aktuálne GitHub Releases. `plugin/update/stable.json` smeruje na r4; `plugin/update/candidate.json` **stále smeruje na r93** ako kompatibilný prechod zo starej opkg identity. Preto je r93 nielen historickým rollbackom, ale aj chráneným migračným medzistupňom. Bez jeho testovanej náhrady ho neodstraňuj.
 
-The existing 10 Releases are **inventory only**, not a reviewed deletion list. First check all live updater URLs and installation dependencies, then produce an explicit keep/remove manifest. Do not delete any Release until that manifest has been validated.
+V `main` nie sú historické inštalačné IPK v `packages/`, `build/` ani `dist/`; balíky patria do GitHub Releases, a `plugin/resources.tar.gz` je **funkčný zdrojový asset**, nie starý inštalačný balík. Existujúce `.github/workflows/cleanup-releases.yml` pracuje iba s explicitnou žiadosťou a kontrolami; jeho automatiku nerozširovať bez overeného návratového postupu.
 
+Nové vydávanie musí rešpektovať maximálne štyri ostré verzie a zároveň migration exceptions, verzované URL, SHA, opkg identitu a používané súbory. Git história, testy, zdrojový kód, nastavenia a schválené CAM správanie zostávajú zachované.
 
-## Cross-project scope
-Apply the same release hygiene process in FullHDGlass, PiconHub, GSU and Warder Radio. Exempt backup/archival snapshots from generic pruning. The aim is to keep release history readable without breaking installations or update feeds.
+Spoločný checkpoint: [FullHDGlass/docs/ECOSYSTEM-CLEANUP-CHECKPOINT-20261123.md](https://github.com/Evolution-by-Warder/FullHDGlass-Warder-Evolution/blob/main/docs/ECOSYSTEM-CLEANUP-CHECKPOINT-20261123.md).
