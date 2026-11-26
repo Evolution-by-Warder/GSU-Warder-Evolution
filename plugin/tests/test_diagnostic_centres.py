@@ -134,7 +134,14 @@ class DiagnosticTests(unittest.TestCase):
         session=MagicMock()
         menu=ui.ProjectMenu(session,api)
         self.assertEqual([r[0] for r in menu.entries()],[p[0] for p in projects.PROJECTS])
-        menu['list'].getCurrent=lambda:['GSU'];menu.select()
+        menu['list'].getCurrent=lambda:['GSU']
+        with patch.object(ui,'deferToThread') as worker,patch.object(projects,'report',return_value='Installed 0.41.5'):
+            menu.select()
+            value=worker.call_args.args[0]()
+            worker.return_value.addCallbacks.call_args.args[0](value)
+        self.assertEqual(menu['descriptions'].getText(),'Installed 0.41.5')
+        session.open.assert_not_called()
+        menu.full_result()
         session.open.assert_called_once_with(ui.ProjectReport,api,projects.PROJECTS[-1])
         view=ui.ProjectReport(session,api,projects.PROJECTS[-1])
         view.update_status('checking')
