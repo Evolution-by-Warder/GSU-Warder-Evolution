@@ -31,6 +31,7 @@ def details(session, api, tr, slot_number=None):
     except (KeyError, TypeError, ValueError, AttributeError):
         human = {}
     rows = []
+    if data:rows.append(tr('Transponder'))
     for key, caption in [('system','System:'), ('tuner_type','Type'), ('frequency','Frequency:'),
                          ('polarization','Polarisation:'), ('modulation','Modulation:'), ('fec_inner','FEC'),
                          ('symbol_rate','Symbol Rate:'), ('orbital_position','Satellite:'),
@@ -40,14 +41,15 @@ def details(session, api, tr, slot_number=None):
                          ('is_id','MIS'), ('pls_mode','PLS'), ('pls_code','PLS code'),
                          ('t2mi_plp_id','T2-MI PLP'), ('t2mi_pid','T2-MI PID'), ('plp_id','PLP')]:
         if key in data and data[key] not in (None, -1):
-            rows.append('%s   %s' % (tr(caption), human[key] if human.get(key) is not None else data[key]))
+            rows.append('    %s   %s' % (tr(caption), human[key] if human.get(key) is not None else data[key]))
     try:
         recordings = nav.getRecordings()
         count = len(recordings)
         occupied = {read_frontend(r).get('tuner_number') for r in recordings}
     except (AttributeError, RuntimeError, TypeError):
         occupied, count = set(), None
-    rows.extend(('', tr('Recordings')+'   '+('—' if count is None else str(count))))
+    if rows:rows.append('')
+    rows.extend((tr('Tuner interfaces'), '    '+tr('Recordings')+'   '+('—' if count is None else str(count))))
     for slot in getattr(nimmanager, 'nim_slots', []):
         number = getattr(slot, 'slot', None)
         if type(number) is not int or (slot_number is not None and slot_number!=number):
@@ -64,7 +66,7 @@ def details(session, api, tr, slot_number=None):
             flag=getattr(slot,method,None)
             if callable(flag) and flag():
                 state.append(tr(label))
-        rows.append('%s    %s' % (slot.getSlotName(), ' · '.join(state) or '—'))
+        rows.append('    %s    %s' % (slot.getSlotName(), ' · '.join(state) or '—'))
         if slot_number is not None:
             description=getattr(slot,'getFriendlyFullDescription',None)
             if callable(description):
@@ -75,6 +77,7 @@ def details(session, api, tr, slot_number=None):
                 if isinstance(values,(list,tuple,set)):
                     rows.append(' / '.join(str(v) for v in values))
     if service and show_current:
+        rows.extend(('',tr('Channel Information')))
         info = service.info()
         enum = api['iServiceInformation']
         for name, label in [('sVideoPID','Video PID'), ('sAudioPID','Audio PID'), ('sPCRPID','PCR PID'),
@@ -85,11 +88,11 @@ def details(session, api, tr, slot_number=None):
                 if type(value) is int and value >= 0:
                     if name == 'sGamma':
                         value = {0:'SDR', 1:'HDR', 2:'HDR10', 3:'HLG'}.get(value, value)
-                    rows.append('%s   %s' % (label, value))
+                    rows.append('    %s   %s' % (label, value))
         tracks = getattr(service,'audioTracks',lambda:None)()
         if tracks and 0 <= tracks.getCurrentTrack() < tracks.getNumberOfTracks():
             audio = tracks.getTrackInfo(tracks.getCurrentTrack())
-            rows.append('Audio   '+str(audio.getDescription())+'   '+str(audio.getLanguage()))
+            rows.append('    '+tr('Audio:')+'   '+str(audio.getDescription())+'   '+str(audio.getLanguage()))
     from .warder_tools import Probe
     if not show_current:
         return '\n'.join(rows).strip() or tr('Unavailable')
