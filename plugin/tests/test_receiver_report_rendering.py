@@ -85,10 +85,8 @@ class ReceiverRenderingTests(unittest.TestCase):
 
     def test_worker_routes_call_the_correct_provider(self):
         cases=(
-            ('system-processes','warder_system_data','detail_text','processes'),
             ('system-log','warder_system_data','detail_text','log'),
             ('storage-overview','warder_storage','report',None),
-            ('storage-categories','warder_storage','report',None),
             ('network-test','warder_network','diagnostics',None),
             ('service-health','warder_service','health',None),
             ('service-ipk','warder_ipk','review',None),
@@ -101,13 +99,13 @@ class ReceiverRenderingTests(unittest.TestCase):
                     provider.assert_called_once()
                     if argument is not None:
                         self.assertEqual(provider.call_args.args[0],argument)
-                    if kind.startswith('storage-'):
-                        self.assertEqual(provider.call_args.args[-1],kind=='storage-categories')
+                    if kind=='storage-overview':
+                        self.assertIs(provider.call_args.args[-1],False)
                     self.assertIn('provider data',report['file_info'].getText())
         report=self.ui.Report(MagicMock(),self.api,'network-overview','Overview')
         with patch.object(mod('warder_network'),'collect',return_value={'fixture':1}) as collect, patch.object(mod('warder_network'),'summary',return_value='network data') as summary:
             report.done(report.collect())
-            collect.assert_called_once()
+            collect.assert_called_once_with(include_addresses=True)
             self.assertEqual(summary.call_args.args[0],{'fixture':1})
             self.assertIn('network data',report['file_info'].getText())
         report=self.ui.Report(MagicMock(),self.api,'forum-report','Overview')
@@ -127,3 +125,73 @@ class ReceiverRenderingTests(unittest.TestCase):
             report.start()
             provider.assert_called_once()
             self.assertEqual(report['file_info'].getText(),'Channel fixture')
+
+    def test_process_table_and_category_rows_are_bound_to_measured_values(self):
+        ui=self.ui
+        report=ui.Report(MagicMock(),self.api,'system-processes','Process Info')
+        rows=[(42,'enigma2','S',1536,12.5),(7,'kernel','R',None,None)]
+        with patch.object(mod('warder_system_data'),'process_table',return_value=rows) as provider:
+            report.done(report.collect())
+            provider.assert_called_once_with(report.cancelled,False)
+        self.assertTrue(report.table_visible)
+        content=report['process_list'].l.list
+        self.assertEqual(content[0][0],42)
+        self.assertEqual([entry['text'] for entry in content[0][1:]],['42','enigma2','S','1.5','12.5'])
+        self.assertEqual([entry['text'] for entry in content[1][-2:]],['—','—'])
+        report.done([])
+        self.assertFalse(report.table_visible)
+        self.assertEqual(report['file_info'].getText(),report.tr('Unavailable'))
+
+        report=ui.Report(MagicMock(),self.api,'storage-categories','Space by category')
+        rows=[('Picons',1048576,True),('Skins',1048576,True),('Plugins',0,True),
+              ('EPG',0,True),('Cache',0,True),('Logs',0,False)]
+        with patch.object(mod('warder_storage'),'category_snapshot',return_value=rows) as provider:
+            report.done(report.collect())
+            provider.assert_called_once_with()
+        self.assertEqual(report['category_size0'].getText(),'1.0 MiB')
+        self.assertEqual(report['category_state5'].getText(),report.tr('Partial result'))
+        self.assertIn('2.0 MiB',report['report_status'].getText())
+        self.assertIn(report.tr('Partial result'),report['report_status'].getText())
+
+    def test_header_lifecycle_preserves_footer_and_version(self):
+        report=self.ui.Report(MagicMock(),self.api,'network-overview','Network overview')
+        header=report._diagnostic_header
+        header.timer=MagicMock()
+        footer=report['yellow'].getText()
+        header.prepare()
+        self.assertEqual(report['version'].getText(),(ROOT/'version').read_text().strip())
+        self.assertEqual(report['yellow'].getText(),footer)
+        self.assertTrue(report['clock'].getText())
+        header.suspend()
+        header.timer.stop.assert_called()
+        header.cleanup()
+        header.timer.reset_mock()
+        header.resume()
+        header.timer.start.assert_not_called()
+
+    def test_new_modes_fit_all_resolutions_and_keep_native_backings_behind_content(self):
+        view=mod('warder_dashboard')
+        for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
+            for mode in ('menu','overview','chart','detail','process','categories'):
+                root=ET.fromstring(view.skin(w,h,mode))
+                names=[n.get('name') for n in root if n.get('name')]
+                self.assertEqual(len(names),len(set(names)),mode)
+                for n in root:
+                    x,y=map(int,n.get('position').split(','))
+                    width,height=map(int,n.get('size').split(','))
+                    self.assertGreaterEqual(min(x,y),0,(mode,n.attrib))
+                    self.assertGreater(min(width,height),0,(mode,n.attrib))
+                    self.assertLessEqual(x+width,w,(mode,n.attrib))
+                    self.assertLessEqual(y+height,h,(mode,n.attrib))
+                for name in ('day','date','clock','seconds','version_title','version'):
+                    self.assertIn(name,names)
+                if mode in ('detail','process','categories'):
+                    target=root.find("widget[@name='file_info']")
+                    x,y=map(int,target.get('position').split(','))
+                    tw,th=map(int,target.get('size').split(','))
+                    for n in root:
+                        if n.tag not in ('eLabel','ePixmap'):continue
+                        nx,ny=map(int,n.get('position').split(','))
+                        nw,nh=map(int,n.get('size').split(','))
+                        if nx<x+tw and nx+nw>x and ny<y+th and ny+nh>y:
+                            self.assertLess(int(n.get('zPosition','0')),0,(mode,n.attrib))
