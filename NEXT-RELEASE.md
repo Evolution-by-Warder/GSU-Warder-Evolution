@@ -1,3 +1,9 @@
+# 2026-11-26 — Consolidated GSU 0.41.5 architecture
+
+See [GSU-0.41.5-ARCHITECTURE.md](docs/GSU-0.41.5-ARCHITECTURE.md) for seven-centre navigation, progressive disclosure, feature requirements, technical modules, reference audit and release gates. Specification commit `34d52512bf1610b9836db1570750e7112bd97f8f`. Design only; implementation and complete reference audit remain open. Technical migration PR #15 remains separate.
+
+---
+
 # 2026-11-26 — Owner-required progressive disclosure and living-room usability
 
 GSU 0.41.5 must be simple on the surface and professional in depth. Organize every redesigned area in three levels: concise overview with key measured values and meaningful status; drill-down details with history, graphs and recommendations; optional expert diagnostics (processes, logs, technical tuner/stream identifiers and service actions). One screen, one primary purpose; avoid information overload and duplicate navigation. Use generous spacing, legible TV-distance typography, consistent remote-control actions, short localized labels, accessible status text alongside colors, explicit unknown states and capability-aware visibility. Show only supported actionable functions; never fabricate health status from missing measurements. Preserve existing features and expert access, with no unnecessary complexity for beginners. Validate focus, long labels, scrolling, contrast and HD/FHD/WQHD/UHD layouts; test real receiver usability and performance. Approved UX requirement, not implemented functionality.
