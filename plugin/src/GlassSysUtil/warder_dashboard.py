@@ -24,9 +24,11 @@ def skin(width, height, mode):
                 foregroundColor=color, backgroundColor=style.PANEL, transparent='1',
                 zPosition='5', **attrs)
 
-    element('ePixmap', 0, 0, 1920, 1080, pixmap=style.BACKGROUND, scale='1', zPosition='0')
-    element('eLabel', 52, 167, 1816, 807, backgroundColor=style.CYAN, zPosition='1')
-    element('eLabel', 54, 169, 1812, 803, backgroundColor=style.PANEL, zPosition='2')
+    # Native ScrollLabel forwards zPosition to child labels, not its parent.
+    # Its root eWidget stays at zero; every covering backing must be negative.
+    element('ePixmap', 0, 0, 1920, 1080, pixmap=style.BACKGROUND, scale='1', zPosition='-3')
+    element('eLabel', 52, 167, 1816, 807, backgroundColor=style.CYAN, zPosition='-2')
+    element('eLabel', 54, 169, 1812, 803, backgroundColor=style.PANEL, zPosition='-1')
     label('heading', 92, 183, 1700, 78, 43, style.CYAN, valign='center')
     element('eLabel', 92, 263, 1734, 2, backgroundColor='#00314b65', zPosition='3')
     if mode == 'menu':
@@ -41,7 +43,7 @@ def skin(width, height, mode):
             x, y = 92 + col*586, 290 + row*230
             element('eLabel', x, y, 558, 207, backgroundColor='#00172539', zPosition='3')
             element('eLabel', x, y+22, 4, 165, backgroundColor=style.CYAN, zPosition='4')
-            label('label%d'%index, x+24, y+12, 505, 58, 30, '#00bcd2df')
+            label('label%d'%index, x+24, y+12, 505, 58, 26, '#00bcd2df')
             label('value%d'%index, x+24, y+72, 505, 108, 48, '#00ffffff', valign='center')
         label('summary', 92, 765, 1725, 165, 31, style.CYAN)
     elif mode == 'chart':
@@ -52,7 +54,7 @@ def skin(width, height, mode):
         label('file_info', 92, 295, 1740, 630, 32, '#00ffffff', scrollbarMode='showOnDemand')
     colors = ('#00ff526a', '#0039ff59', '#00ffdb52', '#0045b9ff')
     for i, (name, color) in enumerate(zip(('red', 'green', 'yellow', 'blue'), colors)):
-        label(name, 55 + 455*i, 990, 443, 81, 28, color, halign='center', valign='center')
+        label(name, 55 + 455*i, 990, 443, 81, 28, color, halign='center', valign='center', noWrap='1')
     return ET.tostring(root, encoding='unicode')
 
 
@@ -66,8 +68,8 @@ def cam_panel(original, width, height, tr):
     def box(node,x,y,w,h):
         node.set('position','%d,%d'%(round(x*sx),round(y*sy)))
         node.set('size','%d,%d'%(max(1,round(w*sx)),max(1,round(h*sy))))
-    box(ET.SubElement(frame,'ePixmap',pixmap=style.BACKGROUND,scale='1',zPosition='0'),0,0,1920,1080)
-    box(ET.SubElement(frame,'eLabel',backgroundColor=style.PANEL,zPosition='1'),55,168,1810,803)
+    box(ET.SubElement(frame,'ePixmap',pixmap=style.BACKGROUND,scale='1',zPosition='-3'),0,0,1920,1080)
+    box(ET.SubElement(frame,'eLabel',backgroundColor=style.PANEL,zPosition='-1'),55,168,1810,803)
     title = ET.SubElement(frame,'eLabel',text=tr(old.get('title','CAM')),font='Regular;%d'%round(40*sy),
                           foregroundColor=style.CYAN,backgroundColor=style.PANEL,zPosition='2')
     box(title,85,184,1740,68)
