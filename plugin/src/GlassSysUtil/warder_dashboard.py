@@ -80,7 +80,7 @@ def skin(width, height, mode):
             x,y=92+(i%3)*586,290+(i//3)*324
             element('eLabel',x,y,558,308,backgroundColor='#00172539',zPosition='-1')
             element('eLabel',x,y,558,3,backgroundColor=style.CYAN,zPosition='1')
-            label('metric_name%d'%i,x+18,y+12,315,58,28,'#00bcd2df',noWrap='1',valign='center')
+            label('metric_name%d'%i,x+18,y+12,288,58,28,'#00bcd2df',noWrap='1',valign='center')
             label('metric_value%d'%i,x+322,y+12,216,58,34,'#00ffffff',halign='right',noWrap='1',valign='center')
             element('widget',x+96,y+87,440,140,source='plot%d'%i,render='Canvas',zPosition='3')
             label('plot_top%d'%i,x+8,y+78,80,36,20,'#00bcd2df',halign='right',noWrap='1')
