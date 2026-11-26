@@ -129,7 +129,9 @@ def native_tools(tr):
     options = []
     for item in plugins.getPluginsForMenu('scan'):
         if len(item) >= 3 and item[2] in allowed and callable(item[1]):
-            options.append((item[0], styled_satfinder(item[1]) if item[2]=='satfinder' else item[1]))
+            action=styled_satfinder(item[1]) if item[2]=='satfinder' else item[1]
+            # Do not offer an unrecognized scanner as a measurement-only finder.
+            if action is not None:options.append((item[0],action))
     try:
         from Screens.ScanSetup import ScanSetup
         from enigma import eComponentScan
@@ -141,26 +143,37 @@ def native_tools(tr):
 
 
 def styled_satfinder(action):
-    """Preserve the registered image entry point, substituting only its screen class."""
+    """Use the native frontend but expose a measurement-only finder in GSU."""
     from types import FunctionType
-    if not isinstance(action,FunctionType):return action
+    if not isinstance(action,FunctionType):return None
     original=action.__globals__.get('Satfinder')
-    if not isinstance(original,type) or action.__name__!='SatfinderMain':return action
-    from .plugin import _
+    if (not isinstance(original,type) or action.__name__!='SatfinderMain'
+            or not callable(getattr(original,'keyGoScan',None))
+            or not callable(getattr(original,'retune',None))):return None
 
     class WarderSatfinder(original):
         def __init__(self,session):
             super().__init__(session)
             from . import plugin
             from .warder_tuner_ui import install
+            # Native fallback skins may still bind these components.
+            for name in ('key_green','introduction'):
+                if name in self:self[name].setText('')
             if not install(self,vars(plugin),True):
                 self.skinName=['Satfinder']
 
+        def keyGoScan(self,*args,**kwargs):
+            # The native OK/green handler otherwise releases the live frontend
+            # BEFORE calling startScan. Prevent that path at its entry.
+            return None
+
+        def keyGo(self,*args,**kwargs):
+            # Also guard inherited ScanSetup action bindings.
+            return None
+
         def startScan(self,*args,**kwargs):
-            if not recording_safe(self.session.nav):
-                tuner_info(self.session,_,'Recording or channel-list protection stopped the scan.')
-                return
-            return super().startScan(*args,**kwargs)
+            # Last line of defense; the finder never launches a service scan.
+            return None
 
     namespace=dict(action.__globals__,Satfinder=WarderSatfinder)
     wrapped=FunctionType(action.__code__,namespace,action.__name__,action.__defaults__,action.__closure__)

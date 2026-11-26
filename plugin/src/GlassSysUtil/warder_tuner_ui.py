@@ -45,10 +45,10 @@ def skin(width,height,finder,components):
             if i<2:
                 add('widget',1274,y+108,510,9,name='warder_meter%d'%i,
                     backgroundColor='#002f465a',foregroundColor=main.CYAN,borderWidth='0',zPosition='3')
-    if 'introduction' in components:
+    if not finder and 'introduction' in components:
         label('introduction',92,914,1734,55,23,'#00bcd2df',halign='center',valign='center')
     for name,x,color in (('key_red',55,'#00ff526a'),('key_green',510,'#0039ff59')):
-        if name in components:
+        if name in components and (not finder or name!='key_green'):
             add('widget',x,990,443,81,source=name,render='Label',font='Regular;%d'%round(28*sy),
                 foregroundColor=color,backgroundColor=main.BASE,transparent='1',halign='center',valign='center',zPosition='3')
     return ET.tostring(root,encoding='unicode')

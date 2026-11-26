@@ -355,6 +355,57 @@ class DiagnosticTests(unittest.TestCase):
             self.assertIs(launch.call_args.args[2],action)
             session.openWithCallback.assert_not_called()
 
+    def test_finder_is_measurement_only_without_disabling_native_retune(self):
+        from Screens.Screen import Screen
+        tuner=module('warder_tuners')
+        ui=module('warder_tuner_ui')
+        calls=[]
+        class Satfinder(Screen):
+            def __init__(self,session):
+                Screen.__init__(self,session)
+                self.frontend=object()
+                self['config']=api['Label']('')
+                self['Frontend']=api['Label']('')
+                self['key_red']=api['Label']('Close')
+                self['key_green']=api['Label']('Scan')
+                self['introduction']=api['Label']('Press OK to scan')
+                self.scan_keys=(self.keyGoScan,self.keyGo,self.startScan)
+            def retune(self):calls.append('retune')
+            def keyGoScan(self):
+                self.frontend=None
+                calls.append('scan-key')
+            def keyGo(self):calls.append('scan-setup')
+            def startScan(self,*args):calls.append('scan-start')
+        scope={'Satfinder':Satfinder}
+        exec('def SatfinderMain(session):\n    session.open(Satfinder)',scope)
+        entry=scope['SatfinderMain']
+        wrapped=tuner.styled_satfinder(entry)
+        session=MagicMock()
+        wrapped(session)
+        klass=session.open.call_args.args[0]
+        self.assertTrue(issubclass(klass,Satfinder))
+        screen=klass(session)
+        frontend=screen.frontend
+        for callback in screen.scan_keys:callback()
+        self.assertIs(screen.frontend,frontend)
+        self.assertEqual(calls,[])
+        screen.retune()
+        self.assertEqual(calls,['retune'])
+        self.assertEqual(screen['key_green'].getText(),'')
+        self.assertEqual(screen['introduction'].getText(),'')
+        for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
+            components={'config','Frontend','key_red','key_green','introduction'}
+            finder=ET.fromstring(ui.skin(width,height,True,components))
+            manual=ET.fromstring(ui.skin(width,height,False,components))
+            self.assertIsNone(finder.find("widget[@source='key_green']"))
+            self.assertIsNone(finder.find("widget[@name='introduction']"))
+            self.assertIsNotNone(manual.find("widget[@source='key_green']"))
+            self.assertIsNotNone(manual.find("widget[@name='introduction']"))
+        self.assertIs(scope['Satfinder'],Satfinder)
+        entry(session)
+        self.assertIs(session.open.call_args.args[0],Satfinder)
+        self.assertIsNone(tuner.styled_satfinder(lambda session:None))
+
     def test_manual_scan_preserves_user_clear_flags_and_recording_guard(self):
         tuner=module('warder_tuners')
         native=importlib.import_module('Screens.ScanSetup')
