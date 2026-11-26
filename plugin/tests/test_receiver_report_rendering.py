@@ -423,3 +423,34 @@ class ReceiverRenderingTests(unittest.TestCase):
                 self.assertGreaterEqual(y,ay)
                 self.assertLessEqual(x+ww,ax+aw)
                 self.assertLessEqual(y+hh,ay+ah)
+
+
+    def test_project_logo_provenance_and_optional_radio_fallback(self):
+        import hashlib
+        import json
+        import tempfile
+        from pathlib import Path
+        icons=mod('warder_menu_icons')
+        manifest=json.loads((ROOT.parents[1]/'artwork/warder-project-logos.json').read_text())
+        for name,path in (('fullhdglass','project-fullhdglass.png'),('piconhub','project-piconhub.png'),
+                          ('youtube','project-youtube.png'),('gsu','warder-plugin.png')):
+            raw=(ROOT/'images'/path).read_bytes()
+            blob=hashlib.sha1(('blob %d\0'%len(raw)).encode()+raw).hexdigest()
+            self.assertEqual(blob,manifest[name]['blob_sha'])
+        api=dict(self.api,LoadPixmap=MagicMock(return_value=object()))
+        icons.cached.cache_clear()
+        icons.project_cached.cache_clear()
+        with tempfile.TemporaryDirectory() as folder:
+            radio=Path(folder)/'plugin.png'
+            with patch.dict(icons.PROJECT_ASSETS,{'Warder Radio':radio}):
+                entry=icons.pixmap_entry(api,'Warder Radio',(0,0),(120,58),project=True)
+                self.assertIsNotNone(entry)
+                api['LoadPixmap'].assert_called_once_with(path=str(ROOT/'images/nav-signal.png'),cached=True)
+                radio.write_bytes(b'fixture')
+                icons.project_cached.cache_clear()
+                api['LoadPixmap'].reset_mock()
+                entry=icons.pixmap_entry(api,'Warder Radio',(0,0),(120,58),project=True)
+                self.assertIsNotNone(entry)
+                api['LoadPixmap'].assert_called_once_with(path=str(radio),cached=True)
+        icons.cached.cache_clear()
+        icons.project_cached.cache_clear()
