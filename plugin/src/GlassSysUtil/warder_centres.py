@@ -50,3 +50,34 @@ def legacy_routes(entries):
     if rest:
         groups.append(("other", "Other", rest))
     return tuple(groups)
+
+
+# User-facing descriptions are independent of route labels and stable IDs.
+# Technical acronyms are left intact; all explanatory sentences are localized.
+TOPICS = {
+    'network-overview': ('Network link','IP','Default gateway','DNS configuration','Network mounts'),
+    'system-log': ('Logs','System Information','Dmesg Info'),
+    'system-live': ('CPU','RAM','Swap','Temperature','RX/TX'),
+    'signal-live': ('SNR','AGC','BER','dB','LOCK','Minimum','Maximum','Average','Lock losses'),
+    'tuner-details': ('Tuner interfaces','Transponder','Recordings','Channel Information'),
+    'storage-overview': ('RAM','Swap','HDD / SSD / USB','Total:','Free:','SMART'),
+    'storage-categories': ('Picons','Skins','Plugins','EPG','Cache','Logs'),
+    'network-test': ('Default gateway','Packet loss','RTT','HTTPS','warder-evolution.eu'),
+    'service-health': ('Check installed files','Package dependencies','Crash logs'),
+    'forum-report': ('Preview anonymous report','System Information','Crash logs'),
+    'signal-quick': ('Signal','SNR','dB','LOCK','Audio:'),
+    'transponder-services': ('Transponder','TV / Radio','/tmp'),
+    'service-ipk': ('IPK','Package manager','Version','Architecture','Package dependencies','Scripts'),
+    'projects': ('Installed version','Stable version','Package dependencies','Open plugin'),
+}
+
+def description(ident,tr,default=''):
+    if ident=='system-overview':
+        return tr('This view provides an overview of: %s.') % tr('CPU load, RAM and swap usage, free flash and disk space, temperature and resource status')
+    if ident=='system-processes':
+        return tr('Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.')
+    if ident=='tuner-native' or ident.startswith('native:'):
+        return tr('A channel backup is created before active tuning; live TV may stop.')
+    if ident in TOPICS:
+        return tr('Use this tool to inspect: %s.') % ', '.join(tr(key).rstrip(':') for key in TOPICS[ident])
+    return default
