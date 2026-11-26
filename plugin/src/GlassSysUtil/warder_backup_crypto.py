@@ -13,8 +13,14 @@ MAX_ENVELOPE=3*1024*1024
 def available():
     try:
         from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-        return callable(AESGCM) and callable(getattr(hashlib,'scrypt',None))
-    except (ImportError,OSError,AttributeError):return False
+        # Check the actual provider, not merely importability. Full memory-cost
+        # errors during an operation still fail closed.
+        if not callable(getattr(hashlib,'scrypt',None)):return False
+        test=hashlib.scrypt(b'probe',salt=b'warder-probe',n=2,r=1,p=1,dklen=32)
+        cipher=AESGCM(test)
+        nonce=b'\0'*12
+        return cipher.decrypt(nonce,cipher.encrypt(nonce,b'probe',AAD),AAD)==b'probe'
+    except Exception:return False
 
 
 def key(password,salt):

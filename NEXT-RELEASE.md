@@ -1,3 +1,7 @@
+# 26.11.2026 — Private backup GUI
+
+Stacked draft PR #20: add standard/private creation choice, masked keyboard, repeated password confirmation, explicit unlock and authenticated preview, password reference cleanup, expected payload fingerprint on restore, provider self-test. 21-language captions and UI/preview regressions. Archive creation/unlock on worker; native restore remains main-thread and needs receiver latency validation. No production mutation.
+
 # 26.11.2026 — Private local backup backend
 
 Separate 0.41.7 draft PR #20: previous OpenATV/OpenPLi/package CI SUCCESS, architecture pending at inspection. Added optional AES-GCM/scrypt encrypted format for explicitly allowlisted YouTube API key and Radio favourites/custom lists. Reject plaintext private payloads before writes; encrypted rollback; no network, auto-install, OAuth tokens or arbitrary credentials. Masked GUI password entry, actual receiver crypto availability and full end-to-end testing still open. No production change.

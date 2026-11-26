@@ -130,7 +130,18 @@
     "No backups": "No backups",
     "Portable settings only. Passwords and tokens are excluded.": "Portable settings only. Passwords and tokens are excluded.",
     "Open each installed plugin once before backup or restore.": "Open each installed plugin once before backup or restore.",
-    "Restart GUI after restoring settings.": "Restart GUI after restoring settings."
+    "Restart GUI after restoring settings.": "Restart GUI after restoring settings.",
+    "Standard backup": "Standard backup",
+    "Private backup": "Private backup",
+    "Private backup encryption unavailable": "Private backup encryption unavailable",
+    "Enter backup password": "Enter backup password",
+    "Confirm backup password": "Confirm backup password",
+    "Passwords do not match": "Passwords do not match",
+    "Unlock backup": "Unlock backup",
+    "Incorrect password or damaged backup": "Incorrect password or damaged backup",
+    "Use arrows and OK to enter characters. Green confirms.": "Use arrows and OK to enter characters. Green confirms.",
+    "At least 12 characters.": "At least 12 characters.",
+    "Erase character": "Erase character"
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -263,7 +274,18 @@
     "No backups": "Žiadne zálohy",
     "Portable settings only. Passwords and tokens are excluded.": "Len prenosné nastavenia. Heslá a tokeny sa vynechávajú.",
     "Open each installed plugin once before backup or restore.": "Pred zálohou alebo obnovou raz otvorte každý nainštalovaný plugin.",
-    "Restart GUI after restoring settings.": "Po obnove nastavení reštartujte GUI."
+    "Restart GUI after restoring settings.": "Po obnove nastavení reštartujte GUI.",
+    "Standard backup": "Štandardná záloha",
+    "Private backup": "Súkromná záloha",
+    "Private backup encryption unavailable": "Šifrovanie záloh nie je dostupné",
+    "Enter backup password": "Zadajte heslo zálohy",
+    "Confirm backup password": "Potvrďte heslo zálohy",
+    "Passwords do not match": "Heslá sa nezhodujú",
+    "Unlock backup": "Odomknúť zálohu",
+    "Incorrect password or damaged backup": "Nesprávne heslo alebo poškodená záloha",
+    "Use arrows and OK to enter characters. Green confirms.": "Šípkami a OK zadávajte znaky. Zelené tlačidlo potvrdí.",
+    "At least 12 characters.": "Najmenej 12 znakov.",
+    "Erase character": "Vymazať znak"
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -396,7 +418,18 @@
     "No backups": "Žádné zálohy",
     "Portable settings only. Passwords and tokens are excluded.": "Pouze přenosná nastavení. Hesla a tokeny jsou vynechány.",
     "Open each installed plugin once before backup or restore.": "Před zálohou nebo obnovou jednou otevřete každý nainstalovaný plugin.",
-    "Restart GUI after restoring settings.": "Po obnově nastavení restartujte GUI."
+    "Restart GUI after restoring settings.": "Po obnově nastavení restartujte GUI.",
+    "Standard backup": "Standardní záloha",
+    "Private backup": "Soukromá záloha",
+    "Private backup encryption unavailable": "Šifrování záloh není dostupné",
+    "Enter backup password": "Zadejte heslo zálohy",
+    "Confirm backup password": "Potvrďte heslo zálohy",
+    "Passwords do not match": "Hesla se neshodují",
+    "Unlock backup": "Odemknout zálohu",
+    "Incorrect password or damaged backup": "Nesprávné heslo nebo poškozená záloha",
+    "Use arrows and OK to enter characters. Green confirms.": "Šipkami a OK zadávejte znaky. Zelené tlačítko potvrdí.",
+    "At least 12 characters.": "Nejméně 12 znaků.",
+    "Erase character": "Smazat znak"
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -529,7 +562,18 @@
     "No backups": "Keine Sicherungen",
     "Portable settings only. Passwords and tokens are excluded.": "Nur übertragbare Einstellungen. Passwörter und Token werden ausgelassen.",
     "Open each installed plugin once before backup or restore.": "Vor Sicherung oder Wiederherstellung jedes installierte Plugin einmal öffnen.",
-    "Restart GUI after restoring settings.": "GUI nach Wiederherstellung neu starten."
+    "Restart GUI after restoring settings.": "GUI nach Wiederherstellung neu starten.",
+    "Standard backup": "Standardsicherung",
+    "Private backup": "Private Sicherung",
+    "Private backup encryption unavailable": "Sicherungsverschlüsselung nicht verfügbar",
+    "Enter backup password": "Sicherungspasswort eingeben",
+    "Confirm backup password": "Sicherungspasswort bestätigen",
+    "Passwords do not match": "Passwörter stimmen nicht überein",
+    "Unlock backup": "Sicherung entsperren",
+    "Incorrect password or damaged backup": "Falsches Passwort oder beschädigte Sicherung",
+    "Use arrows and OK to enter characters. Green confirms.": "Zeichen mit Pfeilen und OK eingeben. Grün bestätigt.",
+    "At least 12 characters.": "Mindestens 12 Zeichen.",
+    "Erase character": "Zeichen löschen"
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -662,7 +706,18 @@
     "No backups": "Brak kopii",
     "Portable settings only. Passwords and tokens are excluded.": "Tylko przenośne ustawienia. Hasła i tokeny są pomijane.",
     "Open each installed plugin once before backup or restore.": "Przed kopią lub przywróceniem otwórz każdy zainstalowany plugin.",
-    "Restart GUI after restoring settings.": "Po przywróceniu uruchom ponownie GUI."
+    "Restart GUI after restoring settings.": "Po przywróceniu uruchom ponownie GUI.",
+    "Standard backup": "Kopia standardowa",
+    "Private backup": "Kopia prywatna",
+    "Private backup encryption unavailable": "Szyfrowanie kopii niedostępne",
+    "Enter backup password": "Wprowadź hasło kopii",
+    "Confirm backup password": "Potwierdź hasło kopii",
+    "Passwords do not match": "Hasła nie są zgodne",
+    "Unlock backup": "Odblokuj kopię",
+    "Incorrect password or damaged backup": "Nieprawidłowe hasło lub uszkodzona kopia",
+    "Use arrows and OK to enter characters. Green confirms.": "Strzałki i OK wprowadzają znaki. Zielony potwierdza.",
+    "At least 12 characters.": "Co najmniej 12 znaków.",
+    "Erase character": "Usuń znak"
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -795,7 +850,18 @@
     "No backups": "Nincs mentés",
     "Portable settings only. Passwords and tokens are excluded.": "Csak hordozható beállítások. Jelszavak és tokenek nélkül.",
     "Open each installed plugin once before backup or restore.": "Mentés vagy visszaállítás előtt nyisson meg minden telepített plugint.",
-    "Restart GUI after restoring settings.": "Visszaállítás után indítsa újra a GUI-t."
+    "Restart GUI after restoring settings.": "Visszaállítás után indítsa újra a GUI-t.",
+    "Standard backup": "Normál mentés",
+    "Private backup": "Privát mentés",
+    "Private backup encryption unavailable": "A mentés titkosítása nem érhető el",
+    "Enter backup password": "Mentési jelszó megadása",
+    "Confirm backup password": "Mentési jelszó megerősítése",
+    "Passwords do not match": "A jelszavak nem egyeznek",
+    "Unlock backup": "Mentés feloldása",
+    "Incorrect password or damaged backup": "Hibás jelszó vagy sérült mentés",
+    "Use arrows and OK to enter characters. Green confirms.": "Nyilakkal és OK-val adja meg a karaktereket. Zöld: jóváhagyás.",
+    "At least 12 characters.": "Legalább 12 karakter.",
+    "Erase character": "Karakter törlése"
   },
   "ru": {
     "System centre": "Системный центр",
@@ -928,7 +994,18 @@
     "No backups": "Нет резервных копий",
     "Portable settings only. Passwords and tokens are excluded.": "Только переносимые настройки. Пароли и токены исключены.",
     "Open each installed plugin once before backup or restore.": "Перед копированием или восстановлением откройте каждый установленный плагин.",
-    "Restart GUI after restoring settings.": "После восстановления перезапустите GUI."
+    "Restart GUI after restoring settings.": "После восстановления перезапустите GUI.",
+    "Standard backup": "Обычная копия",
+    "Private backup": "Личная копия",
+    "Private backup encryption unavailable": "Шифрование копий недоступно",
+    "Enter backup password": "Введите пароль копии",
+    "Confirm backup password": "Подтвердите пароль копии",
+    "Passwords do not match": "Пароли не совпадают",
+    "Unlock backup": "Разблокировать копию",
+    "Incorrect password or damaged backup": "Неверный пароль или повреждённая копия",
+    "Use arrows and OK to enter characters. Green confirms.": "Вводите символы стрелками и OK. Зелёная кнопка подтверждает.",
+    "At least 12 characters.": "Не менее 12 символов.",
+    "Erase character": "Удалить символ"
   },
   "fr": {
     "System centre": "Centre système",
@@ -1061,7 +1138,18 @@
     "No backups": "Aucune sauvegarde",
     "Portable settings only. Passwords and tokens are excluded.": "Réglages portables uniquement. Mots de passe et jetons exclus.",
     "Open each installed plugin once before backup or restore.": "Ouvrez une fois chaque plugin installé avant la sauvegarde ou la restauration.",
-    "Restart GUI after restoring settings.": "Redémarrez l’interface après la restauration."
+    "Restart GUI after restoring settings.": "Redémarrez l’interface après la restauration.",
+    "Standard backup": "Sauvegarde standard",
+    "Private backup": "Sauvegarde privée",
+    "Private backup encryption unavailable": "Chiffrement des sauvegardes indisponible",
+    "Enter backup password": "Saisir le mot de passe",
+    "Confirm backup password": "Confirmer le mot de passe",
+    "Passwords do not match": "Les mots de passe diffèrent",
+    "Unlock backup": "Déverrouiller la sauvegarde",
+    "Incorrect password or damaged backup": "Mot de passe incorrect ou sauvegarde endommagée",
+    "Use arrows and OK to enter characters. Green confirms.": "Saisissez les caractères avec les flèches et OK. Vert pour confirmer.",
+    "At least 12 characters.": "Au moins 12 caractères.",
+    "Erase character": "Effacer un caractère"
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -1194,7 +1282,18 @@
     "No backups": "Nessun backup",
     "Portable settings only. Passwords and tokens are excluded.": "Solo impostazioni portabili. Password e token esclusi.",
     "Open each installed plugin once before backup or restore.": "Aprire ogni plugin installato prima del backup o del ripristino.",
-    "Restart GUI after restoring settings.": "Riavviare la GUI dopo il ripristino."
+    "Restart GUI after restoring settings.": "Riavviare la GUI dopo il ripristino.",
+    "Standard backup": "Backup standard",
+    "Private backup": "Backup privato",
+    "Private backup encryption unavailable": "Crittografia del backup non disponibile",
+    "Enter backup password": "Inserire la password del backup",
+    "Confirm backup password": "Confermare la password del backup",
+    "Passwords do not match": "Le password non coincidono",
+    "Unlock backup": "Sblocca backup",
+    "Incorrect password or damaged backup": "Password errata o backup danneggiato",
+    "Use arrows and OK to enter characters. Green confirms.": "Inserire i caratteri con frecce e OK. Il verde conferma.",
+    "At least 12 characters.": "Almeno 12 caratteri.",
+    "Erase character": "Cancella carattere"
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -1327,7 +1426,18 @@
     "No backups": "No hay copias",
     "Portable settings only. Passwords and tokens are excluded.": "Solo ajustes portátiles. Se excluyen contraseñas y tokens.",
     "Open each installed plugin once before backup or restore.": "Abra cada plugin instalado antes de la copia o restauración.",
-    "Restart GUI after restoring settings.": "Reinicie la interfaz después de restaurar."
+    "Restart GUI after restoring settings.": "Reinicie la interfaz después de restaurar.",
+    "Standard backup": "Copia estándar",
+    "Private backup": "Copia privada",
+    "Private backup encryption unavailable": "Cifrado de copias no disponible",
+    "Enter backup password": "Introduzca la contraseña",
+    "Confirm backup password": "Confirme la contraseña",
+    "Passwords do not match": "Las contraseñas no coinciden",
+    "Unlock backup": "Desbloquear copia",
+    "Incorrect password or damaged backup": "Contraseña incorrecta o copia dañada",
+    "Use arrows and OK to enter characters. Green confirms.": "Introduzca caracteres con flechas y OK. Verde confirma.",
+    "At least 12 characters.": "Al menos 12 caracteres.",
+    "Erase character": "Borrar carácter"
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -1460,7 +1570,18 @@
     "No backups": "Nuk ka kopje",
     "Portable settings only. Passwords and tokens are excluded.": "Vetëm cilësime të transferueshme. Fjalëkalimet dhe tokenët përjashtohen.",
     "Open each installed plugin once before backup or restore.": "Hapni çdo plugin të instaluar para kopjimit ose rikthimit.",
-    "Restart GUI after restoring settings.": "Rinisni GUI pas rikthimit."
+    "Restart GUI after restoring settings.": "Rinisni GUI pas rikthimit.",
+    "Standard backup": "Kopje standarde",
+    "Private backup": "Kopje private",
+    "Private backup encryption unavailable": "Enkriptimi i kopjes nuk është i disponueshëm",
+    "Enter backup password": "Vendosni fjalëkalimin e kopjes",
+    "Confirm backup password": "Konfirmoni fjalëkalimin e kopjes",
+    "Passwords do not match": "Fjalëkalimet nuk përputhen",
+    "Unlock backup": "Zhblloko kopjen",
+    "Incorrect password or damaged backup": "Fjalëkalim i gabuar ose kopje e dëmtuar",
+    "Use arrows and OK to enter characters. Green confirms.": "Përdorni shigjetat dhe OK për karakteret. Jeshilja konfirmon.",
+    "At least 12 characters.": "Të paktën 12 karaktere.",
+    "Erase character": "Fshi karakterin"
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -1593,7 +1714,18 @@
     "No backups": "Δεν υπάρχουν αντίγραφα",
     "Portable settings only. Passwords and tokens are excluded.": "Μόνο μεταφέρσιμες ρυθμίσεις. Εξαιρούνται κωδικοί και διακριτικά.",
     "Open each installed plugin once before backup or restore.": "Ανοίξτε κάθε εγκατεστημένο πρόσθετο πριν την αντιγραφή ή επαναφορά.",
-    "Restart GUI after restoring settings.": "Επανεκκινήστε το GUI μετά την επαναφορά."
+    "Restart GUI after restoring settings.": "Επανεκκινήστε το GUI μετά την επαναφορά.",
+    "Standard backup": "Τυπικό αντίγραφο",
+    "Private backup": "Ιδιωτικό αντίγραφο",
+    "Private backup encryption unavailable": "Μη διαθέσιμη κρυπτογράφηση αντιγράφων",
+    "Enter backup password": "Εισαγωγή κωδικού αντιγράφου",
+    "Confirm backup password": "Επιβεβαίωση κωδικού αντιγράφου",
+    "Passwords do not match": "Οι κωδικοί δεν ταιριάζουν",
+    "Unlock backup": "Ξεκλείδωμα αντιγράφου",
+    "Incorrect password or damaged backup": "Λάθος κωδικός ή κατεστραμμένο αντίγραφο",
+    "Use arrows and OK to enter characters. Green confirms.": "Εισαγάγετε χαρακτήρες με βέλη και OK. Το πράσινο επιβεβαιώνει.",
+    "At least 12 characters.": "Τουλάχιστον 12 χαρακτήρες.",
+    "Erase character": "Διαγραφή χαρακτήρα"
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -1726,7 +1858,18 @@
     "No backups": "Varukoopiaid pole",
     "Portable settings only. Passwords and tokens are excluded.": "Ainult ülekantavad sätted. Paroolid ja tõendid jäetakse välja.",
     "Open each installed plugin once before backup or restore.": "Ava enne varundamist või taastamist iga paigaldatud plugin.",
-    "Restart GUI after restoring settings.": "Taaskäivita GUI pärast taastamist."
+    "Restart GUI after restoring settings.": "Taaskäivita GUI pärast taastamist.",
+    "Standard backup": "Tavaline varukoopia",
+    "Private backup": "Privaatne varukoopia",
+    "Private backup encryption unavailable": "Varukoopia krüpteerimine pole saadaval",
+    "Enter backup password": "Sisesta varukoopia parool",
+    "Confirm backup password": "Kinnita varukoopia parool",
+    "Passwords do not match": "Paroolid ei ühti",
+    "Unlock backup": "Ava varukoopia",
+    "Incorrect password or damaged backup": "Vale parool või rikutud varukoopia",
+    "Use arrows and OK to enter characters. Green confirms.": "Sisesta märgid noolte ja OK-ga. Roheline kinnitab.",
+    "At least 12 characters.": "Vähemalt 12 märki.",
+    "Erase character": "Kustuta märk"
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -1859,7 +2002,18 @@
     "No backups": "بدون پشتیبان",
     "Portable settings only. Passwords and tokens are excluded.": "فقط تنظیمات قابل انتقال. رمزها و توکن‌ها حذف می‌شوند.",
     "Open each installed plugin once before backup or restore.": "پیش از پشتیبان‌گیری یا بازیابی هر افزونه نصب‌شده را یک بار باز کنید.",
-    "Restart GUI after restoring settings.": "پس از بازیابی رابط کاربری را راه‌اندازی مجدد کنید."
+    "Restart GUI after restoring settings.": "پس از بازیابی رابط کاربری را راه‌اندازی مجدد کنید.",
+    "Standard backup": "پشتیبان استاندارد",
+    "Private backup": "پشتیبان خصوصی",
+    "Private backup encryption unavailable": "رمزنگاری پشتیبان در دسترس نیست",
+    "Enter backup password": "رمز پشتیبان را وارد کنید",
+    "Confirm backup password": "رمز پشتیبان را تأیید کنید",
+    "Passwords do not match": "رمزها یکسان نیستند",
+    "Unlock backup": "باز کردن قفل پشتیبان",
+    "Incorrect password or damaged backup": "رمز نادرست یا پشتیبان آسیب‌دیده",
+    "Use arrows and OK to enter characters. Green confirms.": "با جهت‌ها و OK نویسه وارد کنید. دکمه سبز تأیید می‌کند.",
+    "At least 12 characters.": "حداقل ۱۲ نویسه.",
+    "Erase character": "حذف نویسه"
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -1992,7 +2146,18 @@
     "No backups": "Kopijų nėra",
     "Portable settings only. Passwords and tokens are excluded.": "Tik perkeliamos nuostatos. Slaptažodžiai ir žetonai neįtraukiami.",
     "Open each installed plugin once before backup or restore.": "Prieš kopijavimą ar atkūrimą atidarykite kiekvieną įdiegtą įskiepį.",
-    "Restart GUI after restoring settings.": "Atkūrę paleiskite GUI iš naujo."
+    "Restart GUI after restoring settings.": "Atkūrę paleiskite GUI iš naujo.",
+    "Standard backup": "Įprasta kopija",
+    "Private backup": "Privati kopija",
+    "Private backup encryption unavailable": "Kopijų šifravimas nepasiekiamas",
+    "Enter backup password": "Įveskite kopijos slaptažodį",
+    "Confirm backup password": "Patvirtinkite kopijos slaptažodį",
+    "Passwords do not match": "Slaptažodžiai nesutampa",
+    "Unlock backup": "Atrakinti kopiją",
+    "Incorrect password or damaged backup": "Neteisingas slaptažodis arba sugadinta kopija",
+    "Use arrows and OK to enter characters. Green confirms.": "Įveskite simbolius rodyklėmis ir OK. Žalias mygtukas patvirtina.",
+    "At least 12 characters.": "Bent 12 simbolių.",
+    "Erase character": "Ištrinti simbolį"
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -2125,7 +2290,18 @@
     "No backups": "Geen back-ups",
     "Portable settings only. Passwords and tokens are excluded.": "Alleen overdraagbare instellingen. Wachtwoorden en tokens uitgesloten.",
     "Open each installed plugin once before backup or restore.": "Open elke geïnstalleerde plugin eenmaal voor back-up of herstel.",
-    "Restart GUI after restoring settings.": "Herstart de GUI na herstel."
+    "Restart GUI after restoring settings.": "Herstart de GUI na herstel.",
+    "Standard backup": "Standaardback-up",
+    "Private backup": "Privéback-up",
+    "Private backup encryption unavailable": "Back-upversleuteling niet beschikbaar",
+    "Enter backup password": "Voer het back-upwachtwoord in",
+    "Confirm backup password": "Bevestig het back-upwachtwoord",
+    "Passwords do not match": "Wachtwoorden komen niet overeen",
+    "Unlock backup": "Back-up ontgrendelen",
+    "Incorrect password or damaged backup": "Onjuist wachtwoord of beschadigde back-up",
+    "Use arrows and OK to enter characters. Green confirms.": "Voer tekens in met pijlen en OK. Groen bevestigt.",
+    "At least 12 characters.": "Minstens 12 tekens.",
+    "Erase character": "Teken wissen"
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -2258,7 +2434,18 @@
     "No backups": "Sem cópias",
     "Portable settings only. Passwords and tokens are excluded.": "Só definições portáteis. Palavras-passe e tokens excluídos.",
     "Open each installed plugin once before backup or restore.": "Abra cada plugin instalado antes da cópia ou restauro.",
-    "Restart GUI after restoring settings.": "Reinicie a GUI após o restauro."
+    "Restart GUI after restoring settings.": "Reinicie a GUI após o restauro.",
+    "Standard backup": "Cópia padrão",
+    "Private backup": "Cópia privada",
+    "Private backup encryption unavailable": "Encriptação de cópias indisponível",
+    "Enter backup password": "Introduza a palavra-passe da cópia",
+    "Confirm backup password": "Confirme a palavra-passe da cópia",
+    "Passwords do not match": "As palavras-passe não coincidem",
+    "Unlock backup": "Desbloquear cópia",
+    "Incorrect password or damaged backup": "Palavra-passe incorreta ou cópia danificada",
+    "Use arrows and OK to enter characters. Green confirms.": "Introduza caracteres com setas e OK. Verde confirma.",
+    "At least 12 characters.": "Pelo menos 12 caracteres.",
+    "Erase character": "Apagar carácter"
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -2391,7 +2578,18 @@
     "No backups": "Nu există copii",
     "Portable settings only. Passwords and tokens are excluded.": "Doar setări portabile. Parolele și tokenurile sunt excluse.",
     "Open each installed plugin once before backup or restore.": "Deschide fiecare plugin instalat înainte de copiere sau restaurare.",
-    "Restart GUI after restoring settings.": "Repornește GUI după restaurare."
+    "Restart GUI after restoring settings.": "Repornește GUI după restaurare.",
+    "Standard backup": "Copie standard",
+    "Private backup": "Copie privată",
+    "Private backup encryption unavailable": "Criptarea copiilor nu este disponibilă",
+    "Enter backup password": "Introduceți parola copiei",
+    "Confirm backup password": "Confirmați parola copiei",
+    "Passwords do not match": "Parolele nu coincid",
+    "Unlock backup": "Deblochează copia",
+    "Incorrect password or damaged backup": "Parolă incorectă sau copie deteriorată",
+    "Use arrows and OK to enter characters. Green confirms.": "Introduceți caractere cu săgeți și OK. Verde confirmă.",
+    "At least 12 characters.": "Cel puțin 12 caractere.",
+    "Erase character": "Șterge caracterul"
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -2524,7 +2722,18 @@
     "No backups": "Yedek yok",
     "Portable settings only. Passwords and tokens are excluded.": "Yalnızca taşınabilir ayarlar. Parolalar ve belirteçler hariç.",
     "Open each installed plugin once before backup or restore.": "Yedeklemeden veya geri yüklemeden önce her kurulu eklentiyi açın.",
-    "Restart GUI after restoring settings.": "Geri yüklemeden sonra GUI'yi yeniden başlatın."
+    "Restart GUI after restoring settings.": "Geri yüklemeden sonra GUI'yi yeniden başlatın.",
+    "Standard backup": "Standart yedek",
+    "Private backup": "Özel yedek",
+    "Private backup encryption unavailable": "Yedek şifreleme kullanılamıyor",
+    "Enter backup password": "Yedek parolasını girin",
+    "Confirm backup password": "Yedek parolasını doğrulayın",
+    "Passwords do not match": "Parolalar eşleşmiyor",
+    "Unlock backup": "Yedeğin kilidini aç",
+    "Incorrect password or damaged backup": "Yanlış parola veya hasarlı yedek",
+    "Use arrows and OK to enter characters. Green confirms.": "Oklar ve OK ile karakter girin. Yeşil onaylar.",
+    "At least 12 characters.": "En az 12 karakter.",
+    "Erase character": "Karakteri sil"
   },
   "uk": {
     "System centre": "Системний центр",
@@ -2657,7 +2866,18 @@
     "No backups": "Немає резервних копій",
     "Portable settings only. Passwords and tokens are excluded.": "Лише переносні налаштування. Паролі й токени виключено.",
     "Open each installed plugin once before backup or restore.": "Перед копіюванням або відновленням відкрийте кожен встановлений плагін.",
-    "Restart GUI after restoring settings.": "Після відновлення перезапустіть GUI."
+    "Restart GUI after restoring settings.": "Після відновлення перезапустіть GUI.",
+    "Standard backup": "Стандартна копія",
+    "Private backup": "Приватна копія",
+    "Private backup encryption unavailable": "Шифрування копій недоступне",
+    "Enter backup password": "Введіть пароль копії",
+    "Confirm backup password": "Підтвердьте пароль копії",
+    "Passwords do not match": "Паролі не збігаються",
+    "Unlock backup": "Розблокувати копію",
+    "Incorrect password or damaged backup": "Неправильний пароль або пошкоджена копія",
+    "Use arrows and OK to enter characters. Green confirms.": "Вводьте символи стрілками й OK. Зелена кнопка підтверджує.",
+    "At least 12 characters.": "Щонайменше 12 символів.",
+    "Erase character": "Видалити символ"
   },
   "zh": {
     "System centre": "系统中心",
@@ -2790,6 +3010,17 @@
     "No backups": "没有备份",
     "Portable settings only. Passwords and tokens are excluded.": "仅限可迁移设置。不包含密码和令牌。",
     "Open each installed plugin once before backup or restore.": "备份或恢复前请先打开每个已安装的插件一次。",
-    "Restart GUI after restoring settings.": "恢复设置后请重启图形界面。"
+    "Restart GUI after restoring settings.": "恢复设置后请重启图形界面。",
+    "Standard backup": "标准备份",
+    "Private backup": "私密备份",
+    "Private backup encryption unavailable": "备份加密不可用",
+    "Enter backup password": "输入备份密码",
+    "Confirm backup password": "确认备份密码",
+    "Passwords do not match": "密码不匹配",
+    "Unlock backup": "解锁备份",
+    "Incorrect password or damaged backup": "密码错误或备份损坏",
+    "Use arrows and OK to enter characters. Green confirms.": "用方向键和 OK 输入字符，绿色键确认。",
+    "At least 12 characters.": "至少 12 个字符。",
+    "Erase character": "删除字符"
   }
 }

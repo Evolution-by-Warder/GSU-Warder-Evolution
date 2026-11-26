@@ -243,6 +243,22 @@ def validate_payload(payload,private=False):
     return payload
 
 
+def file_kind(path,probe=None):
+    p=probe or Probe()
+    path=Path(path)
+    checked_dir(path.parent,p)
+    if not NAME.fullmatch(path.name):raise ValueError('Invalid backup name')
+    raw=read_bytes(path,crypto.MAX_ENVELOPE)
+    document=json.loads(raw)
+    if isinstance(document,dict) and document.get('format')==crypto.FORMAT:return 'private'
+    if isinstance(document,dict) and set(document)=={'payload','sha256'} and len(raw)<=LIMIT:return 'standard'
+    raise ValueError('Invalid backup')
+
+
+def fingerprint(payload):
+    return hashlib.sha256(canonical(payload)).hexdigest()
+
+
 def load(path,probe=None,password=None):
     p=probe or Probe()
     path=Path(path)
@@ -297,11 +313,12 @@ def plan(config,payload,selected=PRODUCTS,probe=None,private=False):
     return changes,radio,skipped,state
 
 
-def restore(config,configfile,path,selected=PRODUCTS,probe=None,password=None):
+def restore(config,configfile,path,selected=PRODUCTS,probe=None,password=None,expected_digest=None):
     """Explicit apply, native choices/limits, verified rollback snapshot first."""
     p=probe or Probe()
     private=password is not None
     payload=load(path,p,password)
+    if expected_digest is not None and fingerprint(payload)!=expected_digest:raise ValueError('Backup changed after preview')
     changes,radio,skipped,state=plan(config,payload,selected,p,private)
     if not changes and not radio:return 0,skipped,None
     previous=snapshot(config,selected,p,private)
@@ -333,7 +350,9 @@ def restore(config,configfile,path,selected=PRODUCTS,probe=None,password=None):
         for obj,value,saved in originals:
             obj.value=value
             obj.saved_value=saved
-        if changes:persist()
-        if radio_written:replace_bytes(p.path(RADIO),state[0])
+        try:
+            if changes:persist()
+        finally:
+            if radio_written:replace_bytes(p.path(RADIO),state[0])
         raise
     return len(changes)+len(radio),skipped,rollback

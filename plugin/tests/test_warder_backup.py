@@ -141,3 +141,43 @@ class BackupTests(unittest.TestCase):
         self.assertFalse(b.station_list([{'name':'Station','url':'https://user:pass@example.test/radio'}]))
         self.assertFalse(b.station_list([{'name':'Station','url':'file:///etc/passwd'}]))
         self.assertFalse(b.station_list([{'name':'Station','url':'https://example.test/radio','extra':'secret'}]))
+
+
+    def test_password_keyboard_masks_and_clears_secret(self):
+        from Plugins.Extensions.GlassSysUtil.warder_backup_password import BackupPassword
+        api=vars(load(ROOT))
+        view=BackupPassword(MagicMock(),api,'Password')
+        view.render()
+        secret='Password1234'
+        for char in secret:view.append(char)
+        self.assertNotIn(secret,view['descriptions'].getText())
+        self.assertEqual(view.secret,secret)
+        view.accept()
+        self.assertEqual(view.result,(secret,))
+        self.assertEqual(view.secret,'')
+
+    def test_private_creation_requires_two_matching_entries(self):
+        from Plugins.Extensions.GlassSysUtil.warder_backup_ui import BackupMenu
+        api=vars(load(ROOT))
+        menu=BackupMenu(MagicMock(),api)
+        with patch.object(menu,'ask_password') as ask,patch.object(menu,'create') as create:
+            menu.mode_selected(('Private',True))
+            first=ask.call_args.args[1]
+            first('fixture-password-123')
+            second=ask.call_args.args[1]
+            second('different-password')
+            create.assert_not_called()
+            first('fixture-password-123')
+            ask.call_args.args[1]('fixture-password-123')
+            create.assert_called_once_with('fixture-password-123')
+
+    def test_restore_rejects_changed_preview(self):
+        with TemporaryDirectory() as folder:
+            p=b.Probe(folder)
+            p.path('/etc/enigma2').mkdir(parents=True)
+            config=SimpleNamespace(plugins=SimpleNamespace())
+            with patch.object(b,'mounts',return_value=[('/dev/root','/','ext4',False)]):
+                path=b.save(p.path(b.ROOT),{'YouTube':{'warderyoutube.max_quality':'720'}},p)
+                self.assertEqual(b.file_kind(path,p),'standard')
+                with self.assertRaisesRegex(ValueError,'changed after preview'):
+                    b.restore(config,None,path,probe=p,expected_digest='0'*64)
