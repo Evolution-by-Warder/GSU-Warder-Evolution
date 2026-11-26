@@ -13,7 +13,7 @@ from .i18n import for_api, language
 # Read-only result routes. Actions changing tuner state or configuration remain
 # explicit native screens; graphs and full-size tables remain available in Details.
 INLINE_REPORTS=frozenset(('system-overview','system-processes','system-log','system-cpu',
-    'tuner-details','transponder-services','storage-overview','storage-categories','storage-memory','storage-activity','storage-largest',
+    'signal-quick','tuner-details','transponder-services','storage-overview','storage-categories','storage-memory','storage-activity','storage-largest',
     'network-overview','network-test','network-interfaces','network-statistics','network-mounts','network-services','service-health','service-smart','service-crashes','service-plugins','service-ipk','forum-report','17'))
 # Explicit actions must never run merely because the cursor passes over them.
 MANUAL_INLINE=frozenset(('17','network-test','storage-largest'))
@@ -178,6 +178,10 @@ class CentreMenu(Screen):
         self._result_hidden=False
         self._result_reload=False
         self._auto_key=None
+        self._quick_source=None
+        self._quick_tone=None
+        self._quick_sound=False
+        self._quick_busy=None
         self._auto_timer=api['eTimer']()
         signal=getattr(self._auto_timer,'timeout',None)
         if hasattr(signal,'connect'):
@@ -365,7 +369,7 @@ class CentreMenu(Screen):
         self['result_title'].setText(entry[1] if entry else '')
         inline=self.inline_route(key)
         self['yellow'].setText(for_api(self.api,'Refresh') if inline and key!='17' else '')
-        self['blue'].setText(for_api(self.api,'Details') if inline and key!='17' else '')
+        self['blue'].setText(for_api(self.api,'Audio:') if inline and key=='signal-quick' else for_api(self.api,'Details') if inline and key!='17' else '')
         if changed:
             self._result_reload=False
         if changed and inline and key not in MANUAL_INLINE:
@@ -413,7 +417,58 @@ class CentreMenu(Screen):
             return '' if token.is_set() else health(tr,panels=True)
         return collect_report(key,tr,token)
 
+    def stop_quick_signal(self):
+        self._quick_source=None
+        self._quick_sound=False
+        if self._quick_tone is not None:
+            self._quick_tone.close()
+            self._quick_tone=None
+
+    def quick_signal(self):
+        """Read the active frontend while selected, without tuning or a child screen."""
+        if self._result_closed or self._result_hidden or self._result_key!='signal-quick':return
+        from .warder_signal import SignalMonitor
+        from .warder_quick import Tone
+        from time import strftime
+        tr=lambda key:for_api(self.api,key)
+        if self._quick_source is None:self._quick_source=SignalMonitor(self.session.nav)
+        if self._quick_tone is None:self._quick_tone=Tone()
+        try:values=self._quick_source.sample()
+        except (AttributeError,RuntimeError,OSError,TypeError,ValueError):values={}
+        cards=[]
+        for key,label,fmt in (('snr','SNR','%.0f %%'),('agc','AGC','%.0f %%'),
+                              ('db','SNR · dB','%.1f dB'),('ber','BER','%.0f'),
+                              ('lock','LOCK','%d')):
+            value=values.get(key)
+            meter=round(max(0,min(100,value))) if key in ('snr','agc') and value is not None else None
+            cards.append((label,'—' if value is None else fmt%value,meter,''))
+        tone=self._quick_tone
+        audio=tr('yes' if self._quick_sound else 'no') if tone.command else tr('Unavailable')
+        cards.append((tr('Audio:'),audio,None,''))
+        self.show_cards((cards,''))
+        self['result_status'].setText(strftime('%H:%M:%S'))
+        self['blue'].setText(tr('Audio:') if tone.command else '')
+        if self._quick_sound and self._quick_busy is None and values.get('snr') is not None and values.get('lock')==1:
+            self._quick_busy=tone
+            def finished(result):
+                if self._quick_busy is tone:self._quick_busy=None
+                if self._quick_tone is tone and result is False:self._quick_sound=False
+            deferToThread(tone.play,values['snr']).addBoth(finished)
+        self._auto_key='signal-quick'
+        self._auto_timer.start(1000,True)
+
+    def toggle_quick_audio(self):
+        if self._result_closed or self._result_hidden or self._result_key!='signal-quick':return
+        if self._quick_tone is None or not self._quick_tone.command:return
+        if self._quick_sound:
+            self._quick_sound=False
+            self._quick_tone.close()
+            self._quick_tone=None
+        else:self._quick_sound=True
+        self.request_result('signal-quick')
+
     def cancel_result(self):
+        self.stop_quick_signal()
         self._auto_timer.stop()
         self._auto_key=None
         self._result_queued=None
@@ -456,7 +511,9 @@ class CentreMenu(Screen):
     def full_result(self):
         if self._result_closed or self._result_hidden:return
         key=self._result_key
-        if self.inline_route(key) and key!='17':
+        if key=='signal-quick':
+            self.toggle_quick_audio()
+        elif self.inline_route(key) and key!='17':
             self.cancel_result()
             open_diagnostic(self.session,self.api,key)
 
@@ -468,6 +525,9 @@ class CentreMenu(Screen):
             if self._result_job[0]==key and not self._result_job[1].is_set():return
             self._result_queued=key
             self['result_status'].setText(for_api(self.api,'Loading…'))
+            return
+        if key=='signal-quick':
+            self.quick_signal()
             return
         token=Event()
         job=(key,token)
@@ -931,8 +991,9 @@ def open_diagnostic(session, api, kind):
     if kind == 'projects':
         session.open(ProjectMenu, api)
     elif kind == 'signal-quick':
-        from .warder_quick import QuickSignal
-        session.open(QuickSignal, api)
+        tr=lambda key:for_api(api,key)
+        title,hint=DIAGNOSTICS[kind]
+        session.open(CentreMenu,api,((kind,tr(title),tr(hint)),),{kind:True},'reception')
     elif kind == 'system-overview':
         from .warder_overview import Overview
         session.open(Overview, api)

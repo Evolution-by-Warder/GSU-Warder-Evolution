@@ -689,6 +689,65 @@ class ReceiverRenderingTests(unittest.TestCase):
                 self.assertLessEqual(x+ww,w)
                 self.assertLessEqual(y+hh,h)
 
+    def test_quick_signal_is_live_inline_and_stops_on_navigation(self):
+        ui=self.ui
+        signal=mod('warder_signal')
+        quick=mod('warder_quick')
+        session=MagicMock()
+        entries=[('signal-quick','Quick signal','SNR'),('tuner-details','Tuner interfaces','Tuner')]
+        menu=ui.CentreMenu(session,self.api,entries,{k:True for k,_,_ in entries},'reception')
+        menu._auto_timer=MagicMock()
+        values={'snr':68,'agc':42,'db':10.9,'ber':0,'lock':1}
+        with patch.object(signal.SignalMonitor,'sample',return_value=values) as sample,patch.object(quick.shutil,'which',return_value=None):
+            menu.render()
+            menu.auto_result()
+            self.assertTrue(menu.cards_visible)
+            self.assertFalse(menu['descriptions'].visible)
+            self.assertEqual([menu['inline_value%d'%i].getText() for i in range(5)],
+                             ['68 %','42 %','10.9 dB','0','1'])
+            self.assertEqual(menu['inline_value5'].getText(),mod('i18n').for_api(self.api,'Unavailable'))
+            menu._auto_timer.start.assert_called_with(1000,True)
+            menu.auto_result()
+            self.assertEqual(sample.call_count,2)
+            menu.select()
+            self.assertEqual(sample.call_count,3)
+            menu.full_result()
+            session.open.assert_not_called()
+            menu.suspend_results()
+            menu.auto_result()
+            self.assertEqual(sample.call_count,3)
+            self.assertIsNone(menu._quick_source)
+            menu.resume_results()
+            menu.auto_result()
+            self.assertEqual(sample.call_count,4)
+            menu['list'].moveToIndex(1)
+            menu.describe()
+            self.assertIsNone(menu._quick_source)
+            self.assertFalse(menu.cards_visible)
+            menu.close_results()
+            menu.auto_result()
+            self.assertEqual(sample.call_count,4)
+        session.nav.stopService.assert_not_called()
+        session.nav.playService.assert_not_called()
+
+    def test_quick_signal_audio_is_opt_in_and_stops_on_hide(self):
+        ui=self.ui
+        signal=mod('warder_signal')
+        quick=mod('warder_quick')
+        menu=ui.CentreMenu(MagicMock(),self.api,[('signal-quick','Quick signal','SNR')],
+                           {'signal-quick':True},'reception')
+        tone=MagicMock(command='/usr/bin/paplay')
+        with patch.object(signal.SignalMonitor,'sample',return_value={'snr':50,'lock':1}),patch.object(quick,'Tone',return_value=tone),patch.object(ui,'deferToThread') as worker:
+            menu.render()
+            menu.auto_result()
+            worker.assert_not_called()
+            menu.full_result()
+            worker.assert_called_once()
+            menu.suspend_results()
+            tone.close.assert_called_once()
+            self.assertFalse(menu._quick_sound)
+            self.assertIsNone(menu._quick_tone)
+
     def test_inline_storage_overview_uses_shared_panels(self):
         ui=self.ui
         entries=[('storage-overview','Memory and storage','Storage'),

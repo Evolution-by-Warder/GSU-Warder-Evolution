@@ -1,3 +1,7 @@
+# 26.11.2026 — Receiver feedback: inline quick signal
+
+Owner screenshot shows external QuickSignal overlay; explicitly requests the right panel instead. Reuse SignalMonitor, Tone and existing six-card UI with automatic one-second refresh only while selected. Preserve opt-in sound on blue, stop sampler/tone on hide/close/navigation. No external overlay from the menu. Added regressions; exact-head CI and physical retest required. No production change.
+
 # 26.11.2026 — Final inventory and native video codec
 
 Reviewed exact predecessor `348a55d2e0a202419f126f45850456712c298d30`, native OpenATV/OpenPLi codec maps, legacy navigation and publication gate. Existing channel Video Format row includes known native codec without adding a row; tuner details reuse the same helper. Unknown IDs and missing native fields remain unknown. Updated 21-language release notes and consolidated remaining gaps in the inventory. Runtime/release request already 0.41.6; publisher is version-driven. Physical rendering, exact-head CI, production artifact/feed verification and website synchronization remain pending. No production mutation.
