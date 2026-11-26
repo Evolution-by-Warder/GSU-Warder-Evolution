@@ -189,7 +189,7 @@ class Report(Screen):
             return report(tr, kind == 'storage-categories')
         if kind.startswith('network-'):
             from .warder_network import collect, summary, diagnostics
-            return summary(collect(), tr) if kind == 'network-overview' else diagnostics(tr, self.cancelled)
+            return summary(collect(include_addresses=True), tr) if kind == 'network-overview' else diagnostics(tr, self.cancelled)
         if kind == 'forum-report':
             import json
             from .warder_service import forum_snapshot
@@ -235,7 +235,7 @@ class Report(Screen):
             self['file_info'].setText(self.tr('Unavailable'))
 
     def export_services(self, kind):
-        if self.kind != 'transponder-services' or not self.services:
+        if self.kind != 'transponder-services' or self.pending or self.cancelled.is_set() or not self.services:
             return
         from .warder_services import export
         from Screens.MessageBox import MessageBox
