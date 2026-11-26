@@ -146,13 +146,50 @@ class WarderMainTests(unittest.TestCase):
         self.assertEqual(screen['actions'].actions['green'],screen['actions'].actions['ok'])
         self.assertEqual(screen['actions'].actions['yellow'],screen.cfgGsu)
 
-    def test_rows_keep_identity_and_render_status_without_loading_images(self):
-        api=dict(vars(self.plugin));api['LoadPixmap']=MagicMock(side_effect=AssertionError('row must not decode images'))
-        for enabled,color in ((True,0x39ff59),(False,0xff526a)):
+    def test_rows_keep_identity_cache_icons_and_render_unavailable_status(self):
+        from Plugins.Extensions.GlassSysUtil import warder_menu_icons as icons
+        api=dict(vars(self.plugin));api['LoadPixmap']=MagicMock(return_value=object())
+        icons.cached.cache_clear()
+        for enabled in (True,False):
             row=ui.menu_row(api,'3','OScam informácie',enabled,1920,1080)
-            self.assertEqual(row[0],'3');self.assertEqual(row[1]['text'],'OScam informácie')
-            self.assertEqual(row[2]['color'],color)
-        api['LoadPixmap'].assert_not_called()
+            self.assertEqual(row[0],'3')
+            self.assertEqual(row[1]['text'],'OScam informácie')
+            self.assertEqual(row[2]['size'],(48,48))
+            if enabled:self.assertEqual(len(row),3)
+            else:self.assertEqual(row[3]['color'],0xff526a)
+        api['LoadPixmap'].assert_called_once()
+        api['LoadPixmap'].assert_called_with(path=str(ROOT/'images/nav-key.png'),cached=True)
+        icons.cached.cache_clear()
+        api['LoadPixmap']=MagicMock(return_value=None)
+        row=ui.menu_row(api,'centre:system','System centre',True,1920,1080)
+        self.assertEqual(len(row),2)
+        self.assertEqual(row[1]['text'],'System centre')
+        icons.cached.cache_clear()
+
+    def test_navigation_assets_cover_all_centres_and_routes(self):
+        from Plugins.Extensions.GlassSysUtil import warder_menu_icons as icons,warder_centres as centres
+        import struct,zlib
+        paths=set()
+        for key,_,members in centres.CENTRES:
+            for ident in ('centre:'+key,*members):
+                paths.add(ROOT/'images'/('nav-'+icons.icon_name(ident)+'.png'))
+        for path in paths:
+            raw=path.read_bytes()
+            self.assertEqual(raw[:8],b'\\x89PNG\\r\\n\\x1a\\n',path)
+            w,h=struct.unpack('>II',raw[16:24])
+            self.assertEqual(w,h,path)
+            self.assertIn(raw[25],(4,6),path)
+            index=8
+            data=[]
+            while index<len(raw):
+                size=struct.unpack('>I',raw[index:index+4])[0]
+                kind=raw[index+4:index+8]
+                body=raw[index+8:index+8+size]
+                crc=struct.unpack('>I',raw[index+8+size:index+12+size])[0]
+                self.assertEqual(zlib.crc32(kind+body)&0xffffffff,crc,path)
+                if kind==b'IDAT':data.append(body)
+                index+=12+size
+            self.assertTrue(zlib.decompress(b''.join(data)),path)
 
     def test_original_class_interfaces_are_retained(self):
         source=(ROOT/'plugin.py').read_text()
