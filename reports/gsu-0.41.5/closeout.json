@@ -1,0 +1,25 @@
+{
+  "source_commit": "30a420d5019446c1b33f48fe586addc5f9ead153",
+  "candidate_head": "b90807a0a4a56a4fb36437fe1978ca00aaa33e54",
+  "candidate_checks_passed": 17,
+  "plugin_regressions": 467,
+  "tag": "v0.41.5",
+  "activation_commit": "fac1e9a9a9a7ab022f75361dc0af94b0c44e80b2",
+  "production_workflow": 45786453936,
+  "web_pr": 44,
+  "web_candidate": "9a28130cd0bd8a1db668bbeb54524df136146cf9",
+  "web_commit": "ae4cfd43707860e843edc98f22e2dbfc1b028e93",
+  "website_ci": [
+    45787832017,
+    45787832034
+  ],
+  "pages_run": 45788135168,
+  "site": "https://warder-evolution.eu/gsu.html",
+  "portal_languages": [
+    "sk",
+    "en",
+    "de",
+    "ru"
+  ],
+  "physical_receiver_tested": false
+}

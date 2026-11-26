@@ -1,0 +1,20 @@
+name: Verify GSU production and published portal
+on:
+  pull_request:
+    paths:
+      - 'reports/gsu-0.41.5/closeout.json'
+      - 'reports/gsu-0.41.5/verify-live.py'
+      - '.github/workflows/gsu-release-closeout.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - run: python3 reports/gsu-0.41.5/verify-live.py
