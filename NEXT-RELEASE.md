@@ -1,3 +1,13 @@
+# 26. 11. 2026 · stabilná 0.41.5 a nasadenie webu
+
+[PR #16](https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/pull/16) bol zlúčený po všetkých 17 úspešných kontrolách na b90807a0a4a56a4fb36437fe1978ca00aaa33e54. Publikovaný tag v0.41.5 smeruje na 30a420d5019446c1b33f48fe586addc5f9ead153. Verejné bajty a SHA-256 overil produkčný workflow 45786453936. Moderný feed je aktívny od fac1e9a9a9a7ab022f75361dc0af94b0c44e80b2.
+
+IPK má 3 873 060 bajtov, SHA-256 115bc57d4c842049d72864a0e2deaf0eceb35f0bb7d53f515cc5533e9abc48fc. OPKG po každej migrácii alokoval 7 073 792 bajtov pre súbory balíka. Lokálne aj v CI prešlo 467 regresných testov. Výkon sa meral na dvoch natívnych runneroch a v troch emulovaných ABI. Výsledky a hranice fyzických skúšok uvádza [odovzdanie vydania](reports/gsu-0.41.5/CLOSEOUT.md).
+
+Webový [PR #44](https://github.com/Evolution-by-Warder/YouTube-Warder-Evolution/pull/44) prešiel oboma kontrolami na 9a28130cd0bd8a1db668bbeb54524df136146cf9. Nasadený commit ae4cfd43707860e843edc98f22e2dbfc1b028e93 potvrdil [GitHub Pages](https://github.com/Evolution-by-Warder/YouTube-Warder-Evolution/actions/runs/45788135168). SK, EN, DE a RU obsahujú novú verziu, funkcie, kompatibilitu a odkazy. [Verejná kontrola](https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/actions/runs/45788582576) úspešne overila bajty vydania, sidecar, staré aj moderný feed, domovskú stránku, GSU detail a texty štyroch jazykov na skutočnej doméne warder-evolution.eu.
+
+Pre prípadné ďalšie vydanie sa použije 0.41.6 a OPKG epoch 1. V rámci následného hardvérového overovania je otvorený živý príjem, motor, blindscan, HDMI/zvuk a zobrazenie na reálnom televízore.
+
 # Produkčná aktivácia v0.41.5
 
 Zdroj 30a420d5019446c1b33f48fe586addc5f9ead153, workflow 45786453936, overených 3873060 bajtov, SHA-256 115bc57d4c842049d72864a0e2deaf0eceb35f0bb7d53f515cc5533e9abc48fc. Samostatný stabilný feed je aktívny. Ďalší krok je aktualizácia webu SK/EN/DE/RU a kontrola Pages.

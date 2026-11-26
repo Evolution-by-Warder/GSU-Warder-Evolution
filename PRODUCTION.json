@@ -41,6 +41,7 @@
   "package_id": "enigma2-plugin-extensions-gsu-warder-evolution",
   "installation_directory": "/usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/",
   "update_feeds": [
+    "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/main/plugin/update/stable-modern.json",
     "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/plugin/update/stable.json",
     "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/plugin/update/candidate.json",
     "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/restoration/update/candidate.json"
@@ -118,7 +119,26 @@
     "piconhub": "0.1.40"
   },
   "documentation_checkpoint": {
-    "status": "web-sync-pending",
-    "continuation": "Update SK/EN/DE/RU and verify Pages."
-  }
+    "status": "website-deployed-and-publicly-verified",
+    "date": "2026-11-26",
+    "web_pull_request": "https://github.com/Evolution-by-Warder/YouTube-Warder-Evolution/pull/44",
+    "web_commit": "ae4cfd43707860e843edc98f22e2dbfc1b028e93",
+    "pages_run": "https://github.com/Evolution-by-Warder/YouTube-Warder-Evolution/actions/runs/45788135168",
+    "verification": "reports/gsu-0.41.5/closeout.json",
+    "public_links_and_languages_verified_by": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/actions/runs/45788582576"
+  },
+  "feed_roles": {
+    "stable_modern": "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/main/plugin/update/stable-modern.json",
+    "r6_compatibility": [
+      "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/plugin/update/stable.json",
+      "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/main/plugin/update/stable.json"
+    ],
+    "r93_frozen": [
+      "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/plugin/update/candidate.json",
+      "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/restoration/update/candidate.json",
+      "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/main/plugin/update/candidate.json",
+      "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/main/restoration/update/candidate.json"
+    ]
+  },
+  "peer_production_context": "Historical snapshot of the common stable publication on 2026-11-02."
 }
