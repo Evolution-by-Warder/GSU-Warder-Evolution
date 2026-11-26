@@ -1,3 +1,9 @@
+# 26.11.2026 — Physical receiver regression in 0.41.5
+
+Owner supplied 12 screenshots: System overview RAM heading clipped; Processes, Log, Tuners, Transponder services, Storage, Space by category, Network overview, Connection test, Installation check, IPK /tmp, Forum report show blank content; unused green/blue buttons display gettext header. Code inspection confirmed native OpenATV ScrollLabel.applySkin forwards zPosition to child labels, not parent eWidget; modern opaque backings at +1/+2 occlude the parent at 0. Fix dashboard and CAM backings below 0, protect empty msgid globally, shorten RAM title and ensure footer noWrap, explicitly display Unavailable on empty report or native import failure. Added layout and route/provider regressions for all 11 report kinds and 5 project pages. Current work branch work/gsu-0416-rendering, no production changes, CI and physical receiver retest pending. No claim that all providers work on actual hardware. Next: run exact HEAD CI, inspect failures, verify content on receiver; release subsequent stable version only with verified gates. Do not rewrite 0.41.5.
+
+---
+
 # 26. 11. 2026 · stabilná 0.41.5 a nasadenie webu
 
 [PR #16](https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/pull/16) bol zlúčený po všetkých 17 úspešných kontrolách na b90807a0a4a56a4fb36437fe1978ca00aaa33e54. Publikovaný tag v0.41.5 smeruje na 30a420d5019446c1b33f48fe586addc5f9ead153. Verejné bajty a SHA-256 overil produkčný workflow 45786453936. Moderný feed je aktívny od fac1e9a9a9a7ab022f75361dc0af94b0c44e80b2.
