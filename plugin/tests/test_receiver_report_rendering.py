@@ -103,11 +103,13 @@ class ReceiverRenderingTests(unittest.TestCase):
                         self.assertIs(provider.call_args.args[-1],False)
                     self.assertIn('provider data',report['file_info'].getText())
         report=self.ui.Report(MagicMock(),self.api,'network-overview','Overview')
-        with patch.object(mod('warder_network'),'collect',return_value={'fixture':1}) as collect, patch.object(mod('warder_network'),'summary',return_value='network data') as summary:
+        with patch.object(mod('warder_network'),'collect',return_value={'fixture':1}) as collect, patch.object(mod('warder_network'),'overview_panels',return_value=('network data','connection data')) as panels:
             report.done(report.collect())
             collect.assert_called_once_with(include_addresses=True)
-            self.assertEqual(summary.call_args.args[0],{'fixture':1})
-            self.assertIn('network data',report['file_info'].getText())
+            self.assertEqual(panels.call_args.args[0],{'fixture':1})
+            self.assertTrue(report.network_visible)
+            self.assertEqual(report['network_body0'].getText(),'network data')
+            self.assertEqual(report['network_body1'].getText(),'connection data')
         report=self.ui.Report(MagicMock(),self.api,'forum-report','Overview')
         with patch.object(mod('warder_service'),'forum_snapshot',return_value={'schema':2}) as snapshot:
             report.done(report.collect())
@@ -173,7 +175,7 @@ class ReceiverRenderingTests(unittest.TestCase):
     def test_new_modes_fit_all_resolutions_and_keep_native_backings_behind_content(self):
         view=mod('warder_dashboard')
         for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
-            for mode in ('menu','overview','chart','detail','process','categories'):
+            for mode in ('menu','overview','chart','detail','process','categories','network'):
                 root=ET.fromstring(view.skin(w,h,mode))
                 names=[n.get('name') for n in root if n.get('name')]
                 self.assertEqual(len(names),len(set(names)),mode)
@@ -186,7 +188,7 @@ class ReceiverRenderingTests(unittest.TestCase):
                     self.assertLessEqual(y+height,h,(mode,n.attrib))
                 for name in ('day','date','clock','seconds','version_title','version'):
                     self.assertIn(name,names)
-                if mode in ('detail','process','categories'):
+                if mode in ('detail','process','categories','network'):
                     target=root.find("widget[@name='file_info']")
                     x,y=map(int,target.get('position').split(','))
                     tw,th=map(int,target.get('size').split(','))
@@ -225,3 +227,36 @@ class ReceiverRenderingTests(unittest.TestCase):
         self.assertIn('Radio station',value)
         self.assertEqual(rows,expected)
         self.assertEqual(mod('warder_services').display([],str),'Unavailable')
+
+    def test_network_panels_keep_actual_addresses_and_missing_data(self):
+        network=mod('warder_network')
+        data={'interfaces':[{'name':'eth0','state':'up','speed':1000,'addresses':['192.0.2.1','2001:db8::1']}],
+              'gateways':['192.0.2.254'],'dns':[],'network_mounts':0}
+        left,right=network.overview_panels(data,str)
+        self.assertIn('1000 Mb/s',left)
+        self.assertIn('2001:db8::1',left)
+        self.assertIn('192.0.2.254',right)
+        self.assertIn('—',right)
+        report=self.ui.Report(MagicMock(),self.api,'network-overview','Network overview')
+        report.done((left,right))
+        self.assertTrue(report.network_visible)
+        report.scroll(1,True)
+        self.assertEqual(report.network_focus,1)
+        report.done(None)
+        self.assertFalse(report.network_visible)
+        self.assertEqual(report['file_info'].getText(),report.tr('Unavailable'))
+
+    def test_diagnostic_descriptions_are_explanatory_in_all_languages(self):
+        centres=mod('warder_centres')
+        i18n=mod('i18n')
+        for lang in i18n.LANGUAGES:
+            tr=lambda key:i18n.translate(key,lang)
+            for ident,(_,hint) in centres.DIAGNOSTICS.items():
+                value=centres.description(ident,tr,tr(hint))
+                self.assertNotEqual(value,tr(hint),(lang,ident))
+                self.assertGreater(len(value),15,(lang,ident))
+                self.assertNotIn('%s',value)
+        value=centres.description('system-overview',lambda k:i18n.translate(k,'sk'))
+        self.assertIn('CPU',value)
+        self.assertIn('teplotu',value)
+        self.assertIn('flash',value)
