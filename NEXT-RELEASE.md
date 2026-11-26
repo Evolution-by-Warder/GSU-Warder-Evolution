@@ -1,3 +1,9 @@
+# 26.11.2026 — Owner-approved CPU and service inventory extensions
+
+Added CPU per-core utilization using the same counter arithmetic as the aggregate sampler, optional exposed CPU frequencies and uptime, not a second background monitor. Service centre now shows up to ten recent local regular crash file summaries (exception classes and existing advice only; no raw log export) and up to 512 installed enigma2-plugin package records from the existing database, with explicit partial state. Existing forum allowlist, package transactions, and health-check advice preserved; common crash exception parser and remote mount exclusion. New labels translated into all 21 catalogues. Updated explicit menu inventory regression to include new network/CPU/service routes without dropping any prior IDs; preceding network CI failed solely because the old exact menu inventory omitted four new routes. New fixture tests for per-core counters, uptime, local crash privacy and package inventory. Not a full interactive raw crashlog viewer. Fresh exact-head CI and receiver retest required. No production mutation.
+
+---
+
 # 26.11.2026 — Preserve owning centres for legacy actions
 
 Following the owner-approved navigation rule, CentreMenu no longer closes itself to dispatch known legacy CAM/ECM, swap, OSD and update actions through the main screen. Existing controllers are opened as child screens; CCcam/OSCam keep original server-choice behavior, GSU update uses existing ProjectReport and canonical updater. No extra installer, scanner or controller. Legacy screen visual redesign/inline integration remains separate work; this change addresses back-stack ownership only. Regression verifies existing controller identity and update route. Predecessor `cd74dead62ea78a3cbd0e3f094fd0680fe9c4769` network expansion not yet fully CI-verified; fresh exact-head CI and receiver retest required. No production mutation.

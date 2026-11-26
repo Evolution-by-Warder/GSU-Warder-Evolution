@@ -12,9 +12,9 @@ from .i18n import for_api, language
 
 # Read-only result routes. Actions changing tuner state or configuration remain
 # explicit native screens; graphs and full-size tables remain available in Details.
-INLINE_REPORTS=frozenset(('system-overview','system-processes','system-log',
+INLINE_REPORTS=frozenset(('system-overview','system-processes','system-log','system-cpu',
     'tuner-details','transponder-services','storage-overview','storage-categories',
-    'network-overview','network-test','network-interfaces','network-statistics','network-mounts','network-services','service-health','service-ipk','forum-report','17'))
+    'network-overview','network-test','network-interfaces','network-statistics','network-mounts','network-services','service-health','service-crashes','service-plugins','service-ipk','forum-report','17'))
 # Explicit actions must never run merely because the cursor passes over them.
 MANUAL_INLINE=frozenset(('17','network-test'))
 NATIVE_REPORTS=frozenset(('tuner-details','transponder-services'))
@@ -24,6 +24,9 @@ def collect_report(kind,tr,cancelled,cpu_order=False):
     if kind=='system-processes':
         from .warder_system_data import process_table
         return process_table(cancelled,cpu_order)
+    if kind=='system-cpu':
+        from .warder_system_data import cpu_details
+        return cpu_details(tr,cancelled)
     if kind=='system-log':
         from .warder_system_data import detail_text
         return detail_text('log',tr)
@@ -45,6 +48,12 @@ def collect_report(kind,tr,cancelled,cpu_order=False):
     if kind == 'service-ipk':
         from .warder_ipk import review
         return review(tr)
+    if kind=='service-crashes':
+        from .warder_service import crash_report
+        return crash_report(tr,cancelled)
+    if kind=='service-plugins':
+        from .warder_package_status import plugin_inventory
+        return plugin_inventory(tr,cancelled)
     if kind == 'service-health':
         from .warder_service import health
         return health(tr)

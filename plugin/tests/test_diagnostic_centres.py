@@ -632,6 +632,44 @@ class DiagnosticTests(unittest.TestCase):
         cancel=Event();cancel.set()
         self.assertEqual(net.detail_report('network-statistics',str,cancel,p),'')
 
+    def test_cpu_details_share_counter_arithmetic_and_report_real_frequency(self):
+        sysdata=module('warder_system_data')
+        probe=MagicMock()
+        before='cpu0 10 0 0 90\ncpu1 0 0 0 100'
+        after='cpu0 20 0 0 100\ncpu1 0 0 0 120'
+        readings=iter((before,after))
+        def read(path,*args):
+            if path=='/proc/stat':return next(readings)
+            if path.endswith('cpu0/cpufreq/scaling_cur_freq'):return '1500000'
+            if path=='/proc/uptime':return '90061.5 0'
+            return ''
+        probe.text.side_effect=read
+        result=sysdata.cpu_details(str,Event(),probe)
+        self.assertIn('CPU 0   50.0 %   ·   1500 MHz',result)
+        self.assertIn('CPU 1   0.0 %   ·   —',result)
+        self.assertIn('1 d  01:01:01',result)
+
+    def test_local_crash_and_package_inventory_reuse_existing_sources(self):
+        svc=module('warder_service')
+        pkg=module('warder_package_status')
+        with TemporaryDirectory() as folder:
+            root=Path(folder)
+            (root/'tmp').mkdir()
+            (root/'tmp/enigma2_crash_a.log').write_text('password=secret\nImportError: private')
+            (root/'tmp/enigma2_crash_link.log').symlink_to(root/'tmp/enigma2_crash_a.log')
+            p=module('warder_tools').Probe(root)
+            out=svc.crash_report(str,Event(),p)
+            self.assertIn('ImportError',out)
+            self.assertIn('Check plugin dependencies',out)
+            self.assertNotIn('secret',out)
+            self.assertNotIn('crash_link',out)
+            self.assertEqual(svc.crash_summary(p),['ImportError'])
+            with patch.object(pkg,'database',return_value=({'enigma2-plugin-extensions-demo':{'Version':'1.2.3','Architecture':'all'},'kernel':{}},'opkg')):
+                out=pkg.plugin_inventory(str,Event(),root)
+                self.assertIn('enigma2-plugin-extensions-demo',out)
+                self.assertIn('1.2.3',out)
+                self.assertNotIn('kernel',out)
+
     def test_ping_loss_is_distinct_from_unsupported_ping(self):
         net=module('warder_network')
         good=MagicMock(return_value=SimpleNamespace(stdout='3 packets transmitted, 2 received, 33% packet loss\nrtt min/avg/max = 1.0/2.0/3.0 ms'))

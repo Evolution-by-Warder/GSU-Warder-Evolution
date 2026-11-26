@@ -95,7 +95,9 @@
     "Packets": "Packets",
     "Errors": "Errors",
     "Dropped packets": "Dropped packets",
-    "Local ports": "Local ports"
+    "Local ports": "Local ports",
+    "CPU details": "CPU details",
+    "Installed plugin packages": "Installed plugin packages"
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -193,7 +195,9 @@
     "Packets": "Pakety",
     "Errors": "Chyby",
     "Dropped packets": "Zahodené pakety",
-    "Local ports": "Lokálne porty"
+    "Local ports": "Lokálne porty",
+    "CPU details": "Podrobnosti CPU",
+    "Installed plugin packages": "Nainštalované balíky pluginov"
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -291,7 +295,9 @@
     "Packets": "Pakety",
     "Errors": "Chyby",
     "Dropped packets": "Zahozené pakety",
-    "Local ports": "Místní porty"
+    "Local ports": "Místní porty",
+    "CPU details": "Podrobnosti CPU",
+    "Installed plugin packages": "Nainstalované balíčky pluginů"
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -389,7 +395,9 @@
     "Packets": "Pakete",
     "Errors": "Fehler",
     "Dropped packets": "Verworfene Pakete",
-    "Local ports": "Lokale Ports"
+    "Local ports": "Lokale Ports",
+    "CPU details": "CPU-Details",
+    "Installed plugin packages": "Installierte Plugin-Pakete"
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -487,7 +495,9 @@
     "Packets": "Pakiety",
     "Errors": "Błędy",
     "Dropped packets": "Odrzucone pakiety",
-    "Local ports": "Porty lokalne"
+    "Local ports": "Porty lokalne",
+    "CPU details": "Szczegóły CPU",
+    "Installed plugin packages": "Zainstalowane pakiety wtyczek"
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -585,7 +595,9 @@
     "Packets": "Csomagok",
     "Errors": "Hibák",
     "Dropped packets": "Eldobott csomagok",
-    "Local ports": "Helyi portok"
+    "Local ports": "Helyi portok",
+    "CPU details": "CPU-adatok",
+    "Installed plugin packages": "Telepített bővítménycsomagok"
   },
   "ru": {
     "System centre": "Системный центр",
@@ -683,7 +695,9 @@
     "Packets": "Пакеты",
     "Errors": "Ошибки",
     "Dropped packets": "Отброшенные пакеты",
-    "Local ports": "Локальные порты"
+    "Local ports": "Локальные порты",
+    "CPU details": "Сведения о ЦП",
+    "Installed plugin packages": "Установленные пакеты плагинов"
   },
   "fr": {
     "System centre": "Centre système",
@@ -781,7 +795,9 @@
     "Packets": "Paquets",
     "Errors": "Erreurs",
     "Dropped packets": "Paquets rejetés",
-    "Local ports": "Ports locaux"
+    "Local ports": "Ports locaux",
+    "CPU details": "Détails du processeur",
+    "Installed plugin packages": "Paquets de plugins installés"
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -879,7 +895,9 @@
     "Packets": "Pacchetti",
     "Errors": "Errori",
     "Dropped packets": "Pacchetti scartati",
-    "Local ports": "Porte locali"
+    "Local ports": "Porte locali",
+    "CPU details": "Dettagli CPU",
+    "Installed plugin packages": "Pacchetti plugin installati"
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -977,7 +995,9 @@
     "Packets": "Paquetes",
     "Errors": "Errores",
     "Dropped packets": "Paquetes descartados",
-    "Local ports": "Puertos locales"
+    "Local ports": "Puertos locales",
+    "CPU details": "Detalles de CPU",
+    "Installed plugin packages": "Paquetes de plugins instalados"
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -1075,7 +1095,9 @@
     "Packets": "Paketat",
     "Errors": "Gabime",
     "Dropped packets": "Paketa të hedhura",
-    "Local ports": "Portat lokale"
+    "Local ports": "Portat lokale",
+    "CPU details": "Detajet e CPU-së",
+    "Installed plugin packages": "Paketat e shtojcave të instaluara"
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -1173,7 +1195,9 @@
     "Packets": "Πακέτα",
     "Errors": "Σφάλματα",
     "Dropped packets": "Απορριφθέντα πακέτα",
-    "Local ports": "Τοπικές θύρες"
+    "Local ports": "Τοπικές θύρες",
+    "CPU details": "Λεπτομέρειες CPU",
+    "Installed plugin packages": "Εγκατεστημένα πακέτα προσθέτων"
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -1271,7 +1295,9 @@
     "Packets": "Paketid",
     "Errors": "Vead",
     "Dropped packets": "Hüljatud paketid",
-    "Local ports": "Kohalikud pordid"
+    "Local ports": "Kohalikud pordid",
+    "CPU details": "CPU üksikasjad",
+    "Installed plugin packages": "Paigaldatud pluginate paketid"
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -1369,7 +1395,9 @@
     "Packets": "بسته‌ها",
     "Errors": "خطاها",
     "Dropped packets": "بسته‌های حذف‌شده",
-    "Local ports": "درگاه‌های محلی"
+    "Local ports": "درگاه‌های محلی",
+    "CPU details": "جزئیات پردازنده",
+    "Installed plugin packages": "بسته‌های افزونه نصب‌شده"
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -1467,7 +1495,9 @@
     "Packets": "Paketai",
     "Errors": "Klaidos",
     "Dropped packets": "Atmesti paketai",
-    "Local ports": "Vietiniai prievadai"
+    "Local ports": "Vietiniai prievadai",
+    "CPU details": "CPU informacija",
+    "Installed plugin packages": "Įdiegti įskiepių paketai"
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -1565,7 +1595,9 @@
     "Packets": "Pakketten",
     "Errors": "Fouten",
     "Dropped packets": "Verworpen pakketten",
-    "Local ports": "Lokale poorten"
+    "Local ports": "Lokale poorten",
+    "CPU details": "CPU-details",
+    "Installed plugin packages": "Geïnstalleerde pluginpakketten"
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -1663,7 +1695,9 @@
     "Packets": "Pacotes",
     "Errors": "Erros",
     "Dropped packets": "Pacotes descartados",
-    "Local ports": "Portas locais"
+    "Local ports": "Portas locais",
+    "CPU details": "Detalhes da CPU",
+    "Installed plugin packages": "Pacotes de plugins instalados"
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -1761,7 +1795,9 @@
     "Packets": "Pachete",
     "Errors": "Erori",
     "Dropped packets": "Pachete eliminate",
-    "Local ports": "Porturi locale"
+    "Local ports": "Porturi locale",
+    "CPU details": "Detalii CPU",
+    "Installed plugin packages": "Pachete de pluginuri instalate"
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -1859,7 +1895,9 @@
     "Packets": "Paketler",
     "Errors": "Hatalar",
     "Dropped packets": "Atılan paketler",
-    "Local ports": "Yerel bağlantı noktaları"
+    "Local ports": "Yerel bağlantı noktaları",
+    "CPU details": "CPU ayrıntıları",
+    "Installed plugin packages": "Kurulu eklenti paketleri"
   },
   "uk": {
     "System centre": "Системний центр",
@@ -1957,7 +1995,9 @@
     "Packets": "Пакети",
     "Errors": "Помилки",
     "Dropped packets": "Відкинуті пакети",
-    "Local ports": "Локальні порти"
+    "Local ports": "Локальні порти",
+    "CPU details": "Відомості про ЦП",
+    "Installed plugin packages": "Встановлені пакети плагінів"
   },
   "zh": {
     "System centre": "系统中心",
@@ -2055,6 +2095,8 @@
     "Packets": "数据包",
     "Errors": "错误",
     "Dropped packets": "丢弃的数据包",
-    "Local ports": "本地端口"
+    "Local ports": "本地端口",
+    "CPU details": "CPU 详情",
+    "Installed plugin packages": "已安装的插件软件包"
   }
 }

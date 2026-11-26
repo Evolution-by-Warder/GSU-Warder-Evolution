@@ -37,23 +37,65 @@ def save_preview(preview, directory='/tmp'):
         return out.name
 
 
-def crash_summary(p):
-    roots = ('/home/root/logs', '/media/hdd', '/tmp')
+CRASH_ROOTS=('/home/root/logs','/media/hdd','/tmp')
+CRASH_NAME=re.compile(r'(?:enigma2_crash|enigma2-crash)[\w.-]*\.log')
+CRASH_SUGGESTIONS={'ModuleNotFoundError':'Check plugin dependencies', 'ImportError':'Check plugin dependencies',
+                   'MemoryError':'Review memory and storage', 'PermissionError':'Check file permissions',
+                   'FileNotFoundError':'Check installed files', 'AttributeError':'Check image compatibility',
+                   'TypeError':'Check image compatibility'}
+
+
+def crash_exception(text):
     # Only disclose exception classes from the Python built-in namespace.
     import builtins
-    allowed = {k for k, v in vars(builtins).items() if isinstance(v, type) and issubclass(v, Exception)}
-    exceptions = []
-    for root in roots:
-        for name in p.entries(root, 256):
-            if not re.fullmatch(r'(?:enigma2_crash|enigma2-crash)[\w.-]*\.log', name):
-                continue
-            path = p.path(root) / name
-            text = read(path, 32768, private_log=True)
-            matches = re.findall(r'^([A-Za-z]+(?:Error|Exception))(?::|$)', text, re.M)
-            exceptions.extend(cls for cls in matches[-1:] if cls in allowed)
-            if len(exceptions) >= 5:
-                return exceptions
+    matches=re.findall(r'^([A-Za-z]+(?:Error|Exception))(?::|$)',text,re.M)
+    name=matches[-1] if matches else None
+    kind=getattr(builtins,name,None) if name else None
+    return name if isinstance(kind,type) and issubclass(kind,Exception) else None
+
+
+def crash_files(p):
+    """Bounded candidates on local mounts; do not browse remote shares."""
+    from .warder_storage import mounts,REMOTE
+    remote=tuple(target.rstrip('/')+'/' for _,target,fs,_ in mounts(p) if fs in REMOTE)
+    for root in CRASH_ROOTS:
+        if any((root.rstrip('/')+'/').startswith(target) for target in remote):continue
+        for name in p.entries(root,256):
+            if CRASH_NAME.fullmatch(name):
+                yield p.path(root)/name
+
+
+def crash_summary(p):
+    exceptions=[]
+    for path in crash_files(p):
+        name=crash_exception(read(path,32768,private_log=True))
+        if name:exceptions.append(name)
+        if len(exceptions)>=5:break
     return exceptions
+
+
+def crash_report(tr,cancelled,probe=None):
+    """Local, bounded recent crash summaries. Raw log text is not exported."""
+    import stat
+    from datetime import datetime
+    p=probe or Probe()
+    candidates=[]
+    for path in crash_files(p):
+        if cancelled.is_set():return ''
+        try:
+            st=path.lstat()
+            if stat.S_ISREG(st.st_mode):candidates.append((st.st_mtime,st.st_size,path))
+        except OSError:continue
+    rows=[]
+    for timestamp,size,path in sorted(candidates,key=lambda item:(-item[0],str(item[2])))[:10]:
+        if cancelled.is_set():return ''
+        name=crash_exception(read(path,32768,private_log=True))
+        try:stamp=datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+        except (OverflowError,OSError,ValueError):stamp='—'
+        rows.extend((path.name,stamp+'   ·   %.1f KiB'%(size/1024),name or '—'))
+        if name in CRASH_SUGGESTIONS:rows.append(tr(CRASH_SUGGESTIONS[name]))
+        rows.append('')
+    return '\n'.join(rows).strip() or tr('Unavailable')
 
 
 def health(tr, p=None):
@@ -68,11 +110,7 @@ def health(tr, p=None):
     records, manager = database(p.path('/'))
     dependencies = dependency_state(install_health.PACKAGE,records,manager)
     exceptions = crash_summary(p)
-    messages = {'ModuleNotFoundError':'Check plugin dependencies', 'ImportError':'Check plugin dependencies',
-                'MemoryError':'Review memory and storage', 'PermissionError':'Check file permissions',
-                'FileNotFoundError':'Check installed files', 'AttributeError':'Check image compatibility',
-                'TypeError':'Check image compatibility'}
-    suggestions = [tr(messages[name]) for name in dict.fromkeys(exceptions) if name in messages]
+    suggestions = [tr(CRASH_SUGGESTIONS[name]) for name in dict.fromkeys(exceptions) if name in CRASH_SUGGESTIONS]
     return '\n\n'.join(('GSU   '+integrity, tr('Package manager')+'\n    '+(', '.join(packages) or '—'),
                       tr('Package dependencies')+'\n    '+tr(dependencies), tr('Crash logs')+'\n    '+(', '.join(exceptions) or '—'), *dict.fromkeys(suggestions)))
 

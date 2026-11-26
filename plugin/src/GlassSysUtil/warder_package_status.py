@@ -87,3 +87,18 @@ def dependency_state(package, records, manager, compare=compare_versions):
         else:
             return 'Check plugin dependencies'
     return 'Unavailable' if unknown else 'Ready'
+
+
+def plugin_inventory(tr,cancelled,root=Path('/')):
+    """Installed plugin packages only; no package transactions or feed requests."""
+    records,manager=database(root)
+    if not manager:return tr('Unavailable')
+    selected=[(name,row) for name,row in sorted(records.items()) if name.startswith('enigma2-plugin-')]
+    rows=[manager+'   ·   '+tr('Total:')+' '+str(len(selected)),'']
+    for name,row in selected[:512]:
+        if cancelled.is_set():return ''
+        version=row.get('Version','—')
+        architecture=row.get('Architecture','—')
+        rows.extend((name,version+'   ·   '+architecture,''))
+    if len(selected)>512:rows.append(tr('Partial result'))
+    return '\n'.join(rows).strip()

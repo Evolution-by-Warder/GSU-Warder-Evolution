@@ -162,3 +162,34 @@ def information(cancel, p=None):
         status=smart(result['disk_device'])
         if status:result['disk_temperature']=status[1]
     return None if cancel.is_set() else result
+
+
+def cpu_details(tr,cancel,p=None):
+    """Reuse the same counter arithmetic for individual logical CPUs."""
+    from .warder_telemetry import core_counters,cpu_percent
+    p=p or Probe()
+    before=core_counters(p.text('/proc/stat',65536))
+    if cancel.wait(0.25):return ''
+    after=core_counters(p.text('/proc/stat',65536))
+    rows=[]
+    for number in sorted(before.keys()|after.keys()):
+        if cancel.is_set():return ''
+        value=cpu_percent(before.get(number),after.get(number))
+        freq=None
+        for item in ('scaling_cur_freq','cpuinfo_cur_freq'):
+            raw=p.text('/sys/devices/system/cpu/cpu%d/cpufreq/'%number+item,32)
+            if raw.isdigit() and 0<int(raw)<20000000:
+                freq=int(raw)/1000
+                break
+        rows.append('CPU %d   %s   ·   %s'%(number,'—' if value is None else '%.1f %%'%value,
+                    '—' if freq is None else '%.0f MHz'%freq))
+    try:
+        uptime=float(p.text('/proc/uptime',128).split()[0])
+        if not 0<=uptime<3155760000:raise ValueError('invalid uptime')
+        days,seconds=divmod(int(uptime),86400)
+        hours,seconds=divmod(seconds,3600)
+        minutes,seconds=divmod(seconds,60)
+        shown='%d d  %02d:%02d:%02d'%(days,hours,minutes,seconds)
+    except (ValueError,IndexError,OverflowError):shown='—'
+    rows.extend(('',tr('Uptime')+'   '+shown))
+    return '\n'.join(rows).strip()

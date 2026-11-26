@@ -1,11 +1,11 @@
 """Canonical navigation ownership; legacy IDs remain stable."""
 CENTRES = (
-    ("system", "System centre", ("system-overview", "system-live", "system-processes", "system-log", "0")),
+    ("system", "System centre", ("system-overview", "system-live", "system-cpu", "system-processes", "system-log", "0")),
     ("reception", "Reception centre", ("signal-quick", "signal-live", "1", "tuner-details", "transponder-services", "tuner-native")),
     ("storage", "Memory and storage", ("storage-overview", "storage-categories", "9")),
     ("network", "Network centre", ("network-overview", "network-interfaces", "network-statistics", "network-test", "network-mounts", "network-services")),
     ("cam", "CAM / ECM centre", ("2", "3", "4", "6", "7", "8")),
-    ("service", "Service centre", ("service-health", "service-ipk", "forum-report", "17")),
+    ("service", "Service centre", ("service-health", "service-crashes", "service-plugins", "service-ipk", "forum-report", "17")),
     ("warder", "Warder Evolution centre", ("projects", "16")),
 )
 
@@ -14,6 +14,7 @@ DIAGNOSTICS = {
     "network-overview": ("Network overview", "Network link"),
     "system-overview": ("System health check", "Available memory"),
     "system-processes": ("Process Info", "CPU / RAM"),
+    "system-cpu": ("CPU details", "CPU · MHz"),
     "system-log": ("Log view", "Dmesg Info"),
     "system-live": ("Live monitoring", "CPU · RAM · RX/TX"),
     "signal-live": ("Signal history", "SNR · AGC · BER · LOCK"),
@@ -27,6 +28,8 @@ DIAGNOSTICS = {
     "network-mounts": ("Network mounts", "NFS · CIFS"),
     "network-services": ("Network services", "TCP · UDP"),
     "service-health": ("Installation check", "Crash logs"),
+    "service-crashes": ("Crash logs", "Logs"),
+    "service-plugins": ("Installed plugin packages", "Package manager"),
     "forum-report": ("Forum report", "JSON"),
     "signal-quick": ("Quick signal", "SNR · dB · LOCK"),
     "transponder-services": ("Transponder services", "TV / Radio → /tmp"),
@@ -61,6 +64,7 @@ def legacy_routes(entries):
 TOPICS = {
     'network-overview': ('Network link','IP','Default gateway','DNS configuration','Network mounts'),
     'system-log': ('Logs','System Information','Dmesg Info'),
+    'system-cpu': ('CPU','MHz','Uptime'),
     'system-live': ('CPU','RAM','Swap','Temperature','RX/TX'),
     'signal-live': ('SNR','AGC','BER','dB','LOCK','Minimum','Maximum','Average','Lock losses'),
     'tuner-details': ('Tuner interfaces','Transponder','Recordings','Channel Information'),
@@ -72,6 +76,8 @@ TOPICS = {
     'network-mounts': ('NFS','CIFS','read-only'),
     'network-services': ('FTP','Telnet','VPN','Samba','NFS','Local ports'),
     'service-health': ('Check installed files','Package dependencies','Crash logs'),
+    'service-crashes': ('Crash logs','Check plugin dependencies','Check image compatibility'),
+    'service-plugins': ('Package manager','Installed version','Architecture'),
     'forum-report': ('Preview anonymous report','System Information','Crash logs'),
     'signal-quick': ('Signal','SNR','dB','LOCK','Audio:'),
     'transponder-services': ('Transponder','TV / Radio','/tmp'),

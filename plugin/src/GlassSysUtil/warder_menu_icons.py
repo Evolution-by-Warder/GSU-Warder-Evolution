@@ -8,12 +8,12 @@ CENTRE_ICONS={'system':'system','reception':'reception','storage':'storage',
               'network':'network','cam':'key','service':'service','warder':'ecosystem'}
 ROUTE_ICONS={
     'system-overview':'health','system-live':'trend','system-processes':'processes',
-    'system-log':'log','0':'info','1':'tv','signal-quick':'signal','signal-live':'history',
+    'system-log':'log','system-cpu':'system','0':'info','1':'tv','signal-quick':'signal','signal-live':'history',
     'tuner-details':'reception','transponder-services':'tv','tuner-native':'settings',
     'storage-overview':'storage','storage-categories':'memory','9':'swap',
     'network-overview':'network','network-test':'signal','network-interfaces':'network',
     'network-statistics':'trend','network-mounts':'storage','network-services':'service','2':'key','3':'key','4':'key',
-    '6':'info','7':'settings','8':'tv','service-health':'health','service-ipk':'package',
+    '6':'info','7':'settings','8':'tv','service-health':'health','service-crashes':'log','service-plugins':'package','service-ipk':'package',
     'forum-report':'clipboard','17':'service','16':'update','projects':'ecosystem',
     'FullHDGlass':'tv','PiconHub':'ecosystem','Warder Radio':'signal','YouTube':'tv','GSU':'system',
 }
