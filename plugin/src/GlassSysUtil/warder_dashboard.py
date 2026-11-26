@@ -59,6 +59,19 @@ def skin(width, height, mode):
         element('eLabel',834,406,960,2,backgroundColor='#00314b65',zPosition='-1')
         label('descriptions',834,425,960,486,28,'#00e2edf5',
               scrollbarMode='showOnDemand',valign='top')
+        # The same right-hand area can show six native cards instead of text.
+        # Card widgets are hidden together whenever a text report is selected.
+        for i in range(6):
+            x,y=834+(i%2)*488,425+(i//2)*130
+            element('widget',x,y,472,120,name='inline_bg%d'%i,
+                    backgroundColor='#00172539',transparent='0',zPosition='1',font='Regular;%d'%max(1,round(sy)))
+            label('inline_name%d'%i,x+14,y+5,444,34,25,'#00bcd2df',noWrap='1')
+            label('inline_value%d'%i,x+14,y+41,444,48,35,'#00ffffff',noWrap='1')
+            element('widget',x+14,y+98,444,9,name='inline_meter%d'%i,
+                    backgroundColor='#002f465a',foregroundColor=style.CYAN,
+                    borderWidth='0',transparent='0',zPosition='5')
+            label('inline_note%d'%i,x+14,y+90,444,28,20,'#00bcd2df',noWrap='1')
+        label('inline_summary',834,823,960,88,24,style.CYAN,valign='top')
     elif mode == 'overview':
         for index in range(6):
             col, row = index % 3, index // 3
