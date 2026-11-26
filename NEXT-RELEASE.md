@@ -1,3 +1,9 @@
+# 2026-11-26 — GSU PR #14 sixth legacy checkpoint
+
+Added 27 actual debugging, numeric validation and filesystem help strings across all 21 languages. 174 common + 137 supplementary keys (311 total). Remaining 124 direct literal candidates include protocol identifiers and paths. Numeric size syntax, ECM/EMM/CW, I/O, IFD and filesystem names preserved. Prior HEAD 7a34f259c2b1c602210c38915e542c90f7514bff passed 10/10 CI; latest HEAD requires fresh CI. No release or production feed changes.
+
+---
+
 # 2026-11-26 — GSU PR #14 fifth legacy checkpoint
 
 Added 32 real device, mount, filesystem, text editor and CAM/SRV menu labels in all 21 languages. 174 common + 110 supplementary keys (284 total); 151 remaining direct literal candidates, including technical identifiers. Previous HEAD `7a34f259c2b1c602210c38915e542c90f7514bff` had 7/10 CI success and 3 pending at review; no merge before full localization audit and fresh green CI. German/French Partition is a legitimate identical spelling. No release, feed or runtime behavior change.
