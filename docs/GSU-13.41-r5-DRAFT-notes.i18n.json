@@ -1,0 +1,27 @@
+{
+  "version": "13.41-r5",
+  "status": "draft",
+  "notes": {
+    "sk": "Rozšírenie na 21 jazykov vrátane hodín, dátumov a aktualizačných hlásení. Zlepšená správa životného cyklu obrazoviek. Nastavenia zostávajú zachované. Po aktualizácii reštartujte GUI.",
+    "en": "Expanded to 21 languages, including clocks, dates and update messages. Improved screen lifecycle management. Existing settings are preserved. Restart the GUI after updating.",
+    "cs": "Rozšíření na 21 jazyků včetně hodin, dat a hlášení aktualizací. Vylepšená správa životního cyklu obrazovek. Nastavení zůstávají zachována. Po aktualizaci restartujte GUI.",
+    "de": "Erweiterung auf 21 Sprachen einschließlich Uhrzeit, Datum und Update-Meldungen. Verbesserte Verwaltung des Bildschirmlebenszyklus. Einstellungen bleiben erhalten. Nach dem Update die GUI neu starten.",
+    "pl": "Rozszerzenie do 21 języków, w tym zegara, dat i komunikatów aktualizacji. Ulepszone zarządzanie cyklem życia ekranów. Ustawienia pozostają zachowane. Po aktualizacji uruchom ponownie GUI.",
+    "hu": "Bővítés 21 nyelvre, az órát, dátumokat és frissítési üzeneteket is beleértve. Javított képernyő-életciklus-kezelés. A beállítások megmaradnak. Frissítés után indítsd újra a GUI-t.",
+    "ru": "Поддержка расширена до 21 языка, включая часы, даты и сообщения об обновлении. Улучшено управление жизненным циклом экранов. Настройки сохраняются. После обновления перезапустите GUI.",
+    "fr": "Prise en charge étendue à 21 langues, y compris l’horloge, les dates et les messages de mise à jour. Gestion améliorée du cycle de vie des écrans. Les réglages sont conservés. Redémarrez l’interface après la mise à jour.",
+    "it": "Supporto esteso a 21 lingue, inclusi orologio, date e messaggi di aggiornamento. Migliorata la gestione del ciclo di vita delle schermate. Le impostazioni sono conservate. Riavviare la GUI dopo l’aggiornamento.",
+    "es": "Compatibilidad ampliada a 21 idiomas, incluidos reloj, fechas y mensajes de actualización. Gestión mejorada del ciclo de vida de las pantallas. Se conservan los ajustes. Reinicie la interfaz tras actualizar.",
+    "al": "Mbështetja zgjerohet në 21 gjuhë, duke përfshirë orën, datat dhe mesazhet e përditësimit. Menaxhim i përmirësuar i ciklit të jetës së ekraneve. Cilësimet ruhen. Rinisni ndërfaqen grafike pas përditësimit.",
+    "el": "Επέκταση σε 21 γλώσσες, συμπεριλαμβανομένων του ρολογιού, των ημερομηνιών και των μηνυμάτων ενημέρωσης. Βελτιωμένη διαχείριση του κύκλου ζωής των οθονών. Οι ρυθμίσεις διατηρούνται. Επανεκκινήστε το GUI μετά την ενημέρωση.",
+    "et": "Tugi on laiendatud 21 keelele, sealhulgas kell, kuupäevad ja uuendusteated. Täiustatud ekraanide elutsükli haldus. Seaded säilivad. Taaskäivita GUI pärast uuendamist.",
+    "fa": "پشتیبانی به ۲۱ زبان گسترش یافته است، از جمله ساعت، تاریخ و پیام‌های به‌روزرسانی. مدیریت چرخهٔ عمر صفحه‌ها بهبود یافته است. تنظیمات موجود حفظ می‌شوند. پس از به‌روزرسانی رابط گرافیکی را دوباره راه‌اندازی کنید.",
+    "lt": "Palaikymas išplėstas iki 21 kalbos, įskaitant laikrodį, datas ir naujinimo pranešimus. Patobulintas ekranų gyvavimo ciklo valdymas. Nustatymai išsaugomi. Po naujinimo paleiskite GUI iš naujo.",
+    "nl": "Uitgebreid naar 21 talen, inclusief klok, datums en updateberichten. Verbeterd beheer van de levenscyclus van schermen. Bestaande instellingen blijven behouden. Start de GUI na de update opnieuw.",
+    "pt": "Suporte alargado a 21 idiomas, incluindo relógio, datas e mensagens de atualização. Gestão melhorada do ciclo de vida dos ecrãs. As definições são preservadas. Reinicie a interface após a atualização.",
+    "ro": "Suport extins la 21 de limbi, inclusiv ceasul, datele și mesajele de actualizare. Gestionare îmbunătățită a ciclului de viață al ecranelor. Setările sunt păstrate. Reporniți interfața după actualizare.",
+    "tr": "Saat, tarihler ve güncelleme iletileri dahil 21 dile genişletildi. Ekran yaşam döngüsü yönetimi iyileştirildi. Ayarlar korunur. Güncellemeden sonra arayüzü yeniden başlatın.",
+    "uk": "Підтримку розширено до 21 мови, включно з годинником, датами та повідомленнями про оновлення. Поліпшено керування життєвим циклом екранів. Налаштування збережено. Після оновлення перезапустіть GUI.",
+    "zh": "语言支持扩展至 21 种，包括时钟、日期和更新提示。改进界面生命周期管理。保留现有设置。更新后请重启图形界面。"
+  }
+}

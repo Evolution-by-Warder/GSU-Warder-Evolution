@@ -55,7 +55,7 @@ MONTHS = {
     'ro': 'ianuarie|februarie|martie|aprilie|mai|iunie|iulie|august|septembrie|octombrie|noiembrie|decembrie'.split('|'),
     'tr': 'Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık'.split('|'),
     'uk': 'січня|лютого|березня|квітня|травня|червня|липня|серпня|вересня|жовтня|листопада|грудня'.split('|'),
-    'zh': '一月|二月|三月|四月|五月|六月|七月|八月|九月|十月|十一月|十二月'.split('|'),
+    'zh': '1月|2月|3月|4月|5月|6月|7月|8月|9月|10月|11月|12月'.split('|'),
 }
 
 
