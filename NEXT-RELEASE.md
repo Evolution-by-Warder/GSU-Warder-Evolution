@@ -1,3 +1,9 @@
+# 26.11.2026 — Preserve owning centres for legacy actions
+
+Following the owner-approved navigation rule, CentreMenu no longer closes itself to dispatch known legacy CAM/ECM, swap, OSD and update actions through the main screen. Existing controllers are opened as child screens; CCcam/OSCam keep original server-choice behavior, GSU update uses existing ProjectReport and canonical updater. No extra installer, scanner or controller. Legacy screen visual redesign/inline integration remains separate work; this change addresses back-stack ownership only. Regression verifies existing controller identity and update route. Predecessor `cd74dead62ea78a3cbd0e3f094fd0680fe9c4769` network expansion not yet fully CI-verified; fresh exact-head CI and receiver retest required. No production mutation.
+
+---
+
 # 26.11.2026 — Owner-approved expansion without duplicate network functions
 
 Previous HEAD `fd1ddfea7712ab33963d4994ced5c675a1bc477e`: OpenATV/OpenPLi/package SUCCESS, architecture in progress at initial inspection. Added four distinct passive network views to the existing network centre: interfaces (local IP/MAC/link/duplex/driver Wi-Fi readings), cumulative per-interface RX/TX bytes/packets/errors/drops, mounted remote filesystem local paths (never access remote filesystem or display source/credentials), and existing daemon observations plus local TCP listening/UDP unconnected port numbers (not service attribution or remote reachability). Reuses existing collectors, no separate live sampler, active connection test remains explicit. New menu labels and statistic terms in all 21 language catalogues; regression covers real fixture values, missing data, privacy and cancellation. DNS resolver-specific test, per-interface live history and further navigation/service/system work remain pending. No production changes.

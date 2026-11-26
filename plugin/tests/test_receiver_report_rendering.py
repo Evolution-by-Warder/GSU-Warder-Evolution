@@ -385,6 +385,27 @@ class ReceiverRenderingTests(unittest.TestCase):
         self.assertEqual(menu['list'].getCurrent()[0],'1')
         self.assertFalse(hasattr(menu,'result'))
 
+    def test_legacy_centre_children_preserve_parent_and_canonical_update(self):
+        session=MagicMock()
+        targets={name:MagicMock() for name in ('GlassSysInfoBrowser','channelInfoCenter',
+            'cccamInfo','cccamInfoChoiceServer','mboxInfo','ECMInfo','univCamMng','OSD_ECM_Menu','swap_manager')}
+        api=dict(self.api,**targets,countServers=lambda:(False,False))
+        routes={'0':'GlassSysInfoBrowser','1':'channelInfoCenter','2':'cccamInfoChoiceServer',
+            '4':'mboxInfo','6':'ECMInfo','7':'univCamMng','8':'OSD_ECM_Menu','9':'swap_manager'}
+        for key,name in routes.items():
+            self.ui.open_legacy_child(session,api,key)
+            session.open.assert_called_with(targets[name])
+        api['countServers']=lambda:(True,True)
+        self.ui.open_legacy_child(session,api,'2')
+        session.open.assert_called_with(targets['cccamInfo'])
+        with patch.object(mod('warder_oscam'),'open_workspace') as workspace:
+            self.ui.open_legacy_child(session,api,'3')
+            workspace.assert_called_once_with(session,api,select_server=False)
+        self.ui.open_legacy_child(session,api,'16')
+        self.assertIs(session.open.call_args.args[0],self.ui.ProjectReport)
+        self.assertEqual(session.open.call_args.args[2][0],'GSU')
+        self.assertEqual(self.ui.LEGACY_CHILDREN,set(routes)|{'3','16'})
+
     def test_menu_panels_are_disjoint_and_backings_cannot_cover_result(self):
         for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
             root=ET.fromstring(mod('warder_dashboard').skin(w,h,'menu'))

@@ -431,12 +431,8 @@ class CentreMenu(Screen):
                 self.request_result(row[0])
             elif row[0] in DIAGNOSTICS:
                 open_diagnostic(self.session, self.api, row[0])
-            elif row[0] in ('0','1'):
-                # Open the child above this centre instead of closing the centre
-                # and asking the main screen to dispatch it.
-                name={'0':'GlassSysInfoBrowser','1':'channelInfoCenter'}[row[0]]
-                target=self.api.get(name)
-                if callable(target):self.session.open(target)
+            elif row[0] in LEGACY_CHILDREN:
+                open_legacy_child(self.session,self.api,row[0])
             else:
                 self.close(row[0])
 
@@ -446,6 +442,31 @@ class CentreMenu(Screen):
             self.render()
         else:
             self.close(None)
+
+
+LEGACY_CHILDREN=frozenset(('0','1','2','3','4','6','7','8','9','16'))
+
+
+def open_legacy_child(session,api,key):
+    """Keep the owning centre alive; never dispatch through the hidden main menu."""
+    name={'0':'GlassSysInfoBrowser','1':'channelInfoCenter','4':'mboxInfo',
+          '6':'ECMInfo','7':'univCamMng','8':'OSD_ECM_Menu','9':'swap_manager'}.get(key)
+    if key in ('2','3'):
+        try:cc_local,os_local=api['countServers']()
+        except (KeyError,TypeError,OSError,ValueError,AttributeError):
+            from .warder_dialog import show_info
+            return show_info(session,api,for_api(api,'Unavailable'),for_api(api,'CAM / ECM centre'))
+        if key=='2':name='cccamInfo' if cc_local else 'cccamInfoChoiceServer'
+        else:
+            from .warder_oscam import open_workspace
+            return open_workspace(session,api,select_server=not os_local)
+    elif key=='16':
+        from .warder_projects import PROJECTS
+        return session.open(ProjectReport,api,next(p for p in PROJECTS if p[0]=='GSU'))
+    target=api.get(name)
+    if callable(target):return session.open(target)
+    from .warder_dialog import show_info
+    return show_info(session,api,for_api(api,'Unavailable'),for_api(api,'Unavailable'))
 
 
 def open_centre(screen, api, key):
