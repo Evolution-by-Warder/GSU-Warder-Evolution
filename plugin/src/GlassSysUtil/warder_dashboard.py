@@ -4,6 +4,7 @@ from . import warder_main as style
 
 
 PROCESS_COLUMNS=((16,155),(188,690),(895,125),(1045,225),(1290,340))
+INLINE_PROCESS_COLUMNS=((8,110),(126,410),(548,50),(610,150),(772,160))
 
 
 def dimensions(api):
@@ -72,6 +73,15 @@ def skin(width, height, mode):
                     borderWidth='0',transparent='0',zPosition='5')
             label('inline_note%d'%i,x+14,y+90,444,28,20,'#00bcd2df',noWrap='1')
         label('inline_summary',834,823,954,82,24,style.CYAN,valign='top')
+        for i,(offset,span) in enumerate(INLINE_PROCESS_COLUMNS):
+            label('inline_process_column%d'%i,834+offset,425,span,42,23,style.CYAN,noWrap='1',valign='center')
+        row_height=max(1,round(42*sy))
+        table=element('widget',834,475,960,426,name='inline_process_list',
+                scrollbarMode='showOnDemand',backgroundColor=style.PANEL,
+                foregroundColor='#00ffffff',foregroundColorSelected='#00ffffff',
+                backgroundColorSelected='#00203548',transparent='0',zPosition='3')
+        table.set('itemHeight',str(row_height))
+        table.set('size','%d,%d'%(round(960*sx),round(426*sy)//row_height*row_height))
     elif mode == 'overview':
         for index in range(6):
             col, row = index % 3, index // 3

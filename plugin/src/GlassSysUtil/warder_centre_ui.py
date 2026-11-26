@@ -117,6 +117,21 @@ def card_result(kind, value, tr):
     return None
 
 
+def process_rows(api,rows,columns,sx,sy,row_height):
+    """One data-to-native-row mapping for the compact and full process tables."""
+    content=[]
+    for pid,name,state,rss,cpu in rows:
+        values=(str(pid),name,str(state),'—' if rss is None else '%.1f'%(rss/1024),
+                '—' if cpu is None else '%.1f'%cpu)
+        row=[pid]
+        for i,((offset,span),value) in enumerate(zip(columns,values)):
+            row.append(api['MultiContentEntryText'](
+                pos=(round(offset*sx),0),size=(round(span*sx),round(row_height*sy)),
+                font=0,text=value,color=0xbcd2df if i==2 else 0xffffff))
+        content.append(row)
+    return content
+
+
 class CentreMenu(Screen):
     def __init__(self, session, api, entries, enabled, initial=None):
         self.width, self.height = dashboard.dimensions(api)
@@ -147,11 +162,17 @@ class CentreMenu(Screen):
                 self['inline_%s%d'%(field,i)]=Label('')
             self['inline_meter%d'%i]=api['ProgressBar']()
         self['inline_summary']=Label('')
+        self['inline_process_list']=api['ListboxSys2']([])
+        self['inline_process_list'].l.setFont(0,api['gFont']('Regular',round(24*self.height/1080)))
+        self['inline_process_list'].l.setItemHeight(round(42*self.height/1080))
+        for i,title in enumerate(('PID','Process Info','S','RAM (MiB)','CPU (%)')):
+            self['inline_process_column%d'%i]=Label(for_api(api,title) if i==1 else title)
+        self.process_visible=False
         self.hide_cards()
         self['actions'] = ActionMap(['WizardActions', 'ColorActions', 'SetupActions','DirectionActions'],
             {'ok':self.select, 'green':self.select, 'red':self.back, 'back':self.back, 'cancel':self.back,
              'yellow':self.refresh_result,'blue':self.full_result,
-             'left':self['descriptions'].pageUp,'right':self['descriptions'].pageDown,
+             'left':lambda:self.page_result(-1),'right':lambda:self.page_result(1),
              'up':self['list'].up,'down':self['list'].down}, -2)
         self.onLayoutFinish.append(self.render)
 
@@ -201,10 +222,38 @@ class CentreMenu(Screen):
             for field in ('bg','name','value','note','meter'):
                 self['inline_%s%d'%(field,i)].hide()
         self['inline_summary'].hide()
+        self.hide_process_table()
         self['descriptions'].show()
+
+    def hide_process_table(self):
+        self.process_visible=False
+        self['inline_process_list'].hide()
+        self['inline_process_list'].l.setList([])
+        for i in range(5):self['inline_process_column%d'%i].hide()
+
+    def show_process_table(self,rows):
+        self.hide_cards()
+        self['descriptions'].hide()
+        self.process_visible=True
+        widget=self['inline_process_list']
+        widget.l.setList(process_rows(self.api,rows,dashboard.INLINE_PROCESS_COLUMNS,
+            self.width/1920,self.height/1080,42))
+        widget.moveToIndex(0)
+        widget.show()
+        for i in range(5):self['inline_process_column%d'%i].show()
+        from time import strftime
+        self['result_status'].setText('%s · %s %d · RAM ↓'%(strftime('%H:%M:%S'),
+            for_api(self.api,'Total:'),len(rows)))
+
+    def page_result(self,direction):
+        if self.process_visible:
+            widget=self['inline_process_list']
+        else:widget=self['descriptions']
+        (widget.pageUp if direction<0 else widget.pageDown)()
 
     def show_cards(self,model):
         cards,summary=model
+        self.hide_process_table()
         self['descriptions'].hide()
         self.cards_visible=True
         for i,(title,value,meter,note) in enumerate(cards):
@@ -298,7 +347,9 @@ class CentreMenu(Screen):
                     text=''
                 from time import strftime
                 self['result_status'].setText(strftime('%H:%M:%S') if model or text.strip() else tr('Unavailable'))
-                if model:self.show_cards(model)
+                if not failed and key=='system-processes' and isinstance(value,list) and value and text.strip():
+                    self.show_process_table(value)
+                elif model:self.show_cards(model)
                 else:
                     self.hide_cards()
                     self['descriptions'].setText(text if text.strip() else tr('Unavailable'))
@@ -485,16 +536,7 @@ class Report(Screen):
     def display_process_table(self,rows):
         api=self.api
         sx,sy=self.width/1920,self.height/1080
-        content=[]
-        for pid,name,state,rss,cpu in rows:
-            values=(str(pid),name,str(state),'—' if rss is None else '%.1f'%(rss/1024),
-                    '—' if cpu is None else '%.1f'%cpu)
-            row=[pid]
-            for i,((offset,span),value) in enumerate(zip(dashboard.PROCESS_COLUMNS,values)):
-                row.append(api['MultiContentEntryText'](
-                    pos=(round(offset*sx),0),size=(round(span*sx),round(48*sy)),
-                    font=0,text=value,color=0xbcd2df if i==2 else 0xffffff))
-            content.append(row)
+        content=process_rows(api,rows,dashboard.PROCESS_COLUMNS,sx,sy,48)
         self['process_list'].l.setList(content)
         self['process_list'].moveToIndex(0)
         self.show_process_table(True)

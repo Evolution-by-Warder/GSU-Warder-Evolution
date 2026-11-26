@@ -1,3 +1,9 @@
+# 26.11.2026 — Native process table in right-hand centre panel
+
+Predecessor `62f37297312f713a657105d38aa9e3193e518fab` passed OpenATV, OpenPLi and reproducibility; architecture job still running at inspection. Replaced the compact process text preview with five aligned native columns (PID, name, state, measured RAM MiB, CPU %), actual values and unknown markers. Same data-to-row renderer as full detail; left/right pages the compact table while up/down retains navigation in the left menu. Blue opens existing full detail with CPU/RAM sorting, yellow refreshes. Table hidden and data cleared when leaving route, refreshing or replacing result; existing cancellation/stale callback gates retained. Added actual data, pagination and visibility regression. No production change; exact-head CI and physical retest required.
+
+---
+
 # 26.11.2026 — Warder selection dialogs and tuner warnings
 
 Predecessor `9f78bbc0aea039dec29ecf5f04d37934a796fa6a`: OpenPLi SUCCESS; remaining workflow families still running at inspection. Added scoped native list-based selection dialog for tuner details and compatibility tuner tool selector, preserving exact choice tuple identity (including None values), cancellation and callback semantics. GSU-generated recording protection, failed backup and unavailable tuning notices use the shared Warder information dialog. No additional opening confirmation, no new tuning/scan behavior, no global image changes; native third-party screens and destructive-operation confirmations remain intact. New tests cover selection identity, cancel, four resolutions plus 1920x1200 and actual blocked-tuner routing. Fresh CI and receiver check required. No production changes.

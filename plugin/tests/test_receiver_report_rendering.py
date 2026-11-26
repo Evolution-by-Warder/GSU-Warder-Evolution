@@ -432,6 +432,32 @@ class ReceiverRenderingTests(unittest.TestCase):
             self.assertTrue(menu['descriptions'].visible)
             self.assertFalse(menu['inline_bg0'].visible)
 
+    def test_inline_process_table_uses_actual_rows_and_clears_on_navigation(self):
+        ui=self.ui
+        menu=ui.CentreMenu(MagicMock(),self.api,[('system-processes','Process Info','processes'),
+            ('system-log','Log view','log')],{'system-processes':True,'system-log':True},'system')
+        menu.render()
+        rows=[(42,'enigma2','S',1536,12.5),(7,'kernel','R',None,None)]
+        with patch.object(ui,'deferToThread') as worker:
+            menu.select()
+            worker.return_value.addCallbacks.call_args.args[0](rows)
+            self.assertTrue(menu.process_visible)
+            self.assertFalse(menu['descriptions'].visible)
+            content=menu['inline_process_list'].l.list
+            self.assertEqual(content[0][0],42)
+            self.assertEqual([x['text'] for x in content[0][1:]],['42','enigma2','S','1.5','12.5'])
+            self.assertEqual([x['text'] for x in content[1][-2:]],['—','—'])
+            with patch.object(menu['inline_process_list'],'pageDown') as page:
+                menu.page_result(1);page.assert_called_once()
+            menu.refresh_result()
+            self.assertFalse(menu.process_visible)
+            worker.return_value.addCallbacks.call_args.args[0](rows)
+            menu['list'].moveToIndex(1);menu.describe()
+            self.assertFalse(menu.process_visible)
+            self.assertFalse(menu['inline_process_list'].visible)
+            self.assertTrue(menu['descriptions'].visible)
+            self.assertEqual(menu['inline_process_list'].l.list,[])
+
     def test_inline_storage_cards_do_not_show_percentages_for_partial_scans(self):
         ui=self.ui
         names=('Picons','Skins','Plugins','EPG','Cache','Logs')
