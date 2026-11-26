@@ -1,9 +1,12 @@
 name: Diagnostics package reproducibility
 on:
+  workflow_call:
   pull_request:
     paths:
       - 'plugin/**'
       - 'compatibility/verify-modern-migration.py'
+      - 'compatibility/publish-modern.py'
+      - '.github/workflows/gsu-modern-stable.yml'
       - '.github/workflows/diagnostics-reproducibility.yml'
 permissions:
   contents: read
@@ -14,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
@@ -23,7 +26,7 @@ jobs:
         run: git archive --format=tar.gz -o /tmp/gsu-build-inputs.tar.gz HEAD plugin
       - uses: actions/upload-artifact@v4
         with:
-          name: gsu-build-inputs-${{ github.event.pull_request.head.sha }}
+          name: gsu-build-inputs-${{ github.event.pull_request.head.sha || github.sha }}
           path: /tmp/gsu-build-inputs.tar.gz
           retention-days: 7
       - name: Compare two packages and measure installed file bytes
@@ -61,6 +64,17 @@ jobs:
             gh release download "v$version" --repo "$GITHUB_REPOSITORY" --pattern '*.ipk' --dir /tmp/gsu-history
           done
           python compatibility/verify-modern-migration.py upstream/opkg/src/opkg-cl /tmp/gsu-history /tmp/gsu-first/*.ipk
+      - name: Check the publication manifest against the migrated bytes
+        run: |
+          set -euo pipefail
+          cp /tmp/gsu-install.json /tmp/gsu-first/install.json
+          ar p /tmp/gsu-first/*.ipk data.tar.gz | python -c 'import sys,tarfile;print(sum(m.size for m in tarfile.open(fileobj=sys.stdin.buffer,mode="r|gz") if m.isfile()))' > /tmp/gsu-first/installed-bytes
+          python compatibility/publish-modern.py /tmp/gsu-first
+      - uses: actions/upload-artifact@v4
+        with:
+          name: verified-gsu-${{ github.event.pull_request.head.sha || github.sha }}
+          path: /tmp/gsu-first/
+          retention-days: 7
   sampler:
     name: Measure read-only sampler on ${{ matrix.runner }}
     runs-on: ${{ matrix.runner }}
@@ -71,6 +85,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
       - run: python3 compatibility/benchmark-diagnostics.py

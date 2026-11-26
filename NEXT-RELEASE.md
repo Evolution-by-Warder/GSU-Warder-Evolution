@@ -1,3 +1,9 @@
+# 26. 11. 2026 · príprava publikácie 0.41.5
+
+PR #16, commit 66e2962371ad71ed042fa0f7ee5aa49e79f98ff9. OpenATV 45780291483, OpenPLi 45780291593, reprodukcia a migrácia 45780291413 aj inštalátor 45780291582 uspeli. Lokálne 458 testov. Pri prvom zostavení emulátorových testov (45780291482) chýbali hlavičky cieľovej libc. Doplnené sú explicitné závislosti pre každú ABI a kontrola natívnych rozhraní OpenBH. Emuláciu evidujeme oddelene od meraní na fyzickom prijímači.
+
+Vydávací postup používa balík z úspešnej migrácie a vyžaduje zhodu vetvy, revízie, existujúcich historických feedov, tagu, verejného IPK aj súčtu. Oprávnenie na zápis má len produkčný job na main. Pri kolízii nemôže prepísať existujúci tag či verejný balík. Samotná príprava pracovnej vetvy feed neaktivuje. Ďalší krok je verifikácia presného HEAD a verejná kontrola po schválenom merge.
+
 # 26. 11. 2026 · diagnostika a ochrana zoznamu staníc
 
 Commit cf26ac4e881d110f6162507910d291d4967455ac v PR #16 prešiel OpenATV (45778734178), OpenPLi (45778734177), reprodukciou s migráciami a natívnym meraním x86_64/AArch64 (45778734238) a kontrolou inštalátora (45778734218).

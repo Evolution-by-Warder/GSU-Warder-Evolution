@@ -19,10 +19,13 @@ jobs:
         include:
           - abi: mips-linux-gnu
             qemu: mips
+            libc: mips
           - abi: mipsel-linux-gnu
             qemu: mipsel
+            libc: mipsel
           - abi: arm-linux-gnueabihf
             qemu: arm
+            libc: armhf
     steps:
       - uses: actions/checkout@v4
         with:
@@ -45,12 +48,13 @@ jobs:
           python-version: '3.11.14'
       - name: Build target interpreter and run measured sampler
         env:
+          LIBC: ${{ matrix.libc }}
           ABI: ${{ matrix.abi }}
           EMULATOR: ${{ matrix.qemu }}
         run: |
           set -euo pipefail
           sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends "gcc-$ABI" qemu-user
+          sudo apt-get install -y --no-install-recommends "gcc-$ABI" "libc6-dev-$LIBC-cross" qemu-user
           export CC="$ABI-gcc" AR="$ABI-ar" RANLIB="$ABI-ranlib"
           zlib="$RUNNER_TEMP/zlib"
           (cd upstream/zlib && CFLAGS="-O2 -fPIC" ./configure --static --prefix="$zlib" && make -j4 && make install)
@@ -58,3 +62,22 @@ jobs:
           CPPFLAGS="-I$zlib/include" LDFLAGS="-L$zlib/lib" ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no ./configure --build="$(gcc -dumpmachine)" --host="$ABI" --with-build-python="$(command -v python)"
           make -j4 >"$RUNNER_TEMP/build.log" 2>&1 || { tail -100 "$RUNNER_TEMP/build.log"; exit 1; }
           "qemu-$EMULATOR" -L "/usr/$ABI" ./python "$GITHUB_WORKSPACE/compatibility/benchmark-diagnostics.py"
+  openbh:
+    name: Native OpenBH diagnostic interfaces
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: BlackHole/enigma2
+          ref: Python3.14
+          path: upstream/openbh
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - run: python compatibility/check-diagnostic-interfaces.py upstream/openbh

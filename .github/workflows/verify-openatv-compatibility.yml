@@ -58,6 +58,7 @@ jobs:
         with:
           sparse-checkout: |
             plugin
+            compatibility
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}

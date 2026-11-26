@@ -345,7 +345,10 @@ class DiagnosticTests(unittest.TestCase):
             def geturl(self):return self.url
         def opener(url,timeout):
             name='stable.json' if url==projects.FEED_URL else 'stable-modern.json'
-            return Response(url,(ROOT.parents[1]/'update'/name).read_bytes())
+            blob=json.loads((ROOT.parents[1]/'update'/name).read_bytes())
+            if name=='stable-modern.json':
+                blob['release']=None
+            return Response(url,json.dumps(blob).encode())
         with patch.object(projects,'PROJECTS',projects.PROJECTS[-1:]), patch.object(projects,'installed',return_value='13.41-r5'):
             report=projects.report(str,'en',Event(),opener)
             self.assertIn('13.41-r6',report)
