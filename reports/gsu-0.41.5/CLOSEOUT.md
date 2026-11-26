@@ -48,3 +48,5 @@ Fyzické prijímače neboli počas prípravy 0.41.5 pripojené. Živý RF príje
 ## Oficiálny web
 
 Existujúci [PR #44](https://github.com/Evolution-by-Warder/YouTube-Warder-Evolution/pull/44) zosúladil katalóg aj produktový detail v slovenčine, angličtine, nemčine a ruštine. Prešli obsahové testy aj prehliadačové skúšky rozložení. GitHub Pages úspešne nasadil commit ae4cfd43707860e843edc98f22e2dbfc1b028e93. Popis galérie označuje snímky predchádzajúcej generácie rozhrania. [Nasadenie Pages](https://github.com/Evolution-by-Warder/YouTube-Warder-Evolution/actions/runs/45788135168) · [Živý web GSU](https://warder-evolution.eu/gsu.html)
+
+[Verejná kontrola vydania a oboch stránok po nasadení](https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/actions/runs/45788582576).

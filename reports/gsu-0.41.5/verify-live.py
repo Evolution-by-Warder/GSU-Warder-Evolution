@@ -46,6 +46,10 @@ def main():
     public=json.loads((HERE/'public-verification.json').read_text())
     report=get_json(RAW+GSU+'/main/plugin/update/stable-modern.json')
     release=report['release']
+    local=json.loads((HERE.parents[1]/'PRODUCTION.json').read_text())
+    assert local['release']==release
+    assert local['update_feeds'][0]==RAW+GSU+'/main/plugin/update/stable-modern.json'
+    assert set(local['feed_roles']['r6_compatibility'])=={RAW+GSU+'/'+branch+'/plugin/update/stable.json' for branch in ('main','original-python314')}
     assert report['channel']=='stable-modern' and release['tag']==TAG and release['version']==VERSION
     assert release['sha256']==public['public_sha256'] and release['bytes']==public['public_bytes']
     assert get_json(GH+GSU+'/git/ref/tags/'+TAG)['object']['sha']==public['source_commit']
