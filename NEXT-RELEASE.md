@@ -1,6 +1,6 @@
 ## 2026-11-26 — Owner-approved 21-language candidate (incomplete)
 
-Base `b3ba187fa26d9167eaae6f5f1160abc64dcb9996`; production remains v13.41-r4. First four new complete 141-key JSON catalogues (nl, pt, ro, tr) staged, exact key/format-placeholder check performed before commit. Runtime language list deliberately unchanged until remaining seven catalogues (al, el, et, fa, lt, uk, zh), calendar labels, aliases, update notes and tests are complete. No release or feed change. Do not merge this partial draft.
+Base `b3ba187fa26d9167eaae6f5f1160abc64dcb9996`; production remains v13.41-r4. Eight new complete 141-key JSON catalogues (nl, pt, ro, tr, al, el, et, lt) staged, exact key/format-placeholder check performed before commit. Runtime language list deliberately unchanged until remaining three catalogues (fa, uk, zh), calendar labels, aliases, update notes and tests are complete. No release or feed change. Do not merge this partial draft.
 
 ## Current checkpoint — 2026-11-02: common stable release completed
 
