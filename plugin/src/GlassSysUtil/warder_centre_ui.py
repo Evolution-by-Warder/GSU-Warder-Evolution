@@ -536,7 +536,7 @@ class Report(Screen):
                 self['network_title%d'%i]=Label('')
                 self['network_body%d'%i]=ScrollLabel('')
             self.show_network(False)
-        for name, key in [('heading',title), ('red','Back'), ('green','TV' if kind == 'transponder-services' else 'Details' if kind == 'system-processes' else ''), ('yellow','Refresh'),
+        for name, key in [('heading',title), ('red','Back'), ('green','TV' if kind == 'transponder-services' else 'Details' if kind in ('system-processes','service-crashes') else ''), ('yellow','Refresh'),
                           ('blue','Tuner interfaces' if kind == 'tuner-details' else 'Radio' if kind == 'transponder-services' else 'Save' if kind == 'forum-report' else 'CPU / RAM' if kind == 'system-processes' else '')]:
             self[name] = Label(self.tr(key))
         self['actions'] = ActionMap(['ColorActions','SetupActions','DirectionActions'],
@@ -731,6 +731,8 @@ class Report(Screen):
     def green_action(self):
         if self.kind=='transponder-services':
             return self.export_services('tv')
+        if self.kind=='service-crashes':
+            return self.choose_crash()
         if self.kind!='system-processes' or self.pending or self.cancelled.is_set() or not self.table_visible:return
         selected=self['process_list'].getCurrent()
         if not selected or selected[0] not in self.process_names:return
@@ -745,6 +747,41 @@ class Report(Screen):
         def failed(failure):
             done(self.tr('Unavailable'))
         try:deferToThread(process_memory,pid,self.process_names[pid],self.tr).addCallbacks(done,failed)
+        except (RuntimeError,TypeError,OSError):failed(None)
+
+    def choose_crash(self):
+        if self.pending or self.cancelled.is_set():return
+        from .warder_service import crash_inventory,crash_detail
+        from .warder_dialog import choose,show_info
+        self.pending=True
+        def failed(failure):
+            self.pending=False
+            if not self.cancelled.is_set():show_info(self.session,self.api,self.tr('Unavailable'),self.tr('Crash logs'))
+        def selected(item):
+            if self.cancelled.is_set() or self.pending or not item:return
+            payload=item[1]
+            if payload not in choices:return
+            self.pending=True
+            def done(value):
+                self.pending=False
+                if not self.cancelled.is_set():show_info(self.session,self.api,value or self.tr('Unavailable'),self.tr('Crash logs'))
+            try:deferToThread(crash_detail,*payload,self.tr,self.cancelled).addCallbacks(done,failed)
+            except (RuntimeError,TypeError,OSError):failed(None)
+        choices=[]
+        def listed(rows):
+            self.pending=False
+            if self.cancelled.is_set():return
+            if not rows:return failed(None)
+            from datetime import datetime
+            options=[]
+            for stamp,size,path,identity in rows:
+                payload=(path,identity)
+                choices.append(payload)
+                try:date=datetime.fromtimestamp(stamp).strftime('%Y-%m-%d %H:%M:%S')
+                except (OverflowError,OSError,ValueError):date='—'
+                options.append((date+' · '+path.name,payload))
+            choose(self.session,self.api,selected,self.tr('Crash logs'),options)
+        try:deferToThread(crash_inventory,self.cancelled).addCallbacks(listed,failed)
         except (RuntimeError,TypeError,OSError):failed(None)
 
     def action(self):

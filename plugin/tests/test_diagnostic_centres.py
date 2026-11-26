@@ -739,6 +739,28 @@ class DiagnosticTests(unittest.TestCase):
         runner.side_effect=subprocess.TimeoutExpired('resolver',4)
         self.assertIsNone(net.resolver_test(runner))
 
+    def test_selected_crash_tail_checks_identity_redacts_and_never_follows_symlink(self):
+        svc=module('warder_service')
+        with TemporaryDirectory() as folder:
+            root=Path(folder)
+            (root/'tmp').mkdir()
+            path=root/'tmp/enigma2_crash_a.log'
+            path.write_text('x'*40000+'\npassword=secret\nImportError: test')
+            (root/'tmp/enigma2_crash_link.log').symlink_to(path)
+            probe=module('warder_tools').Probe(root)
+            rows=svc.crash_inventory(Event(),probe)
+            self.assertEqual(len(rows),1)
+            identity=rows[0][3]
+            result=svc.crash_detail(path,identity,str,Event(),probe)
+            self.assertIn('ImportError',result)
+            self.assertIn('Check plugin dependencies',result)
+            self.assertIn('Partial result',result)
+            self.assertNotIn('secret',result)
+            self.assertIn('<redacted>',result)
+            path.write_text('changed')
+            self.assertEqual(svc.crash_detail(path,identity,str,Event(),probe),'Unavailable')
+            self.assertEqual(svc.crash_detail(root/'tmp/enigma2_crash_link.log',identity,str,Event(),probe),'Unavailable')
+
     def test_ping_loss_is_distinct_from_unsupported_ping(self):
         net=module('warder_network')
         good=MagicMock(return_value=SimpleNamespace(stdout='3 packets transmitted, 2 received, 33% packet loss\nrtt min/avg/max = 1.0/2.0/3.0 ms'))

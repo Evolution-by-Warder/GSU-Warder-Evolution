@@ -74,20 +74,26 @@ def crash_summary(p):
     return exceptions
 
 
-def crash_report(tr,cancelled,probe=None):
-    """Local, bounded recent crash summaries. Raw log text is not exported."""
+def crash_inventory(cancelled,probe=None):
+    """Bounded, most recent local regular crash files, shared by both views."""
     import stat
-    from datetime import datetime
     p=probe or Probe()
     candidates=[]
     for path in crash_files(p):
-        if cancelled.is_set():return ''
+        if cancelled.is_set():return []
         try:
             st=path.lstat()
-            if stat.S_ISREG(st.st_mode):candidates.append((st.st_mtime,st.st_size,path))
+            if stat.S_ISREG(st.st_mode):
+                candidates.append((st.st_mtime,st.st_size,path,(st.st_dev,st.st_ino,st.st_mtime_ns,st.st_size)))
         except OSError:continue
+    return sorted(candidates,key=lambda item:(-item[0],str(item[2])))[:10]
+
+
+def crash_report(tr,cancelled,probe=None):
+    """Local, bounded recent crash summaries. Raw log text is not exported."""
+    from datetime import datetime
     rows=[]
-    for timestamp,size,path in sorted(candidates,key=lambda item:(-item[0],str(item[2])))[:10]:
+    for timestamp,size,path,identity in crash_inventory(cancelled,probe):
         if cancelled.is_set():return ''
         name=crash_exception(read(path,32768,private_log=True))
         try:stamp=datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
@@ -133,3 +139,36 @@ def format_preview(raw,tr):
     rows.extend(('',tr('Temperature')+'    '+('—' if value['temperature_c'] is None else '%.1f °C'%value['temperature_c']),
                  '',tr('Crash logs'), '    '+(', '.join(value['crash_classes']) or '—')))
     return '\n'.join(rows)
+
+
+def crash_detail(path,identity,tr,cancelled,probe=None):
+    """Selected local crash tail only, recheck inventory and identity, redact secrets."""
+    import os,stat
+    from .warder_tools import redact
+    p=probe or Probe()
+    if cancelled.is_set():return ''
+    if not any(candidate==path and current==identity for _,_,candidate,current in crash_inventory(cancelled,p)):
+        return tr('Unavailable')
+    try:
+        fd=os.open(path,os.O_RDONLY|os.O_NONBLOCK|os.O_NOFOLLOW)
+        try:
+            st=os.fstat(fd)
+            if not stat.S_ISREG(st.st_mode) or (st.st_dev,st.st_ino,st.st_mtime_ns,st.st_size)!=identity:
+                return tr('Unavailable')
+            limit=32768
+            if st.st_size>limit:os.lseek(fd,-limit,os.SEEK_END)
+            raw=os.read(fd,limit)
+            final=os.fstat(fd)
+            if (final.st_dev,final.st_ino,final.st_mtime_ns,final.st_size)!=identity or b'\x00' in raw:
+                return tr('Unavailable')
+        finally:os.close(fd)
+    except OSError:return tr('Unavailable')
+    if cancelled.is_set():return ''
+    text=raw.decode('utf-8','replace')
+    name=crash_exception(text)
+    lines=[path.name]
+    if name:lines.append(name)
+    if name in CRASH_SUGGESTIONS:lines.append(tr(CRASH_SUGGESTIONS[name]))
+    if st.st_size>limit:lines.append(tr('Partial result')+' · 32 KiB')
+    lines.extend(('',redact(text)))
+    return '\n'.join(lines)

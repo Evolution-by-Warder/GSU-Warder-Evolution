@@ -55,7 +55,7 @@ class ReceiverRenderingTests(unittest.TestCase):
                 self.ui.open_diagnostic(session,self.api,kind)
                 session.open.assert_called_once_with(self.ui.Report,self.api,kind,routes[kind][0])
                 report=self.ui.Report(session,self.api,kind,routes[kind][0])
-                self.assertEqual(report['green'].getText(),report.tr('TV') if kind=='transponder-services' else report.tr('Details') if kind=='system-processes' else '')
+                self.assertEqual(report['green'].getText(),report.tr('TV') if kind=='transponder-services' else report.tr('Details') if kind in ('system-processes','service-crashes') else '')
                 report.done('Receiver content')
                 self.assertIn('Receiver content',report['file_info'].getText())
                 for value in ('',None,'   '):
@@ -174,6 +174,29 @@ class ReceiverRenderingTests(unittest.TestCase):
             report.green_action()
             report.cancelled.set()
             worker.return_value.addCallbacks.call_args.args[0]('late')
+            session.open.assert_not_called()
+
+    def test_crash_details_choose_existing_file_and_ignore_closed_screen(self):
+        from pathlib import Path
+        ui=self.ui
+        session=MagicMock()
+        report=ui.Report(session,self.api,'service-crashes','Crash logs')
+        path=Path('/tmp/enigma2_crash_a.log');identity=(1,2,3,4)
+        with patch.object(ui,'deferToThread') as worker:
+            report.green_action()
+            worker.assert_called_once_with(mod('warder_service').crash_inventory,report.cancelled)
+            worker.return_value.addCallbacks.call_args.args[0]([(0,4,path,identity)])
+            args=session.openWithCallback.call_args.args
+            callback=args[0]
+            item=args[-1][0]
+            self.assertEqual(item[1],(path,identity))
+            callback(('bad',(Path('/etc/passwd'),identity)))
+            self.assertEqual(worker.call_count,1)
+            callback(item)
+            worker.assert_called_with(mod('warder_service').crash_detail,path,identity,report.tr,report.cancelled)
+            done=worker.return_value.addCallbacks.call_args.args[0]
+            report.cancelled.set()
+            done('late')
             session.open.assert_not_called()
 
     def test_information_dialog_is_scoped_scrollable_and_has_no_confirmation(self):
