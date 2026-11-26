@@ -13,6 +13,7 @@ def load_notes(path, version, language):
         if not isinstance(notes, dict):
             return ""
         code = str(language).replace("-", "_").split("_")[0].lower()
+        code = {"sq":"al","gr":"el","cz":"cs","ua":"uk","cn":"zh"}.get(code,code)
         entries = document.get('entries')
         if isinstance(entries, list):
             blocks = []

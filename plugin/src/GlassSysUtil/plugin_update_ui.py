@@ -1,5 +1,5 @@
 """Shared automatic/manual update flow, with all network/package work off GUI."""
-from .i18n import for_api as _i18n_text
+from .i18n import for_api as _i18n_text, language as _i18n_language
 import queue
 import threading
 
@@ -90,7 +90,7 @@ class StartupUpdateCheck:
             if error:
                 pane.update_info(text(self.api,'Update check failed.')+'\n\n'+error)
             elif release:
-                language=self.api['config'].osd.language.value.split('_')[0]
+                language=_i18n_language(self.api['config'].osd.language.value)
                 notes=release.notes_i18n.get(language,release.notes)
                 message='GSU Warder Evolution\n\n'+text(self.api,'New version: %s\nInstalled version: %s\n\n%s\n\nInstall the update?')%(release.version,self.screen.readVersion(),notes)
                 pane.update_info(message,release,self)
@@ -99,7 +99,7 @@ class StartupUpdateCheck:
         if error:
             if self.manual:self.screen.session.open(MessageBox,text(self.api,'Update check failed.')+'\n\n'+error,type=MessageBox.TYPE_ERROR)
         elif release:
-            language=self.api['config'].osd.language.value.split('_')[0]
+            language=_i18n_language(self.api['config'].osd.language.value)
             notes=release.notes_i18n.get(language,release.notes)
             message='Glass System Utility Warder Evolution\n\n'+text(self.api,'New version: %s\nInstalled version: %s\n\n%s\n\nInstall the update?') % (release.version,self.screen.readVersion(),notes)
             self.screen.session.openWithCallback(lambda answer:self.answer(release,answer),UpdateOffer,message,self.api,default=False)

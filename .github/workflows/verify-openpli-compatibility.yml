@@ -41,7 +41,7 @@ jobs:
           name: gsu-OpenPLi-${{ matrix.upstream_ref }}
           path: /tmp/openpli-*.json
   regression:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:

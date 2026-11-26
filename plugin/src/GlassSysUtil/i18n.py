@@ -4,12 +4,14 @@ import gettext
 import json
 from pathlib import Path
 
-LANGUAGES=('en','sk','cs','de','pl','hu','ru','fr','it','es')
+LANGUAGES=('en','sk','cs','de','pl','hu','ru','fr','it','es','al','el','et','fa','lt','nl','pt','ro','tr','uk','zh')
+ALIASES={'sq':'al','gr':'el','cz':'cs','ua':'uk','cn':'zh'}
 ROOT=Path(__file__).parent
 
 
 def language(value):
     code=str(value or 'en').replace('-','_').split('_')[0].lower()
+    code=ALIASES.get(code,code)
     return code if code in LANGUAGES else 'en'
 
 

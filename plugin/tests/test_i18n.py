@@ -14,9 +14,10 @@ i18n=importlib.util.module_from_spec(spec);spec.loader.exec_module(i18n)
 
 
 class LocalizationTests(unittest.TestCase):
-    def test_all_ten_catalogs_have_common_keys_and_safe_format_arguments(self):
+    def test_all_twenty_one_catalogs_have_common_keys_and_safe_format_arguments(self):
         english=json.loads((ROOT/'locale/en.json').read_text())
-        self.assertGreaterEqual(len(english),100)
+        self.assertGreaterEqual(len(english),141)
+        self.assertEqual(len(i18n.LANGUAGES),21)
         for lang in i18n.LANGUAGES:
             values=json.loads((ROOT/'locale'/(lang+'.json')).read_text())
             self.assertFalse(set(english)-set(values),lang)
@@ -32,6 +33,9 @@ class LocalizationTests(unittest.TestCase):
         for code in ('xx_XX','../../sk',None,'en_GB'):
             self.assertEqual(i18n.translate('Settings',code),'Settings')
         self.assertEqual(i18n.translate('A missing sentence','ru'),'A missing sentence')
+        for alias,expected in (('sq_AL','al'),('gr-GR','el'),('cz_CZ','cs'),('ua_UA','uk'),('cn_CN','zh')):
+            self.assertEqual(i18n.language(alias),expected)
+            self.assertEqual(i18n.translate('Settings',alias),i18n.translate('Settings',expected))
         with patch('locale.setlocale',side_effect=AssertionError('global locale changed')):
             self.assertEqual(i18n.translate('Back','fr'),'Retour')
 
@@ -66,6 +70,21 @@ class LocalizationTests(unittest.TestCase):
             self.assertEqual(plugin._('Settings'),'Settings')
             self.assertEqual(plugin._warder_main.text(vars(plugin),'Settings'),'Settings')
             plugin.config.plugins.GlassSysUtil.par62.value=True
+
+    def test_calendar_covers_every_supported_language(self):
+        from datetime import datetime
+        plugin=load(ROOT)
+        main=plugin._warder_main
+        self.assertEqual(set(main.DAYS),set(i18n.LANGUAGES))
+        self.assertEqual(set(main.MONTHS),set(i18n.LANGUAGES))
+        for lang in i18n.LANGUAGES:
+            self.assertEqual(len(main.DAYS[lang]),7,lang)
+            self.assertEqual(len(main.MONTHS[lang]),12,lang)
+            day,date,clock,seconds=main.clock_values(datetime(2026,11,26,12,34,56),lang)
+            self.assertEqual(day,main.DAYS[lang][3])
+            self.assertIn('2026',date)
+            self.assertEqual((clock,seconds),('12:34',':56'))
+        self.assertEqual(main.clock_values(datetime(2026,11,26),'cn_CN')[1],'2026年11月26日')
 
     def test_translated_system_labels_keep_layout_and_data_separate(self):
         from xml.etree import ElementTree as ET
