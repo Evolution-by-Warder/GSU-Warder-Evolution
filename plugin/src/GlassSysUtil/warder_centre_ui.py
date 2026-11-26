@@ -104,7 +104,7 @@ def open_centre(screen, api, key):
 class Report(Screen):
     def __init__(self, session, api, kind, title):
         self.width,self.height=dashboard.dimensions(api)
-        mode={'system-processes':'process','storage-categories':'categories'}.get(kind,'detail')
+        mode={'system-processes':'process','storage-categories':'categories','network-overview':'network'}.get(kind,'detail')
         self.skin=dashboard.skin(self.width,self.height,mode)
         Screen.__init__(self, session)
         self.api, self.kind = api, kind
@@ -131,6 +131,13 @@ class Report(Screen):
                     self['category_%s%d'%(field,i)]=Label('')
                 self['category_meter%d'%i]=api['ProgressBar']()
             self.show_categories(False)
+        if kind=='network-overview':
+            self.network_focus=0
+            self.network_visible=False
+            for i in range(2):
+                self['network_title%d'%i]=Label('')
+                self['network_body%d'%i]=ScrollLabel('')
+            self.show_network(False)
         for name, key in [('heading',title), ('red','Back'), ('green','TV' if kind == 'transponder-services' else ''), ('yellow','Refresh'),
                           ('blue','Tuner interfaces' if kind == 'tuner-details' else 'Radio' if kind == 'transponder-services' else 'Save' if kind == 'forum-report' else 'CPU / RAM' if kind == 'system-processes' else '')]:
             self[name] = Label(self.tr(key))
@@ -181,7 +188,38 @@ class Report(Screen):
             (strftime('%H:%M:%S'),self.tr('Measured categories total'),total/1048576,
              '' if complete else ' · '+self.tr('Partial result')))
 
+    def show_network(self,visible):
+        if self.kind!='network-overview':return
+        self.network_visible=bool(visible)
+        for i in range(2):
+            for field in ('title','body'):
+                widget=self['network_%s%d'%(field,i)]
+                (widget.show if visible else widget.hide)()
+        (self['file_info'].hide if visible else self['file_info'].show)()
+
+    def network_titles(self):
+        titles=(self.tr('Network link'),self.tr('Default gateway')+' · DNS')
+        for i,title in enumerate(titles):
+            self['network_title%d'%i].setText(('› ' if i==self.network_focus else '  ')+title)
+
+    def display_network(self,panels):
+        self.network_focus=0
+        for i,body in enumerate(panels):
+            self['network_body%d'%i].setText(body or self.tr('Unavailable'))
+        self.network_titles()
+        self.show_network(True)
+        from time import strftime
+        self['report_status'].setText(strftime('%H:%M:%S'))
+
     def scroll(self,direction,page=False):
+        if getattr(self,'network_visible',False) is True:
+            if page:
+                self.network_focus=(self.network_focus+direction)%2
+                self.network_titles()
+            else:
+                widget=self['network_body%d'%self.network_focus]
+                (widget.pageUp if direction<0 else widget.pageDown)()
+            return
         if getattr(self,'table_visible',False):
             widget=self['process_list']
             method=('pageUp' if direction<0 else 'pageDown') if page else ('up' if direction<0 else 'down')
@@ -216,6 +254,7 @@ class Report(Screen):
         self.preview = None
         self.show_process_table(False)
         self.show_categories(False)
+        self.show_network(False)
         self['report_status'].setText(self.tr('Loading…'))
         self['file_info'].setText(self.tr('Loading…'))
         if self.kind == 'transponder-services':
@@ -251,8 +290,8 @@ class Report(Screen):
             from .warder_storage import report
             return report(tr,False)
         if kind.startswith('network-'):
-            from .warder_network import collect, summary, diagnostics
-            return summary(collect(include_addresses=True), tr) if kind == 'network-overview' else diagnostics(tr, self.cancelled)
+            from .warder_network import collect, overview_panels, diagnostics
+            return overview_panels(collect(include_addresses=True),tr) if kind=='network-overview' else diagnostics(tr,self.cancelled)
         if kind == 'forum-report':
             import json
             from .warder_service import forum_snapshot
@@ -275,8 +314,12 @@ class Report(Screen):
         if self.kind=='storage-categories' and isinstance(result,list) and len(result)==6:
             self.display_categories(result)
             return
+        if self.kind=='network-overview' and isinstance(result,tuple) and len(result)==2 and all(isinstance(v,str) for v in result):
+            self.display_network(result)
+            return
         self.show_process_table(False)
         self.show_categories(False)
+        self.show_network(False)
         # Never display an empty screen on a missing/empty result. Only a real
         # report may become an export preview.
         if not isinstance(result, str) or not result.strip():
@@ -305,6 +348,7 @@ class Report(Screen):
         if not self.cancelled.is_set():
             self.show_process_table(False)
             self.show_categories(False)
+            self.show_network(False)
             self['report_status'].setText(self.tr('Unavailable'))
             self['file_info'].setText(self.tr('Unavailable'))
 
