@@ -1,3 +1,59 @@
+# 26.11.2026 — Simplify restore after physical receiver feedback
+
+Owner screenshot 64d54a9 confirms 181 unchanged, zero incompatible, zero changed. Green Restore directly initiates standard restore or requests one password for private archive; no second green or native confirmation dialog. Preserve verified internal recovery and staged checks, no restore on navigation/OK. Keep final result, meaningful no-op status, compact project lines and disable repeat action until reselection. New UI regression tests and exact-head CI pending. Changed-setting restore and persistence after restart remain unverified. No production mutation.
+
+# 26.11.2026 — Owner-approved six-character backup password minimum
+
+Physical keyboard accepted on 7aad8c7. Reduce minimum from 12 to 6 consistently in editor, encryption and all 21 catalogs; retain maximum 128, existing encryption/KDF and double entry. Add boundary and actual encrypted roundtrip tests. Longer passwords recommended; separate draft, new CI pending.
+
+# 26.11.2026 — Owner feedback: full-width QWERTY and password visibility
+
+Classic YouTube-style keyboard, single active cell, fixed geometry, Aa case/symbol switch, blue Show/Hide password (masked by default, re-mask on hide, clear on close), 21 languages. Full printable ASCII and up to 128 characters displayed across three lines. Tests updated; exact-head CI and physical validation pending. Separate draft PR #20; no production changes.
+
+# 26.11.2026 — Keyboard color consistency and API compatibility
+
+Checked OpenATV and OpenPLi MenuList both delegate selectionEnabled to native setSelectionEnable. Use existing Warder palette for active/inactive cells; only accept integer native alignment flags (also supports test doubles). New exact-head CI and receiver test required.
+
+# 26.11.2026 — Receiver feedback: single-cell backup password cursor
+
+Owner screenshots show entire keyboard column marked. Disable native row highlighting, use explicit row/column coordinates and color only the current cell; keep characters and geometry fixed. Test four-way movement, wrapping and insertion. Separate backup draft PR #20; new CI and physical retest required.
+
+# 26.11.2026 — Staged restore responsiveness
+
+Previous d2836867 OpenATV/OpenPLi/package CI success, architecture running at inspection. Worker decrypts archive and saves verified local rollback; native prepare/recheck/apply stay on GUI thread. Recheck live and saved configuration plus Radio state before writing, refuse absent rollback. Confirmation and regression coverage added. No production change; exact-head CI and receiver test required.
+
+# 26.11.2026 — Fix atomic backup filename regression
+
+Exact predecessor 4ee7f702 failed OpenATV/OpenPLi regression tests with Invalid backup name; double hyphen in new writer corrected, validator retained, added name/inventory regression. No production change; fresh CI required.
+
+# 26.11.2026 — Restore safety and fresh receiver
+
+Previous b530b389 passed all four CI families. Pinned local/removable directory writes, temp file readback/fsync, atomic rename, rechecked mount identity, internal verified rollback prior to changes. Fresh installed Radio can restore absent state with documented defaults; no overwrite of corrupt state. Localized recovery result and tests for simulated USB removal/native write failure. Real hardware and exact-head CI remain pending; no claim of cross-file power-loss atomicity. Separate draft.
+
+# 26.11.2026 — Backup workspace visual usability and restore outcomes
+
+Previous 4631cb3 passed all four CI families. Existing product picons, readable archive date/time, preserved archive selection, explicit disjoint outcome counts per project and total from the same actual plan. Right-panel final report, rollback location and restart advice, no secret values. 21-language captions and regression tests. Exact-head CI and physical test remain open. Separate draft.
+
+# 26.11.2026 — Portable preferences and PiconHub profiles
+
+Expanded audited FullHDGlass appearance choices, GSU OSD preferences, PiconHub style/safe update method and satellite/provider/DTT/DAB selector fields. Validate against target installed catalog, exclude retired IPTV and replace-all deletion mode; device paths remain local. Exact predecessor source artifact 15124972304 independently verified: 10/10 backup tests pass including actual crypto. Corrected Spanish footer width failure and shortened long FR/DE labels. Current CI/physical receiver restore pending; separate draft only.
+
+# 26.11.2026 — Backup caption widths and crypto verification
+
+Predecessor 0b7a544 passed three workflow families and ARM/MIPS emulation; OpenBH reference-font check failed on Russian title length. Shorten RU/UK labels; extend existing width assertions to actual backup footer labels. Independently executed exact predecessor archive's seven backup tests with cryptography 46.0.4: all passed, including encrypted restore. Current GUI revision requires new CI and receiver validation. No production change.
+
+# 26.11.2026 — Private backup GUI
+
+Stacked draft PR #20: add standard/private creation choice, masked keyboard, repeated password confirmation, explicit unlock and authenticated preview, password reference cleanup, expected payload fingerprint on restore, provider self-test. 21-language captions and UI/preview regressions. Archive creation/unlock on worker; native restore remains main-thread and needs receiver latency validation. No production mutation.
+
+# 26.11.2026 — Private local backup backend
+
+Separate 0.41.7 draft PR #20: previous OpenATV/OpenPLi/package CI SUCCESS, architecture pending at inspection. Added optional AES-GCM/scrypt encrypted format for explicitly allowlisted YouTube API key and Radio favourites/custom lists. Reject plaintext private payloads before writes; encrypted rollback; no network, auto-install, OAuth tokens or arbitrary credentials. Masked GUI password entry, actual receiver crypto availability and full end-to-end testing still open. No production change.
+
+# 26.11.2026 — Portable backup workspace (separate development branch for 0.41.7)
+
+Owner approved a simple local Backup & Restore workspace. Added bounded portable settings selection, local storage destinations, integrity-checked JSON and explicit native restore with compatibility checks and a pre-restore snapshot. 21 localized caption sets, backend fixture tests. No credentials, tokens, whole settings file, remote mount or uploads in this first implementation. Optional private-data backup and receiver verification remain open. Does not change PR #19 or stable release. See docs/GSU-PORTABLE-BACKUP.md.
+
 # 26.11.2026 — Receiver feedback: inline quick signal
 
 Owner screenshot shows external QuickSignal overlay; explicitly requests the right panel instead. Reuse SignalMonitor, Tone and existing six-card UI with automatic one-second refresh only while selected. Preserve opt-in sound on blue, stop sampler/tone on hide/close/navigation. No external overlay from the menu. Added regressions; exact-head CI and physical retest required. No production change.

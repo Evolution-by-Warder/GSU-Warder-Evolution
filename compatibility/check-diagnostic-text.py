@@ -30,6 +30,7 @@ def measure():
             labels=[tr(s) for _,s,_ in CENTRES]+[tr(s) for s,_ in DIAGNOSTICS.values()]
             foot=[tr(s) for s in ('Back','Pause','Start','Open plugin','Refresh','Export CSV','Select','Save','Live monitoring','Tuner interfaces')]
             foot.extend((tr('Interval')+' · 5 s',tr('Warning')+' · '+tr('yes')))
+            foot.extend(tr(s) for s in ('Create backup','Restore backup','Storage location','Select projects','Unlock backup','Erase character'))
             for strings,limit,size in ((labels,round(552*w/1920),round(28*h/1080)),(foot,footer_width-8,footer_size)):
                 for label in strings:
                     actual=font(language,size).getlength(label)

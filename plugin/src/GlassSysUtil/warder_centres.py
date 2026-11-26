@@ -6,7 +6,7 @@ CENTRES = (
     ("network", "Network centre", ("network-overview", "network-interfaces", "network-statistics", "network-test", "network-mounts", "network-services")),
     ("cam", "CAM / ECM centre", ("2", "3", "4", "6", "7", "8")),
     ("service", "Service centre", ("service-smart", "service-health", "service-crashes", "service-plugins", "service-ipk", "forum-report", "17")),
-    ("warder", "Warder Evolution centre", ("projects", "16")),
+    ("warder", "Warder Evolution centre", ("projects", "project-backup", "16")),
 )
 
 # Titles and descriptions belong to the same catalogue used by the remote UI.
@@ -39,6 +39,7 @@ DIAGNOSTICS = {
     "transponder-services": ("Transponder services", "TV / Radio → /tmp"),
     "service-ipk": ("IPK · /tmp", "Package manager"),
     "projects": ("Stable releases", "Warder Evolution"),
+    "project-backup": ("Backup and restore", "Create backup"),
 }
 
 
@@ -93,6 +94,8 @@ TOPICS = {
 }
 
 def description(ident,tr,default=''):
+    if ident=='project-backup':
+        return tr('Portable settings only. Passwords and tokens are excluded.')
     if ident=='storage-largest':
         return tr('Press OK to scan selected local folders. No files are changed.')
     if ident=='system-overview':

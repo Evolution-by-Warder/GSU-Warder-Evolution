@@ -66,7 +66,7 @@ class ReceiverRenderingTests(unittest.TestCase):
                 report.cancelled.set()
                 report.done('late')
                 self.assertNotIn('late',report['file_info'].getText())
-        self.assertEqual(set(routes)-kinds,{'projects','signal-quick','system-overview','system-live','signal-live','tuner-native'})
+        self.assertEqual(set(routes)-kinds,{'projects','project-backup','signal-quick','system-overview','system-live','signal-live','tuner-native'})
 
     def test_all_five_project_reports_share_visible_layout_and_empty_state(self):
         for project in mod('warder_projects').PROJECTS:
