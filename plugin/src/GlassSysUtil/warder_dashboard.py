@@ -49,8 +49,8 @@ def skin(width, height, mode):
         # Separate navigation and result surfaces. Native ScrollLabel's parent
         # remains at z=0, so every opaque backing is strictly below it.
         for x,w in ((92,690),(806,1020)):
-            element('eLabel',x,286,w,650,backgroundColor=style.CYAN,zPosition='-2')
-            element('eLabel',x+2,288,w-4,646,backgroundColor=style.PANEL,zPosition='-1')
+            for bx,by,bw,bh in ((x,286,w,2),(x,934,w,2),(x,288,2,646),(x+w-2,288,2,646)):
+                element('eLabel',bx,by,bw,bh,backgroundColor=style.CYAN,zPosition='1')
         element('widget',108,304,658,612,name='list',scrollbarMode='showOnDemand',
                 backgroundColor=style.PANEL,foregroundColor='#00ffffff',
                 foregroundColorSelected='#00ffffff',backgroundColorSelected=style.SELECTION,zPosition='3')
