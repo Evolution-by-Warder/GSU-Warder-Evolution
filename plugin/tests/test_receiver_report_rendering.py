@@ -345,3 +345,20 @@ class ReceiverRenderingTests(unittest.TestCase):
             self.assertLessEqual(x+w,30)
             self.assertLessEqual(y+h,12)
         canvas.flush.assert_called_once()
+
+
+    def test_centre_and_project_rows_include_cached_navigation_picons(self):
+        ui=self.ui
+        api=dict(self.api,LoadPixmap=MagicMock(return_value=object()))
+        menu=ui.CentreMenu(MagicMock(),api,[('system-overview','System health check','health'),
+                             ('system-log','Log view','log')],{'system-overview':True,'system-log':True},'system')
+        menu.render()
+        for row in menu['list'].l.list:
+            self.assertEqual(len(row),3)
+            self.assertIn('png',row[2])
+        menu.render()
+        self.assertEqual(api['LoadPixmap'].call_count,2)
+        projects=ui.ProjectMenu(MagicMock(),api)
+        projects.render()
+        self.assertEqual(len(projects['list'].l.list),5)
+        self.assertTrue(all(len(row)==3 for row in projects['list'].l.list))
