@@ -478,6 +478,9 @@ def open_legacy_child(session,api,key):
         else:
             from .warder_oscam import open_workspace
             return open_workspace(session,api,select_server=not os_local)
+    elif key=='6':
+        from .warder_ecm import open_history
+        return open_history(session,api)
     elif key=='16':
         from .warder_projects import PROJECTS
         return session.open(ProjectReport,api,next(p for p in PROJECTS if p[0]=='GSU'))

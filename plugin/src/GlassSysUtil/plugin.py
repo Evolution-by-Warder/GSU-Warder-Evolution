@@ -922,9 +922,9 @@ def ECMparser(cl=21, *, full_cam=False):
         return
 
     try:
-        tmp = open('/tmp/ecm.info', 'r')
-        content = tmp.read()
-        tmp.close
+        with open('/tmp/ecm.info', 'r') as tmp:
+            content = tmp.read(65537)
+        if len(content)>65536:content=''
     except:
         content = ''
 
@@ -6539,6 +6539,8 @@ class ECMInfo(Screen):
         _warder_ecm.channel_picon(self,globals())
         self.runECMTimer.stop()
         (oscVer, typecam, system, caid, provider, provid, pid, using, adress, hops, share, ecmTime, coding, dcw0, dcw1) = ECMparser(cl=24, full_cam=True)
+        observer=getattr(self,'_warder_history_observer',None)
+        if callable(observer):observer(ecmTime if using!='unsupported CAs\n' else '')
         if not getattr(self,'_inline_ecm_display',False):
             oscVer=_warder_ecm.compact_cam_version(oscVer)
         if using == 'unsupported CAs\n':

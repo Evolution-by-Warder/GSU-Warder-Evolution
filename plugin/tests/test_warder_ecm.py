@@ -138,3 +138,54 @@ class InlineECMTests(unittest.TestCase):
         point=native.move.call_args.args[0]
         self.assertEqual((point.x(),point.y()),(1160,672))
         native.resize.assert_called_once()
+
+
+class ECMHistoryTests(unittest.TestCase):
+    def test_observed_ecm_updates_not_poll_count_and_channel_changes(self):
+        plugin=load(ROOT)
+        ui=plugin._warder_ecm
+        now=[0]
+        history=ui.ECMHistory(lambda:now[0])
+        history.observe('A',True,1,1,'0.300')
+        self.assertEqual(history.history.snapshot(),())
+        now[0]=5
+        history.observe('A',True,2,2,'0.300')
+        history.observe('A',True,2,2,'0.300')
+        self.assertEqual(len(history.history.snapshot()),1)
+        self.assertEqual(history.current,300)
+        now[0]=10
+        history.observe('A',True,3,4,'100 ms')
+        self.assertIsNone(history.current)
+        history.observe('A',True,4,4,'100 ms')
+        self.assertEqual(history.current,100)
+        self.assertEqual(len(history.history.snapshot()),2)
+        history.observe('B',True,4,4,'100 ms')
+        self.assertEqual(history.history.snapshot(),())
+        history.observe('B',False,5,5,'100 ms')
+        self.assertIsNone(history.current)
+        self.assertEqual(ui.milliseconds('0.123 s'),123)
+        self.assertEqual(ui.milliseconds('123 ms'),123)
+        self.assertIsNone(ui.milliseconds('123'))
+        self.assertIsNone(ui.milliseconds('unknown'))
+        self.assertIsNone(ui.milliseconds('99999 ms'))
+
+    def test_history_screen_uses_native_controller_and_bounded_layout(self):
+        plugin=load(ROOT)
+        ui=plugin._warder_ecm
+        session=MagicMock()
+        ui.open_history(session,vars(plugin))
+        klass=session.open.call_args.args[0]
+        self.assertTrue(issubclass(klass,plugin.ECMInfo))
+        screen=klass(session)
+        self.assertIn(screen.cleanup_history,screen.onClose)
+        self.assertIn(screen.suspend_history,screen.onHide)
+        for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
+            root=ET.fromstring(ui.history_skin(width,height))
+            for node in root:
+                x,y=map(int,node.get('position').split(','));w,h=map(int,node.get('size').split(','))
+                self.assertLessEqual(x+w,width)
+                self.assertLessEqual(y+h,height)
+                name=node.get('name') or node.get('source')
+                if name:self.assertIn(name,screen)
+        screen.cleanup_history()
+        self.assertTrue(screen._history_closed)
