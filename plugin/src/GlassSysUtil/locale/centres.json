@@ -82,7 +82,8 @@
     "PLS code": "PLS code",
     "FBC root": "FBC root",
     "FBC link": "FBC link",
-    "Measured categories total": "Measured categories total"
+    "Measured categories total": "Measured categories total",
+    "A channel backup will be created before opening the tool.": "A channel backup will be created before opening the tool."
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -167,7 +168,8 @@
     "PLS code": "Kód PLS",
     "FBC root": "Hlavný tuner FBC",
     "FBC link": "Prepojený tuner FBC",
-    "Measured categories total": "Súčet meraných kategórií"
+    "Measured categories total": "Súčet meraných kategórií",
+    "A channel backup will be created before opening the tool.": "Pred otvorením nástroja sa vytvorí záloha staníc."
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -252,7 +254,8 @@
     "PLS code": "Kód PLS",
     "FBC root": "Hlavní tuner FBC",
     "FBC link": "Připojený tuner FBC",
-    "Measured categories total": "Součet měřených kategorií"
+    "Measured categories total": "Součet měřených kategorií",
+    "A channel backup will be created before opening the tool.": "Před otevřením nástroje se vytvoří záloha stanic."
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -337,7 +340,8 @@
     "PLS code": "PLS-Code",
     "FBC root": "FBC-Haupttuner",
     "FBC link": "Verknüpfter FBC-Tuner",
-    "Measured categories total": "Summe der gemessenen Kategorien"
+    "Measured categories total": "Summe der gemessenen Kategorien",
+    "A channel backup will be created before opening the tool.": "Vor dem Öffnen wird eine Senderliste gesichert."
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -422,7 +426,8 @@
     "PLS code": "Kod PLS",
     "FBC root": "Główny tuner FBC",
     "FBC link": "Powiązany tuner FBC",
-    "Measured categories total": "Suma zmierzonych kategorii"
+    "Measured categories total": "Suma zmierzonych kategorii",
+    "A channel backup will be created before opening the tool.": "Przed otwarciem narzędzia zostanie utworzona kopia listy kanałów."
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -507,7 +512,8 @@
     "PLS code": "PLS-kód",
     "FBC root": "Elsődleges FBC tuner",
     "FBC link": "Kapcsolt FBC tuner",
-    "Measured categories total": "Mért kategóriák összesen"
+    "Measured categories total": "Mért kategóriák összesen",
+    "A channel backup will be created before opening the tool.": "Az eszköz megnyitása előtt mentés készül a csatornalistáról."
   },
   "ru": {
     "System centre": "Системный центр",
@@ -592,7 +598,8 @@
     "PLS code": "Код PLS",
     "FBC root": "Основной тюнер FBC",
     "FBC link": "Связанный тюнер FBC",
-    "Measured categories total": "Сумма измеренных категорий"
+    "Measured categories total": "Сумма измеренных категорий",
+    "A channel backup will be created before opening the tool.": "Перед открытием инструмента будет создана резервная копия списка каналов."
   },
   "fr": {
     "System centre": "Centre système",
@@ -677,7 +684,8 @@
     "PLS code": "Code PLS",
     "FBC root": "Tuner FBC principal",
     "FBC link": "Tuner FBC lié",
-    "Measured categories total": "Total des catégories mesurées"
+    "Measured categories total": "Total des catégories mesurées",
+    "A channel backup will be created before opening the tool.": "Une sauvegarde des chaînes sera créée avant l'ouverture de l'outil."
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -762,7 +770,8 @@
     "PLS code": "Codice PLS",
     "FBC root": "Tuner FBC principale",
     "FBC link": "Tuner FBC collegato",
-    "Measured categories total": "Totale delle categorie misurate"
+    "Measured categories total": "Totale delle categorie misurate",
+    "A channel backup will be created before opening the tool.": "Prima di aprire lo strumento verrà creata una copia dei canali."
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -847,7 +856,8 @@
     "PLS code": "Código PLS",
     "FBC root": "Sintonizador FBC principal",
     "FBC link": "Sintonizador FBC vinculado",
-    "Measured categories total": "Total de las categorías medidas"
+    "Measured categories total": "Total de las categorías medidas",
+    "A channel backup will be created before opening the tool.": "Se creará una copia de los canales antes de abrir la herramienta."
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -932,7 +942,8 @@
     "PLS code": "Kodi PLS",
     "FBC root": "Tuneri kryesor FBC",
     "FBC link": "Tuneri i lidhur FBC",
-    "Measured categories total": "Totali i kategorive të matura"
+    "Measured categories total": "Totali i kategorive të matura",
+    "A channel backup will be created before opening the tool.": "Para hapjes së mjetit do të krijohet një kopje rezervë e kanaleve."
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -1017,7 +1028,8 @@
     "PLS code": "Κωδικός PLS",
     "FBC root": "Κύριος δέκτης FBC",
     "FBC link": "Συνδεδεμένος δέκτης FBC",
-    "Measured categories total": "Σύνολο μετρημένων κατηγοριών"
+    "Measured categories total": "Σύνολο μετρημένων κατηγοριών",
+    "A channel backup will be created before opening the tool.": "Πριν ανοίξει το εργαλείο θα δημιουργηθεί αντίγραφο ασφαλείας των καναλιών."
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -1102,7 +1114,8 @@
     "PLS code": "PLS-kood",
     "FBC root": "FBC põhituuner",
     "FBC link": "Seotud FBC-tuuner",
-    "Measured categories total": "Mõõdetud kategooriate summa"
+    "Measured categories total": "Mõõdetud kategooriate summa",
+    "A channel backup will be created before opening the tool.": "Enne tööriista avamist luuakse kanalite varukoopia."
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -1187,7 +1200,8 @@
     "PLS code": "کد PLS",
     "FBC root": "تیونر اصلی FBC",
     "FBC link": "تیونر پیوندی FBC",
-    "Measured categories total": "مجموع دسته‌های اندازه‌گیری‌شده"
+    "Measured categories total": "مجموع دسته‌های اندازه‌گیری‌شده",
+    "A channel backup will be created before opening the tool.": "پیش از باز کردن ابزار، از فهرست کانال‌ها نسخهٔ پشتیبان تهیه می‌شود."
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -1272,7 +1286,8 @@
     "PLS code": "PLS kodas",
     "FBC root": "Pagrindinis FBC imtuvas",
     "FBC link": "Susietas FBC imtuvas",
-    "Measured categories total": "Išmatuotų kategorijų suma"
+    "Measured categories total": "Išmatuotų kategorijų suma",
+    "A channel backup will be created before opening the tool.": "Prieš atidarant įrankį bus sukurta atsarginė kanalų kopija."
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -1357,7 +1372,8 @@
     "PLS code": "PLS-code",
     "FBC root": "FBC-hoofdtuner",
     "FBC link": "Gekoppelde FBC-tuner",
-    "Measured categories total": "Totaal van gemeten categorieën"
+    "Measured categories total": "Totaal van gemeten categorieën",
+    "A channel backup will be created before opening the tool.": "Voordat het hulpmiddel wordt geopend, wordt een zenderback-up gemaakt."
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -1442,7 +1458,8 @@
     "PLS code": "Código PLS",
     "FBC root": "Sintonizador FBC principal",
     "FBC link": "Sintonizador FBC associado",
-    "Measured categories total": "Total das categorias medidas"
+    "Measured categories total": "Total das categorias medidas",
+    "A channel backup will be created before opening the tool.": "Será criada uma cópia de segurança dos canais antes de abrir a ferramenta."
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -1527,7 +1544,8 @@
     "PLS code": "Cod PLS",
     "FBC root": "Tuner FBC principal",
     "FBC link": "Tuner FBC asociat",
-    "Measured categories total": "Totalul categoriilor măsurate"
+    "Measured categories total": "Totalul categoriilor măsurate",
+    "A channel backup will be created before opening the tool.": "Înainte de deschiderea instrumentului se va crea o copie de rezervă a canalelor."
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -1612,7 +1630,8 @@
     "PLS code": "PLS kodu",
     "FBC root": "Ana FBC alıcısı",
     "FBC link": "Bağlı FBC alıcısı",
-    "Measured categories total": "Ölçülen kategorilerin toplamı"
+    "Measured categories total": "Ölçülen kategorilerin toplamı",
+    "A channel backup will be created before opening the tool.": "Araç açılmadan önce kanal listesi yedeklenecektir."
   },
   "uk": {
     "System centre": "Системний центр",
@@ -1697,7 +1716,8 @@
     "PLS code": "Код PLS",
     "FBC root": "Основний тюнер FBC",
     "FBC link": "Пов’язаний тюнер FBC",
-    "Measured categories total": "Сума виміряних категорій"
+    "Measured categories total": "Сума виміряних категорій",
+    "A channel backup will be created before opening the tool.": "Перед відкриттям інструмента буде створено резервну копію каналів."
   },
   "zh": {
     "System centre": "系统中心",
@@ -1782,6 +1802,7 @@
     "PLS code": "PLS 码",
     "FBC root": "FBC 主调谐器",
     "FBC link": "FBC 关联调谐器",
-    "Measured categories total": "已测量类别合计"
+    "Measured categories total": "已测量类别合计",
+    "A channel backup will be created before opening the tool.": "打开工具前将创建频道列表备份。"
   }
 }
