@@ -111,17 +111,17 @@ class Report(Screen):
         self.preview = None
         self['file_info'].setText(self.tr('Loading…'))
         if self.kind == 'transponder-services':
-            from enigma import eServiceCenter, eServiceReference
-            from .warder_services import services
             try:
+                from enigma import eServiceCenter, eServiceReference
+                from .warder_services import services
                 self.services = services(self.session.nav, eServiceCenter.getInstance(), eServiceReference)
                 self.done('\n'.join(name or ident for _, ident, name in self.services) or self.tr('Unavailable'))
-            except (RuntimeError, TypeError, ValueError, AttributeError):
+            except (RuntimeError, TypeError, ValueError, AttributeError, OSError, ImportError):
                 self.services = []
                 self.failed(None)
         elif self.kind == 'tuner-details':
-            from .warder_tuners import details
             try:
+                from .warder_tuners import details
                 self.done(details(self.session, self.api, self.tr, self.slot_number))
             except (AttributeError, RuntimeError, TypeError, OSError, ImportError):
                 self.failed(None)
@@ -156,6 +156,11 @@ class Report(Screen):
     def done(self, result):
         self.pending = False
         if self.cancelled.is_set():
+            return
+        # Never display an empty screen on a missing/empty result. Only a real
+        # report may become an export preview.
+        if not isinstance(result, str) or not result.strip():
+            self['file_info'].setText(self.tr('Unavailable'))
             return
         if self.kind == 'forum-report':
             self.preview = result
