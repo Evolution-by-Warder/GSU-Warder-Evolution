@@ -114,7 +114,10 @@
     "Timeshift": "Timeshift",
     "Timer recordings": "Timer recordings",
     "Instant recordings": "Instant recordings",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "Largest files",
+    "Selected local folders only": "Selected local folders only",
+    "Press OK to scan selected local folders. No files are changed.": "Press OK to scan selected local folders. No files are changed."
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -231,7 +234,10 @@
     "Timeshift": "Timeshift",
     "Timer recordings": "Časované nahrávky",
     "Instant recordings": "Okamžité nahrávky",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "Najväčšie súbory",
+    "Selected local folders only": "Len vybrané lokálne priečinky",
+    "Press OK to scan selected local folders. No files are changed.": "Stlačením OK prehľadáte vybrané lokálne priečinky. Žiadne súbory sa nemenia."
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -348,7 +354,10 @@
     "Timeshift": "Timeshift",
     "Timer recordings": "Časované nahrávky",
     "Instant recordings": "Okamžité nahrávky",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "Největší soubory",
+    "Selected local folders only": "Pouze vybrané místní složky",
+    "Press OK to scan selected local folders. No files are changed.": "Stisknutím OK prohledáte vybrané místní složky. Žádné soubory se nemění."
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -465,7 +474,10 @@
     "Timeshift": "Timeshift",
     "Timer recordings": "Timeraufnahmen",
     "Instant recordings": "Sofortaufnahmen",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "Größte Dateien",
+    "Selected local folders only": "Nur ausgewählte lokale Ordner",
+    "Press OK to scan selected local folders. No files are changed.": "OK drücken, um ausgewählte lokale Ordner zu durchsuchen. Es werden keine Dateien geändert."
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -582,7 +594,10 @@
     "Timeshift": "Timeshift",
     "Timer recordings": "Nagrania zaplanowane",
     "Instant recordings": "Nagrania natychmiastowe",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "Największe pliki",
+    "Selected local folders only": "Tylko wybrane foldery lokalne",
+    "Press OK to scan selected local folders. No files are changed.": "Naciśnij OK, aby przeszukać wybrane foldery lokalne. Żadne pliki nie są zmieniane."
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -699,7 +714,10 @@
     "Timeshift": "Időeltolás",
     "Timer recordings": "Időzített felvételek",
     "Instant recordings": "Azonnali felvételek",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "Legnagyobb fájlok",
+    "Selected local folders only": "Csak kijelölt helyi mappák",
+    "Press OK to scan selected local folders. No files are changed.": "Az OK gombbal kereshet a kijelölt helyi mappákban. A fájlok nem módosulnak."
   },
   "ru": {
     "System centre": "Системный центр",
@@ -816,7 +834,10 @@
     "Timeshift": "Таймшифт",
     "Timer recordings": "Записи по таймеру",
     "Instant recordings": "Мгновенные записи",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "Крупнейшие файлы",
+    "Selected local folders only": "Только выбранные локальные папки",
+    "Press OK to scan selected local folders. No files are changed.": "Нажмите OK для поиска в выбранных локальных папках. Файлы не изменяются."
   },
   "fr": {
     "System centre": "Centre système",
@@ -933,7 +954,10 @@
     "Timeshift": "Timeshift",
     "Timer recordings": "Enregistrements programmés",
     "Instant recordings": "Enregistrements immédiats",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "Fichiers les plus volumineux",
+    "Selected local folders only": "Dossiers locaux sélectionnés uniquement",
+    "Press OK to scan selected local folders. No files are changed.": "Appuyez sur OK pour analyser les dossiers locaux sélectionnés. Aucun fichier n’est modifié."
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -1050,7 +1074,10 @@
     "Timeshift": "Timeshift",
     "Timer recordings": "Registrazioni programmate",
     "Instant recordings": "Registrazioni immediate",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "File più grandi",
+    "Selected local folders only": "Solo cartelle locali selezionate",
+    "Press OK to scan selected local folders. No files are changed.": "Premere OK per esaminare le cartelle locali selezionate. Nessun file viene modificato."
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -1167,7 +1194,10 @@
     "Timeshift": "Timeshift",
     "Timer recordings": "Grabaciones programadas",
     "Instant recordings": "Grabaciones instantáneas",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "Archivos más grandes",
+    "Selected local folders only": "Solo carpetas locales seleccionadas",
+    "Press OK to scan selected local folders. No files are changed.": "Pulse OK para examinar las carpetas locales seleccionadas. No se modifica ningún archivo."
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -1284,7 +1314,10 @@
     "Timeshift": "Timeshift",
     "Timer recordings": "Regjistrimet me kohëmatës",
     "Instant recordings": "Regjistrimet e menjëhershme",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "Skedarët më të mëdhenj",
+    "Selected local folders only": "Vetëm dosjet lokale të zgjedhura",
+    "Press OK to scan selected local folders. No files are changed.": "Shtypni OK për të kontrolluar dosjet lokale të zgjedhura. Asnjë skedar nuk ndryshohet."
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -1401,7 +1434,10 @@
     "Timeshift": "Χρονική μετατόπιση",
     "Timer recordings": "Προγραμματισμένες εγγραφές",
     "Instant recordings": "Άμεσες εγγραφές",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "Μεγαλύτερα αρχεία",
+    "Selected local folders only": "Μόνο επιλεγμένοι τοπικοί φάκελοι",
+    "Press OK to scan selected local folders. No files are changed.": "Πατήστε OK για σάρωση των επιλεγμένων τοπικών φακέλων. Δεν αλλάζει κανένα αρχείο."
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -1518,7 +1554,10 @@
     "Timeshift": "Ajanihutus",
     "Timer recordings": "Taimerisalvestised",
     "Instant recordings": "Kiirsalvestised",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "Suurimad failid",
+    "Selected local folders only": "Ainult valitud kohalikud kaustad",
+    "Press OK to scan selected local folders. No files are changed.": "Valitud kohalike kaustade skannimiseks vajutage OK. Faile ei muudeta."
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -1635,7 +1674,10 @@
     "Timeshift": "تایم‌شیفت",
     "Timer recordings": "ضبط‌های زمان‌بندی‌شده",
     "Instant recordings": "ضبط‌های فوری",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "بزرگ‌ترین فایل‌ها",
+    "Selected local folders only": "فقط پوشه‌های محلی منتخب",
+    "Press OK to scan selected local folders. No files are changed.": "برای بررسی پوشه‌های محلی منتخب، OK را فشار دهید. هیچ فایلی تغییر نمی‌کند."
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -1752,7 +1794,10 @@
     "Timeshift": "Laiko poslinkis",
     "Timer recordings": "Suplanuoti įrašai",
     "Instant recordings": "Momentiniai įrašai",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "Didžiausi failai",
+    "Selected local folders only": "Tik pasirinkti vietiniai aplankai",
+    "Press OK to scan selected local folders. No files are changed.": "Paspauskite OK, kad patikrintumėte pasirinktus vietinius aplankus. Failai nekeičiami."
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -1869,7 +1914,10 @@
     "Timeshift": "Timeshift",
     "Timer recordings": "Timeropnamen",
     "Instant recordings": "Directe opnamen",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "Grootste bestanden",
+    "Selected local folders only": "Alleen geselecteerde lokale mappen",
+    "Press OK to scan selected local folders. No files are changed.": "Druk op OK om geselecteerde lokale mappen te doorzoeken. Er worden geen bestanden gewijzigd."
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -1986,7 +2034,10 @@
     "Timeshift": "Timeshift",
     "Timer recordings": "Gravações programadas",
     "Instant recordings": "Gravações instantâneas",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "Maiores ficheiros",
+    "Selected local folders only": "Apenas pastas locais selecionadas",
+    "Press OK to scan selected local folders. No files are changed.": "Prima OK para analisar as pastas locais selecionadas. Nenhum ficheiro é alterado."
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -2103,7 +2154,10 @@
     "Timeshift": "Timeshift",
     "Timer recordings": "Înregistrări programate",
     "Instant recordings": "Înregistrări instantanee",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "Cele mai mari fișiere",
+    "Selected local folders only": "Numai dosarele locale selectate",
+    "Press OK to scan selected local folders. No files are changed.": "Apăsați OK pentru a scana dosarele locale selectate. Niciun fișier nu este modificat."
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -2220,7 +2274,10 @@
     "Timeshift": "Zaman kaydırma",
     "Timer recordings": "Zamanlanmış kayıtlar",
     "Instant recordings": "Anlık kayıtlar",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "En büyük dosyalar",
+    "Selected local folders only": "Yalnızca seçili yerel klasörler",
+    "Press OK to scan selected local folders. No files are changed.": "Seçili yerel klasörleri taramak için OK tuşuna basın. Hiçbir dosya değiştirilmez."
   },
   "uk": {
     "System centre": "Системний центр",
@@ -2337,7 +2394,10 @@
     "Timeshift": "Таймшифт",
     "Timer recordings": "Записи за таймером",
     "Instant recordings": "Миттєві записи",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "Найбільші файли",
+    "Selected local folders only": "Лише вибрані локальні папки",
+    "Press OK to scan selected local folders. No files are changed.": "Натисніть OK для сканування вибраних локальних папок. Файли не змінюються."
   },
   "zh": {
     "System centre": "系统中心",
@@ -2454,6 +2514,9 @@
     "Timeshift": "时移",
     "Timer recordings": "定时录制",
     "Instant recordings": "即时录制",
-    "EPG": "EPG"
+    "EPG": "EPG",
+    "Largest files": "最大文件",
+    "Selected local folders only": "仅限选定的本地文件夹",
+    "Press OK to scan selected local folders. No files are changed.": "按 OK 扫描选定的本地文件夹。不会修改任何文件。"
   }
 }

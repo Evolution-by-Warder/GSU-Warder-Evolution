@@ -226,6 +226,37 @@ class DiagnosticTests(unittest.TestCase):
         cancel=Event();cancel.set()
         self.assertEqual(projects.report(str,'en',cancel,compact=True),'')
 
+    def test_largest_files_are_bounded_local_read_only_and_deduplicated(self):
+        storage=module('warder_storage')
+        with TemporaryDirectory() as folder:
+            p=storage.Probe(folder)
+            for directory in ('/media/hdd/movie','/media/hdd/movie/remote','/media/net/movie','/usr/share/enigma2','/etc/enigma2'):
+                p.path(directory).mkdir(parents=True,exist_ok=True)
+            for path,size in (('/media/hdd/movie/a.ts',8192),('/media/hdd/movie/b.ts',4096),
+                              ('/usr/share/enigma2/skin.xml',2048),('/media/hdd/movie/remote/private',32768),
+                              ('/media/net/movie/private',65536)):
+                p.path(path).write_bytes(b'x'*size)
+            os.link(p.path('/media/hdd/movie/a.ts'),p.path('/media/hdd/movie/link.ts'))
+            p.path('/usr/share/enigma2/link').symlink_to(p.path('/media/net/movie'),target_is_directory=True)
+            table=[('/dev/root','/','ext4',False),('/dev/sda1','/media/hdd','ext4',False),
+                   ('server:/private','/media/hdd/movie/remote','nfs',False),
+                   ('server:/private','/media/net','nfs',False)]
+            rows,complete=storage.largest_files(p,table,Event(),limit=3)
+            self.assertTrue(complete)
+            self.assertEqual([size for size,_ in rows],[8192,4096,2048])
+            self.assertNotIn('private',str(rows))
+            self.assertEqual(storage.largest_files(p,[],Event()),([],False))
+            self.assertFalse(storage.largest_files(p,table,Event(),budget=1)[1])
+            cancel=Event();cancel.set()
+            self.assertEqual(storage.largest_files(p,table,cancel),([],False))
+            with patch.object(storage,'mounts',return_value=table):
+                self.assertIn('Selected local folders only',storage.largest_report(str,Event(),p))
+                self.assertEqual(storage.largest_report(str,cancel,p),'')
+            self.assertEqual(p.path('/media/hdd/movie/b.ts').stat().st_size,4096)
+        ui=module('warder_centre_ui')
+        self.assertIn('storage-largest',ui.INLINE_REPORTS)
+        self.assertIn('storage-largest',ui.MANUAL_INLINE)
+
     def test_saved_storage_paths_are_read_only_allowlisted_and_do_not_follow_mounts(self):
         storage=module('warder_storage')
         with TemporaryDirectory() as folder:

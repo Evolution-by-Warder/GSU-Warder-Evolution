@@ -60,3 +60,7 @@ Ostré vydanie blokuje neukončené CI presného HEAD a požadovaný fyzický re
 
 - Existujúci prehľad sieťových služieb rozlišuje listenery OpenWebif podľa už načítaného natívneho modulu `Plugins.Extensions.OpenWebif.httpserver` a jeho aktívnych Twisted handle objektov. Všeobecný zoznam lokálnych portov zostáva nezávislý. Neimportuje ani nespúšťa server, nečíta autentifikačné nastavenia a neodosiela sieťové požiadavky. Nepodporované implementácie sú neznáme; nejde o potvrdenie dostupnosti z LAN ani autentifikácie.
 - Referencia: [OpenWebif httpserver.py](https://github.com/E2OpenPlugins/e2openplugin-OpenWebif/blob/master/plugin/httpserver.py). Pridaná regresia pre vlastné porty, duplicitné a neaktívne handle objekty, neznámy stav a nesúvisiaci port 80. CI nového HEAD a fyzická validácia zostávajú otvorené.
+
+### Rebríček veľkých súborov
+
+- Existujúce centrum Pamäť a úložisko obsahuje samostatný výsledok Najväčšie súbory, najviac 20 položiek podľa logickej veľkosti. Len vybrané lokálne priečinky Enigma2, picony a známe lokálne médiá (movie/timeshift/logs); nie celé disky. Výslovná akcia OK/Obnoviť, pretože čítanie adresárov môže zobudiť HDD. Limity 15 000 položiek, 2 sekundy medzi operáciami, 32 úrovní; čiastočný výsledok výslovne označený. Bez sledovania symlinkov, prechodu vnorených mountov, sieťových ciest, čítania obsahu alebo mazania. Testy pokrývajú poradie, hardlinky, limity a zrušenie. 21 jazykov. Fyzický retest a CI presného HEAD zostávajú.

@@ -1,3 +1,7 @@
+# 26.11.2026 — Bounded local largest-files report
+
+Predecessor `41aa58a8019a88b6526249e876f5ac6f18747fbb`: OpenATV, OpenPLi and reproducible IPK SUCCESS; architecture still running at inspection. Added an explicit on-demand storage report for up to 20 largest logical file sizes, selected local folders only, with entry/time/depth limits, cancellation and incomplete marker. No full-disk crawl, remote mounts, symlink traversal, file contents or writes. Reused existing storage category/profile paths, worker and split result panel. All 21 translations and regression fixtures added. No production mutation; exact-head CI and receiver retest required.
+
 # 26.11.2026 — OpenWebif native listener attribution
 
 Predecessor `83626b2cf03bbba726d01727f022992b27b6cd05`: OpenATV and OpenPLi SUCCESS, architecture and package reproduction in progress at inspection. Existing Network services report now observes connected native OpenWebif listener handles without importing the plugin, invoking reactor methods, reading credentials or sending requests. Generic local port observations remain independent; unsupported native layouts stay unknown. Reused existing localized status labels across all 21 catalogues. Added fixture regression; fresh exact-head CI and physical receiver retest required. No production change.

@@ -2,7 +2,7 @@
 CENTRES = (
     ("system", "System centre", ("system-overview", "system-live", "system-cpu", "system-processes", "system-log", "0")),
     ("reception", "Reception centre", ("signal-quick", "signal-live", "1", "tuner-details", "transponder-services", "tuner-native")),
-    ("storage", "Memory and storage", ("storage-overview", "storage-memory", "storage-categories", "storage-activity", "9")),
+    ("storage", "Memory and storage", ("storage-overview", "storage-memory", "storage-categories", "storage-largest", "storage-activity", "9")),
     ("network", "Network centre", ("network-overview", "network-interfaces", "network-statistics", "network-test", "network-mounts", "network-services")),
     ("cam", "CAM / ECM centre", ("2", "3", "4", "6", "7", "8")),
     ("service", "Service centre", ("service-smart", "service-health", "service-crashes", "service-plugins", "service-ipk", "forum-report", "17")),
@@ -23,6 +23,7 @@ DIAGNOSTICS = {
     "storage-overview": ("Memory and storage", "SMART · RAM · HDD · USB"),
     "storage-categories": ("Space by category", "Picon storage"),
     "storage-memory": ("Memory details", "RAM · Swap"),
+    "storage-largest": ("Largest files", "Selected local folders only"),
     "storage-activity": ("Disk activity", "R/W · IOPS"),
     "network-test": ("Connection test", "HTTPS · RTT"),
     "network-interfaces": ("Network interfaces", "LAN · Wi-Fi"),
@@ -92,6 +93,8 @@ TOPICS = {
 }
 
 def description(ident,tr,default=''):
+    if ident=='storage-largest':
+        return tr('Press OK to scan selected local folders. No files are changed.')
     if ident=='system-overview':
         return tr('This view provides an overview of: %s.') % tr('CPU load, RAM and swap usage, free flash and disk space, temperature and resource status')
     if ident=='system-processes':

@@ -13,10 +13,10 @@ from .i18n import for_api, language
 # Read-only result routes. Actions changing tuner state or configuration remain
 # explicit native screens; graphs and full-size tables remain available in Details.
 INLINE_REPORTS=frozenset(('system-overview','system-processes','system-log','system-cpu',
-    'tuner-details','transponder-services','storage-overview','storage-categories','storage-memory','storage-activity',
+    'tuner-details','transponder-services','storage-overview','storage-categories','storage-memory','storage-activity','storage-largest',
     'network-overview','network-test','network-interfaces','network-statistics','network-mounts','network-services','service-health','service-smart','service-crashes','service-plugins','service-ipk','forum-report','17'))
 # Explicit actions must never run merely because the cursor passes over them.
-MANUAL_INLINE=frozenset(('17','network-test'))
+MANUAL_INLINE=frozenset(('17','network-test','storage-largest'))
 NATIVE_REPORTS=frozenset(('tuner-details','transponder-services'))
 
 
@@ -33,6 +33,9 @@ def collect_report(kind,tr,cancelled,cpu_order=False):
     if kind=='storage-memory':
         from .warder_storage import memory_report
         return memory_report(tr,cancelled)
+    if kind=='storage-largest':
+        from .warder_storage import largest_report
+        return largest_report(tr,cancelled)
     if kind=='storage-activity':
         from .warder_storage import disk_activity
         return disk_activity(tr,cancelled)

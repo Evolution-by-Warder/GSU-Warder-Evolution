@@ -302,3 +302,106 @@ def configured_storage_paths(p):
         ('Timer recordings',values.get(keys[5])),
         ('Instant recordings',values.get(keys[6])),
     )
+
+
+# Explicit, local-only top files analysis; sizes are logical file lengths.
+LOCAL_FILE_SYSTEMS=frozenset(('ext2','ext3','ext4','xfs','btrfs','f2fs','vfat','exfat','ntfs','ntfs3','jffs2','ubifs','overlay','rootfs','squashfs','cramfs'))
+
+def largest_files(p, table, cancelled, budget=15000, seconds=2, limit=20, clock=time.monotonic):
+    """Bounded scan of dedicated folders. Never traverse a separate mount or link."""
+    import heapq
+    if cancelled.is_set():
+        return [],False
+    mountmap={target:(device,kind) for device,target,kind,_ in table}
+    if '/' not in mountmap or mountmap['/'][1] not in LOCAL_FILE_SYSTEMS:
+        return [],False
+    local=[target for target,(device,kind) in mountmap.items()
+           if device.startswith('/dev/') and kind in LOCAL_FILE_SYSTEMS
+           and target.startswith(('/media/','/mnt/'))]
+    roots=[]
+    for target in sorted(local):
+        roots.extend(target.rstrip('/')+'/'+suffix for suffix in ('movie','timeshift','picon','XPicons/picon','ZZPicons/picon','logs'))
+    roots.extend(path for _,paths in CATEGORIES for path in paths)
+    roots.extend(configured_picons(p,local))
+    # Longest mount prefix determines ownership, including nested remote/bind mounts.
+    def owner(path):
+        return max((m for m in mountmap if m=='/' or path==m or path.startswith(m.rstrip('/')+'/')),key=len)
+    def permitted(path):
+        m=owner(path)
+        return m=='/' or m in local
+    deadline=clock()+seconds
+    visited=0
+    complete=True
+    seen=set()
+    heap=[]
+    def stopped():
+        return cancelled.is_set() or visited>=budget or clock()>=deadline
+    def walk(node,relative,device,depth=0):
+        nonlocal visited,complete
+        if stopped():
+            complete=False
+            return False
+        visited+=1
+        try:
+            info=node.lstat()
+            if info.st_dev!=device or stat.S_ISLNK(info.st_mode):
+                return True
+            key=(info.st_dev,info.st_ino)
+            if key in seen:
+                return True
+            if stat.S_ISREG(info.st_mode):
+                seen.add(key)
+                if relative.isprintable() and info.st_size>0:
+                    item=(info.st_size,relative)
+                    if len(heap)<limit:heapq.heappush(heap,item)
+                    elif item>heap[0]:heapq.heapreplace(heap,item)
+            elif stat.S_ISDIR(info.st_mode):
+                seen.add(key)
+                if depth>=32:
+                    complete=False
+                    return True
+                with os.scandir(node) as children:
+                    for child in children:
+                        if stopped():
+                            complete=False
+                            return False
+                        target=relative.rstrip('/')+'/'+child.name
+                        if target in mountmap:continue
+                        if not walk(node/child.name,target,device,depth+1):return False
+        except FileNotFoundError:
+            pass
+        except OSError:
+            complete=False
+        return True
+    if limit<=0:return [],False
+    for path in dict.fromkeys(roots):
+        if stopped():
+            complete=False
+            break
+        if not permitted(path) or path in mountmap:continue
+        node=p.path(path)
+        try:
+            # Inspect ancestors top-down. Do not stat through a symlink.
+            chain=list(reversed(node.parents))
+            if any(parent.is_symlink() for parent in chain+[node]):continue
+            info=node.lstat()
+            if info.st_dev!=p.path(owner(path)).lstat().st_dev:continue
+        except FileNotFoundError:continue
+        except OSError:
+            complete=False
+            continue
+        if not walk(node,path,info.st_dev):break
+    return sorted(heap,reverse=True),complete and not cancelled.is_set()
+
+
+def largest_report(tr,cancelled,probe=None):
+    p=probe or Probe()
+    rows,complete=largest_files(p,mounts(p),cancelled)
+    if cancelled.is_set():return ''
+    lines=[tr('Selected local folders only')]
+    if not complete:lines.append(tr('Partial result'))
+    if not rows:lines.append(tr('Files')+'   '+('0' if complete else '—'))
+    for size,path in rows:
+        value='%.2f GiB'%(size/1073741824) if size>=1073741824 else '%.1f MiB'%(size/1048576) if size>=1048576 else '%d KiB'%max(1,(size+1023)//1024)
+        lines.extend(('',value,path))
+    return '\n'.join(lines)
