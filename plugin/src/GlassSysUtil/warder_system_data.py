@@ -193,3 +193,44 @@ def cpu_details(tr,cancel,p=None):
     except (ValueError,IndexError,OverflowError):shown='—'
     rows.extend(('',tr('Uptime')+'   '+shown))
     return '\n'.join(rows).strip()
+
+
+def smart_diagnostics(tr,cancel,p=None):
+    """Reuse resource checks, local network observations and installation health."""
+    from .warder_network import collect
+    from .warder_service import health
+    from .warder_storage import mounts,disks
+    p=p or Probe()
+    result=overview(p)
+    rows=[]
+    for check in result['checks']:
+        value=check['available_percent']
+        rows.append('%s   ·   %s   ·   %s'%(tr(check['name']),
+            tr({'ok':'Ready','warning':'Warning','critical':'Critical','unknown':'Not exposed'}[check['state']]),
+            '—' if value is None else '%.1f %%'%value))
+    score=result['health']
+    rows.extend((tr('Resource score')+'   '+('—' if score['score'] is None else str(score['score'])+'/100'),
+                 tr('Measured checks')+'   %d/%d (RAM / Flash)'%score['coverage']))
+    if score['state'] in ('warning','critical'):rows.append(tr('Review memory and storage'))
+    if cancel.is_set():return ''
+    rows.append('')
+    for target,device,fs,ro,usage in disks(p,mounts(p)):
+        if cancel.is_set():return ''
+        if target=='/':continue  # Flash is already covered.
+        check=resource_check(target,usage.total if usage else None,usage.free if usage else None)
+        value=check['available_percent']
+        rows.append('%s   ·   %s   ·   %s'%(target,
+            tr({'ok':'Ready','warning':'Warning','critical':'Critical','unknown':'Not exposed'}[check['state']]),
+            '—' if value is None else '%.1f %%'%value))
+        if ro:rows.append(tr('read-only'))
+    if cancel.is_set():return ''
+    net=collect(p)
+    active=[row['name'] for row in net['interfaces'] if row['state']=='up']
+    rows.extend(('',tr('Network link')+'   '+(', '.join(active) or tr('Not exposed')),
+                 tr('Default gateway')+'   '+(', '.join(net['gateways']) or '—'),
+                 tr('DNS configuration')+'   '+(', '.join(net['dns']) or '—')))
+    temperatures=p.temperatures(p.sensor_paths())
+    rows.append(tr('Temperature')+'   '+('%.1f °C'%max(s['celsius'] for s in temperatures) if temperatures else '—'))
+    if cancel.is_set():return ''
+    rows.extend(('',health(tr,p),'',tr('This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.')))
+    return '' if cancel.is_set() else '\n'.join(rows)

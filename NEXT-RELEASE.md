@@ -1,3 +1,9 @@
+# 26.11.2026 — Extend memory/storage and compose existing Smart Diagnostics
+
+Added read-only memory field details and a one-second whole-device diskstats sample (read/write KiB/s and IOPS); no disk wake-up, benchmarks or new persistent workers. Reuses memory parser and existing storage module. Smart Diagnostics combines existing resource checks, mounted local disk capacities, network link/DNS configuration, temperature observations and existing installation health; score remains explicitly RAM/flash only with measured coverage. It does not claim internet/DNS resolution, disk integrity or CAM decoding tests; no auto-repair. Two new menu labels translated in all 21 languages, Smart Diagnostics retained as product name. New fixture tests verify units, unknown data and shared checks. Predecessor channel layout CI still in progress at inspection. Physical receiver and exact-head CI required; no publication. Remaining: ECM event history, detailed SMART attributes, optional PSS and legacy inline visual work; not silently marked finished.
+
+---
+
 # 26.11.2026 — Channel information: align existing data, improve legibility
 
 Previous exact HEAD `e750579b266fc0200852feced85fed0e5406d652` passed OpenATV/OpenPLi and reproducibility, architecture running at inspection. Reworked existing channel skin into bounded ECM, bitrate, picon, signal and transponder panels without a new controller. Increased transponder value space and multi-line CAID capacity, aligned labels/values, compacted CAM commit suffix, kept all picons, original native frontend and service converters and bitrate lifecycle. Horizontal SNR/AGC bars and stacked metrics; native source coordinates normalized by original skin size, not target resolution. No new translations or external dependencies. Regression covers five resolutions and CAID preservation. Full raw ECM information remains in ECM centre. Exact-head CI and physical receiver check required; no release mutation.

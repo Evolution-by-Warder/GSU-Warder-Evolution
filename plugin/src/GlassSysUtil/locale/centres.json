@@ -97,7 +97,10 @@
     "Dropped packets": "Dropped packets",
     "Local ports": "Local ports",
     "CPU details": "CPU details",
-    "Installed plugin packages": "Installed plugin packages"
+    "Installed plugin packages": "Installed plugin packages",
+    "Memory details": "Memory details",
+    "Disk activity": "Disk activity",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -197,7 +200,10 @@
     "Dropped packets": "Zahodené pakety",
     "Local ports": "Lokálne porty",
     "CPU details": "Podrobnosti CPU",
-    "Installed plugin packages": "Nainštalované balíky pluginov"
+    "Installed plugin packages": "Nainštalované balíky pluginov",
+    "Memory details": "Podrobnosti pamäte",
+    "Disk activity": "Aktivita diskov",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -297,7 +303,10 @@
     "Dropped packets": "Zahozené pakety",
     "Local ports": "Místní porty",
     "CPU details": "Podrobnosti CPU",
-    "Installed plugin packages": "Nainstalované balíčky pluginů"
+    "Installed plugin packages": "Nainstalované balíčky pluginů",
+    "Memory details": "Podrobnosti paměti",
+    "Disk activity": "Aktivita disků",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -397,7 +406,10 @@
     "Dropped packets": "Verworfene Pakete",
     "Local ports": "Lokale Ports",
     "CPU details": "CPU-Details",
-    "Installed plugin packages": "Installierte Plugin-Pakete"
+    "Installed plugin packages": "Installierte Plugin-Pakete",
+    "Memory details": "Speicherdetails",
+    "Disk activity": "Datenträgeraktivität",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -497,7 +509,10 @@
     "Dropped packets": "Odrzucone pakiety",
     "Local ports": "Porty lokalne",
     "CPU details": "Szczegóły CPU",
-    "Installed plugin packages": "Zainstalowane pakiety wtyczek"
+    "Installed plugin packages": "Zainstalowane pakiety wtyczek",
+    "Memory details": "Szczegóły pamięci",
+    "Disk activity": "Aktywność dysków",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -597,7 +612,10 @@
     "Dropped packets": "Eldobott csomagok",
     "Local ports": "Helyi portok",
     "CPU details": "CPU-adatok",
-    "Installed plugin packages": "Telepített bővítménycsomagok"
+    "Installed plugin packages": "Telepített bővítménycsomagok",
+    "Memory details": "Memóriaadatok",
+    "Disk activity": "Lemezaktivitás",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "ru": {
     "System centre": "Системный центр",
@@ -697,7 +715,10 @@
     "Dropped packets": "Отброшенные пакеты",
     "Local ports": "Локальные порты",
     "CPU details": "Сведения о ЦП",
-    "Installed plugin packages": "Установленные пакеты плагинов"
+    "Installed plugin packages": "Установленные пакеты плагинов",
+    "Memory details": "Сведения о памяти",
+    "Disk activity": "Активность дисков",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "fr": {
     "System centre": "Centre système",
@@ -797,7 +818,10 @@
     "Dropped packets": "Paquets rejetés",
     "Local ports": "Ports locaux",
     "CPU details": "Détails du processeur",
-    "Installed plugin packages": "Paquets de plugins installés"
+    "Installed plugin packages": "Paquets de plugins installés",
+    "Memory details": "Détails de la mémoire",
+    "Disk activity": "Activité des disques",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -897,7 +921,10 @@
     "Dropped packets": "Pacchetti scartati",
     "Local ports": "Porte locali",
     "CPU details": "Dettagli CPU",
-    "Installed plugin packages": "Pacchetti plugin installati"
+    "Installed plugin packages": "Pacchetti plugin installati",
+    "Memory details": "Dettagli memoria",
+    "Disk activity": "Attività disco",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -997,7 +1024,10 @@
     "Dropped packets": "Paquetes descartados",
     "Local ports": "Puertos locales",
     "CPU details": "Detalles de CPU",
-    "Installed plugin packages": "Paquetes de plugins instalados"
+    "Installed plugin packages": "Paquetes de plugins instalados",
+    "Memory details": "Detalles de memoria",
+    "Disk activity": "Actividad de discos",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -1097,7 +1127,10 @@
     "Dropped packets": "Paketa të hedhura",
     "Local ports": "Portat lokale",
     "CPU details": "Detajet e CPU-së",
-    "Installed plugin packages": "Paketat e shtojcave të instaluara"
+    "Installed plugin packages": "Paketat e shtojcave të instaluara",
+    "Memory details": "Detajet e memories",
+    "Disk activity": "Aktiviteti i disqeve",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -1197,7 +1230,10 @@
     "Dropped packets": "Απορριφθέντα πακέτα",
     "Local ports": "Τοπικές θύρες",
     "CPU details": "Λεπτομέρειες CPU",
-    "Installed plugin packages": "Εγκατεστημένα πακέτα προσθέτων"
+    "Installed plugin packages": "Εγκατεστημένα πακέτα προσθέτων",
+    "Memory details": "Λεπτομέρειες μνήμης",
+    "Disk activity": "Δραστηριότητα δίσκων",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -1297,7 +1333,10 @@
     "Dropped packets": "Hüljatud paketid",
     "Local ports": "Kohalikud pordid",
     "CPU details": "CPU üksikasjad",
-    "Installed plugin packages": "Paigaldatud pluginate paketid"
+    "Installed plugin packages": "Paigaldatud pluginate paketid",
+    "Memory details": "Mälu üksikasjad",
+    "Disk activity": "Ketta aktiivsus",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -1397,7 +1436,10 @@
     "Dropped packets": "بسته‌های حذف‌شده",
     "Local ports": "درگاه‌های محلی",
     "CPU details": "جزئیات پردازنده",
-    "Installed plugin packages": "بسته‌های افزونه نصب‌شده"
+    "Installed plugin packages": "بسته‌های افزونه نصب‌شده",
+    "Memory details": "جزئیات حافظه",
+    "Disk activity": "فعالیت دیسک",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -1497,7 +1539,10 @@
     "Dropped packets": "Atmesti paketai",
     "Local ports": "Vietiniai prievadai",
     "CPU details": "CPU informacija",
-    "Installed plugin packages": "Įdiegti įskiepių paketai"
+    "Installed plugin packages": "Įdiegti įskiepių paketai",
+    "Memory details": "Atminties informacija",
+    "Disk activity": "Diskų aktyvumas",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -1597,7 +1642,10 @@
     "Dropped packets": "Verworpen pakketten",
     "Local ports": "Lokale poorten",
     "CPU details": "CPU-details",
-    "Installed plugin packages": "Geïnstalleerde pluginpakketten"
+    "Installed plugin packages": "Geïnstalleerde pluginpakketten",
+    "Memory details": "Geheugendetails",
+    "Disk activity": "Schijfactiviteit",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -1697,7 +1745,10 @@
     "Dropped packets": "Pacotes descartados",
     "Local ports": "Portas locais",
     "CPU details": "Detalhes da CPU",
-    "Installed plugin packages": "Pacotes de plugins instalados"
+    "Installed plugin packages": "Pacotes de plugins instalados",
+    "Memory details": "Detalhes da memória",
+    "Disk activity": "Atividade dos discos",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -1797,7 +1848,10 @@
     "Dropped packets": "Pachete eliminate",
     "Local ports": "Porturi locale",
     "CPU details": "Detalii CPU",
-    "Installed plugin packages": "Pachete de pluginuri instalate"
+    "Installed plugin packages": "Pachete de pluginuri instalate",
+    "Memory details": "Detalii memorie",
+    "Disk activity": "Activitate discuri",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -1897,7 +1951,10 @@
     "Dropped packets": "Atılan paketler",
     "Local ports": "Yerel bağlantı noktaları",
     "CPU details": "CPU ayrıntıları",
-    "Installed plugin packages": "Kurulu eklenti paketleri"
+    "Installed plugin packages": "Kurulu eklenti paketleri",
+    "Memory details": "Bellek ayrıntıları",
+    "Disk activity": "Disk etkinliği",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "uk": {
     "System centre": "Системний центр",
@@ -1997,7 +2054,10 @@
     "Dropped packets": "Відкинуті пакети",
     "Local ports": "Локальні порти",
     "CPU details": "Відомості про ЦП",
-    "Installed plugin packages": "Встановлені пакети плагінів"
+    "Installed plugin packages": "Встановлені пакети плагінів",
+    "Memory details": "Відомості про пам’ять",
+    "Disk activity": "Активність дисків",
+    "Smart Diagnostics": "Smart Diagnostics"
   },
   "zh": {
     "System centre": "系统中心",
@@ -2097,6 +2157,9 @@
     "Dropped packets": "丢弃的数据包",
     "Local ports": "本地端口",
     "CPU details": "CPU 详情",
-    "Installed plugin packages": "已安装的插件软件包"
+    "Installed plugin packages": "已安装的插件软件包",
+    "Memory details": "内存详情",
+    "Disk activity": "磁盘活动",
+    "Smart Diagnostics": "Smart Diagnostics"
   }
 }

@@ -35,7 +35,7 @@ def cpu_percent(previous, current):
         return None
     return 100.0 * (total-idle)/total
 
-def memory_values(text):
+def memory_fields(text):
     values = {}
     for line in text.splitlines():
         key, sep, value = line.partition(":")
@@ -47,6 +47,11 @@ def memory_values(text):
                     values[key] = number * 1024
             except ValueError:
                 pass
+    return values
+
+
+def memory_values(text):
+    values=memory_fields(text)
     total = values.get("MemTotal")
     available = values.get("MemAvailable")
     basis = "MemAvailable"

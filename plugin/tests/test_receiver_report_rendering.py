@@ -46,9 +46,9 @@ class ReceiverRenderingTests(unittest.TestCase):
     def test_every_report_route_displays_data_or_explicit_state(self):
         routes=mod('warder_centres').DIAGNOSTICS
         kinds={'system-processes','system-log','system-cpu','tuner-details','transponder-services',
-               'storage-overview','storage-categories','network-overview','network-test',
+               'storage-overview','storage-categories','storage-memory','storage-activity','network-overview','network-test',
                'network-interfaces','network-statistics','network-mounts','network-services',
-               'service-health','service-crashes','service-plugins','service-ipk','forum-report'}
+               'service-health','service-smart','service-crashes','service-plugins','service-ipk','forum-report'}
         for kind in kinds:
             with self.subTest(kind=kind):
                 session=MagicMock()

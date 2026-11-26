@@ -127,7 +127,7 @@ class WarderMainTests(unittest.TestCase):
         with patch.object(module,'countServers',return_value=(True,True)),patch.object(screen,'checkCam',return_value=False),patch.object(screen,'cccamRunning',return_value=False),patch.object(screen,'mboxRunning',return_value=False),patch.object(module,'oscamRunning',return_value=True):
             screen.updatemenulist()
         self.assertEqual([row[0] for row in screen.list],['centre:system','centre:reception','centre:storage','centre:network','centre:cam','centre:service','centre:warder'])
-        self.assertEqual([e[0] for e in screen.menuListAll],['0','1','2','3','4','6','7','8','9','17','16','network-overview','system-overview','system-processes','system-cpu','system-log','system-live','signal-live','tuner-details','tuner-native','storage-overview','storage-categories','network-test','network-interfaces','network-statistics','network-mounts','network-services','service-health','service-crashes','service-plugins','forum-report','signal-quick','transponder-services','service-ipk','projects'])
+        self.assertEqual([e[0] for e in screen.menuListAll],['0','1','2','3','4','6','7','8','9','17','16','network-overview','system-overview','system-processes','system-cpu','system-log','system-live','signal-live','tuner-details','tuner-native','storage-overview','storage-categories','storage-memory','storage-activity','network-test','network-interfaces','network-statistics','network-mounts','network-services','service-health','service-smart','service-crashes','service-plugins','forum-report','signal-quick','transponder-services','service-ipk','projects'])
         screen['list'].getCurrent=lambda:['centre:cam']
         screen.selectedmenuitem()
         args=session.openWithCallback.call_args.args

@@ -203,3 +203,52 @@ def report(tr, detail=False, probe=None):
         if options:
             rows.extend(('', tr('Picon storage')+'   '+max(options)[1]))
     return '\n'.join(rows) or tr('Unavailable')
+
+
+def memory_report(tr,cancelled,probe=None):
+    """Detailed kernel memory fields are not a mutually exclusive pie chart."""
+    from .warder_telemetry import memory_fields
+    p=probe or Probe()
+    values=memory_fields(p.text('/proc/meminfo',16384))
+    rows=[]
+    for key in ('MemTotal','MemAvailable','MemFree','Buffers','Cached','SReclaimable',
+                'Shmem','Slab','AnonPages','Dirty','Writeback','SwapTotal','SwapFree'):
+        if cancelled.is_set():return ''
+        value=values.get(key)
+        rows.append('%s   %s'%(key,'—' if value is None else '%.1f MiB'%(value/1048576)))
+    raw=p.text('/proc/sys/vm/swappiness',32)
+    rows.extend(('','swappiness   '+(raw if raw.isdigit() and 0<=int(raw)<=200 else '—')))
+    return '\n'.join(rows)
+
+
+def disk_counters(p):
+    """Use whole block devices only; sector units in Linux diskstats are 512 B."""
+    result={}
+    for line in p.text('/proc/diskstats',65536).splitlines():
+        f=line.split()
+        if len(f)<14 or not re.fullmatch(r'(?:sd[a-z]+|hd[a-z]+|vd[a-z]+|mmcblk\d+|nvme\d+n\d+)',f[2]):continue
+        try:values=tuple(int(f[i]) for i in (3,5,7,9))
+        except ValueError:continue
+        if min(values)>=0:result[f[2]]=values
+    return result
+
+
+def disk_activity(tr,cancelled,probe=None,clock=time.monotonic):
+    """Short, passive sampling. No disk benchmark, file writes or wake-up."""
+    p=probe or Probe()
+    before=disk_counters(p);start=clock()
+    if cancelled.wait(1):return ''
+    after=disk_counters(p);elapsed=clock()-start
+    rows=[]
+    for name in sorted(before.keys()|after.keys()):
+        if cancelled.is_set():return ''
+        rows.append(name)
+        old,new=before.get(name),after.get(name)
+        delta=tuple(b-a for a,b in zip(old,new)) if old and new else ()
+        if elapsed<=0 or not delta or min(delta)<0:
+            rows.append('R —   ·   W —')
+        else:
+            rows.extend(('R   %.1f KiB/s   ·   %.1f IOPS'%(delta[1]/2/elapsed,delta[0]/elapsed),
+                         'W   %.1f KiB/s   ·   %.1f IOPS'%(delta[3]/2/elapsed,delta[2]/elapsed)))
+        rows.append('')
+    return '\n'.join(rows).strip() or tr('Unavailable')

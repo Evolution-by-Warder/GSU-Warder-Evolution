@@ -670,6 +670,38 @@ class DiagnosticTests(unittest.TestCase):
                 self.assertIn('1.2.3',out)
                 self.assertNotIn('kernel',out)
 
+    def test_memory_and_disk_activity_are_passive_and_keep_unknown_values(self):
+        storage=module('warder_storage')
+        p=MagicMock()
+        p.text.side_effect=lambda path,*args:{'/proc/meminfo':'MemTotal: 1024 kB\nMemFree: 512 kB\nCached: 256 kB',
+            '/proc/sys/vm/swappiness':'60'}.get(path,'')
+        result=storage.memory_report(str,Event(),p)
+        self.assertIn('MemTotal   1.0 MiB',result)
+        self.assertIn('MemAvailable   —',result)
+        self.assertIn('swappiness   60',result)
+        before='8 0 sda 10 0 100 0 20 0 200 0 0 0 0\n8 1 sda1 10 0 100 0 20 0 200 0 0 0 0'
+        after='8 0 sda 14 0 120 0 22 0 240 0 0 0 0'
+        p.text.side_effect=(before,after)
+        clock=iter((0,2))
+        result=storage.disk_activity(str,Event(),p,lambda:next(clock))
+        self.assertIn('R   5.0 KiB/s   ·   2.0 IOPS',result)
+        self.assertIn('W   10.0 KiB/s   ·   1.0 IOPS',result)
+        self.assertNotIn('sda1',result)
+
+    def test_smart_diagnostics_reuses_resource_and_installation_checks(self):
+        system=module('warder_system_data')
+        p=MagicMock()
+        p.temperatures.return_value=[]
+        model={'checks':[{'name':'RAM','state':'unknown','available_percent':None}],
+               'health':{'score':None,'coverage':(0,1),'state':'unknown'}}
+        with patch.object(system,'overview',return_value=model),patch.object(module('warder_storage'),'mounts',return_value=[]),patch.object(module('warder_storage'),'disks',return_value=[]),patch.object(module('warder_network'),'collect',return_value={'interfaces':[],'gateways':[],'dns':[]}),patch.object(module('warder_service'),'health',return_value='GSU verified') as health:
+            result=system.smart_diagnostics(str,Event(),p)
+            self.assertIn('RAM   ·   Not exposed   ·   —',result)
+            self.assertIn('Measured checks   0/1',result)
+            self.assertIn('GSU verified',result)
+            self.assertIn('Internet access, disk integrity and CAM decoding are not tested',result)
+            health.assert_called_once_with(str,p)
+
     def test_ping_loss_is_distinct_from_unsupported_ping(self):
         net=module('warder_network')
         good=MagicMock(return_value=SimpleNamespace(stdout='3 packets transmitted, 2 received, 33% packet loss\nrtt min/avg/max = 1.0/2.0/3.0 ms'))
