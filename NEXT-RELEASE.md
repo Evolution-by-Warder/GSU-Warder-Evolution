@@ -1,3 +1,9 @@
+# 2026-11-26 — GSU PR #14 fourth legacy checkpoint
+
+Previous exact HEAD `08bc24baa927ceabf8006069aa5de1a936da0ea9` passed 10/10 CI. Added 20 legacy device-management, partition, path and CAM/SRV error messages in all 21 languages (78 supplementary keys, 174 common keys). Preserved existing translations, gettext precedence and runtime behavior. 183 previously inventoried direct literal candidates still need review; technical identifiers may be excluded. No r5 release or production feed change. Fresh CI required.
+
+---
+
 # 2026-11-26 — GSU PR #14 third legacy checkpoint
 
 Previous HEAD `9f656a4373af26d0196783d221f94d4421a885cd` passed 10/10 CI. Added 30 further user-facing labels across 21 languages: device manager, expert settings, CAM search and client status. Supplement now 58 keys; common catalogues 174 keys. 203 remaining direct literal candidates, including technical identifiers. No release, feed, storage operation or CAM behavior changed.
