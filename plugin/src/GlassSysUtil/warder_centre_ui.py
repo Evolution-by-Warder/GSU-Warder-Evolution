@@ -199,9 +199,9 @@ class Report(Screen):
         if self.kind == 'transponder-services':
             try:
                 from enigma import eServiceCenter, eServiceReference
-                from .warder_services import services
+                from .warder_services import services, display
                 self.services = services(self.session.nav, eServiceCenter.getInstance(), eServiceReference)
-                self.done('\n'.join(name or ident for _, ident, name in self.services) or self.tr('Unavailable'))
+                self.done(display(self.services,self.tr))
             except (RuntimeError, TypeError, ValueError, AttributeError, OSError, ImportError):
                 self.services = []
                 self.failed(None)
@@ -264,7 +264,13 @@ class Report(Screen):
         from time import strftime
         self['report_status'].setText(strftime('%H:%M:%S'))
         if self.kind == 'forum-report':
+            from .warder_service import format_preview
+            try:
+                readable=format_preview(result,self.tr)
+            except (ValueError,TypeError,KeyError,AttributeError):
+                readable=result
             self.preview = result
+            result=readable
         if self.kind == 'network-test':
             from time import strftime
             self.history.insert(0, strftime('%H:%M:%S')+'\n'+result)
