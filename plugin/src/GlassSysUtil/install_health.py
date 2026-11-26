@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path, PurePosixPath
 import subprocess
+import re
 
 PACKAGE = 'enigma2-plugin-extensions-gsu-warder-evolution'
 LEGACY_PACKAGE = 'enigma2-plugin-glasssysutil'
@@ -37,13 +38,14 @@ def verify_installation(expected_version, package=PACKAGE, runner=subprocess.run
     version = verify_files(expected_version, runtime)
     if package not in (PACKAGE, LEGACY_PACKAGE):
         raise ValueError('Unexpected installed GSU package identity')
+    control_version = '1:' + version if re.fullmatch(r'(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)', version) else version
     result = runner(['opkg', 'status', package], stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT, text=True, timeout=15)
     if result.returncode == 0:
         for paragraph in result.stdout.split('\n\n'):
             fields = dict(line.split(': ', 1) for line in paragraph.splitlines()
                           if ': ' in line and not line[:1].isspace())
-            if (fields.get('Package') == package and fields.get('Version') == version and
+            if (fields.get('Package') == package and fields.get('Version') == control_version and
                     fields.get('Status', '').split() == ['install', 'ok', 'installed']):
                 return version
     raise ValueError('GSU package is not completely installed')
