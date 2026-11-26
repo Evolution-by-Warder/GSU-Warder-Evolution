@@ -83,7 +83,12 @@
     "FBC root": "FBC root",
     "FBC link": "FBC link",
     "Measured categories total": "Measured categories total",
-    "A channel backup will be created before opening the tool.": "A channel backup will be created before opening the tool."
+    "A channel backup will be created before opening the tool.": "A channel backup will be created before opening the tool.",
+    "This view provides an overview of: %s.": "This view provides an overview of: %s.",
+    "Use this tool to inspect: %s.": "Use this tool to inspect: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.",
+    "A channel backup is created before active tuning; live TV may stop.": "A channel backup is created before active tuning; live TV may stop."
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -169,7 +174,12 @@
     "FBC root": "Hlavný tuner FBC",
     "FBC link": "Prepojený tuner FBC",
     "Measured categories total": "Súčet meraných kategórií",
-    "A channel backup will be created before opening the tool.": "Pred otvorením nástroja sa vytvorí záloha staníc."
+    "A channel backup will be created before opening the tool.": "Pred otvorením nástroja sa vytvorí záloha staníc.",
+    "This view provides an overview of: %s.": "Na tejto obrazovke získate prehľad: %s.",
+    "Use this tool to inspect: %s.": "Pomocou tejto funkcie môžete skontrolovať: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "zaťaženie CPU, využitie RAM a swapu, voľné miesto vo flash a na disku, teplotu a stav zdrojov",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Bežiace procesy s PID, stavom a využitím CPU a pamäte. Zoradenie podľa CPU alebo RAM.",
+    "A channel backup is created before active tuning; live TV may stop.": "Pred aktívnym ladením sa vytvorí záloha staníc; živé vysielanie sa môže prerušiť."
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -255,7 +265,12 @@
     "FBC root": "Hlavní tuner FBC",
     "FBC link": "Připojený tuner FBC",
     "Measured categories total": "Součet měřených kategorií",
-    "A channel backup will be created before opening the tool.": "Před otevřením nástroje se vytvoří záloha stanic."
+    "A channel backup will be created before opening the tool.": "Před otevřením nástroje se vytvoří záloha stanic.",
+    "This view provides an overview of: %s.": "Na této obrazovce získáte přehled: %s.",
+    "Use this tool to inspect: %s.": "Pomocí této funkce můžete zkontrolovat: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "zatížení CPU, využití RAM a swapu, volné místo ve flash a na disku, teplotu a stav prostředků",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Běžící procesy s PID, stavem a využitím CPU a paměti. Řazení podle CPU nebo RAM.",
+    "A channel backup is created before active tuning; live TV may stop.": "Před aktivním laděním se vytvoří záloha stanic; živé vysílání se může přerušit."
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -341,7 +356,12 @@
     "FBC root": "FBC-Haupttuner",
     "FBC link": "Verknüpfter FBC-Tuner",
     "Measured categories total": "Summe der gemessenen Kategorien",
-    "A channel backup will be created before opening the tool.": "Vor dem Öffnen wird eine Senderliste gesichert."
+    "A channel backup will be created before opening the tool.": "Vor dem Öffnen wird eine Senderliste gesichert.",
+    "This view provides an overview of: %s.": "Diese Ansicht bietet einen Überblick über: %s.",
+    "Use this tool to inspect: %s.": "Mit dieser Funktion können Sie Folgendes prüfen: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "CPU-Auslastung, RAM- und Swap-Nutzung, freien Flash- und Plattenspeicher, Temperatur und Ressourcenstatus",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Laufende Prozesse mit PID, Status, CPU- und Speichernutzung. Sortierung nach CPU oder RAM.",
+    "A channel backup is created before active tuning; live TV may stop.": "Vor dem aktiven Suchlauf wird die Senderliste gesichert; Live-TV kann unterbrochen werden."
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -427,7 +447,12 @@
     "FBC root": "Główny tuner FBC",
     "FBC link": "Powiązany tuner FBC",
     "Measured categories total": "Suma zmierzonych kategorii",
-    "A channel backup will be created before opening the tool.": "Przed otwarciem narzędzia zostanie utworzona kopia listy kanałów."
+    "A channel backup will be created before opening the tool.": "Przed otwarciem narzędzia zostanie utworzona kopia listy kanałów.",
+    "This view provides an overview of: %s.": "Ten ekran przedstawia: %s.",
+    "Use this tool to inspect: %s.": "Ta funkcja umożliwia sprawdzenie: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "obciążenie CPU, użycie RAM i swapu, wolne miejsce we flash i na dysku, temperaturę oraz stan zasobów",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Uruchomione procesy z PID, stanem i użyciem CPU oraz pamięci. Sortowanie według CPU lub RAM.",
+    "A channel backup is created before active tuning; live TV may stop.": "Przed strojeniem zostanie utworzona kopia kanałów; telewizja na żywo może zostać przerwana."
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -513,7 +538,12 @@
     "FBC root": "Elsődleges FBC tuner",
     "FBC link": "Kapcsolt FBC tuner",
     "Measured categories total": "Mért kategóriák összesen",
-    "A channel backup will be created before opening the tool.": "Az eszköz megnyitása előtt mentés készül a csatornalistáról."
+    "A channel backup will be created before opening the tool.": "Az eszköz megnyitása előtt mentés készül a csatornalistáról.",
+    "This view provides an overview of: %s.": "Ezen a képernyőn áttekinthető: %s.",
+    "Use this tool to inspect: %s.": "Ezzel a funkcióval ellenőrizhető: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "CPU-terhelés, RAM és swap használata, szabad flash- és lemezterület, hőmérséklet és erőforrásállapot",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Futó folyamatok PID-del, állapottal, CPU- és memóriahasználattal. Rendezés CPU vagy RAM szerint.",
+    "A channel backup is created before active tuning; live TV may stop.": "Aktív hangolás előtt csatornamentés készül; az élő adás megszakadhat."
   },
   "ru": {
     "System centre": "Системный центр",
@@ -599,7 +629,12 @@
     "FBC root": "Основной тюнер FBC",
     "FBC link": "Связанный тюнер FBC",
     "Measured categories total": "Сумма измеренных категорий",
-    "A channel backup will be created before opening the tool.": "Перед открытием инструмента будет создана резервная копия списка каналов."
+    "A channel backup will be created before opening the tool.": "Перед открытием инструмента будет создана резервная копия списка каналов.",
+    "This view provides an overview of: %s.": "Этот экран показывает: %s.",
+    "Use this tool to inspect: %s.": "Эта функция позволяет проверить: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "нагрузку CPU, использование RAM и swap, свободное место во флеш-памяти и на диске, температуру и состояние ресурсов",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Запущенные процессы с PID, состоянием, нагрузкой CPU и памятью. Сортировка по CPU или RAM.",
+    "A channel backup is created before active tuning; live TV may stop.": "Перед активной настройкой создаётся резервная копия каналов; эфир может прерваться."
   },
   "fr": {
     "System centre": "Centre système",
@@ -685,7 +720,12 @@
     "FBC root": "Tuner FBC principal",
     "FBC link": "Tuner FBC lié",
     "Measured categories total": "Total des catégories mesurées",
-    "A channel backup will be created before opening the tool.": "Une sauvegarde des chaînes sera créée avant l'ouverture de l'outil."
+    "A channel backup will be created before opening the tool.": "Une sauvegarde des chaînes sera créée avant l'ouverture de l'outil.",
+    "This view provides an overview of: %s.": "Cet écran présente : %s.",
+    "Use this tool to inspect: %s.": "Cette fonction permet de vérifier : %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "la charge CPU, la RAM et le swap utilisés, l'espace libre en flash et sur disque, la température et l'état des ressources",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Processus actifs avec PID, état et utilisation CPU et mémoire. Tri par CPU ou RAM.",
+    "A channel backup is created before active tuning; live TV may stop.": "Une sauvegarde des chaînes précède la recherche active ; la télévision peut être interrompue."
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -771,7 +811,12 @@
     "FBC root": "Tuner FBC principale",
     "FBC link": "Tuner FBC collegato",
     "Measured categories total": "Totale delle categorie misurate",
-    "A channel backup will be created before opening the tool.": "Prima di aprire lo strumento verrà creata una copia dei canali."
+    "A channel backup will be created before opening the tool.": "Prima di aprire lo strumento verrà creata una copia dei canali.",
+    "This view provides an overview of: %s.": "Questa schermata mostra: %s.",
+    "Use this tool to inspect: %s.": "Questa funzione consente di verificare: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "carico CPU, uso di RAM e swap, spazio libero in flash e su disco, temperatura e stato delle risorse",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Processi attivi con PID, stato e utilizzo di CPU e memoria. Ordinamento per CPU o RAM.",
+    "A channel backup is created before active tuning; live TV may stop.": "Prima della sintonia attiva viene salvata la lista dei canali; la TV in diretta può interrompersi."
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -857,7 +902,12 @@
     "FBC root": "Sintonizador FBC principal",
     "FBC link": "Sintonizador FBC vinculado",
     "Measured categories total": "Total de las categorías medidas",
-    "A channel backup will be created before opening the tool.": "Se creará una copia de los canales antes de abrir la herramienta."
+    "A channel backup will be created before opening the tool.": "Se creará una copia de los canales antes de abrir la herramienta.",
+    "This view provides an overview of: %s.": "Esta pantalla muestra: %s.",
+    "Use this tool to inspect: %s.": "Esta función permite comprobar: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "carga de CPU, uso de RAM y swap, espacio libre en flash y disco, temperatura y estado de los recursos",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Procesos activos con PID, estado y uso de CPU y memoria. Orden por CPU o RAM.",
+    "A channel backup is created before active tuning; live TV may stop.": "Antes de sintonizar se guarda una copia de los canales; la televisión en directo puede interrumpirse."
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -943,7 +993,12 @@
     "FBC root": "Tuneri kryesor FBC",
     "FBC link": "Tuneri i lidhur FBC",
     "Measured categories total": "Totali i kategorive të matura",
-    "A channel backup will be created before opening the tool.": "Para hapjes së mjetit do të krijohet një kopje rezervë e kanaleve."
+    "A channel backup will be created before opening the tool.": "Para hapjes së mjetit do të krijohet një kopje rezervë e kanaleve.",
+    "This view provides an overview of: %s.": "Kjo pamje paraqet: %s.",
+    "Use this tool to inspect: %s.": "Me këtë funksion mund të kontrolloni: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "ngarkesën e CPU, përdorimin e RAM dhe swap, hapësirën e lirë në flash dhe disk, temperaturën dhe gjendjen e burimeve",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Proceset aktive me PID, gjendje dhe përdorim të CPU dhe memories. Renditje sipas CPU ose RAM.",
+    "A channel backup is created before active tuning; live TV may stop.": "Para kërkimit aktiv ruhet lista e kanaleve; transmetimi mund të ndërpritet."
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -1029,7 +1084,12 @@
     "FBC root": "Κύριος δέκτης FBC",
     "FBC link": "Συνδεδεμένος δέκτης FBC",
     "Measured categories total": "Σύνολο μετρημένων κατηγοριών",
-    "A channel backup will be created before opening the tool.": "Πριν ανοίξει το εργαλείο θα δημιουργηθεί αντίγραφο ασφαλείας των καναλιών."
+    "A channel backup will be created before opening the tool.": "Πριν ανοίξει το εργαλείο θα δημιουργηθεί αντίγραφο ασφαλείας των καναλιών.",
+    "This view provides an overview of: %s.": "Αυτή η οθόνη παρουσιάζει: %s.",
+    "Use this tool to inspect: %s.": "Με αυτή τη λειτουργία μπορείτε να ελέγξετε: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "φόρτο CPU, χρήση RAM και swap, ελεύθερο χώρο flash και δίσκου, θερμοκρασία και κατάσταση πόρων",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Ενεργές διεργασίες με PID, κατάσταση και χρήση CPU και μνήμης. Ταξινόμηση κατά CPU ή RAM.",
+    "A channel backup is created before active tuning; live TV may stop.": "Πριν από τον ενεργό συντονισμό δημιουργείται αντίγραφο καναλιών· η ζωντανή TV μπορεί να διακοπεί."
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -1115,7 +1175,12 @@
     "FBC root": "FBC põhituuner",
     "FBC link": "Seotud FBC-tuuner",
     "Measured categories total": "Mõõdetud kategooriate summa",
-    "A channel backup will be created before opening the tool.": "Enne tööriista avamist luuakse kanalite varukoopia."
+    "A channel backup will be created before opening the tool.": "Enne tööriista avamist luuakse kanalite varukoopia.",
+    "This view provides an overview of: %s.": "See vaade annab ülevaate: %s.",
+    "Use this tool to inspect: %s.": "Selle funktsiooniga saab kontrollida: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "CPU koormusest, RAM-i ja saaleala kasutusest, vabast välkmälu- ja kettaruumist, temperatuurist ning ressursside olekust",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Töötavad protsessid koos PID, oleku, CPU ja mälukasutusega. Sortimine CPU või RAM-i järgi.",
+    "A channel backup is created before active tuning; live TV may stop.": "Enne aktiivset häälestamist varundatakse kanalid; telesaade võib katkeda."
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -1201,7 +1266,12 @@
     "FBC root": "تیونر اصلی FBC",
     "FBC link": "تیونر پیوندی FBC",
     "Measured categories total": "مجموع دسته‌های اندازه‌گیری‌شده",
-    "A channel backup will be created before opening the tool.": "پیش از باز کردن ابزار، از فهرست کانال‌ها نسخهٔ پشتیبان تهیه می‌شود."
+    "A channel backup will be created before opening the tool.": "پیش از باز کردن ابزار، از فهرست کانال‌ها نسخهٔ پشتیبان تهیه می‌شود.",
+    "This view provides an overview of: %s.": "این صفحه نمایی از موارد زیر ارائه می‌دهد: %s.",
+    "Use this tool to inspect: %s.": "با این ابزار می‌توانید موارد زیر را بررسی کنید: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "بار CPU، مصرف RAM و swap، فضای آزاد فلش و دیسک، دما و وضعیت منابع",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "فرایندهای فعال همراه با PID، وضعیت و مصرف CPU و حافظه. مرتب‌سازی بر اساس CPU یا RAM.",
+    "A channel backup is created before active tuning; live TV may stop.": "پیش از تنظیم فعال، از کانال‌ها پشتیبان تهیه می‌شود؛ پخش زنده ممکن است قطع شود."
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -1287,7 +1357,12 @@
     "FBC root": "Pagrindinis FBC imtuvas",
     "FBC link": "Susietas FBC imtuvas",
     "Measured categories total": "Išmatuotų kategorijų suma",
-    "A channel backup will be created before opening the tool.": "Prieš atidarant įrankį bus sukurta atsarginė kanalų kopija."
+    "A channel backup will be created before opening the tool.": "Prieš atidarant įrankį bus sukurta atsarginė kanalų kopija.",
+    "This view provides an overview of: %s.": "Šiame lange pateikiama: %s.",
+    "Use this tool to inspect: %s.": "Šia funkcija galima patikrinti: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "CPU apkrova, RAM ir swap naudojimas, laisva „flash“ ir disko vieta, temperatūra ir išteklių būklė",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Veikiantys procesai su PID, būsena, CPU ir atminties naudojimu. Rikiavimas pagal CPU arba RAM.",
+    "A channel backup is created before active tuning; live TV may stop.": "Prieš aktyvų derinimą sukuriama kanalų kopija; tiesioginė TV gali nutrūkti."
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -1373,7 +1448,12 @@
     "FBC root": "FBC-hoofdtuner",
     "FBC link": "Gekoppelde FBC-tuner",
     "Measured categories total": "Totaal van gemeten categorieën",
-    "A channel backup will be created before opening the tool.": "Voordat het hulpmiddel wordt geopend, wordt een zenderback-up gemaakt."
+    "A channel backup will be created before opening the tool.": "Voordat het hulpmiddel wordt geopend, wordt een zenderback-up gemaakt.",
+    "This view provides an overview of: %s.": "Dit scherm geeft een overzicht van: %s.",
+    "Use this tool to inspect: %s.": "Met deze functie kunt u het volgende controleren: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "CPU-belasting, RAM- en swapgebruik, vrije flash- en schijfruimte, temperatuur en bronstatus",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Actieve processen met PID, status, CPU- en geheugengebruik. Sorteren op CPU of RAM.",
+    "A channel backup is created before active tuning; live TV may stop.": "Voor actief afstemmen wordt de zenderlijst opgeslagen; live-tv kan worden onderbroken."
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -1459,7 +1539,12 @@
     "FBC root": "Sintonizador FBC principal",
     "FBC link": "Sintonizador FBC associado",
     "Measured categories total": "Total das categorias medidas",
-    "A channel backup will be created before opening the tool.": "Será criada uma cópia de segurança dos canais antes de abrir a ferramenta."
+    "A channel backup will be created before opening the tool.": "Será criada uma cópia de segurança dos canais antes de abrir a ferramenta.",
+    "This view provides an overview of: %s.": "Este ecrã apresenta: %s.",
+    "Use this tool to inspect: %s.": "Esta função permite verificar: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "carga da CPU, utilização de RAM e swap, espaço livre na flash e disco, temperatura e estado dos recursos",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Processos ativos com PID, estado e utilização de CPU e memória. Ordenação por CPU ou RAM.",
+    "A channel backup is created before active tuning; live TV may stop.": "Antes da sintonia ativa é criada uma cópia dos canais; a TV em direto pode ser interrompida."
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -1545,7 +1630,12 @@
     "FBC root": "Tuner FBC principal",
     "FBC link": "Tuner FBC asociat",
     "Measured categories total": "Totalul categoriilor măsurate",
-    "A channel backup will be created before opening the tool.": "Înainte de deschiderea instrumentului se va crea o copie de rezervă a canalelor."
+    "A channel backup will be created before opening the tool.": "Înainte de deschiderea instrumentului se va crea o copie de rezervă a canalelor.",
+    "This view provides an overview of: %s.": "Acest ecran prezintă: %s.",
+    "Use this tool to inspect: %s.": "Această funcție permite verificarea: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "încărcarea CPU, utilizarea RAM și swap, spațiul liber în flash și pe disc, temperatura și starea resurselor",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Procese active cu PID, stare și utilizare CPU și memorie. Sortare după CPU sau RAM.",
+    "A channel backup is created before active tuning; live TV may stop.": "Înainte de acordarea activă se salvează canalele; televiziunea în direct poate fi întreruptă."
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -1631,7 +1721,12 @@
     "FBC root": "Ana FBC alıcısı",
     "FBC link": "Bağlı FBC alıcısı",
     "Measured categories total": "Ölçülen kategorilerin toplamı",
-    "A channel backup will be created before opening the tool.": "Araç açılmadan önce kanal listesi yedeklenecektir."
+    "A channel backup will be created before opening the tool.": "Araç açılmadan önce kanal listesi yedeklenecektir.",
+    "This view provides an overview of: %s.": "Bu ekran şunları gösterir: %s.",
+    "Use this tool to inspect: %s.": "Bu işlevle şunları kontrol edebilirsiniz: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "CPU yükü, RAM ve swap kullanımı, boş flash ve disk alanı, sıcaklık ve kaynak durumu",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "PID, durum, CPU ve bellek kullanımıyla çalışan işlemler. CPU veya RAM'e göre sıralama.",
+    "A channel backup is created before active tuning; live TV may stop.": "Etkin ayarlama öncesi kanal yedeği alınır; canlı TV kesilebilir."
   },
   "uk": {
     "System centre": "Системний центр",
@@ -1717,7 +1812,12 @@
     "FBC root": "Основний тюнер FBC",
     "FBC link": "Пов’язаний тюнер FBC",
     "Measured categories total": "Сума виміряних категорій",
-    "A channel backup will be created before opening the tool.": "Перед відкриттям інструмента буде створено резервну копію каналів."
+    "A channel backup will be created before opening the tool.": "Перед відкриттям інструмента буде створено резервну копію каналів.",
+    "This view provides an overview of: %s.": "Цей екран показує: %s.",
+    "Use this tool to inspect: %s.": "Ця функція дозволяє перевірити: %s.",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "навантаження CPU, використання RAM і swap, вільне місце у флеш-пам'яті й на диску, температуру та стан ресурсів",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Запущені процеси з PID, станом, використанням CPU та пам'яті. Сортування за CPU або RAM.",
+    "A channel backup is created before active tuning; live TV may stop.": "Перед активним налаштуванням створюється копія каналів; прямий ефір може перерватися."
   },
   "zh": {
     "System centre": "系统中心",
@@ -1803,6 +1903,11 @@
     "FBC root": "FBC 主调谐器",
     "FBC link": "FBC 关联调谐器",
     "Measured categories total": "已测量类别合计",
-    "A channel backup will be created before opening the tool.": "打开工具前将创建频道列表备份。"
+    "A channel backup will be created before opening the tool.": "打开工具前将创建频道列表备份。",
+    "This view provides an overview of: %s.": "此页面提供以下信息的概览：%s。",
+    "Use this tool to inspect: %s.": "此功能可用于检查：%s。",
+    "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "CPU 负载、RAM 和交换空间使用量、闪存和磁盘剩余空间、温度及资源状态",
+    "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "查看运行进程的 PID、状态、CPU 和内存使用率，可按 CPU 或 RAM 排序。",
+    "A channel backup is created before active tuning; live TV may stop.": "主动调谐前会备份频道列表，直播可能中断。"
   }
 }
