@@ -33,3 +33,7 @@ Predecessor b530b389fc85b41711fe7e05dd32da30a1a3f49d: four CI families successfu
 ## Regression correction
 
 Predecessor 4ee7f702: OpenATV and OpenPLi regression jobs failed (six errors each) because the new atomic writer generated a double hyphen before its random suffix, rejected by the existing strict archive name validator. Corrected the generator, kept validator unchanged, added explicit filename/inventory regression. Architecture and reproducibility workflows had passed. Fresh CI required; no release.
+
+## Staged restore and responsiveness
+
+Predecessor d2836867: OpenATV, OpenPLi and package reproducibility successful; architecture running at check. GUI confirmed restore now stages archive read/decryption and verified local rollback creation on the existing worker. Native configuration planning, revalidation and apply stay on GUI thread; no native objects used by worker. Rechecks live and saved values, current plan and Radio original bytes before any mutation, refuses missing recovery path. Explicit confirmation explains backup and GUI restart. Synchronous wrapper delegates to same helpers. Added tests for missing rollback and concurrent native settings changes. Actual disk write latency and cross-file power-loss limitations remain; exact-head CI pending.

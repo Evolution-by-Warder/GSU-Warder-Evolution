@@ -1,3 +1,7 @@
+# 26.11.2026 — Staged restore responsiveness
+
+Previous d2836867 OpenATV/OpenPLi/package CI success, architecture running at inspection. Worker decrypts archive and saves verified local rollback; native prepare/recheck/apply stay on GUI thread. Recheck live and saved configuration plus Radio state before writing, refuse absent rollback. Confirmation and regression coverage added. No production change; exact-head CI and receiver test required.
+
 # 26.11.2026 — Fix atomic backup filename regression
 
 Exact predecessor 4ee7f702 failed OpenATV/OpenPLi regression tests with Invalid backup name; double hyphen in new writer corrected, validator retained, added name/inventory regression. No production change; fresh CI required.

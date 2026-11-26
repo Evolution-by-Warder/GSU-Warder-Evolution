@@ -278,27 +278,41 @@ class BackupMenu(Screen):
                 return
             if self.preview!=path or self.preview_digest!=digest:return
             self.password=None
-            try:
-                from Components.config import configfile
-                count,skipped,rollback,summary=backup.restore(self.api['config'],configfile,path,selected,
-                    password=password,expected_digest=digest,details=True)
-                self.describe()
-                self['result_title'].setText(self.tr('Restore result'))
-                self['result_status'].setText('OK · %d'%count)
-                rows=summary_lines(self.tr,summary,completed=True)
-                if rollback:rows.extend(('',self.tr('Restart GUI after restoring settings.'),
-                                         self.tr('Backup before restore'),str(rollback)))
-                self['descriptions'].setText('\n'.join(rows))
-            except backup.RestoreFailure as failure:
-                self.describe()
-                self['result_title'].setText(self.tr('Restore result'))
-                self['result_status'].setText(self.tr('Restore failed'))
-                self['descriptions'].setText(self.tr('Previous settings restored' if failure.recovered else 'Recovery backup required')+
-                    '\n\n'+self.tr('Backup before restore')+'\n'+str(failure.rollback))
-            except (OSError,ValueError,TypeError,RuntimeError,AttributeError,RecursionError):
+            def failed():
                 self.describe()
                 self['result_status'].setText(self.tr('Unavailable'))
-        self.session.openWithCallback(confirmed,MessageBox,self.tr('Restore selected compatible settings only.'),
+            def loaded(payload):
+                try:
+                    prepared=backup.prepare_restore(self.api['config'],payload,selected,
+                        private=password is not None,expected_digest=digest)
+                except (OSError,ValueError,TypeError,RuntimeError,AttributeError,RecursionError):
+                    failed()
+                    return
+                previous=prepared['previous']
+                def recovered_copy(rollback):
+                    try:
+                        from Components.config import configfile
+                        count,skipped,rollback,summary=backup.apply_prepared(self.api['config'],configfile,prepared,
+                            rollback,details=True)
+                        self.describe()
+                        self['result_title'].setText(self.tr('Restore result'))
+                        self['result_status'].setText('OK · %d'%count)
+                        rows=summary_lines(self.tr,summary,completed=True)
+                        if rollback:rows.extend(('',self.tr('Restart GUI after restoring settings.'),
+                                                 self.tr('Backup before restore'),str(rollback)))
+                        self['descriptions'].setText('\n'.join(rows))
+                    except backup.RestoreFailure as failure:
+                        self.describe()
+                        self['result_title'].setText(self.tr('Restore result'))
+                        self['result_status'].setText(self.tr('Restore failed'))
+                        self['descriptions'].setText(self.tr('Previous settings restored' if failure.recovered else 'Recovery backup required')+
+                            '\n\n'+self.tr('Backup before restore')+'\n'+str(failure.rollback))
+                    except (OSError,ValueError,TypeError,RuntimeError,AttributeError,RecursionError):
+                        failed()
+                # Only plain snapshot data crosses the worker boundary.
+                self.task(lambda:backup.save_recovery(previous,password=password),recovered_copy,failed)
+            self.task(lambda:backup.load(path,password=password),loaded,failed)
+        self.session.openWithCallback(confirmed,MessageBox,self.tr('Restore selected compatible settings only.')+'\n\n'+self.tr('Backup before restore')+'\n'+self.tr('Restart GUI after restoring settings.'),
                                       type=MessageBox.TYPE_YESNO,default=False)
 
     def back(self):

@@ -320,3 +320,41 @@ class BackupTests(unittest.TestCase):
                 self.assertRegex(path.name,b.NAME)
                 self.assertNotIn('--',path.name)
                 self.assertEqual(b.inventory(path.parent,p),[path])
+
+
+    def test_staged_restore_aborts_if_target_changed_before_write(self):
+        with TemporaryDirectory() as folder:
+            p=b.Probe(folder)
+            p.path('/etc/enigma2').mkdir(parents=True)
+            item=Item('720',['360','720','1080'])
+            config=SimpleNamespace(plugins=SimpleNamespace(warderyoutube=SimpleNamespace(max_quality=item)))
+            configfile=MagicMock()
+            payload={'schema':1,'created':'2026-11-26','projects':{'YouTube':{'warderyoutube.max_quality':'1080'}}}
+            with patch.object(b,'mounts',return_value=[('/dev/root','/','ext4',False)]):
+                prepared=b.prepare_restore(config,payload,probe=p)
+                self.assertEqual(item.value,'720')
+                self.assertEqual(b.inventory(p.path(b.ROOT),p),[])
+                with self.assertRaisesRegex(ValueError,'Recovery backup unavailable'):
+                    b.apply_prepared(config,configfile,prepared,None,p)
+                rollback=b.save_recovery(prepared['previous'],p)
+                item.value='360'
+                with self.assertRaisesRegex(ValueError,'Settings changed before restore'):
+                    b.apply_prepared(config,configfile,prepared,rollback,p)
+                self.assertEqual(item.value,'360')
+                configfile.save.assert_not_called()
+                self.assertEqual(b.load(rollback,p)['projects']['YouTube']['warderyoutube.max_quality'],'720')
+
+    def test_staged_restore_preserves_native_saved_value_race(self):
+        with TemporaryDirectory() as folder:
+            p=b.Probe(folder)
+            p.path('/etc/enigma2').mkdir(parents=True)
+            item=Item('720',['720','1080'])
+            config=SimpleNamespace(plugins=SimpleNamespace(warderyoutube=SimpleNamespace(max_quality=item)))
+            payload={'schema':1,'created':'2026-11-26','projects':{'YouTube':{'warderyoutube.max_quality':'1080'}}}
+            with patch.object(b,'mounts',return_value=[('/dev/root','/','ext4',False)]):
+                prepared=b.prepare_restore(config,payload,probe=p)
+                rollback=b.save_recovery(prepared['previous'],p)
+                item.saved_value=None
+                with self.assertRaisesRegex(ValueError,'Settings changed before restore'):
+                    b.apply_prepared(config,MagicMock(),prepared,rollback,p)
+                self.assertEqual(item.value,'720')

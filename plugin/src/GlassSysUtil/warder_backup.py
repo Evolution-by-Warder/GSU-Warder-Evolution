@@ -433,17 +433,18 @@ class RestoreFailure(OSError):
         self.recovered=recovered
 
 
-def restore(config,configfile,path,selected=PRODUCTS,probe=None,password=None,expected_digest=None,details=False):
-    """Explicit apply, native choices/limits, verified rollback snapshot first."""
+def prepare_restore(config,payload,selected=PRODUCTS,probe=None,private=False,expected_digest=None):
+    """Main-thread native configuration planning, without any writes."""
     p=probe or Probe()
-    private=password is not None
-    payload=load(path,p,password)
+    selected=tuple(selected)
     if expected_digest is not None and fingerprint(payload)!=expected_digest:raise ValueError('Backup changed after preview')
     changes,radio,skipped,state=plan(config,payload,selected,p,private)
     summary=outcome(payload,selected,changes,radio,skipped)
-    if not changes and not radio:
-        result=(0,skipped,None)
-        return (*result,summary) if details else result
+    prepared={'payload':payload,'selected':selected,'private':private,'changes':changes,
+              'radio':radio,'skipped':skipped,'state':state,'summary':summary,
+              'originals':[(obj,obj.value,obj.saved_value) for _,_,obj,_ in changes],
+              'previous':{}}
+    if not changes and not radio:return prepared
     previous=snapshot(config,selected,p,private)
     if any(key not in previous.get(product,{}) for product,key,_,_ in changes):raise ValueError('Native rollback unavailable')
     if radio:
@@ -454,9 +455,30 @@ def restore(config,configfile,path,selected=PRODUCTS,probe=None,password=None,ex
             value=state[1].get(key,defaults[key])
             if not radio_valid(key,value,private):raise ValueError('Radio rollback unavailable')
             old[key]=value
-    # Recovery must survive removal of the source USB. Never start changing
-    # settings until the internal, verified rollback archive exists.
-    rollback=save(p.path(ROOT),previous,p,password)
+    prepared['previous']=previous
+    return prepared
+
+
+def save_recovery(previous,probe=None,password=None):
+    """Worker-safe: no native Enigma2 objects are accessed here."""
+    p=probe or Probe()
+    return save(p.path(ROOT),previous,p,password) if previous else None
+
+
+def apply_prepared(config,configfile,prepared,rollback,probe=None,details=False):
+    """Main-thread apply, only after the verified local recovery copy exists."""
+    p=probe or Probe()
+    changes,radio,skipped,state,summary=(prepared[k] for k in ('changes','radio','skipped','state','summary'))
+    fresh=plan(config,prepared['payload'],prepared['selected'],p,prepared['private'])
+    if fresh[:3]!=(changes,radio,skipped) or (radio and (fresh[3] is None or fresh[3][0]!=state[0])):
+        raise ValueError('Settings changed before restore')
+    for obj,value,saved in prepared['originals']:
+        if obj.value!=value or obj.saved_value!=saved:raise ValueError('Settings changed before restore')
+    if not changes and not radio:
+        result=(0,skipped,None)
+        return (*result,summary) if details else result
+    if rollback is None or rollback.parent!=p.path(ROOT) or not rollback.is_file():
+        raise ValueError('Recovery backup unavailable')
     originals=[]
     def persist():
         destination=Path(configfile.CONFIG_FILE)
@@ -506,3 +528,12 @@ def restore(config,configfile,path,selected=PRODUCTS,probe=None,password=None,ex
         raise RestoreFailure(rollback,recovered) from None
     result=(len(changes)+len(radio),skipped,rollback)
     return (*result,summary) if details else result
+
+
+def restore(config,configfile,path,selected=PRODUCTS,probe=None,password=None,expected_digest=None,details=False):
+    """Synchronous wrapper for tests and non-GUI callers; UI uses staged helpers."""
+    p=probe or Probe()
+    payload=load(path,p,password)
+    prepared=prepare_restore(config,payload,selected,p,password is not None,expected_digest)
+    rollback=save_recovery(prepared['previous'],p,password)
+    return apply_prepared(config,configfile,prepared,rollback,p,details)
