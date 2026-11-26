@@ -126,7 +126,14 @@ class WarderMainTests(unittest.TestCase):
         screen=module.SysUtilMngMain(session)
         with patch.object(module,'countServers',return_value=(True,True)),patch.object(screen,'checkCam',return_value=False),patch.object(screen,'cccamRunning',return_value=False),patch.object(screen,'mboxRunning',return_value=False),patch.object(module,'oscamRunning',return_value=True):
             screen.updatemenulist()
-        self.assertEqual([row[0] for row in screen.list],['0','1','2','3','4','6','7','8','9','17','16'])
+        self.assertEqual([row[0] for row in screen.list],['centre:system','centre:reception','centre:storage','centre:network','centre:cam','centre:service','centre:warder'])
+        self.assertEqual([e[0] for e in screen.menuListAll],['0','1','2','3','4','6','7','8','9','17','16','network-overview'])
+        screen['list'].getCurrent=lambda:['centre:cam']
+        screen.selectedmenuitem()
+        args=session.openWithCallback.call_args.args
+        self.assertEqual(args[-1],'cam')
+        self.assertEqual(args[0],screen.dispatch_menu_id)
+        session.openWithCallback.reset_mock()
         self.assertFalse(screen.status['2']);self.assertFalse(screen.status['4']);self.assertTrue(screen.status['3'])
         for entry in screen.menuListAll:
             screen['list'].getCurrent=lambda e=entry:[e[0]]
