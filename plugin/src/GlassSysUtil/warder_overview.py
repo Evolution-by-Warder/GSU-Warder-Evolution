@@ -62,6 +62,7 @@ class Overview(Screen):
             return
         self.show_setting()
         self.pending = True
+        self['summary'].setText(self.tr('Loading…'))
         deferToThread(dashboard, self.cancelled).addCallbacks(self.done, self.failed)
 
     def done(self, report):
@@ -84,11 +85,12 @@ class Overview(Screen):
                 else:
                     meter.setValue(round(max(0,min(100,value))))
                     meter.show()
-        self['label1'].setText('RAM · '+self.tr('Used(%):').rstrip(':'))
+        self['label1'].setText('RAM · '+self.tr('Used:').rstrip(':'))
         self['label3'].setText('Flash · '+self.tr('free'))
         self['label4'].setText('HDD / SSD / USB · '+self.tr('free'))
         self['sub4'].setText(str(report.get('disk_mount') or ''))
-        self['sub5'].setText(str(report.get('temperature_source') or ''))
+        source=str(report.get('temperature_source') or '')
+        self['sub5'].setText((source.rsplit('/',1)[-1] if source.startswith('/') else source)[:36])
         h = report['health']
         score = str(h['score'])+'/100' if h['score'] is not None else '—'
         message = '%s   %s     ·     %s   %d/%d (RAM / Flash)' % (self.tr('Resource score'),score,
@@ -106,4 +108,8 @@ class Overview(Screen):
     def failed(self, failure):
         self.pending = False
         if not self.cancelled.is_set():
+            for i in range(6):
+                self['value%d'%i].setText('—')
+                if i<4:self['meter%d'%i].hide()
+                else:self['sub%d'%i].setText('')
             self['summary'].setText(self.tr('Unavailable'))
