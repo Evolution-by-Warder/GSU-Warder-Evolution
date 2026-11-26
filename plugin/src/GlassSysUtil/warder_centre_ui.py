@@ -6,7 +6,7 @@ from Components.ScrollLabel import ScrollLabel
 from twisted.internet.threads import deferToThread
 from .warder_screen import Screen
 from . import warder_dashboard as dashboard
-from .warder_centres import legacy_routes, DIAGNOSTICS
+from .warder_centres import legacy_routes, DIAGNOSTICS, description as route_description
 from .i18n import for_api, language
 
 
@@ -66,7 +66,7 @@ class CentreMenu(Screen):
     def describe(self):
         row = self['list'].getCurrent()
         entry = next((e for e in self.entries() if row and e[0] == row[0]), None)
-        description=entry[2] if entry else ''
+        description=route_description(row[0],lambda key:for_api(self.api,key),entry[2]) if row and entry else ''
         backup=getattr(self,'_gsu_last_channel_backup',None)
         if row and row[0] in self.native_actions and isinstance(backup,str):
             description+='\n\n'+for_api(self.api,'Verified channel backup')+'\n'+backup
