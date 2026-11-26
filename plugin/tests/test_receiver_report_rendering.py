@@ -362,3 +362,64 @@ class ReceiverRenderingTests(unittest.TestCase):
         projects.render()
         self.assertEqual(len(projects['list'].l.list),5)
         self.assertTrue(all(len(row)==3 for row in projects['list'].l.list))
+
+
+    def test_inline_system_cards_show_real_values_and_clear_on_navigation(self):
+        ui=self.ui
+        menu=ui.CentreMenu(MagicMock(),self.api,[('system-overview','System health check','health'),
+            ('system-log','Log view','log')],{'system-overview':True,'system-log':True},'system')
+        menu.render()
+        value={'values':(62,18,0,29,465*1073741824,79.4),
+               'disk_mount':'/media/hdd','temperature_source':'/sys/class/thermal/cpu',
+               'health':{'score':100,'coverage':(2,2),'state':'ok'}}
+        with patch.object(ui,'deferToThread') as worker:
+            menu.select()
+            worker.return_value.addCallbacks.call_args.args[0](value)
+            self.assertTrue(menu.cards_visible)
+            self.assertFalse(menu['descriptions'].visible)
+            self.assertEqual([menu['inline_value%d'%i].getText() for i in range(6)],
+                ['62 %','18 %','0 %','29 %','465.0 GiB','79.4 °C'])
+            self.assertTrue(menu['inline_meter2'].visible)
+            self.assertFalse(menu['inline_meter4'].visible)
+            self.assertEqual(menu['inline_note4'].getText(),'/media/hdd')
+            self.assertEqual(menu['inline_note5'].getText(),'cpu')
+            self.assertIn('100/100',menu['inline_summary'].getText())
+            menu.refresh_result()
+            self.assertFalse(menu.cards_visible)
+            callback=worker.return_value.addCallbacks.call_args.args[0]
+            callback(dict(value,values=(None,18,0,29,None,None)))
+            self.assertEqual(menu['inline_value0'].getText(),'—')
+            self.assertFalse(menu['inline_meter0'].visible)
+            menu['list'].moveToIndex(1)
+            menu.describe()
+            self.assertFalse(menu.cards_visible)
+            self.assertTrue(menu['descriptions'].visible)
+            self.assertFalse(menu['inline_bg0'].visible)
+
+    def test_inline_storage_cards_do_not_show_percentages_for_partial_scans(self):
+        ui=self.ui
+        names=('Picons','Skins','Plugins','EPG','Cache','Logs')
+        complete=[(n,1048576,True) for n in names]
+        cards,summary=ui.card_result('storage-categories',complete,str)
+        self.assertEqual(cards[0],('Picons','1.0 MiB',17,''))
+        partial=complete[:-1]+[('Logs',0,False)]
+        cards,summary=ui.card_result('storage-categories',partial,str)
+        self.assertTrue(all(c[2] is None for c in cards))
+        self.assertEqual(cards[-1],('Logs','—',None,'Partial result'))
+        self.assertIn('≥ 5.0 MiB',summary)
+        self.assertIn('Partial result',summary)
+
+    def test_inline_card_widgets_stay_within_the_right_panel(self):
+        for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
+            root=ET.fromstring(mod('warder_dashboard').skin(w,h,'menu'))
+            area=root.find("widget[@name='descriptions']")
+            ax,ay=map(int,area.get('position').split(','))
+            aw,ah=map(int,area.get('size').split(','))
+            for widget in root.findall('widget'):
+                if not widget.get('name','').startswith('inline_'):continue
+                x,y=map(int,widget.get('position').split(','))
+                ww,hh=map(int,widget.get('size').split(','))
+                self.assertGreaterEqual(x,ax)
+                self.assertGreaterEqual(y,ay)
+                self.assertLessEqual(x+ww,ax+aw)
+                self.assertLessEqual(y+hh,ay+ah)
