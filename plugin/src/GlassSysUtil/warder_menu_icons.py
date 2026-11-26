@@ -31,11 +31,31 @@ def cached(loader,name):
     except (OSError,RuntimeError,TypeError,AttributeError):
         return None
 
-def pixmap_entry(api,ident,pos,size):
+PROJECT_ASSETS={
+    'FullHDGlass':ROOT/'project-fullhdglass.png',
+    'PiconHub':ROOT/'project-piconhub.png',
+    'YouTube':ROOT/'project-youtube.png',
+    'GSU':ROOT/'warder-plugin.png',
+    'Warder Radio':Path('/usr/lib/enigma2/python/Plugins/Extensions/WarderRadio/plugin.png'),
+}
+
+
+@lru_cache(maxsize=16)
+def project_cached(loader,ident,path):
+    try:
+        if not path.is_file() or path.stat().st_size>2*1024*1024:return None
+        return loader(path=str(path),cached=True)
+    except (OSError,RuntimeError,TypeError,AttributeError):
+        return None
+
+
+def pixmap_entry(api,ident,pos,size,project=False):
     loader,entry=api.get('LoadPixmap'),api.get('MultiContentEntryPixmapAlphaBlend')
     if not callable(loader) or not callable(entry):return None
     try:
-        pix=cached(loader,icon_name(ident))
+        path=PROJECT_ASSETS.get(ident) if project else None
+        pix=project_cached(loader,ident,path) if path is not None else None
+        if pix is None:pix=cached(loader,icon_name(ident))
         if pix is None:return None
         flags=0
         for key in ('BT_SCALE','BT_KEEP_ASPECT_RATIO'):
