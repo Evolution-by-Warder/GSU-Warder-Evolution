@@ -3,7 +3,7 @@ CENTRES = (
     ("system", "System centre", ("0",)),
     ("reception", "Reception centre", ("1",)),
     ("storage", "Memory and storage", ("9",)),
-    ("network", "Network centre", ()),
+    ("network", "Network centre", ("network-overview",)),
     ("cam", "CAM / ECM centre", ("2", "3", "4", "6", "7", "8")),
     ("service", "Service centre", ("17",)),
     ("warder", "Warder Evolution centre", ("16",)),
