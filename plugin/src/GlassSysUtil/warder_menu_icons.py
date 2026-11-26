@@ -17,11 +17,36 @@ ROUTE_ICONS={
     'FullHDGlass':'tv','PiconHub':'ecosystem','Warder Radio':'signal','YouTube':'tv','GSU':'system',
 }
 
+# Legacy CAM diagnostic navigation uses the same local functional icon set.
+LEGACY_CAM_ICONS={
+    'summary':'info','servers':'network','readers':'network','clients':'processes',
+    'users':'processes','activeclients':'processes','shares':'ecosystem',
+    'providers':'ecosystem','entitlements':'key','extend':'search','log':'log',
+    'files':'settings','pid.info':'processes','share.info':'ecosystem',
+    'share.onl':'network','stat.info':'info',
+}
+
+
+def legacy_cam_row(api,ident,title,enabled):
+    """Preserve legacy row identity, dimensions and independent availability light."""
+    fhd=api['fhd']
+    symbol=pixmap_entry(api,ident,(fhd(21),fhd(1)),(fhd(22),fhd(22)))
+    left=48 if symbol is not None else 25
+    row=[ident,api['MultiContentEntryText'](pos=(fhd(left),0),
+        size=(fhd(560-left),fhd(22)),font=0,text=title,
+        color=0xffffff if enabled else 0x666666)]
+    status=api['LoadPixmap'](api['BP_ICO'] % ('green' if enabled else 'red'))
+    row.append(api['MultiContentEntryPixmapAlphaTest'](pos=(0,fhd(3)),
+        size=(fhd(15),fhd(16)),png=status))
+    if symbol is not None:row.append(symbol)
+    return row
+
+
 def icon_name(ident):
     if not isinstance(ident,str):return 'info'
     if ident.startswith('centre:'):return CENTRE_ICONS.get(ident.split(':',1)[1],'info')
     if ident.startswith('native:'):return 'reception'
-    return ROUTE_ICONS.get(ident,CENTRE_ICONS.get(ident,'info'))
+    return ROUTE_ICONS.get(ident,CENTRE_ICONS.get(ident,LEGACY_CAM_ICONS.get(ident,'info')))
 
 @lru_cache(maxsize=64)
 def cached(loader,name):

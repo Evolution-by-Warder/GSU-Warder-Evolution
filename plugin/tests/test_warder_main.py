@@ -270,3 +270,52 @@ class SelectionStyleTests(unittest.TestCase):
             for node in root.findall('widget'):
                 if node.get('name') in ui.LIST_WIDGETS:
                     self.assertEqual(node.get('backgroundColorSelected'),ui.SELECTION)
+
+
+class LegacyNavigationIconTests(unittest.TestCase):
+    def test_settings_icons_follow_config_identity_and_fit_native_rows(self):
+        from Plugins.Extensions.GlassSysUtil import warder_settings as settings
+        cfg=types.SimpleNamespace(**{key:object() for key,_ in settings.SETTING_ICONS})
+        entries=[('translated',getattr(cfg,key)) for key,_ in settings.SETTING_ICONS]
+        names=settings.setting_icons(entries,cfg)
+        self.assertEqual(names,tuple(icon for _,icon in settings.SETTING_ICONS))
+        self.assertEqual(settings.setting_icons(entries[::-1],cfg),names[::-1])
+        self.assertEqual(settings.setting_icons(entries[:-1],cfg),())
+        self.assertEqual(settings.setting_icons(entries[:-1]+[('unknown',object())],cfg),())
+        for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
+            root=ET.fromstring(settings.skin(width,height,names))
+            native=root.find("widget[@name='config']")
+            x,y=map(int,native.get('position').split(','))
+            step=int(native.get('itemHeight'))
+            nodes=[n for n in root.findall('ePixmap') if '/nav-' in n.get('pixmap','')]
+            self.assertEqual(len(nodes),len(entries))
+            for index,node in enumerate(nodes):
+                ix,iy=map(int,node.get('position').split(','))
+                w,h=map(int,node.get('size').split(','))
+                self.assertLessEqual(ix+w,x)
+                self.assertGreaterEqual(iy,y+index*step)
+                self.assertLessEqual(iy+h,y+(index+1)*step)
+            fallback=ET.fromstring(settings.skin(width,height,('not-an-asset',)))
+            self.assertFalse(any('/nav-' in n.get('pixmap','') for n in fallback.findall('ePixmap')))
+
+    def test_legacy_cam_row_retains_id_and_status_with_icon_fallback(self):
+        from Plugins.Extensions.GlassSysUtil import warder_menu_icons as icons
+        api=dict(vars(load(ROOT)))
+        api['fhd']=lambda n:n
+        api['LoadPixmap']=MagicMock(return_value=object())
+        icons.cached.cache_clear()
+        for ident in icons.LEGACY_CAM_ICONS:
+            for enabled in (True,False):
+                row=icons.legacy_cam_row(api,ident,'Translated',enabled)
+                self.assertEqual(row[0],ident)
+                self.assertEqual(row[1]['text'],'Translated')
+                self.assertEqual(row[1]['color'],0xffffff if enabled else 0x666666)
+                self.assertEqual(row[2]['size'],(15,16))
+                self.assertEqual(row[3]['size'],(22,22))
+                self.assertEqual(row[1]['pos'],(48,0))
+        icons.cached.cache_clear()
+        api['LoadPixmap']=MagicMock(return_value=None)
+        row=icons.legacy_cam_row(api,'summary','Translated',False)
+        self.assertEqual(len(row),3)
+        self.assertEqual(row[1]['pos'],(25,0))
+        icons.cached.cache_clear()

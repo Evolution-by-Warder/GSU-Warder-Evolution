@@ -1,3 +1,9 @@
+# 26.11.2026 — Legacy navigation icon checkpoint (continued from PR #19)
+
+Previous exact HEAD `ef18452b6ef78293ac74192e0307c5a455fb230f`: diagnostics reproducibility 45805814172, OpenPLi 45805814142 and OpenATV 45805814149 SUCCESS; architecture run 45805814141 in progress at inspection. Stable release remains 0.41.5. This checkpoint adds a native settings icon gutter keyed by ConfigElement identity, with full-width native fallback for unknown, overflowing or missing icons; it retains existing settings values, native edit/save/cancel, row height and translations. Legacy CCcam, OSCam and Mbox diagnostic menu rows reuse local functional icons while retaining independent green/red availability indicators, disabled colors, row IDs and action dispatch. No CAM operations, configuration or data collectors changed. Regression fixtures cover icon identity, four resolutions, geometry, row status and missing assets. New exact-head CI and physical receiver retest are required; main CAM/SRV action panel and remaining legacy screens still need visual review. No release, feed or website mutation.
+
+---
+
 # 26.11.2026 — Inline resource cards and branded product navigation
 
 Owner-approved two-panel UI extended: the System health check now renders six native metric cards in the right panel (CPU, RAM, swap, flash free, disk free with mount, sensor temperature). Storage category result uses the same six-card surface with measured relative bars only for complete scans and explicit partial/lower-bound states. Summary and measurement coverage remain visible. Existing full-screen details unchanged; selecting another route or refreshing hides old cards, stale callbacks rejected. Layout tested by new fixture assertions for HD/FHD/WQHD/UHD; actual hardware render pending.

@@ -2735,12 +2735,8 @@ class cccamInfo(Screen):
                 self.status[x[0]] = True
             if x[0] == 'extend' and num != -1:
                 self.status[x[0]] = True
-            item = [
-             x[0]]
-            item.append(MultiContentEntryText(pos=(fhd(25), 0), size=(fhd(535), fhd(22)), font=0, text=x[1], color=int({True: '0xffffff', False: '0x666666'}[self.status.get(x[0])], 16)))
-            pix = LoadPixmap({True: (BP_ICO % 'green'), False: (BP_ICO % 'red')}[self.status.get(x[0])])
-            item.append(MultiContentEntryPixmapAlphaTest(pos=(0, fhd(3)), size=(fhd(15), fhd(16)), png=pix))
-            self.list.append(item)
+            from .warder_menu_icons import legacy_cam_row
+            self.list.append(legacy_cam_row(globals(),x[0],x[1],self.status.get(x[0])))
 
         self['list'].l.setList(self.list)
         return
@@ -5904,12 +5900,8 @@ class oscamInfo(Screen):
             self.status[x[0]] = False
             if tst:
                 self.status[x[0]] = True
-            item = [
-             x[0]]
-            item.append(MultiContentEntryText(pos=(fhd(25), 0), size=(fhd(535), fhd(22)), font=0, text=x[1], color=int({True: '0xffffff', False: '0x666666'}[self.status.get(x[0])], 16)))
-            pix = LoadPixmap({True: (BP_ICO % 'green'), False: (BP_ICO % 'red')}[self.status.get(x[0])])
-            item.append(MultiContentEntryPixmapAlphaTest(pos=(0, fhd(3)), size=(fhd(15), fhd(16)), png=pix))
-            self.list.append(item)
+            from .warder_menu_icons import legacy_cam_row
+            self.list.append(legacy_cam_row(globals(),x[0],x[1],self.status.get(x[0])))
 
         self['list'].l.setList(self.list)
         self['server_name'].setText(start + '\n\n' + infoline + '\n\n' + startInfo)
@@ -7512,12 +7504,8 @@ class mboxInfo(Screen):
             self.status[x[0]] = False
             if fileExists('/tmp/' + x[0]):
                 self.status[x[0]] = True
-            item = [
-             x[0]]
-            item.append(MultiContentEntryText(pos=(fhd(25), 0), size=(fhd(535), fhd(22)), font=0, text=x[1], color=int({True: '0xffffff', False: '0x666666'}[self.status.get(x[0])], 16)))
-            pix = LoadPixmap({True: (BP_ICO % 'green'), False: (BP_ICO % 'red')}[self.status.get(x[0])])
-            item.append(MultiContentEntryPixmapAlphaTest(pos=(0, fhd(3)), size=(fhd(15), fhd(16)), png=pix))
-            self.list.append(item)
+            from .warder_menu_icons import legacy_cam_row
+            self.list.append(legacy_cam_row(globals(),x[0],x[1],self.status.get(x[0])))
 
         self['list'].l.setList(self.list)
         if fileExists('/tmp/mbox.ver'):
