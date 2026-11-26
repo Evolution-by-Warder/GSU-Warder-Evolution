@@ -80,3 +80,7 @@ Ostré vydanie blokuje neukončené CI presného HEAD a požadovaný fyzický re
 ### Centrum Warder Evolution — grafický prehľad
 
 - Automatický pravý panel produktu má verzie, stav a dostupné metadáta oddelené od poznámok k vydaniu. Spoločný prehľad piatich produktov má natívnu tabuľku názov/nainštalovaná/stabilná/stav. Neznáme údaje sa nevydávajú za aktuálne. Zdieľaný čítač manifestov, jeden zber na požiadavku, pôvodné detailné reporty a aktualizátory zachované. Dva nové jazykové kľúče vo všetkých 21 katalógoch. Regresie pre formáty, zber, neznáme hodnoty, chybu a rozlíšenia. Fyzické overenie a CI nového HEAD otvorené.
+
+### Pamäť a úložisko — pravý panel
+
+- Prehľad má dva stĺpce: RAM, swap, uložené cesty EPG/timeshift/nahrávania a lokálne úložiská, kapacity, SMART atribúty a odporúčaná cesta piconov. Pôvodné dáta a podrobný report zachované, bez ďalšieho merania; kontrola zrušenia pred SMART a čítaním ciest. Využité existujúce preklady. Regresie pre dáta, jeden zber, zrušenie a vyčistenie pri zmene výberu. CI a fyzické overenie zostávajú.

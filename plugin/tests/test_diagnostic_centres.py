@@ -273,6 +273,30 @@ class DiagnosticTests(unittest.TestCase):
         self.assertIn('storage-largest',ui.INLINE_REPORTS)
         self.assertIn('storage-largest',ui.MANUAL_INLINE)
 
+    def test_storage_overview_panels_preserve_measurements_and_cancel(self):
+        storage=module('warder_storage')
+        p=MagicMock()
+        p.text.return_value='MemTotal: 1048576 kB\nMemAvailable: 524288 kB\nSwapTotal: 0 kB\nSwapFree: 0 kB'
+        usage=SimpleNamespace(total=10*1073741824,free=5*1073741824)
+        with patch.object(storage,'mounts',return_value=[]),patch.object(storage,'disks',return_value=[('/media/hdd','/dev/sda1','ext4',False,usage)]) as disks,patch.object(storage,'smart',return_value=('PASSED',35,{'Power On Hours':10})) as smart,patch.object(storage,'configured_storage_paths',return_value=(('EPG','/media/hdd/epg.dat'),)):
+            left,right=storage.report(str,probe=p,panels=True,cancelled=Event())
+            disks.assert_called_once()
+            smart.assert_called_once()
+            self.assertIn('512.0 MiB',left)
+            self.assertIn('/media/hdd/epg.dat',left)
+            self.assertNotIn('SMART',left)
+            self.assertIn('5.0 GiB',right)
+            self.assertIn('PASSED',right)
+            self.assertIn('Power On Hours',right)
+            full=storage.report(str,probe=p)
+            self.assertIn('/media/hdd/epg.dat',full)
+            self.assertIn('PASSED',full)
+            cancel=Event();cancel.set()
+            disks.reset_mock();smart.reset_mock()
+            self.assertEqual(storage.report(str,probe=p,panels=True,cancelled=cancel),'')
+            disks.assert_not_called()
+            smart.assert_not_called()
+
     def test_saved_storage_paths_are_read_only_allowlisted_and_do_not_follow_mounts(self):
         storage=module('warder_storage')
         with TemporaryDirectory() as folder:

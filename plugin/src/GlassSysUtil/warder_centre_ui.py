@@ -94,7 +94,7 @@ def preview_text(kind,value,tr):
         from .warder_storage import category_size
         return '\n'.join('%s    %s%s'%(tr(name),category_size(size,complete),
                          '' if complete else ' · '+tr('Partial result')) for name,size,complete in value)
-    if kind in ('network-overview','tuner-details','service-smart','service-health') and isinstance(value,tuple) and len(value)==2 and all(isinstance(v,str) for v in value):
+    if kind in ('network-overview','tuner-details','service-smart','service-health','storage-overview') and isinstance(value,tuple) and len(value)==2 and all(isinstance(v,str) for v in value):
         return '\n\n'.join(value)
     if kind in ('transponder-services','FullHDGlass','PiconHub','Warder Radio','YouTube','GSU') and isinstance(value,tuple) and len(value)==2 and all(isinstance(v,tuple) and len(v)==2 and all(isinstance(x,str) for x in v) for v in value):
         return '\n\n'.join(title+'\n'+body for title,body in value)
@@ -402,6 +402,9 @@ class CentreMenu(Screen):
         if key=='system-overview':
             from .warder_system_data import dashboard
             return dashboard(token)
+        if key=='storage-overview':
+            from .warder_storage import report
+            return report(tr,panels=True,cancelled=token)
         if key=='service-smart':
             from .warder_system_data import smart_diagnostics
             return smart_diagnostics(tr,token,panels=True)
@@ -488,12 +491,13 @@ class CentreMenu(Screen):
                 self['result_status'].setText(strftime('%H:%M:%S') if model or text.strip() else tr('Unavailable'))
                 if not failed and key=='system-processes' and isinstance(value,list) and value and text.strip():
                     self.show_process_table(value)
-                elif (not failed and key in ('network-overview','tuner-details','service-smart','service-health') and isinstance(value,tuple)
+                elif (not failed and key in ('network-overview','tuner-details','service-smart','service-health','storage-overview') and isinstance(value,tuple)
                       and len(value)==2 and all(isinstance(v,str) for v in value) and text.strip()):
                     captions={
                         'tuner-details':('Transponder','Tuner interfaces'),
                         'service-smart':('System health check','Installation check'),
                         'service-health':('Installation check','Crash logs'),
+                        'storage-overview':('Memory and storage','HDD / SSD / USB'),
                     }.get(key)
                     titles=tuple(map(tr,captions)) if captions else None
                     self.show_inline_network(value,titles)

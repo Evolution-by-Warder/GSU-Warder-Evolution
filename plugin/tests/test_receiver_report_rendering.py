@@ -689,6 +689,27 @@ class ReceiverRenderingTests(unittest.TestCase):
                 self.assertLessEqual(x+ww,w)
                 self.assertLessEqual(y+hh,h)
 
+    def test_inline_storage_overview_uses_shared_panels(self):
+        ui=self.ui
+        entries=[('storage-overview','Memory and storage','Storage'),
+                 ('storage-memory','Memory details','RAM')]
+        menu=ui.CentreMenu(MagicMock(),self.api,entries,{k:True for k,_,_ in entries},'storage')
+        menu.render()
+        with patch.object(ui,'deferToThread') as worker,patch.object(mod('warder_storage'),'report',return_value=('RAM and paths','Disks and SMART')) as provider:
+            menu.auto_result()
+            value=worker.call_args.args[0]()
+            self.assertTrue(provider.call_args.kwargs['panels'])
+            self.assertIs(provider.call_args.kwargs['cancelled'],menu._result_job[1])
+            worker.return_value.addCallbacks.call_args.args[0](value)
+            self.assertTrue(menu.inline_network_visible)
+            self.assertEqual(menu['inline_network_body0'].getText(),'RAM and paths')
+            self.assertEqual(menu['inline_network_body1'].getText(),'Disks and SMART')
+            menu['list'].moveToIndex(1)
+            menu.describe()
+            self.assertFalse(menu.inline_network_visible)
+            self.assertEqual(menu['inline_network_body0'].getText(),'')
+            self.assertTrue(menu['descriptions'].visible)
+
     def test_inline_service_panels_reuse_existing_providers(self):
         ui=self.ui
         from threading import Event

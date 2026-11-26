@@ -189,8 +189,9 @@ def category_size(size,complete):
     return ('' if complete else '≥ ')+value
 
 
-def report(tr, detail=False, probe=None):
+def report(tr, detail=False, probe=None, panels=False, cancelled=None):
     p = probe or Probe()
+    if cancelled is not None and cancelled.is_set():return ''
     table = mounts(p)
     rows = []
     if detail:
@@ -203,10 +204,12 @@ def report(tr, detail=False, probe=None):
             total=mem['ram_total' if key=='ram_available' else 'swap_total']
             rows.append(tr(label))
             rows.append('    %s %.1f MiB    ·    %s %.1f MiB' % (tr('Total:'),total/1048576,tr('Free:'),value/1048576) if total is not None and value is not None else '    —')
-        rows.append('')
+        memory_rows=rows[:]
+        rows=[]
         options = []
         smart_cache = {}
         for path, dev, fs, ro, usage in disks(p, table):
+            if cancelled is not None and cancelled.is_set():return ''
             rows.append('%s   ·   %s%s' % (path, fs, ' · '+tr('read-only') if ro else ''))
             if usage and usage.total>0:
                 rows.append('    %s %.1f GiB    ·    %s %.1f GiB    ·    %s %.0f %%' % (tr('Total:'),usage.total/1073741824,tr('Free:'),usage.free/1073741824,tr('Used(%):'),100*(usage.total-usage.free)/usage.total))
@@ -225,9 +228,14 @@ def report(tr, detail=False, probe=None):
             rows.append('')
         if options:
             rows.extend(('', tr('Picon storage')+'   '+max(options)[1]))
-        rows.extend(('',tr('Saved storage paths')))
+        disk_rows=rows
+        if cancelled is not None and cancelled.is_set():return ''
+        paths=['',tr('Saved storage paths')]
         for label,path in configured_storage_paths(p):
-            rows.append('    '+tr(label)+'   '+(path or '—'))
+            paths.append('    '+tr(label)+'   '+(path or '—'))
+        if cancelled is not None and cancelled.is_set():return ''
+        if panels:return ('\n'.join(memory_rows+paths).strip(),'\n'.join(disk_rows).strip() or tr('Unavailable'))
+        rows=memory_rows+['']+disk_rows+paths
     return '\n'.join(rows) or tr('Unavailable')
 
 
