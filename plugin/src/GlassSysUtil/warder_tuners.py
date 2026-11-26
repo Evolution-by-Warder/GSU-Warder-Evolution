@@ -140,49 +140,75 @@ def native_tools(tr):
     return options
 
 
-def choose_native(session, tr):
-    from Screens.ChoiceBox import ChoiceBox
+def open_native(session,tr,action):
+    """One consent covers a private verified backup and native tool launch."""
     from Screens.MessageBox import MessageBox
     def info(msg):
-        session.open(MessageBox, tr(msg), type=MessageBox.TYPE_INFO)
-    if not recording_safe(session.nav):
+        session.open(MessageBox,tr(msg),type=MessageBox.TYPE_INFO)
+    if not callable(action) or not recording_safe(session.nav):
         return info('Tuner in use')
-    try:
-        options = native_tools(tr)
-    except (ImportError, AttributeError, RuntimeError):
-        options = []
-    if not options:
-        return info('Unavailable')
-    def selected(item):
-        if not item:
+    owner=session.current_dialog
+    if getattr(owner,'_gsu_native_pending',False) is True:
+        return
+    owner._gsu_native_pending=True
+    def clear():
+        owner._gsu_native_pending=False
+    def confirmed(answer):
+        if answer is not True or session.current_dialog is not owner:
+            clear()
             return
-        def confirmed(answer):
-            if answer is not True:
+        if not recording_safe(session.nav):
+            clear()
+            return info('Tuner in use')
+        from twisted.internet.threads import deferToThread
+        from Tools.Directories import resolveFilename,SCOPE_CONFIG
+        from .warder_scan_backup import create
+        def launch(folder):
+            clear()
+            if session.current_dialog is not owner:
                 return
             if not recording_safe(session.nav):
                 return info('Tuner in use')
-            from twisted.internet.threads import deferToThread
-            from Tools.Directories import resolveFilename, SCOPE_CONFIG
-            from .warder_scan_backup import create
-            owner = session.current_dialog
-            def offer(folder):
-                if session.current_dialog is not owner:
-                    return
-                def launch(accepted):
-                    if accepted is True:
-                        if recording_safe(session.nav):
-                            item[1](session)
-                        else:
-                            info('Tuner in use')
-                message = tr('Verified channel backup')+'\n'+folder+'\n\n'+tr('Open tuner setup? Live TV may stop.')
-                session.openWithCallback(launch,MessageBox,message,type=MessageBox.TYPE_YESNO,default=False)
-            def failed(_failure):
-                if session.current_dialog is owner:
-                    info('Recording or channel-list protection stopped the scan.')
-            deferToThread(create,resolveFilename(SCOPE_CONFIG)).addCallbacks(offer,failed)
-        session.openWithCallback(confirmed, MessageBox, tr('Open tuner setup? Live TV may stop.'), type=MessageBox.TYPE_YESNO, default=False)
-    session.openWithCallback(selected, ChoiceBox, title=tr('Tuner setup'), list=options)
+            owner._gsu_last_channel_backup=folder
+            describe=getattr(owner,'describe',None)
+            if callable(describe):describe()
+            try:
+                action(session)
+            except (AttributeError,RuntimeError,TypeError,ImportError,OSError,ValueError):
+                info('Unavailable')
+        def failed(_failure):
+            clear()
+            if session.current_dialog is owner:
+                info('Recording or channel-list protection stopped the scan.')
+        try:
+            deferToThread(create,resolveFilename(SCOPE_CONFIG)).addCallbacks(launch,failed)
+        except (OSError,RuntimeError,TypeError,AttributeError):
+            failed(None)
+    message=tr('Open tuner setup? Live TV may stop.')+'\n\n'+tr('A channel backup will be created before opening the tool.')
+    try:
+        session.openWithCallback(confirmed,MessageBox,message,type=MessageBox.TYPE_YESNO,default=False)
+    except Exception:
+        clear()
+        raise
 
+
+def choose_native(session, tr):
+    """Compatibility route; skip a redundant selector if only one tool exists."""
+    from Screens.ChoiceBox import ChoiceBox
+    from Screens.MessageBox import MessageBox
+    def info(msg):
+        session.open(MessageBox,tr(msg),type=MessageBox.TYPE_INFO)
+    if not recording_safe(session.nav):
+        return info('Tuner in use')
+    try:
+        options=native_tools(tr)
+    except (ImportError,AttributeError,RuntimeError,TypeError):
+        options=[]
+    if not options:return info('Unavailable')
+    if len(options)==1:return open_native(session,tr,options[0][1])
+    def selected(item):
+        if item in options:open_native(session,tr,item[1])
+    session.openWithCallback(selected,ChoiceBox,title=tr('Tuner setup'),list=options)
 
 def manual_scan(session):
     from Screens.ScanSetup import ScanSetup
