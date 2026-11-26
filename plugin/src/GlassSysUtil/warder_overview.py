@@ -72,7 +72,7 @@ class Overview(Screen):
             else:
                 text = '%.0f %%' % value
             self['value%d'%i].setText(text)
-        self['label1'].setText('RAM · '+self.tr('Used(%):').rstrip(':')+' · '+str(report['basis'] or '—'))
+        self['label1'].setText('RAM · '+self.tr('Used(%):').rstrip(':'))
         self['label3'].setText('Flash · '+self.tr('free'))
         self['label4'].setText('HDD / SSD / USB · '+self.tr('free'))
         h = report['health']
