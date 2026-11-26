@@ -4,7 +4,7 @@ from ipaddress import ip_address
 import re
 from .warder_tools import Probe
 
-def collect(probe=None):
+def collect(probe=None, include_addresses=False):
     p=probe or Probe()
     rows=[]
     for name in p.entries('/sys/class/net',64):
@@ -30,7 +30,12 @@ def collect(probe=None):
         if len(fields)>=2 and fields[0]=='nameserver':
             try:dns.append(str(ip_address(fields[1])))
             except ValueError:pass
-    return dict(interfaces=rows,gateways=list(dict.fromkeys(gateways)),dns=list(dict.fromkeys(dns)))
+    result=dict(interfaces=rows,gateways=list(dict.fromkeys(gateways)),dns=list(dict.fromkeys(dns)))
+    if include_addresses:
+        for item in rows:item['addresses']=local_addresses(item['name'],p)
+        table=p.text('/proc/mounts',65536).splitlines()
+        result['network_mounts']=sum(1 for line in table if len(line.split())>2 and line.split()[2] in ('nfs','nfs4','cifs','smbfs','fuse.sshfs'))
+    return result
 
 def summary(report,tr):
     rows=[]
@@ -38,8 +43,11 @@ def summary(report,tr):
         speed=item['speed']
         rows.append(item['name']+' — '+tr({'up':'Running','down':'Unavailable'}.get(item['state'],'Not exposed'))+
                     (' · %s Mb/s'%speed if speed is not None else ''))
+        if 'addresses' in item:rows.append('    IP   '+(', '.join(item['addresses']) or '—'))
+        rows.append('')
     rows += ['',tr('Default gateway')+': '+(', '.join(report['gateways']) or tr('Not exposed')),
              tr('DNS configuration')+': '+(', '.join(report['dns']) or tr('Not exposed'))]
+    if 'network_mounts' in report:rows.append(tr('Network mounts')+': '+str(report['network_mounts']))
     return '\n'.join(rows)
 
 
