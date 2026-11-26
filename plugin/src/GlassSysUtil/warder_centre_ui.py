@@ -585,12 +585,12 @@ class Report(Screen):
         if self.kind != 'transponder-services' or self.pending or self.cancelled.is_set() or not self.services:
             return
         from .warder_services import export
-        from Screens.MessageBox import MessageBox
+        from .warder_dialog import show_info
         try:
             result = export(self.services,kind)
         except OSError:
             result = None
-        self.session.open(MessageBox,result or self.tr('Unavailable'),type=MessageBox.TYPE_INFO)
+        show_info(self.session,self.api,result or self.tr('Unavailable'),self.tr('Unavailable') if not result else self.tr('Save'))
 
     def action(self):
         if self.pending or self.cancelled.is_set():
@@ -611,12 +611,12 @@ class Report(Screen):
             self.start()
         elif self.kind == 'forum-report' and self.preview is not None:
             from .warder_service import save_preview
-            from Screens.MessageBox import MessageBox
+            from .warder_dialog import show_info
             try:
                 path = save_preview(self.preview)
             except OSError:
                 path = self.tr('Unavailable')
-            self.session.open(MessageBox, path, type=MessageBox.TYPE_INFO)
+            show_info(self.session,self.api,path,self.tr('Save'))
 
 
 def open_diagnostic(session, api, kind):
@@ -693,7 +693,7 @@ class ProjectReport(Report):
 
     def action(self):
         from .warder_projects import entrypoint
-        from Screens.MessageBox import MessageBox
+        from .warder_dialog import show_info
         if self.project[0] == 'GSU':
             # The canonical in-plugin updater owns check, confirmation and installation.
             from .plugin_update_ui import StartupUpdateCheck
@@ -705,7 +705,7 @@ class ProjectReport(Report):
         if descriptor:
             descriptor(session=self.session)
         else:
-            self.session.open(MessageBox,self.tr('Unavailable'),type=MessageBox.TYPE_INFO)
+            show_info(self.session,self.api,self.tr('Unavailable'),self.project[0])
 
     def update_status(self, value):
         self['file_info'].setText(value)

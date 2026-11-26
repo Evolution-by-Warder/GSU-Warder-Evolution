@@ -150,11 +150,24 @@ class ReceiverRenderingTests(unittest.TestCase):
               ('EPG',0,True),('Cache',0,True),('Logs',0,False)]
         with patch.object(mod('warder_storage'),'category_snapshot',return_value=rows) as provider:
             report.done(report.collect())
-            provider.assert_called_once_with()
+            provider.assert_called_once_with(cancelled=report.cancelled)
         self.assertEqual(report['category_size0'].getText(),'1.0 MiB')
         self.assertEqual(report['category_state5'].getText(),report.tr('Partial result'))
         self.assertIn('2.0 MiB',report['report_status'].getText())
         self.assertIn(report.tr('Partial result'),report['report_status'].getText())
+
+    def test_information_dialog_is_scoped_scrollable_and_has_no_confirmation(self):
+        dialog=mod('warder_dialog')
+        session=MagicMock()
+        dialog.show_info(session,self.api,'/tmp/report.json','Save')
+        session.open.assert_called_once_with(dialog.InformationDialog,self.api,'/tmp/report.json','Save')
+        screen=dialog.InformationDialog(session,self.api,'/tmp/report.json','Save')
+        self.assertEqual(screen['file_info'].getText(),'/tmp/report.json')
+        self.assertEqual(screen['heading'].getText(),'Save')
+        self.assertEqual(screen['green'].getText(),'')
+        self.assertEqual(screen['blue'].getText(),'')
+        self.assertEqual(screen['actions'].actions['ok'],screen.close)
+        self.assertEqual(screen['actions'].actions['cancel'],screen.close)
 
     def test_header_lifecycle_preserves_footer_and_version(self):
         report=self.ui.Report(MagicMock(),self.api,'network-overview','Network overview')
