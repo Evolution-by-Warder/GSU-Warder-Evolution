@@ -1,3 +1,9 @@
+# 2026-11-26 — GSU 0.41.5 feature scope approved by owner
+
+Six features: expand existing System Health diagnostics, bounded live CPU/RAM/swap/temperature/network graphs, read-only storage analysis including picons, timed network diagnostics, Warder Evolution installed-project and update centre, and privacy-first diagnostic report export. Reuse warder_tools.py and warder_tools_ui.py rather than duplicate existing diagnostics. All user-facing strings in 21 languages; HD/FHD/WQHD/UHD, MIPS/ARM, no GLES dependency. Background workers must be bounded and UI callbacks ignored after close; no automatic deletion, configuration changes or upload; no credentials, raw configuration or private logs in new report. Project centre must use official feeds and preserve individual updater ownership. Develop independently from technical r6 bridge PR #15; integrate after verified r6 publication, then full CI, epoch migration and stable 0.41.5 publication, web SK/EN/DE/RU and registers. Existing releases/feeds unchanged. No feature implementation claimed yet.
+
+---
+
 # 2026-11-26 — stable r5 publication
 
 PR #14, source `9e03199394ca498d30120cca5cf184752e0f1bbf`, workflow 45763722273, public IPK SHA-256 `17de1b2624dd90b77d2c8c05ceba997e683c2d66d888212dda21e31233ef7085`, 3812194 bytes. Both native matrices and packaged install gate passed. Feed activation via atomic fast-forward below; website verification remains pending.
