@@ -1,3 +1,13 @@
+# 26.11.2026 — Warder visual standard and single-screen diagnostic presentation
+
+Owner approved small functional menu picons throughout all five projects, based on existing Radio/YouTube artwork, and replacement of decorative blue/green navigation dots in FullHDGlass settings without changing status indicators, menu density or actions. Full scope is recorded in [WARDER-ICON-STANDARD.md](docs/WARDER-ICON-STANDARD.md). GSU first; remaining projects deferred until GSU is complete.
+
+Additional owner feedback: menu descriptions must explain actual functions in meaningful sentences (not merely Available memory). For bounded diagnostic data use one clear full-screen dashboard, two or three complementary panels, icon-led headings and aligned values rather than long scrolling prose. Keep separate expert details and scrolling only for genuinely unbounded lists, logs and release notes. Do not combine unrelated functions, hide unsupported hardware status, truncate necessary data, or reduce legibility. Apply this to tuner/channel details, storage, network, service, project pages and anonymous report as appropriate; preserve existing process table and live chart. Exact visual verification on receivers required. Implementation pending; no other project runtime changed.
+
+OpenPLi CI 45795763637 on e139d6a failed one of 482 tests due to wrong test fixture import (Screens package returned a class). Corrected fixture import in 5981f4ef9108ee2939edd4d16b3f090bc66b870c; no runtime guard removed. Reproducibility run 45796906808 succeeded on that checkpoint; all final exact HEAD checks remain required.
+
+---
+
 # 26.11.2026 — Manual scan blank native screen on receiver
 
 Owner's five screenshots show successful channel backup, confirmation, bare live TV, and EXIT returning to Reception centre. Root cause identified from source: GSU opens AdditiveScan subclass; native OpenATV Screen derives skinName from actual subclass and readSkin falls back to empty screen when no skin exists. OpenPLi ScanSetup explicitly provides ScanSetup/Setup names. Fix commit f1dd04ddc6802759b787c8fb33df664baf5ed1f0 preserves ScanSetup and native fallback names after parent initialization, without weakening additive scan/recording safeguards. Regression test commit 9f0afc867ed68d5b66c6b948cd5f20ae42829669 checks both native initialization styles and blocked/allowed scan flags. Earlier single-confirmation and direct tool navigation retained. Exact HEAD CI and physical retest pending; no production changes. Source evidence: openatv/enigma2 8.0 lib/python/Screens/Screen.py and lib/python/skin.py, OpenPLi/enigma2 release-9.2 ScanSetup.py. This is a distinct native skin lookup bug, not the common ScrollLabel layering issue.
