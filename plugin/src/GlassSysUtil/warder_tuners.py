@@ -162,6 +162,13 @@ def styled_satfinder(action):
             if not install(self,vars(plugin),True):
                 self.skinName=['Satfinder']
 
+        def retune(self,*args,**kwargs):
+            # Native retune continues to own the selected frontend. Never
+            # mix observations from two tuning attempts.
+            header=getattr(self,'_diagnostic_header',None)
+            if header is not None and hasattr(header,'reset_history'):header.reset_history()
+            return super().retune(*args,**kwargs)
+
         def keyGoScan(self,*args,**kwargs):
             # The native OK/green handler otherwise releases the live frontend
             # BEFORE calling startScan. Prevent that path at its entry.

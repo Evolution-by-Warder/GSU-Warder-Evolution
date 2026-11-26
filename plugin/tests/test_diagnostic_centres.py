@@ -406,6 +406,48 @@ class DiagnosticTests(unittest.TestCase):
         self.assertIs(session.open.call_args.args[0],Satfinder)
         self.assertIsNone(tuner.styled_satfinder(lambda session:None))
 
+    def test_finder_quality_history_and_audio_capability(self):
+        ui=module('warder_tuner_ui')
+        self.assertEqual(ui.quality_color(20,1),0xff526a)
+        self.assertEqual(ui.quality_color(50,1),0xffdb52)
+        self.assertEqual(ui.quality_color(80,1),0x39ff59)
+        self.assertEqual(ui.quality_color(80,0),0xff526a)
+        self.assertEqual(ui.quality_color(None,None),0x8291a5)
+        canvas=MagicMock()
+        ui.draw_quality(canvas,70,1,100,10)
+        canvas.fill.assert_called_with(0,0,70,10,0x39ff59)
+        from Screens.Screen import Screen
+        screen=Screen(MagicMock())
+        screen['config']=api['Label']('')
+        screen['Frontend']=MagicMock()
+        quick=module('warder_quick')
+        with patch.object(quick.shutil,'which',return_value=None):
+            self.assertTrue(ui.install(screen,api,True))
+        header=screen._diagnostic_header
+        self.assertEqual(screen['warder_audio_key'].getText(),'')
+        header.toggle_audio()
+        self.assertFalse(header.audio_enabled)
+        header.ready=True
+        header.history.append({'snr':70,'lock':1})
+        screen['Frontend'].getFrontendStatus.return_value={'tuner_signal_quality':40000,'tuner_locked':0}
+        with patch.object(module('warder_chart'),'draw_trend') as draw:
+            header.tick()
+            draw.assert_called_once()
+            self.assertEqual(draw.call_args.args[2],'snr')
+        self.assertTrue(screen['warder_lock_losses'].getText().endswith('1'))
+        header.reset_history()
+        self.assertEqual(header.history.snapshot(),())
+        header.suspend()
+        self.assertFalse(header.audio_enabled)
+        header.cleanup()
+        for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160),(1920,1200)):
+            root=ET.fromstring(ui.skin(width,height,True,{'config','Frontend','key_red'}))
+            for name in ('warder_quality','warder_signal_history'):
+                node=root.find("widget[@source='%s']"%name)
+                self.assertIsNotNone(node)
+                x,y=map(int,node.get('position').split(','));w,h=map(int,node.get('size').split(','))
+                self.assertLessEqual(x+w,width);self.assertLessEqual(y+h,height)
+
     def test_manual_scan_preserves_user_clear_flags_and_recording_guard(self):
         tuner=module('warder_tuners')
         native=importlib.import_module('Screens.ScanSetup')

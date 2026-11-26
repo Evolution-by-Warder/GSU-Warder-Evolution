@@ -36,15 +36,25 @@ def skin(width,height,finder,components):
     w,h=map(int,cfg.get('size').split(','));cfg.set('size','%d,%d'%(w,h//row*row))
     if finder:
         panel(1236,286,590,620)
-        for i,name in enumerate(METRICS):
-            y=310+i*143
-            add('eLabel',1254,y,554,128,backgroundColor='#00172539',zPosition='-1')
-            add('eLabel',1254,y,4,128,backgroundColor=main.CYAN,zPosition='1')
-            label('warder_metric_name%d'%i,1274,y+8,510,35,27,'#00bcd2df',noWrap='1')
-            label('warder_metric%d'%i,1274,y+49,510,50,36,noWrap='1')
-            if i<2:
-                add('widget',1274,y+108,510,9,name='warder_meter%d'%i,
+        # Compact measurement cards leave room for a live 60-second plot.
+        for i,(x,y,w,h) in enumerate(((1254,306,554,126),(1254,442,554,100),
+                                       (1254,552,268,94),(1540,552,268,94))):
+            add('eLabel',x,y,w,h,backgroundColor='#00172539',zPosition='-1')
+            add('eLabel',x,y,4,h,backgroundColor=main.CYAN,zPosition='1')
+            label('warder_metric_name%d'%i,x+16,y+5,w-32,32,25,'#00bcd2df',noWrap='1')
+            label('warder_metric%d'%i,x+16,y+39,w-32,47,34,noWrap='1')
+            if i==0:
+                add('widget',x+16,y+106,w-32,10,source='warder_quality',render='Canvas',zPosition='3')
+            elif i==1:
+                add('widget',x+16,y+88,w-32,8,name='warder_meter1',
                     backgroundColor='#002f465a',foregroundColor=main.CYAN,borderWidth='0',zPosition='3')
+        add('eLabel',1254,656,554,234,backgroundColor='#00172539',zPosition='-1')
+        label('warder_history_title',1270,662,522,34,25,main.CYAN,noWrap='1')
+        add('widget',1270,702,522,112,source='warder_signal_history',render='Canvas',zPosition='3')
+        label('warder_history_window',1270,816,522,27,21,'#00bcd2df',halign='right',noWrap='1')
+        label('warder_lock_losses',1270,850,522,32,23,'#00ffffff',noWrap='1')
+        label('warder_audio_state',92,914,1734,55,23,'#00bcd2df',halign='center',valign='center')
+        label('warder_audio_key',1420,990,443,81,28,'#0045b9ff',halign='center',valign='center',noWrap='1')
     if not finder and 'introduction' in components:
         label('introduction',92,914,1734,55,23,'#00bcd2df',halign='center',valign='center')
     for name,x,color in (('key_red',55,'#00ff526a'),('key_green',510,'#0039ff59')):
@@ -68,21 +78,110 @@ def readings(status):
     return snr,agc,db,ber,lock if type(lock) in (int,bool) and lock in (0,1) else None
 
 
+def quality_color(snr,lock):
+    """Relative visual guide only, not a universal reception threshold."""
+    if lock==0:return 0xff526a
+    if lock is None or snr is None:return 0x8291a5
+    return 0xff526a if snr<35 else 0xffdb52 if snr<65 else 0x39ff59
+
+
+def draw_quality(canvas,snr,lock,width,height):
+    canvas.clear()
+    canvas.fill(0,0,width,height,0x2f465a)
+    if snr is not None:
+        filled=round(width*max(0,min(100,snr))/100)
+        if filled:canvas.fill(0,0,filled,height,quality_color(snr,lock))
+    canvas.flush()
+
+
 class Header(dashboard.DiagnosticHeader):
+    def __init__(self,screen,api):
+        from .warder_telemetry import History
+        from .warder_quick import Tone
+        self.history=History()
+        self.finder='warder_metric0' in screen
+        self.tone=Tone() if self.finder else None
+        self.audio_enabled=False
+        self.audio_busy=False
+        self.audio_failed=False
+        super().__init__(screen,api)
+        if self.finder:self.audio_label()
+
+    def reset_history(self):
+        self.history.samples.clear()
+
+    def audio_label(self):
+        if not self.finder:return
+        tr=lambda key:main.text(self.api,key)
+        available=bool(self.tone and self.tone.command and not self.audio_failed)
+        key=('yes' if self.audio_enabled else 'no') if available else 'Unavailable'
+        self.screen['warder_audio_state'].setText(tr('Audio:')+' '+tr(key))
+        self.screen['warder_audio_key'].setText(tr('Audio:') if available else '')
+
+    def toggle_audio(self):
+        if self.closed or self.suspended or not self.finder or not self.tone.command or self.audio_failed:return
+        if self.audio_enabled:
+            self.stop_audio()
+        else:
+            from .warder_quick import Tone
+            self.tone=Tone()
+            self.audio_enabled=bool(self.tone.command)
+        self.audio_label()
+
+    def stop_audio(self):
+        self.audio_enabled=False
+        self.audio_busy=False
+        if self.tone:self.tone.close()
+
+    def audio_done(self,result,tone):
+        if self.closed or self.tone is not tone or not self.audio_enabled:return
+        self.audio_busy=False
+        if result is not True:
+            self.audio_failed=True
+            self.stop_audio()
+            self.audio_label()
+
+    def suspend(self):
+        super().suspend()
+        self.stop_audio()
+        self.reset_history()
+        self.audio_label()
+
+    def cleanup(self):
+        self.stop_audio()
+        super().cleanup()
+
     def tick(self):
         super().tick()
-        if self.closed or not self.ready or self.suspended or 'warder_metric0' not in self.screen:return
+        if self.closed or not self.ready or self.suspended or not self.finder:return
         try:status=self.screen['Frontend'].getFrontendStatus() or {}
         except (AttributeError,RuntimeError,TypeError,OSError):status={}
+        if not isinstance(status,dict):status={}
         snr,agc,db,ber,lock=readings(status)
         def pct(v):return '—' if v is None else '%d %%'%v
         values=(pct(snr)+('  ·  %.1f dB'%(db/100) if db is not None else ''),pct(agc),
             '—' if ber is None else str(int(ber)),'—' if lock is None else str(int(lock)))
         for i,value in enumerate(values):self.screen['warder_metric%d'%i].setText(value)
-        for i,value in enumerate((snr,agc)):
-            meter=self.screen['warder_meter%d'%i]
-            if value is None:meter.hide()
-            else:meter.setValue(value);meter.show()
+        meter=self.screen['warder_meter1']
+        if agc is None:meter.hide()
+        else:meter.setValue(agc);meter.show()
+        width,height=dashboard.dimensions(self.api)
+        draw_quality(self.screen['warder_quality'],snr,lock,round(522*width/1920),round(10*height/1080))
+        self.history.append({'snr':snr,'lock':lock})
+        samples=self.history.snapshot()
+        from .warder_chart import draw_trend
+        from .warder_signal import lock_losses
+        draw_trend(self.screen['warder_signal_history'],samples,'snr',
+            round(522*width/1920),round(112*height/1080),100,1)
+        tr=lambda key:main.text(self.api,key)
+        losses=str(lock_losses(samples)) if any(v.get('lock') is not None for _,v in samples) else '—'
+        self.screen['warder_lock_losses'].setText(tr('Lock losses')+'  '+losses)
+        if self.audio_enabled and not self.audio_busy and snr is not None and lock==1:
+            from twisted.internet.threads import deferToThread
+            tone=self.tone
+            self.audio_busy=True
+            try:deferToThread(tone.play,snr).addBoth(lambda result:self.audio_done(result,tone))
+            except (RuntimeError,TypeError,OSError):self.audio_done(False,tone)
 
 
 def install(screen,api,finder):
@@ -103,8 +202,19 @@ def install(screen,api,finder):
         for i,name in enumerate(METRICS):
             screen['warder_metric_name%d'%i]=api['Label'](name)
             screen['warder_metric%d'%i]=api['Label']('—')
-            if i<2:screen['warder_meter%d'%i]=api['ProgressBar']()
+        from Components.Sources.CanvasSource import CanvasSource
+        screen['warder_meter1']=api['ProgressBar']()
+        screen['warder_quality']=CanvasSource()
+        screen['warder_signal_history']=CanvasSource()
+        screen['warder_history_title']=api['Label'](tr('Signal history'))
+        screen['warder_history_window']=api['Label']('−60 s → 0 s')
+        screen['warder_lock_losses']=api['Label']('—')
+        screen['warder_audio_state']=api['Label']('')
+        screen['warder_audio_key']=api['Label']('')
     screen._diagnostic_header=Header(screen,api)
+    if finder:
+        screen['warder_audio_actions']=api['ActionMap'](['ColorActions'],
+            {'blue':screen._diagnostic_header.toggle_audio},-4)
     return True
 
 
