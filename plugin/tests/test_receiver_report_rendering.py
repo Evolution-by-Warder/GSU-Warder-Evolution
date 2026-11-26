@@ -175,7 +175,7 @@ class ReceiverRenderingTests(unittest.TestCase):
     def test_new_modes_fit_all_resolutions_and_keep_native_backings_behind_content(self):
         view=mod('warder_dashboard')
         for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
-            for mode in ('menu','overview','chart','detail','process','categories','network'):
+            for mode in ('menu','overview','chart','multichart','detail','process','categories','network'):
                 root=ET.fromstring(view.skin(w,h,mode))
                 names=[n.get('name') for n in root if n.get('name')]
                 self.assertEqual(len(names),len(set(names)),mode)
@@ -310,3 +310,38 @@ class ReceiverRenderingTests(unittest.TestCase):
                 nw,nh=map(int,n.get('size').split(','))
                 if nx<rx+rw and nx+nw>rx and ny<ry+rh and ny+nh>ry:
                     self.assertLess(int(n.get('zPosition','0')),0,n.attrib)
+
+
+    def test_live_system_dashboard_binds_six_real_metrics_and_one_sampler(self):
+        chart=mod('warder_chart')
+        screen=chart.LiveChart(MagicMock(),self.api)
+        samples=[(10,{'cpu':None,'ram':18,'swap':0,'temp':78.9,'rx':None,'tx':None}),
+                 (12,{'cpu':62,'ram':19,'swap':0,'temp':79.4,'rx':2048,'tx':1024})]
+        screen.source=MagicMock()
+        screen.source.history.snapshot.return_value=samples
+        with patch.object(chart,'draw_trend') as draw:
+            screen.render()
+        self.assertEqual(screen.source.history.snapshot.call_count,1)
+        self.assertEqual(draw.call_count,6)
+        self.assertEqual([call.args[2] for call in draw.call_args_list],[key for key,_,_ in chart.SYSTEM])
+        self.assertEqual([screen['metric_value%d'%i].getText() for i in range(6)],
+                         ['62.0 %','19.0 %','0.0 %','79.4 °C','2.0 KiB/s','1.0 KiB/s'])
+        self.assertEqual(screen['stat_value0_0'].getText(),'62.0')
+        self.assertEqual(screen['stat_value1_2'].getText(),'18.5')
+        screen.source.history.snapshot.return_value=[]
+        screen.render()
+        self.assertEqual(screen['metric_value0'].getText(),'— %')
+        self.assertEqual(screen['stat_value0_0'].getText(),'—')
+
+    def test_trends_do_not_connect_missing_or_old_samples(self):
+        chart=mod('warder_chart')
+        canvas=MagicMock()
+        chart.draw_trend(canvas,[(0,{'cpu':10}),(2,{'cpu':None}),(4,{'cpu':20}),
+                                (6,{'cpu':30}),(20,{'cpu':40})],'cpu',30,12,100,2)
+        canvas.line.assert_called_once()
+        for call in canvas.fill.call_args_list:
+            x,y,w,h,_=call.args
+            self.assertGreaterEqual(min(x,y),0)
+            self.assertLessEqual(x+w,30)
+            self.assertLessEqual(y+h,12)
+        canvas.flush.assert_called_once()
