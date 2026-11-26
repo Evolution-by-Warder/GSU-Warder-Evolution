@@ -1,0 +1,212 @@
+{
+  "sk": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Položky tabuľky oddielov nie sú v poradí disku. Chcete ich opraviť? (Všetky údaje budú zničené)",
+    "All data will be destroyed, do you wish to continue?": "Všetky údaje budú zničené. Chcete pokračovať?",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Formátovanie (ext3), všetky údaje budú zničené; dostupné iba na odpojenom zariadení",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Formátovanie (ext4), všetky údaje budú zničené; dostupné iba na odpojenom zariadení",
+    "Are you sure to unmount?": "Naozaj chcete zariadenie odpojiť?",
+    "Mounted partition can not be deleted": "Pripojený oddiel nemožno odstrániť",
+    "Partition is in use, please, select another": "Oddiel sa používa, vyberte iný",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "Konfigurácia sa zmenila. Chcete teraz reštartovať GUI, aby sa zmeny aktivovali?"
+  },
+  "cs": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Položky tabulky oddílů nejsou v pořadí disku. Chcete je opravit? (Všechna data budou zničena)",
+    "All data will be destroyed, do you wish to continue?": "Všechna data budou zničena. Chcete pokračovat?",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Formátování (ext3), všechna data budou zničena; dostupné pouze na odpojeném zařízení",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Formátování (ext4), všechna data budou zničena; dostupné pouze na odpojeném zařízení",
+    "Are you sure to unmount?": "Opravdu chcete zařízení odpojit?",
+    "Mounted partition can not be deleted": "Připojený oddíl nelze odstranit",
+    "Partition is in use, please, select another": "Oddíl se používá, vyberte jiný",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "Konfigurace se změnila. Chcete nyní restartovat GUI a aktivovat změny?"
+  },
+  "de": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Die Partitionstabelleneinträge entsprechen nicht der Reihenfolge auf dem Datenträger. Jetzt korrigieren? (Alle Daten werden gelöscht)",
+    "All data will be destroyed, do you wish to continue?": "Alle Daten werden gelöscht. Möchten Sie fortfahren?",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Formatierung (ext3), alle Daten werden gelöscht; nur bei ausgehängtem Gerät verfügbar",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Formatierung (ext4), alle Daten werden gelöscht; nur bei ausgehängtem Gerät verfügbar",
+    "Are you sure to unmount?": "Möchten Sie das Gerät wirklich aushängen?",
+    "Mounted partition can not be deleted": "Eine eingehängte Partition kann nicht gelöscht werden",
+    "Partition is in use, please, select another": "Partition wird verwendet, bitte eine andere auswählen",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "Die Konfiguration wurde geändert. GUI jetzt neu starten, um die Änderungen zu aktivieren?"
+  },
+  "pl": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Wpisy tablicy partycji nie są w kolejności dysku. Czy je naprawić? (Wszystkie dane zostaną zniszczone)",
+    "All data will be destroyed, do you wish to continue?": "Wszystkie dane zostaną zniszczone. Czy kontynuować?",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Formatowanie (ext3), wszystkie dane zostaną zniszczone; dostępne tylko na odmontowanym urządzeniu",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Formatowanie (ext4), wszystkie dane zostaną zniszczone; dostępne tylko na odmontowanym urządzeniu",
+    "Are you sure to unmount?": "Czy na pewno odmontować urządzenie?",
+    "Mounted partition can not be deleted": "Nie można usunąć zamontowanej partycji",
+    "Partition is in use, please, select another": "Partycja jest używana, wybierz inną",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "Konfiguracja została zmieniona. Czy uruchomić ponownie GUI, aby aktywować zmiany?"
+  },
+  "hu": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "A partíciós tábla bejegyzései nem a lemez sorrendjében vannak. Javítja őket? (Minden adat törlődik)",
+    "All data will be destroyed, do you wish to continue?": "Minden adat törlődik. Folytatja?",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Formázás (ext3), minden adat törlődik; csak leválasztott eszközön érhető el",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Formázás (ext4), minden adat törlődik; csak leválasztott eszközön érhető el",
+    "Are you sure to unmount?": "Biztosan leválasztja az eszközt?",
+    "Mounted partition can not be deleted": "Csatolt partíció nem törölhető",
+    "Partition is in use, please, select another": "A partíció használatban van, válasszon másikat",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "A konfiguráció megváltozott. Újraindítja most a GUI-t a módosítások aktiválásához?"
+  },
+  "ru": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Записи таблицы разделов расположены не в порядке диска. Исправить? (Все данные будут уничтожены)",
+    "All data will be destroyed, do you wish to continue?": "Все данные будут уничтожены. Продолжить?",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Форматирование (ext3), все данные будут уничтожены; доступно только для отмонтированного устройства",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Форматирование (ext4), все данные будут уничтожены; доступно только для отмонтированного устройства",
+    "Are you sure to unmount?": "Вы уверены, что хотите отмонтировать устройство?",
+    "Mounted partition can not be deleted": "Смонтированный раздел нельзя удалить",
+    "Partition is in use, please, select another": "Раздел используется, выберите другой",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "Конфигурация изменена. Перезапустить GUI сейчас для применения изменений?"
+  },
+  "fr": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Les entrées de la table de partitions ne suivent pas l’ordre du disque. Les corriger ? (Toutes les données seront détruites)",
+    "All data will be destroyed, do you wish to continue?": "Toutes les données seront détruites. Voulez-vous continuer ?",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Formatage (ext3), toutes les données seront détruites ; uniquement sur un périphérique démonté",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Formatage (ext4), toutes les données seront détruites ; uniquement sur un périphérique démonté",
+    "Are you sure to unmount?": "Voulez-vous vraiment démonter le périphérique ?",
+    "Mounted partition can not be deleted": "Impossible de supprimer une partition montée",
+    "Partition is in use, please, select another": "La partition est utilisée, choisissez-en une autre",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "La configuration a changé. Redémarrer l’interface maintenant pour appliquer les modifications ?"
+  },
+  "it": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Le voci della tabella delle partizioni non seguono l’ordine del disco. Correggerle? (Tutti i dati verranno distrutti)",
+    "All data will be destroyed, do you wish to continue?": "Tutti i dati verranno distrutti. Continuare?",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Formattazione (ext3), tutti i dati verranno distrutti; disponibile solo su dispositivo smontato",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Formattazione (ext4), tutti i dati verranno distrutti; disponibile solo su dispositivo smontato",
+    "Are you sure to unmount?": "Smontare davvero il dispositivo?",
+    "Mounted partition can not be deleted": "Una partizione montata non può essere eliminata",
+    "Partition is in use, please, select another": "Partizione in uso, selezionarne un’altra",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "La configurazione è cambiata. Riavviare ora la GUI per applicare le modifiche?"
+  },
+  "es": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Las entradas de la tabla de particiones no siguen el orden del disco. ¿Corregirlas? (Se destruirán todos los datos)",
+    "All data will be destroyed, do you wish to continue?": "Se destruirán todos los datos. ¿Desea continuar?",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Formateo (ext3), se destruirán todos los datos; disponible solo en dispositivos desmontados",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Formateo (ext4), se destruirán todos los datos; disponible solo en dispositivos desmontados",
+    "Are you sure to unmount?": "¿Seguro que desea desmontar el dispositivo?",
+    "Mounted partition can not be deleted": "No se puede eliminar una partición montada",
+    "Partition is in use, please, select another": "La partición está en uso, seleccione otra",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "La configuración ha cambiado. ¿Reiniciar ahora la interfaz para aplicar los cambios?"
+  },
+  "al": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Regjistrimet e tabelës së ndarjeve nuk janë sipas rendit të diskut. Dëshironi t’i korrigjoni? (Të gjitha të dhënat do të shkatërrohen)",
+    "All data will be destroyed, do you wish to continue?": "Të gjitha të dhënat do të shkatërrohen. Dëshironi të vazhdoni?",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Formatim (ext3), të gjitha të dhënat do të shkatërrohen; vetëm në pajisje të çmontuar",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Formatim (ext4), të gjitha të dhënat do të shkatërrohen; vetëm në pajisje të çmontuar",
+    "Are you sure to unmount?": "Jeni të sigurt se doni ta çmontoni pajisjen?",
+    "Mounted partition can not be deleted": "Ndarja e montuar nuk mund të fshihet",
+    "Partition is in use, please, select another": "Ndarja është në përdorim, zgjidhni një tjetër",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "Konfigurimi ndryshoi. Të riniset GUI tani për të zbatuar ndryshimet?"
+  },
+  "el": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Οι εγγραφές του πίνακα κατατμήσεων δεν ακολουθούν τη σειρά του δίσκου. Να διορθωθούν; (Όλα τα δεδομένα θα καταστραφούν)",
+    "All data will be destroyed, do you wish to continue?": "Όλα τα δεδομένα θα καταστραφούν. Θέλετε να συνεχίσετε;",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Μορφοποίηση (ext3), όλα τα δεδομένα θα καταστραφούν· μόνο σε αποπροσαρτημένη συσκευή",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Μορφοποίηση (ext4), όλα τα δεδομένα θα καταστραφούν· μόνο σε αποπροσαρτημένη συσκευή",
+    "Are you sure to unmount?": "Θέλετε σίγουρα να αποπροσαρτήσετε τη συσκευή;",
+    "Mounted partition can not be deleted": "Δεν μπορεί να διαγραφεί προσαρτημένη κατάτμηση",
+    "Partition is in use, please, select another": "Η κατάτμηση χρησιμοποιείται, επιλέξτε άλλη",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "Η διαμόρφωση άλλαξε. Επανεκκίνηση του GUI τώρα για εφαρμογή των αλλαγών;"
+  },
+  "et": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Partitsioonitabeli kirjed ei ole ketta järjekorras. Kas parandada? (Kõik andmed hävitatakse)",
+    "All data will be destroyed, do you wish to continue?": "Kõik andmed hävitatakse. Kas jätkata?",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Vormindamine (ext3), kõik andmed hävitatakse; saadaval ainult lahti ühendatud seadmel",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Vormindamine (ext4), kõik andmed hävitatakse; saadaval ainult lahti ühendatud seadmel",
+    "Are you sure to unmount?": "Kas soovite kindlasti seadme lahti ühendada?",
+    "Mounted partition can not be deleted": "Ühendatud partitsiooni ei saa kustutada",
+    "Partition is in use, please, select another": "Partitsioon on kasutusel, valige teine",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "Seadistus muutus. Kas taaskäivitada GUI muudatuste rakendamiseks?"
+  },
+  "fa": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "ورودی‌های جدول پارتیشن به ترتیب دیسک نیستند. اصلاح شوند؟ (همه داده‌ها از بین می‌روند)",
+    "All data will be destroyed, do you wish to continue?": "همه داده‌ها از بین می‌روند. ادامه می‌دهید؟",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "قالب‌بندی (ext3)، همه داده‌ها از بین می‌روند؛ فقط برای دستگاه جداشده در دسترس است",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "قالب‌بندی (ext4)، همه داده‌ها از بین می‌روند؛ فقط برای دستگاه جداشده در دسترس است",
+    "Are you sure to unmount?": "آیا از جدا کردن دستگاه مطمئن هستید؟",
+    "Mounted partition can not be deleted": "پارتیشن متصل را نمی‌توان حذف کرد",
+    "Partition is in use, please, select another": "پارتیشن در حال استفاده است، مورد دیگری انتخاب کنید",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "پیکربندی تغییر کرده است. برای اعمال تغییرات رابط گرافیکی اکنون بازراه‌اندازی شود؟"
+  },
+  "lt": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Skaidinių lentelės įrašai neatitinka disko eilės tvarkos. Ar taisyti? (Visi duomenys bus sunaikinti)",
+    "All data will be destroyed, do you wish to continue?": "Visi duomenys bus sunaikinti. Ar tęsti?",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Formatavimas (ext3), visi duomenys bus sunaikinti; galima tik atjungtame įrenginyje",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Formatavimas (ext4), visi duomenys bus sunaikinti; galima tik atjungtame įrenginyje",
+    "Are you sure to unmount?": "Ar tikrai norite atjungti įrenginį?",
+    "Mounted partition can not be deleted": "Prijungto skaidinio pašalinti negalima",
+    "Partition is in use, please, select another": "Skaidinys naudojamas, pasirinkite kitą",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "Konfigūracija pakeista. Ar dabar paleisti GUI iš naujo, kad pakeitimai įsigaliotų?"
+  },
+  "nl": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "De vermeldingen in de partitietabel staan niet in schijfvolgorde. Corrigeren? (Alle gegevens worden vernietigd)",
+    "All data will be destroyed, do you wish to continue?": "Alle gegevens worden vernietigd. Wilt u doorgaan?",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Formatteren (ext3), alle gegevens worden vernietigd; alleen op een ontkoppeld apparaat",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Formatteren (ext4), alle gegevens worden vernietigd; alleen op een ontkoppeld apparaat",
+    "Are you sure to unmount?": "Weet u zeker dat u het apparaat wilt ontkoppelen?",
+    "Mounted partition can not be deleted": "Een gekoppelde partitie kan niet worden verwijderd",
+    "Partition is in use, please, select another": "Partitie is in gebruik, selecteer een andere",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "Configuratie gewijzigd. GUI nu herstarten om de wijzigingen toe te passen?"
+  },
+  "pt": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "As entradas da tabela de partições não seguem a ordem do disco. Corrigir? (Todos os dados serão destruídos)",
+    "All data will be destroyed, do you wish to continue?": "Todos os dados serão destruídos. Deseja continuar?",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Formatação (ext3), todos os dados serão destruídos; disponível apenas num dispositivo desmontado",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Formatação (ext4), todos os dados serão destruídos; disponível apenas num dispositivo desmontado",
+    "Are you sure to unmount?": "Tem a certeza de que pretende desmontar o dispositivo?",
+    "Mounted partition can not be deleted": "Uma partição montada não pode ser eliminada",
+    "Partition is in use, please, select another": "Partição em utilização, selecione outra",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "A configuração foi alterada. Reiniciar agora a interface para aplicar as alterações?"
+  },
+  "ro": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Intrările din tabela de partiții nu sunt în ordinea discului. Doriți să le corectați? (Toate datele vor fi distruse)",
+    "All data will be destroyed, do you wish to continue?": "Toate datele vor fi distruse. Doriți să continuați?",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Formatare (ext3), toate datele vor fi distruse; disponibilă doar pe dispozitivul demontat",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Formatare (ext4), toate datele vor fi distruse; disponibilă doar pe dispozitivul demontat",
+    "Are you sure to unmount?": "Sigur doriți să demontați dispozitivul?",
+    "Mounted partition can not be deleted": "O partiție montată nu poate fi ștearsă",
+    "Partition is in use, please, select another": "Partiția este utilizată, selectați alta",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "Configurația a fost modificată. Reporniți acum interfața pentru a activa modificările?"
+  },
+  "tr": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Bölüm tablosu girdileri disk sırasına uygun değil. Düzeltmek ister misiniz? (Tüm veriler silinecek)",
+    "All data will be destroyed, do you wish to continue?": "Tüm veriler silinecek. Devam etmek istiyor musunuz?",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Biçimlendirme (ext3), tüm veriler silinecek; yalnızca bağlantısı kaldırılmış aygıtta kullanılabilir",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Biçimlendirme (ext4), tüm veriler silinecek; yalnızca bağlantısı kaldırılmış aygıtta kullanılabilir",
+    "Are you sure to unmount?": "Aygıtın bağlantısını kaldırmak istediğinizden emin misiniz?",
+    "Mounted partition can not be deleted": "Bağlı bölüm silinemez",
+    "Partition is in use, please, select another": "Bölüm kullanımda, lütfen başka bir bölüm seçin",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "Yapılandırma değişti. Değişiklikleri etkinleştirmek için GUI şimdi yeniden başlatılsın mı?"
+  },
+  "uk": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Записи таблиці розділів розташовані не в порядку диска. Виправити? (Усі дані буде знищено)",
+    "All data will be destroyed, do you wish to continue?": "Усі дані буде знищено. Продовжити?",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Форматування (ext3), усі дані буде знищено; доступне лише для відмонтованого пристрою",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Форматування (ext4), усі дані буде знищено; доступне лише для відмонтованого пристрою",
+    "Are you sure to unmount?": "Ви впевнені, що хочете відмонтувати пристрій?",
+    "Mounted partition can not be deleted": "Змонтований розділ не можна видалити",
+    "Partition is in use, please, select another": "Розділ використовується, виберіть інший",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "Конфігурацію змінено. Перезапустити GUI зараз для застосування змін?"
+  },
+  "zh": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "分区表条目未按磁盘顺序排列。是否修复？（所有数据都将被销毁）",
+    "All data will be destroyed, do you wish to continue?": "所有数据都将被销毁。是否继续？",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "格式化（ext3），所有数据都将被销毁；仅适用于已卸载的设备",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "格式化（ext4），所有数据都将被销毁；仅适用于已卸载的设备",
+    "Are you sure to unmount?": "确定要卸载设备吗？",
+    "Mounted partition can not be deleted": "无法删除已挂载的分区",
+    "Partition is in use, please, select another": "分区正在使用，请选择其他分区",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "配置已更改。是否立即重启 GUI 以使更改生效？"
+  },
+  "en": {
+    "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)",
+    "All data will be destroyed, do you wish to continue?": "All data will be destroyed, do you wish to continue?",
+    "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only": "Formating (filesystem ext3), all data will be destroyed, available on unmounted device only",
+    "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only": "Formating (filesystem ext4), all data will be destroyed, available on unmounted device only",
+    "Are you sure to unmount?": "Are you sure to unmount?",
+    "Mounted partition can not be deleted": "Mounted partition can not be deleted",
+    "Partition is in use, please, select another": "Partition is in use, please, select another",
+    "Configuration was changed. Do you want restart GUI to activate changes now?": "Configuration was changed. Do you want restart GUI to activate changes now?"
+  }
+}

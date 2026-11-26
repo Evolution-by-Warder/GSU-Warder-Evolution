@@ -1,3 +1,9 @@
+# 2026-11-26 — GSU PR #14 checkpoint (not released)
+
+Predecessor `49107d887dc71c80f916c419ad71b9c76a4a85e7`: 21 common JSON catalogues, 174 keys; previous CI 10/10 successful. Legacy direct translation-call inventory found 261 distinct literals absent from the common English JSON, including technical labels, mounting/partition warnings, CAM diagnostics and settings. This checkpoint adds eight high-priority destructive-operation and configuration warnings translated for all 21 languages in the packaged supplementary catalogue, preserving existing JSON and original gettext precedence. Remaining legacy strings still need review and translation; do not claim full UI coverage or activate r5 until reviewed and exact HEAD CI is green. Current stable 13.41-r4 SHA256 `48d8f90a6f1665f28e777b615f4dd25b1b8afc0b85128685965d44b66134acb2`; no changes to storage operations, settings, stable feed or release tag. No public TEST release.
+
+---
+
 ## 26.11.2026 — Verified 174-key localization checkpoint
 
 HEAD `a49ac47317af593d8a279f95933600059e4a95ac`: all 10 checks SUCCESS (Python 3.9/3.14 regression and layouts, OpenATV master/8.0-next/8.0, OpenPLi develop/release-9.2, hooks). All 21 catalogues contain the expanded 174 common keys. No remaining CI failure at this SHA. Legacy runtime label audit, activation of r5 version and localized release notes, and canonical stable publisher remain open. Existing v13.41-r4 and updater feeds unchanged. Do not merge incomplete draft #14.

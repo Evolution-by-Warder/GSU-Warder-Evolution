@@ -27,6 +27,17 @@ class LocalizationTests(unittest.TestCase):
                 self.assertEqual(re.findall(r'%[sdi]',key),re.findall(r'%[sdi]',value),(lang,key))
             if lang!='en':self.assertNotEqual(i18n.translate('System Information',lang),'System Information')
 
+    def test_legacy_destructive_operation_warnings_are_translated(self):
+        extra=json.loads((ROOT/'locale/legacy-supplement.json').read_text(encoding='utf-8'))
+        self.assertEqual(set(extra),set(i18n.LANGUAGES))
+        self.assertEqual(len(extra['en']),8)
+        for code,catalog in extra.items():
+            self.assertEqual(set(catalog),set(extra['en']))
+            for key,value in catalog.items():
+                self.assertTrue(value)
+                if code!='en':
+                    self.assertNotEqual(i18n.translate(key,code),key,(code,key))
+
     def test_normalizes_regions_and_falls_back_to_english_without_global_locale(self):
         for code in ('sk_SK','SK-sk','sk'):
             self.assertEqual(i18n.translate('Settings',code),'Nastavenia')
@@ -111,6 +122,7 @@ class LocalizationTests(unittest.TestCase):
                 names={m.name.removeprefix('./') for m in archive}
                 prefix=build_ipk.PLUGIN+'/locale/'
                 for lang in i18n.LANGUAGES:self.assertIn(prefix+lang+'.json',names)
+                self.assertIn(prefix+'legacy-supplement.json',names)
                 self.assertIn(prefix+'sk/LC_MESSAGES/gsu.mo',names)
             with tarfile.open(fileobj=io.BytesIO(control)) as archive:
                 self.assertNotIn(b'python3-gettext',archive.extractfile('./control').read())
