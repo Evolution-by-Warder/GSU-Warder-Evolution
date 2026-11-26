@@ -1,3 +1,7 @@
+# 26.11.2026 — Backup caption widths and crypto verification
+
+Predecessor 0b7a544 passed three workflow families and ARM/MIPS emulation; OpenBH reference-font check failed on Russian title length. Shorten RU/UK labels; extend existing width assertions to actual backup footer labels. Independently executed exact predecessor archive's seven backup tests with cryptography 46.0.4: all passed, including encrypted restore. Current GUI revision requires new CI and receiver validation. No production change.
+
 # 26.11.2026 — Private backup GUI
 
 Stacked draft PR #20: add standard/private creation choice, masked keyboard, repeated password confirmation, explicit unlock and authenticated preview, password reference cleanup, expected payload fingerprint on restore, provider self-test. 21-language captions and UI/preview regressions. Archive creation/unlock on worker; native restore remains main-thread and needs receiver latency validation. No production mutation.
