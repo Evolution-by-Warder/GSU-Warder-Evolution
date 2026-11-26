@@ -316,7 +316,7 @@ class DiagnosticTests(unittest.TestCase):
 
     def test_manual_scan_subclass_uses_native_skin_and_retains_scan_guard(self):
         tuner=module('warder_tuners')
-        from Screens import ScanSetup as native
+        native=importlib.import_module('Screens.ScanSetup')
         from Screens.MessageBox import MessageBox
         import enigma
         calls=[]
