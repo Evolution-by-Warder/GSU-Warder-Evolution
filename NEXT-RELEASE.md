@@ -1,3 +1,9 @@
+# 2026-11-26 — GSU PR #14 seventh legacy checkpoint
+
+Added 43 actual OSCam/CAM errors, script results, update and other status/operation strings in all 21 languages. 174 common + 180 supplementary keys (354 total). 81 remaining direct literal candidates include protocol names and paths. Exact HEAD cd583b3baf5068fc6403736d7a61d33a72929b9c passed 10/10 CI. New HEAD requires CI. No runtime behavior, release or stable feed changes.
+
+---
+
 # 2026-11-26 — GSU PR #14 sixth legacy checkpoint
 
 Added 27 actual debugging, numeric validation and filesystem help strings across all 21 languages. 174 common + 137 supplementary keys (311 total). Remaining 124 direct literal candidates include protocol identifiers and paths. Numeric size syntax, ECM/EMM/CW, I/O, IFD and filesystem names preserved. Prior HEAD 7a34f259c2b1c602210c38915e542c90f7514bff passed 10/10 CI; latest HEAD requires fresh CI. No release or production feed changes.
