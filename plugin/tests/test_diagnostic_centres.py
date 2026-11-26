@@ -314,6 +314,35 @@ class DiagnosticTests(unittest.TestCase):
             self.assertIs(launch.call_args.args[2],action)
             session.openWithCallback.assert_not_called()
 
+    def test_manual_scan_subclass_uses_native_skin_and_retains_scan_guard(self):
+        tuner=module('warder_tuners')
+        from Screens import ScanSetup as native
+        from Screens.MessageBox import MessageBox
+        import enigma
+        calls=[]
+        for initial,expected in ((None,['ScanSetup']),(['ScanSetup','Setup'],['ScanSetup','Setup'])):
+            class NativeScan:
+                def __init__(self,session):
+                    self.session=session
+                    self.skinName=initial if initial is not None else type(self).__name__
+                def startScan(self,tlist,flags,feid,*args,**kwargs):
+                    calls.append((tlist,flags,feid,args,kwargs))
+            session=MagicMock()
+            with patch.object(native,'ScanSetup',NativeScan),patch.object(enigma,'eComponentScan',SimpleNamespace(scanRemoveServices=4)),patch.object(MessageBox,'TYPE_INFO',1,create=True),patch.object(tuner,'recording_safe',return_value=True) as safe:
+                tuner.manual_scan(session)
+                wrapper=session.open.call_args.args[0]
+                screen=wrapper(session)
+                self.assertEqual(screen.skinName,expected)
+                calls.clear()
+                screen.startScan(['tp'],4,0)
+                self.assertEqual(calls,[])
+                safe.return_value=False
+                screen.startScan(['tp'],0,0)
+                self.assertEqual(calls,[])
+                safe.return_value=True
+                screen.startScan(['tp'],0,0,networkid=1)
+                self.assertEqual(calls,[(['tp'],0,0,(),{'networkid':1})])
+
     def test_forum_report_allowlist_preview_and_private_mode(self):
         service = module('warder_service')
         data = {'checks':[{'name':'RAM','available_percent':51.768},{'name':'Flash','available_percent':None},
