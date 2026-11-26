@@ -1,4 +1,5 @@
 """Masked remote-control keyboard for a local backup passphrase."""
+import enigma
 from Components.Label import Label
 from Components.ScrollLabel import ScrollLabel
 from Components.ActionMap import ActionMap
@@ -19,10 +20,15 @@ class BackupPassword(Screen):
         root.set('name','WarderBackupPassword')
         for node in list(root):
             if node.get('name','').startswith('inline_'):root.remove(node)
+        # Disable the inherited full-row highlight: this is a cell keyboard.
+        keyboard=root.find("widget[@name='list']")
+        keyboard.set('backgroundColorSelected',keyboard.get('backgroundColor'))
+        keyboard.set('scrollbarMode','showNever')
         self.skin=ET.tostring(root,encoding='unicode')
         Screen.__init__(self,session)
         dashboard.install_header(self,api)
         self.secret=''
+        self.row=0
         self.column=0
         self['list']=api['ListboxSys2']([])
         self['list'].l.setFont(0,api['gFont']('Regular',round(28*self.height/1080)))
@@ -34,9 +40,9 @@ class BackupPassword(Screen):
         self['actions']=ActionMap(['ColorActions','SetupActions','DirectionActions','NumberActions'],
             dict({'red':self.cancel,'cancel':self.cancel,'back':self.cancel,'green':self.accept,
                   'yellow':self.erase,'ok':self.add,'left':lambda:self.horizontal(-1),'right':lambda:self.horizontal(1),
-                  'up':self['list'].up,'down':self['list'].down},
+                  'up':lambda:self.vertical(-1),'down':lambda:self.vertical(1)},
                  **{str(i):(lambda n=i:self.append(str(n))) for i in range(10)}),-2)
-        self.onLayoutFinish.append(self.render)
+        self.onLayoutFinish.append(self.prepare_keyboard)
         self.onClose.append(self.clear)
 
     def tr(self,key):return for_api(self.api,key)
@@ -44,24 +50,33 @@ class BackupPassword(Screen):
     def clear(self):self.secret=''
 
     def index(self):
-        row=self['list'].getCurrent()
-        return row[0] if row else 0
+        return self.row
+
+    def prepare_keyboard(self):
+        instance=self['list'].instance
+        if instance is not None:
+            instance.setSelectionEnable(False)
+        self.render()
+        self.mask()
 
     def render(self):
-        index=self.index()
         sx,sy=self.width/1920,self.height/1080
         rows=[]
+        flags=getattr(enigma,'RT_HALIGN_CENTER',0)|getattr(enigma,'RT_VALIGN_CENTER',0)
         for i,line in enumerate(KEYS):
             row=[i]
             for pos,char in enumerate(line):
+                active=(i==self.row and pos==self.column)
+                color=0xffffff
+                background=0x296b9d if active else 0x101f30
                 row.append(self.api['MultiContentEntryText'](
-                    pos=(round((12+pos*63)*sx),round(10*sy)),size=(round(63*sx),round(54*sy)),
-                    font=0,text='['+char+']' if pos==self.column else char,
-                    color=0x42c8ef if pos==self.column else 0xffffff))
+                    pos=(round((12+pos*63)*sx),round(8*sy)),size=(round(59*sx),round(58*sy)),
+                    font=0,flags=flags,text=char,color=color,color_sel=color,
+                    backcolor=background,backcolor_sel=background))
             rows.append(row)
         self['list'].l.setList(rows)
-        self['list'].moveToIndex(index)
-        self.mask()
+        # All eight rows fit the visible area; never move the native row cursor.
+        self['list'].moveToIndex(0)
 
     def mask(self):
         self['descriptions'].setText(self.tr('Use arrows and OK to enter characters. Green confirms.')+
@@ -71,6 +86,10 @@ class BackupPassword(Screen):
 
     def horizontal(self,direction):
         self.column=(self.column+direction)%10
+        self.render()
+
+    def vertical(self,direction):
+        self.row=(self.row+direction)%len(KEYS)
         self.render()
 
     def append(self,char):

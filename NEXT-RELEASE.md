@@ -1,3 +1,7 @@
+# 26.11.2026 — Receiver feedback: single-cell backup password cursor
+
+Owner screenshots show entire keyboard column marked. Disable native row highlighting, use explicit row/column coordinates and color only the current cell; keep characters and geometry fixed. Test four-way movement, wrapping and insertion. Separate backup draft PR #20; new CI and physical retest required.
+
 # 26.11.2026 — Staged restore responsiveness
 
 Previous d2836867 OpenATV/OpenPLi/package CI success, architecture running at inspection. Worker decrypts archive and saves verified local rollback; native prepare/recheck/apply stay on GUI thread. Recheck live and saved configuration plus Radio state before writing, refuse absent rollback. Confirmation and regression coverage added. No production change; exact-head CI and receiver test required.

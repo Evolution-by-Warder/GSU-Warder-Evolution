@@ -358,3 +358,35 @@ class BackupTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError,'Settings changed before restore'):
                     b.apply_prepared(config,MagicMock(),prepared,rollback,p)
                 self.assertEqual(item.value,'720')
+
+
+    def test_password_keyboard_has_exactly_one_cell_cursor(self):
+        from Plugins.Extensions.GlassSysUtil.warder_backup_password import BackupPassword,KEYS
+        from xml.etree import ElementTree as ET
+        api=vars(load(ROOT))
+        view=BackupPassword(MagicMock(),api,'Password')
+        view.prepare_keyboard()
+        root=ET.fromstring(view.skin)
+        keyboard=root.find("widget[@name='list']")
+        self.assertEqual(keyboard.get('backgroundColor'),keyboard.get('backgroundColorSelected'))
+        def check(row,column):
+            rows=view['list'].l.list
+            active=[(i,j) for i,line in enumerate(rows) for j,cell in enumerate(line[1:])
+                    if cell['backcolor']==0x296b9d]
+            self.assertEqual(active,[(row,column)])
+            self.assertEqual([''.join(cell['text'] for cell in line[1:]) for line in rows],list(KEYS))
+            self.assertEqual(view['list'].getCurrentIndex(),0)
+        check(0,0)
+        view.vertical(1)
+        check(1,0)
+        view.horizontal(1)
+        check(1,1)
+        view.add()
+        self.assertEqual(view.secret,'b')
+        self.assertNotIn('b'+'b',view['descriptions'].getText())
+        view.vertical(-2)
+        check(7,1)
+        view.horizontal(-2)
+        check(7,9)
+        view.add()
+        self.assertEqual(view.secret,'b,')

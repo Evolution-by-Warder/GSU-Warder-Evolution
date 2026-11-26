@@ -37,3 +37,7 @@ Predecessor 4ee7f702: OpenATV and OpenPLi regression jobs failed (six errors eac
 ## Staged restore and responsiveness
 
 Predecessor d2836867: OpenATV, OpenPLi and package reproducibility successful; architecture running at check. GUI confirmed restore now stages archive read/decryption and verified local rollback creation on the existing worker. Native configuration planning, revalidation and apply stay on GUI thread; no native objects used by worker. Rechecks live and saved values, current plan and Radio original bytes before any mutation, refuses missing recovery path. Explicit confirmation explains backup and GUI restart. Synchronous wrapper delegates to same helpers. Added tests for missing rollback and concurrent native settings changes. Actual disk write latency and cross-file power-loss limitations remain; exact-head CI pending.
+
+## Physical keyboard correction
+
+Owner's receiver screenshots of candidate 485ec37 show the native row selection and bracket marker repeated in all eight rows of the selected column. Replaced that behavior with a single explicit row/column cursor, centered unchanged characters, cell-only background highlight and disabled native row selection; directional movement wraps and OK inserts the exact active cell. All 80 keys remain within the existing left panel; no password text exposed. Added regression for exactly one highlighted cell and correct insertion. Fresh CI and receiver retest required. No production change.
