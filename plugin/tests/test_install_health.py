@@ -47,7 +47,7 @@ class HealthTests(unittest.TestCase):
 
     def status(self, status='install ok installed', version=None, package=None):
         return lambda *a, **k: SimpleNamespace(returncode=0, stdout='Package: %s\nVersion: %s\nStatus: %s\n' % (
-            package or health.PACKAGE, version or self.version, status))
+            package or health.PACKAGE, version or update.package_version(self.version), status))
 
     def test_actual_built_payload_passes_and_every_core_module_has_a_hash(self):
         self.assertEqual(health.verify_installation(self.version, runner=self.status(), runtime=self.runtime), self.version)

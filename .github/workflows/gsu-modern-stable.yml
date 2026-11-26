@@ -1,0 +1,40 @@
+name: Publish verified GSU 0.41.5
+on:
+  push:
+    branches: [main]
+    paths: ['plugin/update/release-request']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: gsu-modern-production
+  cancel-in-progress: false
+jobs:
+  openpli:
+    uses: ./.github/workflows/verify-openpli-compatibility.yml
+  openatv:
+    uses: ./.github/workflows/verify-openatv-compatibility.yml
+  architectures:
+    uses: ./.github/workflows/receiver-architectures.yml
+  package:
+    uses: ./.github/workflows/diagnostics-reproducibility.yml
+  publish:
+    if: github.repository == 'Evolution-by-Warder/GSU-Warder-Evolution' && github.ref == 'refs/heads/main'
+    needs: [package, openatv, openpli, architectures]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: verified-gsu-${{ github.sha }}
+          path: verified
+      - name: Publish verified assets and activate only the modern feed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 compatibility/publish-modern.py verified --publish

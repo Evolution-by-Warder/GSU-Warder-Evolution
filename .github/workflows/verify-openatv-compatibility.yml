@@ -23,6 +23,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
           sparse-checkout: |
             compatibility
             plugin/src
@@ -56,8 +58,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
           sparse-checkout: |
             plugin
+            compatibility
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}

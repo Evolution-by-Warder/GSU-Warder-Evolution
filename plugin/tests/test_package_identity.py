@@ -30,7 +30,8 @@ class PackageIdentityTests(unittest.TestCase):
         cls.bridge_doc=publish_update.manifest(cls.bridge,'13.40-r93','Compatible transition')
         cls.version=(ROOT/'src/GlassSysUtil/version').read_text().strip()
         cls.current_doc=publish_update.manifest(cls.current,cls.version,'Correct plugin group')
-        cls.release=update.parse_release(json.dumps(cls.current_doc),'13.40-r93')
+        cls.current_doc['channel']='stable-modern'
+        cls.release=update.parse_release(json.dumps(cls.current_doc),'13.41-r6','stable-modern')
 
     @classmethod
     def tearDownClass(cls):cls.folder.cleanup()

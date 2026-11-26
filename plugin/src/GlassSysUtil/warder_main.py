@@ -85,7 +85,7 @@ def clock_values(now, lang):
 
 def main_skin(width=1920, height=1080, api=None):
     sx, sy = width/1920.0, height/1080.0
-    row_height = round(58*sy)
+    row_height = round(100*sy)
     list_height = round(759*sy)//row_height*row_height
     def box(x,y,w,h,pixel_height=None):
         return 'position="%d,%d" size="%d,%d"' % (round(x*sx),round(y*sy),round(w*sx),round(h*sy) if pixel_height is None else pixel_height)
@@ -131,9 +131,9 @@ def menu_row(api, ident, title, enabled, width, height):
     def scaled(values):return tuple(round(v*(sx if i%2==0 else sy)) for i,v in enumerate(values))
     entry=api['MultiContentEntryText']
     return [ident,
-            entry(pos=scaled((42,8)),size=scaled((940,45)),font=0,text=title,
+            entry(pos=scaled((54,24)),size=scaled((925,62)),font=0,text=title,
                   color=0xffffff if enabled else 0x8291a5,color_sel=0xffffff if enabled else 0xb1bbc8),
-            entry(pos=scaled((10,15)),size=scaled((26,32)),font=1,text='●',
+            entry(pos=scaled((14,34)),size=scaled((28,40)),font=1,text='●',
                   color=0x39ff59 if enabled else 0xff526a,color_sel=0x39ff59 if enabled else 0xff526a)]
 
 
@@ -181,9 +181,9 @@ def install(screen,api):
     for name in ('day','date','clock','seconds','version_title','version','selection'):
         screen[name]=api['Label']('')
     screen['selection'].setText(text(api,'Select a menu item'))
-    screen['list'].l.setFont(0,api['gFont']('Regular',round(30*size.height()/1080.0)))
+    screen['list'].l.setFont(0,api['gFont']('Regular',round(34*size.height()/1080.0)))
     screen['list'].l.setFont(1,api['gFont']('Regular',round(20*size.height()/1080.0)))
-    screen['list'].l.setItemHeight(round(58*size.height()/1080.0))
+    screen['list'].l.setItemHeight(round(100*size.height()/1080.0))
     screen._warder_header=Header(screen,api)
 
 

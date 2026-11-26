@@ -1,0 +1,90 @@
+name: Diagnostics package reproducibility
+on:
+  workflow_call:
+  pull_request:
+    paths:
+      - 'plugin/**'
+      - 'compatibility/verify-modern-migration.py'
+      - 'compatibility/publish-modern.py'
+      - '.github/workflows/gsu-modern-stable.yml'
+      - '.github/workflows/diagnostics-reproducibility.yml'
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Archive exact build inputs for independent reproduction
+        run: git archive --format=tar.gz -o /tmp/gsu-build-inputs.tar.gz HEAD plugin
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gsu-build-inputs-${{ github.event.pull_request.head.sha || github.sha }}
+          path: /tmp/gsu-build-inputs.tar.gz
+          retention-days: 7
+      - name: Compare two packages and measure installed file bytes
+        run: |
+          set -eu
+          python plugin/tools/build_ipk.py --output /tmp/gsu-first
+          python plugin/tools/build_ipk.py --output /tmp/gsu-second
+          cmp /tmp/gsu-first/*.ipk /tmp/gsu-second/*.ipk
+          sha256sum /tmp/gsu-first/*.ipk
+          wc -c /tmp/gsu-first/*.ipk
+          ar p /tmp/gsu-first/*.ipk data.tar.gz | python -c 'import sys,tarfile; print("Installed regular file bytes:",sum(m.size for m in tarfile.open(fileobj=sys.stdin.buffer,mode="r|gz") if m.isfile()))'
+      - name: Verify shipped runtime, minimal Python and OPKG epoch
+        run: python compatibility/verify-packaged-install.py /tmp/gsu-first/*.ipk --product gsu --version 0.41.5 --report /tmp/gsu-install.json
+      - uses: actions/checkout@v4
+        with:
+          repository: shr-project/opkg
+          ref: eed3359acfff5cb90cd8e91949df32f089db50be
+          path: upstream/opkg
+          persist-credentials: false
+      - name: Build the pinned offline OPKG
+        working-directory: upstream/opkg
+        run: |
+          set -eu
+          sed -i '/AC_CONFIG_MACRO_DIR(\[m4\])/d' configure.ac
+          autoreconf -fi
+          ./configure --disable-curl --disable-gpg --disable-openssl --disable-ssl-curl --disable-sha256 CFLAGS='-include sys/sysmacros.h -fcommon'
+          make -j2
+      - name: Exercise public historical packages and exact r6 updater
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/gsu-history
+          for version in 13.40-r93 13.41-r4 13.41-r5 13.41-r6; do
+            gh release download "v$version" --repo "$GITHUB_REPOSITORY" --pattern '*.ipk' --dir /tmp/gsu-history
+          done
+          python compatibility/verify-modern-migration.py upstream/opkg/src/opkg-cl /tmp/gsu-history /tmp/gsu-first/*.ipk /tmp/gsu-first/migration.json
+      - name: Check the publication manifest against the migrated bytes
+        run: |
+          set -euo pipefail
+          cp /tmp/gsu-install.json /tmp/gsu-first/install.json
+          ar p /tmp/gsu-first/*.ipk data.tar.gz | python -c 'import sys,tarfile;print(sum(m.size for m in tarfile.open(fileobj=sys.stdin.buffer,mode="r|gz") if m.isfile()))' > /tmp/gsu-first/installed-bytes
+          python compatibility/publish-modern.py /tmp/gsu-first
+      - uses: actions/upload-artifact@v4
+        with:
+          name: verified-gsu-${{ github.event.pull_request.head.sha || github.sha }}
+          path: /tmp/gsu-first/
+          retention-days: 7
+  sampler:
+    name: Measure read-only sampler on ${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - run: python3 compatibility/benchmark-diagnostics.py

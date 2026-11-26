@@ -305,6 +305,7 @@ if os.path.isfile('/etc/version_act'):
         pass
 
 config.plugins.GlassSysUtil = ConfigSubsection()
+config.plugins.GlassSysUtil.diagnosticAlerts = ConfigYesNo(default=False)
 config.plugins.GlassSysUtil.par0 = ConfigYesNo(default=False)
 config.plugins.GlassSysUtil.par1 = ConfigInteger(default=1030)
 config.plugins.GlassSysUtil.par2 = ConfigInteger(default=70)
@@ -1530,6 +1531,9 @@ class SysUtilMngMain(Screen):
             ('9', _('Swap Management'), _('Create,remove and show single/multi swap on mapped devices on your hw')),
             ('17', _warder_tools_ui.text(globals(), 'Tools'), _warder_tools_ui.text(globals(), 'Create one archive with system information and GSU logs.')),
             ('16', _plugin_update_text(globals(), 'Update'), _plugin_update_text(globals(), 'Check for a new version of Glass System Utility Warder Evolution'))]
+        from .warder_centres import DIAGNOSTICS
+        self.menuListAll.extend((ident, _(title), _(hint))
+                                for ident, (title, hint) in DIAGNOSTICS.items())
         self.status = {}
         self['list'] = ListboxSys2(self.list)
         self['list'].onSelectionChanged.append(self.reactivate)
@@ -1559,7 +1563,16 @@ class SysUtilMngMain(Screen):
     def selectedmenuitem(self):
         if self.size < 1280:
             self.close()
-        selectedItem = self['list'].getCurrent()[0]
+        current = self['list'].getCurrent()
+        if not current:return
+        selectedItem = current[0]
+        if selectedItem.startswith('centre:'):
+            from .warder_centre_ui import open_centre
+            return open_centre(self, globals(), selectedItem.split(':',1)[1])
+        return self.dispatch_menu_id(selectedItem)
+
+    def dispatch_menu_id(self, selectedItem):
+        if selectedItem is None:return
         enabledItem = self.status.get(selectedItem)
         if enabledItem:
             if selectedItem == '0':
@@ -1587,6 +1600,9 @@ class SysUtilMngMain(Screen):
                 _warder_right.show(self, globals(), 'tools')
             elif selectedItem == '16':
                 self.updatechckact()
+            else:
+                from .warder_centre_ui import open_diagnostic
+                open_diagnostic(self.session, globals(), selectedItem)
         return
 
     def updatemenulist(self):
@@ -1601,9 +1617,16 @@ class SysUtilMngMain(Screen):
             self.status[x[0]] = True
             if (not MNG_DEV and x[0] == '11') or (x[0] == '7' and (not ENA_PS)) or (x[0] == '4' and (not tmpMx)) or (x[0] == '2' and (not tmpCC) and self.enaNonLocal) or (x[0] == '3' and (not tmpOS) and self.enaNonLocalOscam) or (x[0] == '6' and (not fileExists('/tmp/ecm.info'))) or (x[0] == '7' and fileExists(PYTHONPATH + 'Plugins/Extensions/GlassBluePanel/plugin.pyo') and (not tmp)):
                 self.status[x[0]] = False
-            desktop = getDesktop(0).size()
-            self.list.append(_warder_main.menu_row(globals(), x[0], x[1], self.status[x[0]], desktop.width(), desktop.height()))
-
+        desktop = getDesktop(0).size()
+        from .warder_centres import legacy_routes
+        self.centre_entries = []
+        for key, label, entries in legacy_routes(self.menuListAll):
+            if not entries:continue
+            ident = 'centre:' + key
+            description = '\n'.join(entry[1] for entry in entries)
+            self.centre_entries.append((ident, _(label), description))
+        self.list = [_warder_main.menu_row(globals(), ident, label, True, desktop.width(), desktop.height())
+                     for ident, label, description in self.centre_entries]
         self['list'].l.setList(self.list)
         self.reactivate()
         return
@@ -1646,7 +1669,7 @@ class SysUtilMngMain(Screen):
     def reactivate(self):
         selection = self['list'].getCurrent()
         if selection:
-            entry = next((entry for entry in self.menuListAll if entry[0] == selection[0]), None)
+            entry = next((entry for entry in getattr(self, 'centre_entries', []) + self.menuListAll if entry[0] == selection[0]), None)
             self['info'].setText(str(entry[2]) if entry else '')
             _warder_main.selection(self, entry)
 
@@ -2575,7 +2598,8 @@ class channelInfoCenter(Screen):
 class cccamInfo(Screen):
 
     def __init__(self, session, url='http://127.0.0.1:16001', srv_name='Box'):
-        self.skin = cccam_Info
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_Info, globals())
         self.session = session
         Screen.__init__(self, session)
         self.url = url
@@ -2734,7 +2758,8 @@ class cccamInfo(Screen):
 class serversStatus(Screen):
 
     def __init__(self, session, url):
-        self.skin = cccam_servers_Info
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_servers_Info, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -2930,7 +2955,8 @@ class serversStatus(Screen):
 class providerStatus(Screen):
 
     def __init__(self, session, url):
-        self.skin = cccam_providers_Info
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_providers_Info, globals())
         self.session = session
         Screen.__init__(self, session)
         self.url = url
@@ -2996,7 +3022,8 @@ class providerStatus(Screen):
 class sharesStatus(Screen):
 
     def __init__(self, session, url):
-        self.skin = cccam_shares_Info
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_shares_Info, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -3062,7 +3089,8 @@ class sharesStatus(Screen):
 class clientsStatus(Screen):
 
     def __init__(self, session, url):
-        self.skin = cccam_clients_Info
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_clients_Info, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -3256,7 +3284,8 @@ class clientsStatus(Screen):
 class activeClientsStatus(Screen):
 
     def __init__(self, session, url):
-        self.skin = cccam_activeClients_Info
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_activeClients_Info, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -3327,7 +3356,8 @@ class activeClientsStatus(Screen):
 class entitlements(Screen):
 
     def __init__(self, session, url):
-        self.skin = cccam_entitlements
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_entitlements, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -3389,7 +3419,8 @@ class entitlements(Screen):
 class cccamSummary(Screen):
 
     def __init__(self, session, url):
-        self.skin = cccam_summary_Info
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_summary_Info, globals())
         self.session = session
         Screen.__init__(self, session)
         self.url = url
@@ -3480,7 +3511,8 @@ class cccamSummary(Screen):
 class cccamInfoChoiceServer(Screen):
 
     def __init__(self, session):
-        self.skin = cccam_InfoChoiseServer
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_InfoChoiseServer, globals())
         self.session = session
         Screen.__init__(self, session)
         self.status = {}
@@ -3607,7 +3639,8 @@ class cccamInfoChoiceServer(Screen):
 class providerCardView(Screen):
 
     def __init__(self, session, url):
-        self.skin = cccam_providerCardView_Info
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_providerCardView_Info, globals())
         self.session = session
         Screen.__init__(self, session)
         self.url = url
@@ -7424,7 +7457,8 @@ class SelectPosition(Screen):
 class mboxInfo(Screen):
 
     def __init__(self, session):
-        self.skin = mbox_Main
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(mbox_Main, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -7544,7 +7578,8 @@ class mboxInfo(Screen):
 class m_pid(Screen):
 
     def __init__(self, session):
-        self.skin = mbox_pid_scr
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(mbox_pid_scr, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -7608,7 +7643,8 @@ class m_pid(Screen):
 class m_servers(Screen):
 
     def __init__(self, session):
-        self.skin = mbox_servers_scr
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(mbox_servers_scr, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -7669,7 +7705,8 @@ class m_servers(Screen):
 class m_stat(Screen):
 
     def __init__(self, session):
-        self.skin = mbox_netstat_scr
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(mbox_netstat_scr, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -7730,7 +7767,8 @@ class m_stat(Screen):
 class m_share(Screen):
 
     def __init__(self, session):
-        self.skin = mbox_share_scr
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(mbox_share_scr, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []

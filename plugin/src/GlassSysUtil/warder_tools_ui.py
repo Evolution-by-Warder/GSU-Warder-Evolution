@@ -67,7 +67,8 @@ class ToolsScreen(Screen):
         self.skin=api['ipkScript_center']
         Screen.__init__(self,session)
         self.api=api
-        self.entries=[('bundle','Create diagnostic bundle','Create one archive with system information and GSU logs.')]
+        self.entries=[('bundle','Create diagnostic bundle','Create one archive with system information and GSU logs.'),
+                      ('forum-report','Forum report','Preview anonymous report')]
         self['list']=api['ListboxSys2']([])
         self['list'].onSelectionChanged.append(self.describe)
         self['descriptions']=Label('')
@@ -92,7 +93,11 @@ class ToolsScreen(Screen):
     def select(self):
         row=self['list'].getCurrent()
         if not row:return
-        if row[0]=='bundle':self.session.open(DiagnosticScreen,'bundle',self.api)
+        if row[0]=='bundle':
+            self.session.open(DiagnosticScreen,'bundle',self.api)
+        elif row[0]=='forum-report':
+            from .warder_centre_ui import open_diagnostic
+            open_diagnostic(self.session,self.api,'forum-report')
 
 
 class DiagnosticScreen(Screen):

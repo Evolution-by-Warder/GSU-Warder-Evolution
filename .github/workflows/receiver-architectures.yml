@@ -1,0 +1,94 @@
+name: Receiver CPU architecture checks
+on:
+  workflow_call:
+  pull_request:
+    paths:
+      - 'plugin/**'
+      - 'compatibility/**'
+      - '.github/workflows/receiver-architectures.yml'
+permissions:
+  contents: read
+jobs:
+  cross:
+    name: Emulated sampler on ${{ matrix.abi }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - abi: mips-linux-gnu
+            qemu: mips
+            libc: mips
+          - abi: mipsel-linux-gnu
+            qemu: mipsel
+            libc: mipsel
+          - abi: arm-linux-gnueabihf
+            qemu: arm
+            libc: armhf
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: python/cpython
+          ref: cd1c3a6342869b7346c1b5c27b8de9c6ef9c4e69
+          path: upstream/cpython
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: madler/zlib
+          ref: 51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf
+          path: upstream/zlib
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11.14'
+      - name: Build target interpreter and run measured sampler
+        env:
+          DEBIAN_CROSS_ARCH: ${{ matrix.libc }}
+          ABI: ${{ matrix.abi }}
+          EMULATOR: ${{ matrix.qemu }}
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends "gcc-$ABI" "libc6-dev-$DEBIAN_CROSS_ARCH-cross" qemu-user
+          export CC="$ABI-gcc" AR="$ABI-ar" RANLIB="$ABI-ranlib"
+          zlib="$RUNNER_TEMP/zlib"
+          (cd upstream/zlib && CFLAGS="-O2 -fPIC" ./configure --static --prefix="$zlib" && make -j4 && make install)
+          cd upstream/cpython
+          export PKG_CONFIG_LIBDIR="$zlib/lib/pkgconfig"
+          CPPFLAGS="-I$zlib/include" LIBS="-lz -lm" LDFLAGS="-L$zlib/lib" ac_cv_buggy_getaddrinfo=no ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no ./configure --build="$(gcc -dumpmachine)" --host="$ABI" --with-build-python="$(command -v python)"
+          # Embed the native modules exercised by the sampler, without building unrelated desktop extensions.
+          echo '*static*' > Modules/Setup.local
+          awk '/^(_bisect|_json|_random|_struct|array|math|binascii|zlib|_sha512|fcntl|_posixsubprocess|resource|select|_socket|grp|_datetime|_csv|unicodedata) / {print}' Modules/Setup.stdlib >> Modules/Setup.local
+          make -j4 python >"$RUNNER_TEMP/build.log" 2>&1 || { grep -Ei 'error|failed|not found|cannot|undefined reference' "$RUNNER_TEMP/build.log" | tail -60; tail -15 "$RUNNER_TEMP/build.log"; exit 1; }
+          export PYTHONPATH="$PWD/Lib"
+          "qemu-$EMULATOR" -L "/usr/$ABI" ./python -c 'import socket; assert all(socket.getaddrinfo(ip,0,f,socket.SOCK_STREAM,0,socket.AI_NUMERICHOST) for f,ip in ((socket.AF_INET,"127.0.0.1"),(socket.AF_INET6,"::1")))'
+          "qemu-$EMULATOR" -L "/usr/$ABI" ./python "$GITHUB_WORKSPACE/compatibility/benchmark-diagnostics.py"
+  openbh:
+    name: Native OpenBH diagnostic interfaces
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: BlackHole/enigma2
+          ref: Python3.14
+          path: upstream/openbh
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - run: python compatibility/check-diagnostic-interfaces.py upstream/openbh
+      - name: Measure translated controls in all four TV layouts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends python3-pil fonts-dejavu-core fonts-noto-cjk
+          /usr/bin/python3 compatibility/check-diagnostic-text.py

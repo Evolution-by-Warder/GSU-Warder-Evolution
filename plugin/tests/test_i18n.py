@@ -51,7 +51,9 @@ class LocalizationTests(unittest.TestCase):
               if isinstance(node,ast.Call) and isinstance(node.func,ast.Name)
               and node.func.id=='_' and node.args and isinstance(node.args[0],ast.Constant)
               and isinstance(node.args[0].value,str)}
-        self.assertFalse(keys-set(common)-set(extra)-technical)
+        centres=json.loads((ROOT/'locale/centres.json').read_text(encoding='utf-8'))
+        for lang in i18n.LANGUAGES:
+            self.assertFalse(keys-set(common)-set(extra)-set(centres[lang])-technical,lang)
 
     def test_normalizes_regions_and_falls_back_to_english_without_global_locale(self):
         for code in ('sk_SK','SK-sk','sk'):

@@ -1,3 +1,59 @@
+# 26. 11. 2026 · konečná kontrola balíka a alokácie
+
+Na 9809b5f5083081d68668cd20f9f269b2ac57bf93 mali dve CI zostavy a lokálne bajty zhodný SHA-256 115bc57d4c842049d72864a0e2deaf0eceb35f0bb7d53f515cc5533e9abc48fc. Job 45784968376 overil tri cesty migrácie, veľkosť 3 873 060 bajtov a 6 500 779 bajtov súborov po rozbalení. Na natívnom CI AArch64 trvalo jedno odčítanie v priemere 0,423 ms (12 vzoriek po sekunde), CPU 5,908 ms spolu, špička procesu 14 312 KiB. OpenATV 45784968596, OpenPLi 45784968381, inštalátor 45784968501 a OpenBH uspeli. V emulácii už cieľové interpretery bežali. V izolovanej zostave chýbal modul unicodedata pre IDNA pri getaddrinfo, ktorý sa doplnil do cieľového interpretera. Plugin používa štandardné moduly image.
+
+CI teraz eviduje aj skutočnú alokáciu súborov po inštalácii OPKG pre každú migračnú cestu. Započítava diskové bloky súborov z výstupu opkg files, každý inode raz. Matice oboch image aj kontrola inštalátora majú explicitný checkout presného PR HEAD. Lokálne 467 regresných testov. Produkcia a web sú podmienené úspešným overením.
+
+# 26. 11. 2026 · kandidát pred vydaním
+
+Predchádzajúci HEAD 5e5b062a70a03dec43cfa0f05ee62f52a4a0dd4c prešiel OpenATV 45784124685, OpenPLi 45784124525, inštalátorom 45784124554 a reprodukciou/migráciou 45784124546. Log linkera z behu 45784124598 ukázal presnú príčinu zlyhania krížovej zostavy. Premenná LIBC s názvom architektúry kolidovala s rovnomennou premennou CPython. Workflow už používa samostatný názov pre výber správneho balíka Debian.
+
+Aktuálny kandidát dopĺňa údaje DVB-T/T2 a DVB-S/S2 podľa údajov ovládača, opätovne overuje súbežné zmeny súborov v zálohe a zabraňuje uloženiu zálohy používateľa na sieťový mount. Príručka zodpovedá novým centrám a vysvetľuje obnovu. Lokálne prešlo 466 testov a 3 024 kontrol rozmerov. Dve zostavy IPK majú 3 873 060 bajtov a SHA-256 115bc57d4c842049d72864a0e2deaf0eceb35f0bb7d53f515cc5533e9abc48fc, bežné súbory po rozbalení 6 500 779 bajtov. Produkčná aktivácia a web sa evidujú až po úspešnom merge a kontrole verejných bajtov.
+
+# 26. 11. 2026 · meranie a optimalizácia teplotných čidiel
+
+Na 17f50f2745ade5e90757880722c8da09cdf59af4 uspeli OpenATV 45782325859, OpenPLi 45782325928, reprodukcia/migrácie 45782325936 aj kontrola inštalátora 45782325857. OpenBH prešiel aj kontrolou 3 024 ovládacích textov. Pri zostavovaní krížového CPython zachytilo CI 45782325842 problém s nesúvisiacimi rozšíreniami pre vývojový hostiteľ. Nové zostavenie cieli na skutočné natívne moduly potrebné na spustenie samplera a IPv4/IPv6 pod emuláciou.
+
+Meranie odhalilo zbytočné opakované čítanie pomalých tepelných senzorov. Živé meranie používa päťsekundový interval pre tento senzor, zobrazuje vek výsledku a štatistiku počíta z čerstvých pozorovaní. CPU a sieť zostávajú pri nastavenom intervale. Lokálne meranie na x86_64, 12 vzoriek po sekunde, priemer 0,539 ms, CPU 7,832 ms spolu, špička procesu 11 136 KiB. Čísla nepopisujú reálny prijímač. Ďalší krok je kontrola všetkých troch emulovaných ABI, presného kandidáta a produkčná verifikácia.
+
+Manuálne preskúmané vydávacie workflowy a ich volané skripty. Historické vydávacie vetvy spúšťa ich vlastná vetva, r6 má len manuálnu obnovu pôvodných bajtov. Moderné zverejnenie vyžaduje úspech všetkých štyroch volaných pracovných postupov, overený IPK z toho istého behu, stav hlavnej vetvy a historických feedov. Pri zhodnom už zverejnenom tagu iba kontroluje existujúce bajty. Zápis na main je bez force. Referenčné zdroje sa načítavajú v read-only joboch. Lokálne 465 testov, balík 3 871 820 bajtov, SHA-256 b0aee79b5566cfd6de66208143d0b8bc1d949f81e889c96685bb8c0110637a8a. Toto je kontrola pracovného balíka.
+
+# 26. 11. 2026 · výsledky kandidáta a rozhrania prijímača
+
+Na e08b766f399eceb865febd6ad3ff217bce6ba3cd prešli matice OpenATV (45781593896), OpenPLi (45781593863), kontrola balíka s migráciami a publikátorom (45781593912), inštalátor (45781594076) aj natívne rozhrania OpenBH. Kompilátor troch emulovaných cieľov nevedel pri konfigurácii CPython na hostiteľovi spustiť cieľový getaddrinfo. Overenie sa presúva do hotového cieľového interpretera pod QEMU pre IPv4 aj IPv6. Na vývojovej vetve sa zatiaľ nevydal žiadny IPK.
+
+Posledné doplnenia zahŕňajú pasívny výber tunera bez preladenia, oddelenie výsledku testu internetu od zlyhania aktualizačného servera, rozpoznanie výpadkov zámku, anonymný výstup s povolenými diagnostickými hodnotami a meranie rozmerov 3 024 preložených ovládacích prvkov. Kontrola odhalila príliš dlhý ruský popis živých meraní. Nasleduje kontrola presného HEAD a publikácia po úspechu.
+
+# 26. 11. 2026 · príprava publikácie 0.41.5
+
+PR #16, commit 66e2962371ad71ed042fa0f7ee5aa49e79f98ff9. OpenATV 45780291483, OpenPLi 45780291593, reprodukcia a migrácia 45780291413 aj inštalátor 45780291582 uspeli. Lokálne 458 testov. Pri prvom zostavení emulátorových testov (45780291482) chýbali hlavičky cieľovej libc. Doplnené sú explicitné závislosti pre každú ABI a kontrola natívnych rozhraní OpenBH. Emuláciu evidujeme oddelene od meraní na fyzickom prijímači.
+
+Vydávací postup používa balík z úspešnej migrácie a vyžaduje zhodu vetvy, revízie, existujúcich historických feedov, tagu, verejného IPK aj súčtu. Oprávnenie na zápis má len produkčný job na main. Pri kolízii nemôže prepísať existujúci tag či verejný balík. Samotná príprava pracovnej vetvy feed neaktivuje. Ďalší krok je verifikácia presného HEAD a verejná kontrola po schválenom merge.
+
+# 26. 11. 2026 · diagnostika a ochrana zoznamu staníc
+
+Commit cf26ac4e881d110f6162507910d291d4967455ac v PR #16 prešiel OpenATV (45778734178), OpenPLi (45778734177), reprodukciou s migráciami a natívnym meraním x86_64/AArch64 (45778734238) a kontrolou inštalátora (45778734218).
+Ďalšia zmena pridáva stav závislostí balíka, samostatné stránky piatich projektov, kanonický vstup do aktualizácií a náhľad anonymného výstupu aj z pôvodných Nástrojov. Pred vstupom do natívneho ladenia sa vytvorí lokálna súkromná kópia lamedb a bouquetov so spätným overením každého súboru. Obnova spočíva v spätnom skopírovaní overených súborov do konfiguračného adresára Enigma2 pri zastavenom GUI. Umiestnenie zálohy sa zobrazí pred ladením. Súbor settings sa nekopíruje.
+Referenčné jadrá OpenPLi release-9.2 a OpenATV master poskytujú isTimeshiftActive aj isTimeshiftEnabled a zhodný vstup do manuálneho ladenia. Pribudli kontrola lokalizačných súborov, HiSilicon a meranie pod emulovanými MIPS/MIPSEL/ARMv7. Fyzické zariadenia neboli pripojené. Produkčný r6 aj staré feedy zostávajú aktívne. Nasleduje kontrola emulovaných výsledkov a vydávacieho postupu.
+
+# 26. 11. 2026 · overenie migrácie a auditu
+
+Implementačný commit 0f76366b94dbb97e002318064823bc489640296b prešiel štyrmi workflowmi. Nasledujúci commit 4088a82731a3fb5734faf0ca32847e912ddf1973 zaviedol verejnú verziu 0.41.5 a interné balíkové číslo 1:0.41.5. Tri relevantné workflowy uspeli (45776767657, 45776767676, 45776767689). Job 139762183252 overil tri izolované aktualizácie r93/r4/r5 → r6 → 1:0.41.5 so skutočnými historickými IPK a zachovaným nastavením. CI meranie tohto medzistupňa: 3851822 komprimovaných bajtov, 6428850 bajtov regulárnych súborov; SHA-256 fa86333b6051139f8c9315558b6ad4018111d19723fc81c075397ed63084885f. Vývojový balík sa nevydával.
+
+Presná kontrola odhalila rozdiel medzi OS bajtom gzip hlavičky Pythonu 3.12 a 3.14. Ďalšia dávka normalizuje gzip, dopĺňa šesťkarietový prehľad, plávajúci signál s voliteľným zvukom, detailné CAM panely, HDMI dáta, bezpečný export služieb TP, ochranu timeshiftu, doplnkové testy a meranie samplera. Funkčné zdroje, hranice a pôvod porovnania sú v docs/GSU-0.41.5-REFERENCE-AUDIT.md. Odkaz LinuxSat a rozsah verejného auditu výslovne doplnil vlastník. Ďalší krok: verifikovať presný HEAD, lokálny a CI hash, hardvérové obmedzenia, konečný publikátor a web až po stabilnom vydaní.
+
+---
+
+# 26. 11. 2026 · GSU 0.41.5, PR #16
+
+Vlastník schválil implementáciu, kontrolované zlúčenie a stabilné vydanie po overení v rozsahu zadania. Integrácia produkčného main e064e426d1c7388200b9ed4727aacbf5e5705bc8 do pracovnej vetvy je cbe4de0cb836d3589b8d7188574b1761e259bad1. Zachované oba nezávislé bloky registra. Na integračnom commite a0f0adfef5637b2e728b234d11c83d07ddf368fc uspeli štyri workflowy vrátane reprodukovateľnosti 45774748963, OpenATV 45774749143, OpenPLi 45774748935 a balíkovej kontroly 45774749115.
+
+R6: tag v13.41-r6 ukazuje na 45a9fad7be6e20a6eae6055c0cb59551be45b9f9. Porovnanie SHA verejného assetu s nezávisle stiahnutým CI IPK potvrdilo 3813348 bajtov a a8e79609147666b27f18460b3340e099bb013664478a787746bcf56bb28052e2. Produkčný workflow 45773458863 overil verejné bajty a sprievodný súčet. Nový stable-modern.json je zatiaľ prázdny. Produkčná verzia zostáva r6.
+
+Funkčný prírastok: natívne grafy so 60-sekundovou históriou, SNR/AGC/dB/BER/LOCK, export CSV, merania CPU/RAM/swap/senzorov/RX/TX, CPU a RSS procesov, natívne ladenie chránené kontrolou nahrávania, príjem a parametre streamu, SMART bez prebúdzania diskov, kategórie obsadenia, meranie brány/HTTPS, stav piatich oficiálnych feedov, kontrola inštalácie, náhľad anonymného exportu a kontrola lokálnych IPK. Vlastné rozloženia pre štyri rozlíšenia. Nové obrazovky sú dostupné z menu. Posledná miestna sada pred doplnením špecifického testu IPK mala 448 úspešných testov. Hardvér nebol meraný. Pokračovanie: overiť nový HEAD, skompletizovať číslovanie balíka, migráciu v OPKG, fyzické schopnosti prijímačov a otvorené položky auditu pred vydaním. Web sa synchronizuje po publikácii.
+
+---
+
 # 2026-11-26 — stable r6 publication
 
 PR #15, immutable source `45a9fad7be6e20a6eae6055c0cb59551be45b9f9`, workflow 45773458863, public IPK SHA-256 `a8e79609147666b27f18460b3340e099bb013664478a787746bcf56bb28052e2`, 3813348 bytes. Both native matrices and packaged install gate passed. Feed activation via atomic fast-forward below; website verification remains pending.
@@ -7,6 +63,55 @@ PR #15, immutable source `45a9fad7be6e20a6eae6055c0cb59551be45b9f9`, workflow 45
 # 2026-11-26 — Owner-approved independent version numbering
 
 Target public version `0.41.5`, OPKG version `1:0.41.5`, GitHub tag `v0.41.5`, subsequent releases `0.41.6` etc. Stable r5 was already published: source `9e03199394ca498d30120cca5cf184752e0f1bbf`, SHA256 `17de1b2624dd90b77d2c8c05ceba997e683c2d66d888212dda21e31233ef7085`. Do not overwrite. Existing updater only parses historical versions and validates exact control version, so direct feed switch would break installed receivers. Prepare final legacy-compatible r6 bridge and separate modern feed, keep old feed on bridge and frozen r93 feeds unchanged. Implement epoch-aware package builder, manifest and installed health validation, version comparison and history, localized notes, tests for actual old updater and OPKG, then stable publisher and four-language website. No production changes at this checkpoint. Branch `work/gsu-version-normalization`. Existing r5 website synchronization remains separately required.
+
+---
+
+# 2026-11-26 — Consolidated GSU 0.41.5 architecture
+
+See [GSU-0.41.5-ARCHITECTURE.md](docs/GSU-0.41.5-ARCHITECTURE.md) for seven-centre navigation, progressive disclosure, feature requirements, technical modules, reference audit and release gates. Specification commit `34d52512bf1610b9836db1570750e7112bd97f8f`. Design only; implementation and complete reference audit remain open. Technical migration PR #15 remains separate.
+
+---
+
+# 2026-11-26 — Owner-required progressive disclosure and living-room usability
+
+GSU 0.41.5 must be simple on the surface and professional in depth. Organize every redesigned area in three levels: concise overview with key measured values and meaningful status; drill-down details with history, graphs and recommendations; optional expert diagnostics (processes, logs, technical tuner/stream identifiers and service actions). One screen, one primary purpose; avoid information overload and duplicate navigation. Use generous spacing, legible TV-distance typography, consistent remote-control actions, short localized labels, accessible status text alongside colors, explicit unknown states and capability-aware visibility. Show only supported actionable functions; never fabricate health status from missing measurements. Preserve existing features and expert access, with no unnecessary complexity for beginners. Validate focus, long labels, scrolling, contrast and HD/FHD/WQHD/UHD layouts; test real receiver usability and performance. Approved UX requirement, not implemented functionality.
+
+---
+
+# 2026-11-26 — Owner-required differentiation from native image tools
+
+GSU 0.41.5 must provide compelling value beyond stock OpenATV, OpenPLi, OpenBH and other Enigma2 system-information screens. Before implementing each feature, compare actual native image capabilities and existing GSU functionality; document the incremental value, avoid duplicate menus, reuse native APIs when suitable. Prioritize measured history/trends, actionable evidence-based diagnostics, cross-resource correlations, storage category breakdown, process resource attribution, network failure isolation, signal stability/lock-loss analysis, tuner occupancy and recording conflicts where supported, crash summaries, verified package integrity and Warder ecosystem status. Health scoring must be transparent, show measured checks/thresholds and unknown values, not invent observations or guarantee causes; only make recommendations justified by available measurements and avoid universal hardware temperature thresholds. Shared history is bounded and collected only when needed; optional alerts must be opt-in with negligible background load. Preserve compatibility, privacy, user configuration and existing functionality. No duplicated stock features solely for visual novelty. New UI is a unified Warder dashboard with drill-down details and actionable insights. This is a design requirement, not an implementation or parity claim.
+
+---
+
+# 2026-11-26 — Expanded signal centre scope approved by owner
+
+Extend functional assimilation with EvgQuickSignal, CiefpSignalInfo and CiefpSatelliteAnalyzer, native SatFinder/PositionerSetup and SatScanner as reference products. Audit actual features and existing GSU warder_channel/bitrate_worker before implementation; do not claim source-level parity from prior discussion alone. Integrate into existing Channel Information, not duplicate main-menu functions. Target: current service and tuner selection, SNR/AGC/BER/lock and supported dB, bounded history/min/max/mean, signal instability and lock-loss diagnostics, optional audio feedback for dish alignment, orbital position and transponder parameters (DVB-S/S2/S2X, MIS/PLS/T2-MI, DVB-T/T2/C/C2 only when supported), video/audio bitrate/PIDs/codecs/resolution, native tuning/scanning/blindscan and DiSEqC/USALS only through supported image APIs, compact quick signal view, optional local measurement export. No invented measurements or inferred unsupported capability; display unavailable explicitly. Read-only default; protect playback and recordings, require explicit confirmation for tuner retuning/motor movement/bouquet changes and preserve existing configuration. No conditional-access bypass. Reuse common sampling and graph widgets, cancel on close, 21 languages, all four resolutions, no GLES requirement. Compare sources and record actual feature coverage, tests and receiver limitations. Own implementation and UI; no third-party asset copying. Scope only, not implementation or verified parity.
+
+---
+
+# 2026-11-26 — Owner-approved functional assimilation of five reference products
+
+Target stable 0.41.5, own implementations and UI, no copied third-party assets. Reference inventory (public documentation reviewed, not exhaustive source audit):
+- E2 Doctor: https://www.linuxsat-support.com/thread/163145-e2-doctor/ — health score with check states and recommendations, image/Python/resources/network/tuner/mount/OPKG/EPG/picon/bouquet integrity checks, crashlog exception summaries, IPK metadata/dependency/script/architecture risk inspection, repair proposals and reversible actions where safe. Never delete files or modify configuration automatically; explicit confirmation, protected targets, validated backup/rollback before any supported mutation. No stale-lock removal without proving inactivity.
+- Pulse Dashboard: https://www.linuxsat-support.com/thread/162383-pulse-dashboard/ — combined live hardware/signal telemetry, SNR/AGC, encryption type labels, active CAM, temperature sensor fallbacks, local network status, orbital position.
+- MemOrganize: https://www.linuxsat-support.com/thread/162699-memorganize-is-a-smart-plugin-for-enigma2-receivers-to-manage-memory/ — readable grouped process names, per-process memory/CPU, flash directory analysis, swap details; investigate safe maintenance, never kill critical or unknown processes or drop caches automatically.
+- CiefpSatelliteAnalyzer: https://github.com/ciefp/CiefpSatelliteAnalyzer — tuner selection and lock/SNR/AGC/BER history, signal logging, tuning, DiSEqC/USALS, multistream/T2MI and Abertis scanning, blindscan when native hardware supports it, bouquet preview/deduplication/import. Use native image APIs, explicit confirmation for tuning or writing bouquets, protect current playback/recordings and existing lists, no conditional-access bypass.
+- LinuxSat Panel: https://github.com/OwnerPlugins/LinuxsatPanel — package-manager detection, installed inventory, approved source search, installation/update progress, release history, log viewer, LCN ordering and curated addon management. No untrusted arbitrary scripts, credential feeds or unauthorized CAM access. Warder projects retain canonical verified updaters; third-party catalog/install support requires verified provenance, integrity and compatibility.
+
+Mandatory next step: compare actual source/runtime behavior against GSU feature by feature; mark existing/partial/missing/unsupported, source evidence, implementation module, tests, hardware limitations. Reuse the existing system/ECM/channel/CAM/swap/tools views; process and log full-width subsections; no duplicate modules or navigation. Implement safely in batches, with 21-language coverage, HD/FHD/WQHD/UHD, native compatibility and lifecycle tests. Aim for compressed IPK under 7 MB, measure actual size and installed footprint; target is not a verified limit. Keep r6 migration isolated. No public stable 0.41.5 until implemented and verified, no claim of full parity from documentation alone.
+
+---
+
+# 2026-11-26 — Approved UI modernization direction for GSU 0.41.5
+
+Owner explicitly approved modernization of existing screens to current Warder Evolution standards, not merely adding six features. Preserve existing functionality, brand/logo/header, blue-cyan identity, PIG, remote-control usability, all 21 languages and HD/FHD/WQHD/UHD, without requiring GLES. Avoid duplicate functions. In particular, remove the two large Processes and System Log panels from the existing System Information overview and give each its own full-width detail view within the System Information section. Target navigation: Overview / Processes / System Log / Storage / Network / Live Monitoring. Overview uses reclaimed space for legible RAM, swap, root/flash, local disks, CPU load, temperatures, network/service status and health warnings. Processes: PID/name/state, scrolling, optionally measured CPU/RAM and sorting; read-only. Log: full-width scrolling, refresh, optional severity filter where reliable; no raw private logs in exported reports. Storage and network diagnostics must reuse the same views/data from any Tools shortcuts, not duplicate implementations. Live graphs use bounded history and stop sampling on close. Proposed navigation: left/right between sections, up/down for lists/scroll, yellow refresh, red back, OK detail; validate actual key bindings and preserve existing actions. Modernize main menu/right panel, channel/ECM/transponder/signal screens, CAM/OSCam/SRV and other legacy layouts consistently; preserve underlying actions and data. Use shared responsive layout components; verify long translations, native CI, lifecycle and receiver performance. This is an approved design direction, not implemented functionality. Keep technical r6 migration separate; deliver six features and UI modernization in stable 0.41.5.
+
+---
+
+# 2026-11-26 — GSU 0.41.5 feature scope approved by owner
+
+Six features: expand existing System Health diagnostics, bounded live CPU/RAM/swap/temperature/network graphs, read-only storage analysis including picons, timed network diagnostics, Warder Evolution installed-project and update centre, and privacy-first diagnostic report export. Reuse warder_tools.py and warder_tools_ui.py rather than duplicate existing diagnostics. All user-facing strings in 21 languages; HD/FHD/WQHD/UHD, MIPS/ARM, no GLES dependency. Background workers must be bounded and UI callbacks ignored after close; no automatic deletion, configuration changes or upload; no credentials, raw configuration or private logs in new report. Project centre must use official feeds and preserve individual updater ownership. Develop independently from technical r6 bridge PR #15; integrate after verified r6 publication, then full CI, epoch migration and stable 0.41.5 publication, web SK/EN/DE/RU and registers. Existing releases/feeds unchanged. No feature implementation claimed yet.
 
 ---
 

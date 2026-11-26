@@ -32,6 +32,15 @@ def catalog(root,code):
             candidate=all_values.get(code,{}) if isinstance(all_values,dict) else {}
             if isinstance(candidate,dict):supplement=candidate
         except (OSError,ValueError):pass
+    centres=base/'centres.json'
+    if centres.is_file():
+        try:
+            extra=json.loads(centres.read_text(encoding='utf-8'))
+            extra=extra.get(code,{}) if isinstance(extra,dict) else {}
+            if isinstance(extra,dict):
+                for key,value in extra.items():
+                    if isinstance(value,str) and value:values.setdefault(key,value)
+        except (OSError,ValueError):pass
     return values,original,supplement
 
 

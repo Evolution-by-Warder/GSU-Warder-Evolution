@@ -27,7 +27,11 @@ def archive(entries):
                 output.addfile(info);directories.add(str(parent))
             info=tarfile.TarInfo('./'+name);info.size=len(data);info.mode=mode;info.mtime=0
             output.addfile(info,io.BytesIO(data))
-    return gzip.compress(raw.getvalue(),mtime=0)
+    # GzipFile emits the portable OS byte on all supported Python versions.
+    compressed = io.BytesIO()
+    with gzip.GzipFile(filename='', mode='wb', fileobj=compressed, compresslevel=9, mtime=0) as stream:
+        stream.write(raw.getvalue())
+    return compressed.getvalue()
 
 
 def build(destination, bridge=False):
@@ -88,7 +92,7 @@ def build(destination, bridge=False):
     control=('Package: '+package+'\nVersion: '+control_version+'\nArchitecture: all\nSection: '+('extra' if bridge else 'extensions')+'\nPriority: optional\nMaintainer: Warder Evolution\nDepends: enigma2, python3-core, python3-xml, python3-netclient, python3-compression, python3-fcntl, python3-json, python3-threading, ca-certificates\nDescription: GSU Warder Evolution: receiver information, CAM/ECM management and diagnostics\n'+('' if bridge else 'Replaces: '+LEGACY_PACKAGE+'\nConflicts: '+LEGACY_PACKAGE+'\n')).encode()
     checked = {name[len(PLUGIN)+1:]: hashlib.sha256(data).hexdigest()
                for name, data, mode in entries if name.startswith(PLUGIN+'/')
-               and (name.endswith('.py') or name == PLUGIN+'/version')}
+               and (name.endswith(('.py','.mo','.json')) or name == PLUGIN+'/version')}
     entries.append((PLUGIN+'/installed-files.json',
                     (json.dumps({'version':version,'files':checked},sort_keys=True,indent=2)+'\n').encode(),0o644))
     preinst=(BASE/'control/preinst').read_bytes()
