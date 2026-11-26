@@ -1886,7 +1886,7 @@ class channelInfoCenter(Screen):
 
         try:
             (x, i) = self.getTunerInfo(service)
-            self['tp_values'].setText('%s%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s' % (i, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], iswide, ac, str(num), _warder_channel.caid_rows(tmp)))
+            self['tp_values'].setText('%s%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s' % (i, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], _warder_channel.video_format(iswide,serviceinfo,iServiceInformation), ac, str(num), _warder_channel.caid_rows(tmp)))
             self['tp_ref'].setText(ref)
             if addr != '':
                 self['tp_lab_sat'].setText('Address:')

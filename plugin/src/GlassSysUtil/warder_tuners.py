@@ -91,6 +91,9 @@ def details(session, api, tr, slot_number=None, panels=False):
                     if name == 'sGamma':
                         value = {0:'SDR', 1:'HDR', 2:'HDR10', 3:'HLG'}.get(value, value)
                     rows.append('    %s   %s' % (label, value))
+        from .warder_channel import video_codec
+        codec=video_codec(info,enum)
+        if codec:rows.append('    '+tr('Video Format:')+'   '+codec)
         tracks = getattr(service,'audioTracks',lambda:None)()
         if tracks and 0 <= tracks.getCurrentTrack() < tracks.getNumberOfTracks():
             audio = tracks.getTrackInfo(tracks.getCurrentTrack())

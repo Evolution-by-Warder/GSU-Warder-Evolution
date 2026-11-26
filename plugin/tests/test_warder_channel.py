@@ -58,6 +58,20 @@ class ChannelLayoutTests(unittest.TestCase):
         self.assertEqual(len(ui.caid_rows(caids).splitlines()),2)
         self.assertEqual(ui.compact_ecm_cam('OSCam\n',' (2.26.09-11968-802@39e78a46)\n'),'OSCam (2.26.09-11968-802)')
 
+    def test_native_video_codec_is_optional_and_preserves_aspect_row(self):
+        plugin=load(ROOT)
+        ui=plugin._warder_channel
+        enum=types.SimpleNamespace(sVideoType=42)
+        for value,expected in ((0,'MPEG2'),(1,'AVC'),(7,'HEVC'),(9,'VP9'),(40,'AVS2'),
+                               (-1,None),(11,None),(999,None),(True,None),('7',None)):
+            info=types.SimpleNamespace(getInfo=lambda key:value)
+            self.assertEqual(ui.video_codec(info,enum),expected)
+            self.assertEqual(ui.video_format('16:9',info,enum),'16:9 · '+expected if expected else '16:9')
+        self.assertIsNone(ui.video_codec(None,enum))
+        self.assertIsNone(ui.video_codec(types.SimpleNamespace(),types.SimpleNamespace()))
+        def unavailable(key):raise RuntimeError('native field unavailable')
+        self.assertIsNone(ui.video_codec(types.SimpleNamespace(getInfo=unavailable),enum))
+
     def test_header_is_independent_and_stops_on_close(self):
         plugin=load(ROOT)
         screen=plugin.channelInfoCenter(types.SimpleNamespace())

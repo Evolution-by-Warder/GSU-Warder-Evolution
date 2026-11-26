@@ -84,3 +84,10 @@ Ostré vydanie blokuje neukončené CI presného HEAD a požadovaný fyzický re
 ### Pamäť a úložisko — pravý panel
 
 - Prehľad má dva stĺpce: RAM, swap, uložené cesty EPG/timeshift/nahrávania a lokálne úložiská, kapacity, SMART atribúty a odporúčaná cesta piconov. Pôvodné dáta a podrobný report zachované, bez ďalšieho merania; kontrola zrušenia pred SMART a čítaním ciest. Využité existujúce preklady. Regresie pre dáta, jeden zber, zrušenie a vyčistenie pri zmene výberu. CI a fyzické overenie zostávajú.
+
+## Záverečný audit — kontrola `348a55d2e0a202419f126f45850456712c298d30`
+
+- Funkčne zapracované: prehľad záloh, OpenWebif, najväčšie súbory, uložené cesty, päť projektov, dvojstĺpcové výsledky. Staršie odseky sú historické checkpointy, nie aktuálny zoznam chýb.
+- Video kodek doplnený do existujúceho riadka Video Format a detailu tunera. Spoločné natívne ID overené v OpenATV master/8.0 a OpenPLi develop/release-9.2 (`Components/Converter/PliExtraInfo.py`, OpenATV `Components/SystemInfo.py`); neznáme hodnoty neoznačovať za kodek. Bez nového riadka v kanálovej obrazovke. Regresia voliteľného API.
+- Lokalizované release notes rozšírené v 21 jazykoch; nejde o fyzické overenie každej jazykovej mutácie. Verzia a release-request už 0.41.6, publikátor používa runtime verziu. Stabilný feed a existujúce tagy nezmenené.
+- Otvorené: fyzická kontrola všetkých centier, dlhých textov a ovládania; staršie SWAP/OSD/CAM konfigurácie ostávajú podriadené obrazovky, aktívne ladenie a zápis musia zostať explicitné. Samostatné per-interface grafy nie sú implementované (existujú súhrnné grafy a per-interface počítadlá). Vydanie blokované fyzickým retestom a CI presnej revízie; následne overenie IPK/feedu a webu SK/EN/DE/RU. Nevyhlasovať automaticky úplnú vizuálnu paritu.

@@ -130,3 +130,23 @@ def caid_rows(caids,max_per_line=6):
     if values and all(len(v)==4 and all(c in '0123456789ABCDEFabcdef' for c in v) for v in values):
         return '\n'.join('  '.join(values[i:i+max_per_line]) for i in range(0,len(values),max_per_line))
     return caids
+
+
+# Common Enigma2 stream type IDs verified against OpenATV and OpenPLi.
+VIDEO_CODECS={0:'MPEG2',1:'AVC',2:'H263',3:'VC1',4:'MPEG4-VC',5:'VC1-SM',
+              6:'MPEG1',7:'HEVC',8:'VP8',9:'VP9',10:'XVID',13:'DIVX 3.11',
+              14:'DIVX 4',15:'DIVX 5',16:'AVS',18:'VP6',21:'SPARK',40:'AVS2'}
+
+
+def video_codec(info,enum):
+    """Return a known native stream codec, not a guess from resolution."""
+    key=getattr(enum,'sVideoType',None)
+    if info is None or key is None:return None
+    try:value=info.getInfo(key)
+    except (AttributeError,RuntimeError,TypeError,ValueError):return None
+    return VIDEO_CODECS.get(value) if type(value) is int else None
+
+
+def video_format(aspect,info,enum):
+    codec=video_codec(info,enum)
+    return aspect+' · '+codec if codec else aspect

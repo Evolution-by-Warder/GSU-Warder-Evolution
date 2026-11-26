@@ -1,3 +1,7 @@
+# 26.11.2026 — Final inventory and native video codec
+
+Reviewed exact predecessor `348a55d2e0a202419f126f45850456712c298d30`, native OpenATV/OpenPLi codec maps, legacy navigation and publication gate. Existing channel Video Format row includes known native codec without adding a row; tuner details reuse the same helper. Unknown IDs and missing native fields remain unknown. Updated 21-language release notes and consolidated remaining gaps in the inventory. Runtime/release request already 0.41.6; publisher is version-driven. Physical rendering, exact-head CI, production artifact/feed verification and website synchronization remain pending. No production mutation.
+
 # 26.11.2026 — Inline memory and storage overview
 
 Existing storage collector now optionally formats RAM/swap and saved native paths separately from local disk capacities, SMART attributes and picon storage suggestion. Shared two-column UI, cancellation checkpoints, original detailed report retained, no additional measurements or writes. Existing captions reused. Added collector and UI fixture regressions. Exact-head CI and physical validation required; no production mutation.
