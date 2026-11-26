@@ -130,20 +130,25 @@ def report(tr, detail=False, probe=None):
         mem = memory_values(p.text('/proc/meminfo', 16384))
         for label, key in [('RAM', 'ram_available'), ('Swap', 'swap_free')]:
             value = mem[key]
-            rows.append('%s   %s' % (tr(label), '%.1f MiB %s' % (value/1048576, tr('free')) if value is not None else '—'))
+            total=mem['ram_total' if key=='ram_available' else 'swap_total']
+            rows.append(tr(label))
+            rows.append('    %s %.1f MiB    ·    %s %.1f MiB' % (tr('Total:'),total/1048576,tr('Free:'),value/1048576) if total is not None and value is not None else '    —')
         rows.append('')
         options = []
         smart_cache = {}
         for path, dev, fs, ro, usage in disks(p, table):
-            value = '%.1f GiB %s' % (usage.free/1073741824, tr('free')) if usage else '—'
-            rows.append('%s   %s   %s%s' % (path, fs, value, ' · '+tr('read-only') if ro else ''))
+            rows.append('%s   ·   %s%s' % (path, fs, ' · '+tr('read-only') if ro else ''))
+            if usage and usage.total>0:
+                rows.append('    %s %.1f GiB    ·    %s %.1f GiB    ·    %s %.0f %%' % (tr('Total:'),usage.total/1073741824,tr('Free:'),usage.free/1073741824,tr('Used(%):'),100*(usage.total-usage.free)/usage.total))
+            else:rows.append('    '+tr('Unavailable'))
             if path.startswith('/media/') and not ro and usage and usage.free > 0:
                 options.append((usage.free, path))
             if dev not in smart_cache and len(smart_cache) < 4:
                 smart_cache[dev] = smart(dev)
             health = smart_cache.get(dev)
             if health and any(x is not None for x in health):
-                rows.append('SMART   %s   %s' % (health[0] or '—', '—' if health[1] is None else '%d °C' % health[1]))
+                rows.append('    SMART   %s   %s' % (health[0] or '—', '—' if health[1] is None else '%d °C' % health[1]))
+            rows.append('')
         if options:
             rows.extend(('', tr('Picon storage')+'   '+max(options)[1]))
     return '\n'.join(rows) or tr('Unavailable')
