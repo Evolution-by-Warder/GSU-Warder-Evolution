@@ -63,7 +63,7 @@ def skin(width, height, mode):
         # Card widgets are hidden together whenever a text report is selected.
         for i in range(6):
             x,y=834+(i%2)*488,425+(i//2)*130
-            element('widget',x,y,472,120,name='inline_bg%d'%i,
+            element('widget',x,y,470,120,name='inline_bg%d'%i,
                     backgroundColor='#00172539',transparent='0',zPosition='1',font='Regular;%d'%max(1,round(sy)))
             label('inline_name%d'%i,x+14,y+5,444,34,25,'#00bcd2df',noWrap='1')
             label('inline_value%d'%i,x+14,y+41,444,48,35,'#00ffffff',noWrap='1')
@@ -71,7 +71,7 @@ def skin(width, height, mode):
                     backgroundColor='#002f465a',foregroundColor=style.CYAN,
                     borderWidth='0',transparent='0',zPosition='5')
             label('inline_note%d'%i,x+14,y+90,444,28,20,'#00bcd2df',noWrap='1')
-        label('inline_summary',834,823,960,88,24,style.CYAN,valign='top')
+        label('inline_summary',834,823,954,82,24,style.CYAN,valign='top')
     elif mode == 'overview':
         for index in range(6):
             col, row = index % 3, index // 3
