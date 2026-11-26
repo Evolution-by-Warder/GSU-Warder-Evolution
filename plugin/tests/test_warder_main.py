@@ -127,7 +127,7 @@ class WarderMainTests(unittest.TestCase):
         with patch.object(module,'countServers',return_value=(True,True)),patch.object(screen,'checkCam',return_value=False),patch.object(screen,'cccamRunning',return_value=False),patch.object(screen,'mboxRunning',return_value=False),patch.object(module,'oscamRunning',return_value=True):
             screen.updatemenulist()
         self.assertEqual([row[0] for row in screen.list],['centre:system','centre:reception','centre:storage','centre:network','centre:cam','centre:service','centre:warder'])
-        self.assertEqual([e[0] for e in screen.menuListAll],['0','1','2','3','4','6','7','8','9','17','16','network-overview'])
+        self.assertEqual([e[0] for e in screen.menuListAll],['0','1','2','3','4','6','7','8','9','17','16','network-overview','system-overview','system-processes','system-log'])
         screen['list'].getCurrent=lambda:['centre:cam']
         screen.selectedmenuitem()
         args=session.openWithCallback.call_args.args
