@@ -84,11 +84,25 @@ def main(opkg, archive, current, report=None):
         paths[version] = path
     feed = (ROOT/'plugin/update/stable.json').read_bytes()
     assert json.loads(feed)['release']['sha256'] == PINS['13.41-r6']
-    tag = 'v0.41.5'
+    target=(ROOT/'plugin/src/GlassSysUtil/version').read_text().strip()
+    target_updater=runpy.run_path(str(ROOT/'plugin/src/GlassSysUtil/plugin_update.py'))
+    assert target_updater['version_key'](target)[0]==1
+    target_package_version=target_updater['package_version'](target)
+    tag='v'+target
     url = 'https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/'+tag+'/'+current.name
     modern = json.dumps({'schema':1,'channel':'stable-modern','product':'Glass System Utility Warder Evolution',
-                         'release':{'version':'0.41.5','tag':tag,'url':url,'sha256':hashlib.sha256(current.read_bytes()).hexdigest(),'bytes':current.stat().st_size}})
-    for version in ('13.40-r93','13.41-r4','13.41-r5'):
+                         'release':{'version':target,'tag':tag,'url':url,'sha256':hashlib.sha256(current.read_bytes()).hexdigest(),'bytes':current.stat().st_size}})
+    active=json.loads((ROOT/'plugin/update/stable-modern.json').read_text()).get('release')
+    origins=['13.40-r93','13.41-r4','13.41-r5']
+    if active and active['version']!=target:
+        prior=active['version']
+        offered=target_updater['parse_release'](json.dumps({'schema':1,'channel':'stable-modern','product':'Glass System Utility Warder Evolution','release':active}),'13.41-r6','stable-modern')
+        assert offered and offered.version==prior
+        assert target_updater['version_key'](target)>target_updater['version_key'](prior)
+        paths[prior]=archive/active['url'].rsplit('/',1)[-1]
+        target_updater['validate_ipk'](paths[prior],offered)
+        origins.append(prior)
+    for version in origins:
         with tempfile.TemporaryDirectory() as directory:
             work=Path(directory)
             root=work/'root'
@@ -109,24 +123,30 @@ def main(opkg, archive, current, report=None):
             settings.write_bytes(b'config.plugins.GlassSysUtil.par62=True\n')
             runtime=root/build_ipk.PLUGIN
             updater=runpy.run_path(str(runtime/'plugin_update.py'))
-            offered=updater['parse_release'](feed,version)
-            updater['validate_ipk'](paths['13.41-r6'],offered)
-            if version.endswith('r93'):
-                run('remove',LEGACY)
-            run('install',paths['13.41-r6'])
-            assert PACKAGE+' - 13.41-r6' in run('list-installed')
-            assert (runtime/'version').read_text().strip()=='13.41-r6'
+            if version in PINS:
+                offered=updater['parse_release'](feed,version)
+                updater['validate_ipk'](paths['13.41-r6'],offered)
+                if version.endswith('r93'):
+                    run('remove',LEGACY)
+                run('install',paths['13.41-r6'])
+                assert PACKAGE+' - 13.41-r6' in run('list-installed')
+                assert (runtime/'version').read_text().strip()=='13.41-r6'
+                installed='13.41-r6'
+            else:
+                installed=version
+                assert PACKAGE+' - '+target_updater['package_version'](version) in run('list-installed')
+                assert (runtime/'version').read_text().strip()==version
             updater=runpy.run_path(str(runtime/'plugin_update.py'))
-            accepted=updater['parse_release'](modern,'13.41-r6','stable-modern')
+            accepted=updater['parse_release'](modern,installed,'stable-modern')
             updater['validate_ipk'](current,accepted)
             run('install',current)
-            assert PACKAGE+' - 1:0.41.5' in run('list-installed')
+            assert PACKAGE+' - '+target_package_version in run('list-installed')
             assert LEGACY+' - ' not in run('list-installed')
-            assert (runtime/'version').read_text().strip()=='0.41.5'
+            assert (runtime/'version').read_text().strip()==target
             assert settings.read_bytes()==b'config.plugins.GlassSysUtil.par62=True\n'
             allocation=allocated_bytes(root,run('files',PACKAGE))
             routes[version]=allocation
-            print(version,'-> 13.41-r6 -> 1:0.41.5 verified; allocated package file bytes:',allocation)
+            print(version,'->',installed,'->',target_package_version,'verified; allocated package file bytes:',allocation)
     if report:
         report.write_text(json.dumps({'allocated_installed_package_file_bytes':routes},indent=2)+'\n')
 
