@@ -8,12 +8,13 @@ def overview(probe=None):
     p=probe or Probe()
     memory=memory_values(p.text('/proc/meminfo',16384))
     checks=[resource_check('RAM',memory['ram_total'],memory['ram_available'])]
+    disk=None
     try:
         disk=p.usage(p.path('/'))
         checks.append(resource_check('Flash',disk.total,disk.free,warning=10,critical=5))
     except OSError:
         checks.append(resource_check('Flash',None,None))
-    return {'memory':memory,'checks':checks,'health':health_summary(checks)}
+    return {'memory':memory,'checks':checks,'health':health_summary(checks),'flash_usage':disk}
 
 def processes(probe=None):
     p=probe or Probe()
@@ -122,12 +123,42 @@ def dashboard(cancel, p=None):
         return None
     live = sampler.sample()
     local = disks(p, mounts(p))
-    selected = [(path,usage) for path, _, _, _, usage in local if path != '/' and usage and (path.startswith('/media/') or path.startswith('/mnt/'))]
+    selected = [(path,usage,device) for path, device, _, _, usage in local if path != '/' and usage and (path.startswith('/media/') or path.startswith('/mnt/'))]
     best=max(selected,key=lambda item:item[1].free,default=None)
     flash = report['checks'][1]['available_percent']
     # List separate mount capacities. Bind mounts can otherwise double-count the same device.
     return {'health':report['health'], 'basis':report['memory']['ram_basis'],
             'disk_mount':best[0] if best else None,
             'temperature_source':sampler.temperature_source,
+            'memory':report['memory'],'flash_usage':report['flash_usage'],
+            'disk_usage':best[1] if best else None,'disk_device':best[2] if best else None,
             'values':(live['cpu'], live['ram'], live['swap'], flash,
                       best[1].free if best else None, live['temp'])}
+
+
+PROTOCOLS=('FTP','Telnet','VPN','Samba','NFS')
+
+
+def observed_services(p):
+    """Local daemon observations, not a connectivity or authentication test."""
+    names=set()
+    for pid in p.entries('/proc',8192):
+        if pid.isdigit():
+            name=p.text('/proc/'+pid+'/comm',128).strip().lower()
+            if name:names.add(name)
+    patterns=(('vsftpd','proftpd','pure-ftpd','ftpd'),('telnetd','in.telnetd'),
+              ('openvpn','wireguard','wg-quick'),('smbd','nmbd'),('nfsd','rpc.mountd','mountd'))
+    return tuple(any(n in names for n in group) if names else None for group in patterns)
+
+
+def information(cancel, p=None):
+    from .warder_storage import smart
+    p=p or Probe()
+    result=dashboard(cancel,p)
+    if result is None or cancel.is_set():return None
+    result['services']=observed_services(p)
+    result['disk_temperature']=None
+    if result['disk_device'] and not cancel.is_set():
+        status=smart(result['disk_device'])
+        if status:result['disk_temperature']=status[1]
+    return None if cancel.is_set() else result

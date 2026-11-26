@@ -1,149 +1,149 @@
-"""Present existing system widgets inside the common Warder frame."""
-from copy import deepcopy
+"""Full-screen system information and shared header for other Warder screens."""
 from pathlib import Path
 from xml.etree import ElementTree as ET
+from threading import Event
 from . import warder_main as main
+from .warder_screen import Screen
+
+CARD_NAMES=('CPU','RAM','Swap','Flash','HDD / SSD / USB','Temperature')
 
 
-def system_skin(original,width,height,translator=lambda value:value):
-    old=ET.fromstring(original)
-    sx,sy=width/1920.0,height/1080.0
-    root=ET.fromstring(main.main_skin(width,height))
-    header={'day','date','clock','seconds','version_title','version'}
-    # Keep the single shared backdrop and header, replacing the menu body.
+def information_skin(width,height):
+    from . import warder_dashboard as dashboard
+    sx,sy=width/1920,height/1080
+    root=ET.fromstring(dashboard.skin(width,height,'information'))
+    header={'day','date','clock','seconds','version_title','version','red','green','yellow','blue'}
     for node in list(root):
-        y=int(node.get('position','0,0').split(',')[1])
-        if not (node.tag=='ePixmap' and y==0) and node.get('name') not in header and y>=round(164*sy):
-            root.remove(node)
-    root.set('name','WarderGSUSystem')
-    for node in root.findall('ePixmap'):
-        node.set('zPosition','-3')
-    def fill(x,y,w,h,color):
-        ET.SubElement(root,'eLabel',position='%d,%d'%(round(x*sx),round(y*sy)),size='%d,%d'%(round(w*sx),round(h*sy)),backgroundColor=color,zPosition='-2' if color==main.CYAN else '-1')
-    fill(55,180,1810,800,main.CYAN)
-    fill(57,182,1806,796,main.PANEL)
-    lower_icons=[]
-    for original_node in old:
-        node=deepcopy(original_node)
-        if node.get('name') in ('red','green','yellow'):continue
-        x,y=map(int,node.get('position','0,0').split(','))
-        w,h=map(int,node.get('size','0,0').split(','))
-        if y/sy>=975:continue  # Old footer and its full-width color lines.
-        node.set('position','%d,%d'%(x,round((190+(y/sy-75)*0.84)*sy)))
-        node.set('size','%d,%d'%(w,max(1,min(round(h*0.84),round(978*sy)-int(node.get('position').split(',')[1])))))
-        if node.get('text'):node.set('text',translator(node.get('text')))
-        if node.get('font'):
-            family,size=node.get('font').rsplit(';',1)
-            node.set('font','Regular;%d'%max(12,round(int(size)*0.84)))
-        if node.tag in ('widget','eLabel'):
-            node.set('backgroundColor',main.PANEL)
-            node.set('transparent','1')
-            if node.get('foregroundColor') in (None,'#666666'):
-                node.set('foregroundColor','#00d1e3f3')
-        pixmap=node.get('pixmap','')
-        basename=Path(pixmap).stem
-        if '/devices/' in pixmap or basename in ('lr','updown'):
-            node.set('pixmap',main.BACKGROUND.rsplit('/',1)[0]+'/system-'+basename+'.png')
-            px,py=map(int,node.get('position').split(','))
-            pw,ph=map(int,node.get('size').split(','))
-            # Keep approved device size and horizontal centers; each picture
-            # precedes its own data block. Navigation arrows are unchanged.
-            side=min(round(pw*1.2),ph) if '/devices/' in pixmap else min(pw,ph)
-            node.set('position','%d,%d'%(px+(pw-side)//2,py+(ph-side)//2))
-            node.set('size','%d,%d'%(side,side))
-            if '/devices/' in pixmap:
-                row_y=190 if y/sy<400 else 445 if y/sy<700 else 700
-                node.set('position','%d,%d'%(px+(pw-side)//2,round(row_y*sy)))
-            node.set('scale','1')
-            if '/devices/' in pixmap and y>=round(700*sy):
-                lower_icons.append(node)
-        elif '/bp_icons/' in pixmap and basename in ('red','green'):
-            node.set('pixmap',main.BACKGROUND.rsplit('/',1)[0]+'/system-status-'+basename+'.png')
-            node.set('scale','1')
-        if node.tag=='ePixmap':node.set('alphatest','blend')
-        if y/sy>=870:  # Protocol captions and both states of each status dot.
-            nx,ny=map(int,node.get('position').split(','))
-            nw,nh=map(int,node.get('size').split(','))
-            ny+=round(26*sy)
-            node.set('position','%d,%d'%(nx,ny))
-            node.set('size','%d,%d'%(nw,min(nh,round(978*sy)-ny)))
-        root.append(node)
-    def move_meter(meter,target_y,backing_name):
-        original_position=meter.get('position')
-        original_size=meter.get('size')
-        mx=int(original_position.split(',')[0])
-        for node in root:
-            if node is meter or (node.tag=='ePixmap' and
-                    Path(node.get('pixmap','')).name==backing_name and
-                    node.get('position')==original_position and node.get('size')==original_size):
-                node.set('position','%d,%d'%(mx,target_y))
-
-    # Keep memory/storage meters beside their data after moving each block.
-    rows=(('ram',280,('mem_labels','ram','swap','mem_tot','root'),
-           ('membar','swapbar','memtotalbar','rootbar')),
-          ('hdd',535,('space_labels','hdd','usb','cf','sd'),
-           ('hddbar','usbbar','cfbar','sdbar')),
-          ('cpu',790,('HDDCPULabels','HDDTemperature','hdddev','cpu','sensors'),()))
-    for reference,target,names,meters in rows:
-        anchor=root.find("widget[@name='%s']"%reference)
-        delta=round(target*sy)-int(anchor.get('position').split(',')[1])
-        for name in meters:
-            meter=root.find("widget[@name='%s']"%name)
-            move_meter(meter,int(meter.get('position').split(',')[1])+delta,'bar_back.png')
-        for name in names:
-            field=root.find("widget[@name='%s']"%name)
-            fx=int(field.get('position').split(',')[0])
-            field.set('position','%d,%d'%(fx,round(target*sy)))
-            if target==790:
-                fw=int(field.get('size').split(',')[0])
-                field.set('size','%d,%d'%(fw,round(58*sy)))
-
-    # Lower meters stay bottom-aligned with their adjacent device pictures.
-    for name in ('hddtempbar','hddstate','cpubar','tempDBbar'):
-        meter=root.find("widget[@name='%s']"%name)
-        if meter is None or not lower_icons:continue
-        mx=int(meter.get('position').split(',')[0])
-        mh=int(meter.get('size').split(',')[1])
-        adjacent=[n for n in lower_icons if int(n.get('position').split(',')[0])>mx]
-        if not adjacent:continue
-        icon=min(adjacent,key=lambda n:int(n.get('position').split(',')[0])-mx)
-        iy=int(icon.get('position').split(',')[1])
-        ih=int(icon.get('size').split(',')[1])
-        move_meter(meter,iy+ih-mh,'barm_back.png')
-    for index,(name,color) in enumerate((('red','#00ff526a'),('green','#0039ff59'),('yellow','#00ffdb52'))):
-        x=55+index*610
-        fill(x+195,996,200,2,color)
-        ET.SubElement(root,'widget',name=name,position='%d,%d'%(round(x*sx),round(1006*sy)),size='%d,%d'%(round(590*sx),round(50*sy)),font='Regular;%d'%round(28*sy),foregroundColor=color,backgroundColor=main.BASE,transparent='0',halign='center',valign='center',zPosition='3',noWrap='1')
-    # Shift both right-hand scroll areas, headings and arrows as one group.
-    for node in root:
-        x,y=map(int,node.get('position','0,0').split(','));w,h=map(int,node.get('size','0,0').split(','))
-        if x>=round(850*sx) and round(180*sy)<=y<round(978*sy):
-            node.set('position','%d,%d'%(x+round(90*sx),y))
-            if node.get('name') in ('ProccessInfo','DmesgInfo') or node.get('text'):node.set('size','%d,%d'%(max(1,w-round(90*sx)),h))
-    # Give the left-hand icon/data groups the same breathing room as the logs.
-    for node in root:
-        x,y=map(int,node.get('position','0,0').split(','));w,h=map(int,node.get('size','0,0').split(','))
-        if x<round(850*sx) and w<round(850*sx) and round(182*sy)<=y<round(978*sy):
-            node.set('position','%d,%d'%(x+round(50*sx),y))
-        if node.get('name') in ('ProccessInfo','DmesgInfo'):
-            node.set('scrollbarBackgroundColor','#00102136')
-            node.set('scrollbarForegroundColor',main.CYAN)
-            node.set('scrollbarBorderColor','#00364b61')
-    from .warder_glass import apply
-    apply(root,width,height)
-    # Native progress tracks must not inherit the panel's transparency.
-    meters={'membar','swapbar','memtotalbar','rootbar','hddbar','usbbar',
-            'cfbar','sdbar','hddtempbar','hddstate','cpubar','tempDBbar'}
-    for node in root:
-        if node.get('name') in meters:
-            node.set('backgroundColor','#00102136')
-            node.set('transparent','0')
-        elif node.tag=='ePixmap' and Path(node.get('pixmap','')).name in ('bar_back.png','barm_back.png'):
-            node.set('backgroundColor','#00102136')
-            node.set('alphatest','off')
-    from .warder_system_help import prepare
-    prepare(root,width,height)
+        if node.get('name') in header or node.tag=='ePixmap':continue
+        if int(node.get('position','0,0').split(',')[1])>=round(181*sy):root.remove(node)
+    root.set('name','WarderGSUSystemInformation')
+    def add(tag,x,y,w,h,**attrs):
+        return ET.SubElement(root,tag,position='%d,%d'%(round(x*sx),round(y*sy)),
+             size='%d,%d'%(round(w*sx),round(h*sy)),**attrs)
+    def label(name,x,y,w,h,points,color='#00ffffff',**attrs):
+        return add('widget',x,y,w,h,name=name,font='Regular;%d'%round(points*sy),
+            foregroundColor=color,backgroundColor=main.PANEL,transparent='1',zPosition='3',**attrs)
+    label('heading',92,181,1300,72,40,main.CYAN,valign='center',noWrap='1')
+    label('stamp',1420,190,400,50,25,'#00bcd2df',halign='right',valign='center',noWrap='1')
+    add('eLabel',92,263,1734,2,backgroundColor='#00314b65',zPosition='1')
+    for i in range(6):
+        x,y=92+(i%2)*879,286+(i//2)*183
+        add('eLabel',x,y,855,170,backgroundColor='#00172539',zPosition='-1')
+        add('eLabel',x,y,855,3,backgroundColor=main.CYAN,zPosition='1')
+        label('title%d'%i,x+18,y+12,810,38,27,'#00bcd2df',noWrap='1')
+        label('value%d'%i,x+18,y+50,810,55,40,noWrap='1')
+        label('note%d'%i,x+18,y+105,810,48,22,'#00bcd2df',noWrap='1')
+        if i<4:
+            add('widget',x+18,y+154,810,8,name='meter%d'%i,backgroundColor='#002f465a',
+                foregroundColor=main.CYAN,borderWidth='0',transparent='0',zPosition='3')
+    label('summary',92,840,1734,42,24,main.CYAN,noWrap='1',valign='center')
+    for i in range(5):
+        x=92+i*350
+        add('eLabel',x,890,334,67,backgroundColor='#00172539',zPosition='-1')
+        label('service_name%d'%i,x+8,892,318,27,21,'#00bcd2df',halign='center',noWrap='1')
+        label('service_value%d'%i,x+8,920,318,30,21,halign='center',noWrap='1')
     return ET.tostring(root,encoding='unicode')
+
+
+def capacity_note(total,free,tr):
+    if total is None or free is None or not 0<=free<=total:return '—'
+    def unit(v):return '%.1f GiB'%(v/1073741824) if v>=1073741824 else '%.1f MiB'%(v/1048576)
+    return '  ·  '.join(tr(k)+' '+unit(v) for k,v in (('Total:',total),('Free:',free),('Used:',total-free)))
+
+
+def information_model(report,tr):
+    numbers=report['values'];mem=report['memory']
+    flash,disk=report['flash_usage'],report['disk_usage']
+    titles=[tr(k) for k in CARD_NAMES]
+    titles[1]+=' · '+tr('Used:').rstrip(':')
+    titles[3]+=' · '+tr('free');titles[4]+=' · '+tr('free')
+    notes=['',capacity_note(mem['ram_total'],mem['ram_available'],tr),
+           capacity_note(mem['swap_total'],mem['swap_free'],tr),
+           capacity_note(flash.total,flash.free,tr) if flash else '—',
+           capacity_note(disk.total,disk.free,tr) if disk else '—',
+           str(report.get('temperature_source') or '').rsplit('/',1)[-1]]
+    if report.get('disk_mount'):titles[4]+=' · '+report['disk_mount']
+    if report.get('disk_temperature') is not None:
+        notes[5]+='  ·  '+(tr('Temp. %s:') % 'HDD/SSD')+' %s °C'%report['disk_temperature']
+    cards=[]
+    for i,n in enumerate(numbers):
+        value='—' if n is None else ('%.1f GiB'%(n/1073741824) if i==4 else '%.1f °C'%n if i==5 else '%.0f %%'%n)
+        meter=round(max(0,min(100,n))) if i<4 and n is not None else None
+        cards.append((titles[i],value,notes[i],meter))
+    health=report['health']
+    summary=tr('Resource score')+'  '+(str(health['score'])+'/100' if health['score'] is not None else '—')+'  ·  '+tr('Measured checks')+'  %d/%d (RAM / Flash)'%health['coverage']
+    return cards,summary,report['services']
+
+
+class Information(Screen):
+    def __init__(self,session,api):
+        from . import warder_dashboard as dashboard
+        from .warder_system_data import PROTOCOLS
+        self.skin=information_skin(*dashboard.dimensions(api))
+        Screen.__init__(self,session)
+        self.api=api;self.cancelled=Event();self.pending=False
+        self.setTitle(self.tr('System Information'))
+        dashboard.install_header(self,api)
+        for name,key in (('heading','System Information'),('stamp',''),('summary','Loading…'),
+                         ('red','Back'),('green','Live monitoring'),('yellow','Refresh'),('blue','Details')):
+            self[name]=api['Label'](self.tr(key))
+        for i,key in enumerate(CARD_NAMES):
+            self['title%d'%i]=api['Label'](self.tr(key))
+            self['value%d'%i]=api['Label']('—');self['note%d'%i]=api['Label']('')
+            if i<4:
+                self['meter%d'%i]=api['ProgressBar']();self['meter%d'%i].hide()
+        for i,name in enumerate(PROTOCOLS):
+            self['service_name%d'%i]=api['Label'](name)
+            self['service_value%d'%i]=api['Label']('—')
+        self['actions']=api['ActionMap'](['ColorActions','SetupActions','WizardActions'],
+            {'red':self.close,'cancel':self.close,'back':self.close,'green':self.live,
+             'yellow':self.refresh,'blue':self.details},-2)
+        self.onLayoutFinish.append(self.refresh);self.onClose.append(self.cancelled.set)
+
+    def tr(self,key):return main.text(self.api,key)
+
+    def live(self):
+        from .warder_centre_ui import open_diagnostic
+        open_diagnostic(self.session,self.api,'system-live')
+
+    def details(self):
+        from .warder_centre_ui import open_diagnostic
+        open_diagnostic(self.session,self.api,'storage-overview')
+
+    def refresh(self):
+        from twisted.internet.threads import deferToThread
+        from .warder_system_data import information
+        if self.pending or self.cancelled.is_set():return
+        self.pending=True
+        self['summary'].setText(self.tr('Loading…'))
+        try:deferToThread(information,self.cancelled).addCallbacks(self.done,self.failed)
+        except (RuntimeError,TypeError,OSError):self.failed(None)
+
+    def done(self,report):
+        self.pending=False
+        if self.cancelled.is_set():return
+        if report is None:return self.failed(None)
+        try:cards,summary,services=information_model(report,self.tr)
+        except (KeyError,ValueError,TypeError,AttributeError):return self.failed(None)
+        from time import strftime
+        for i,(title,value,note,meter) in enumerate(cards):
+            for key,v in (('title',title),('value',value),('note',note)):self[key+str(i)].setText(v)
+            if i<4:
+                bar=self['meter%d'%i]
+                if meter is None:bar.hide()
+                else:bar.setValue(meter);bar.show()
+        for i,detected in enumerate(services):
+            self['service_value%d'%i].setText('—' if detected is None else self.tr('Detected' if detected else 'Not detected'))
+        self['stamp'].setText(strftime('%H:%M:%S'));self['summary'].setText(summary)
+
+    def failed(self,failure):
+        self.pending=False
+        if not self.cancelled.is_set():
+            for i in range(6):
+                self['value%d'%i].setText('—');self['note%d'%i].setText('')
+                if i<4:self['meter%d'%i].hide()
+            for i in range(5):self['service_value%d'%i].setText('—')
+            self['stamp'].setText('');self['summary'].setText(self.tr('Unavailable'))
 
 
 class SystemHeader(main.Header):

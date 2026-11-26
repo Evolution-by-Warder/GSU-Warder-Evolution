@@ -117,12 +117,12 @@ class LocalizationTests(unittest.TestCase):
     def test_translated_system_labels_keep_layout_and_data_separate(self):
         from xml.etree import ElementTree as ET
         plugin=load(ROOT)
-        translate=lambda key:i18n.translate(key,'de')
-        root=ET.fromstring(plugin._warder_system.system_skin(plugin.GlassSysInfo,1920,1080,translator=translate))
-        self.assertTrue(any(n.get('text')=='Prozesse' for n in root))
-        self.assertTrue(any(n.get('text')=='Protokolle:' for n in root))
-        self.assertIsNotNone(root.find("widget[@name='ProccessInfo']"))
-
+        root=ET.fromstring(plugin._warder_system.information_skin(1920,1080))
+        self.assertIsNotNone(root.find("widget[@name='title1']"))
+        self.assertIsNone(root.find("widget[@name='ProccessInfo']"))
+        for code in i18n.LANGUAGES:
+            for key in ('System Information','Total:','Free:','Used:','Details'):
+                self.assertTrue(i18n.translate(key,code))
     def test_builder_includes_catalogs_without_external_gettext_dependency(self):
         import sys,io,tarfile
         sys.path.insert(0,str(ROOT.parents[1]/'tools'))
