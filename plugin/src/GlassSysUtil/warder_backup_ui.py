@@ -289,6 +289,12 @@ class BackupMenu(Screen):
                 if rollback:rows.extend(('',self.tr('Restart GUI after restoring settings.'),
                                          self.tr('Backup before restore'),str(rollback)))
                 self['descriptions'].setText('\n'.join(rows))
+            except backup.RestoreFailure as failure:
+                self.describe()
+                self['result_title'].setText(self.tr('Restore result'))
+                self['result_status'].setText(self.tr('Restore failed'))
+                self['descriptions'].setText(self.tr('Previous settings restored' if failure.recovered else 'Recovery backup required')+
+                    '\n\n'+self.tr('Backup before restore')+'\n'+str(failure.rollback))
             except (OSError,ValueError,TypeError,RuntimeError,AttributeError,RecursionError):
                 self.describe()
                 self['result_status'].setText(self.tr('Unavailable'))

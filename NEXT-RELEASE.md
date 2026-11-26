@@ -1,3 +1,7 @@
+# 26.11.2026 — Restore safety and fresh receiver
+
+Previous b530b389 passed all four CI families. Pinned local/removable directory writes, temp file readback/fsync, atomic rename, rechecked mount identity, internal verified rollback prior to changes. Fresh installed Radio can restore absent state with documented defaults; no overwrite of corrupt state. Localized recovery result and tests for simulated USB removal/native write failure. Real hardware and exact-head CI remain pending; no claim of cross-file power-loss atomicity. Separate draft.
+
 # 26.11.2026 — Backup workspace visual usability and restore outcomes
 
 Previous 4631cb3 passed all four CI families. Existing product picons, readable archive date/time, preserved archive selection, explicit disjoint outcome counts per project and total from the same actual plan. Right-panel final report, rollback location and restart advice, no secret values. 21-language captions and regression tests. Exact-head CI and physical test remain open. Separate draft.

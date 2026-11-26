@@ -3,6 +3,7 @@ import hashlib
 import json
 import os
 import re
+import secrets
 import stat
 import tempfile
 from datetime import datetime
@@ -17,6 +18,7 @@ LIMIT=512*1024
 NAME=re.compile(r'warder-backup-[0-9]{8}-[0-9]{6}-[a-z0-9_]{6,16}\.json\Z')
 RADIO='/etc/enigma2/warder-radio/state.json'
 ROOT='/etc/enigma2/warder-backups'
+RADIO_PLUGIN='/usr/lib/enigma2/python/Plugins/Extensions/WarderRadio/plugin.py'
 # Explicit portable preferences only. No generic prefix export, credentials,
 # scripts, device paths, update state, automatic deletion settings or tokens.
 # Visual preferences audited in FullHDGlass setupGlass17/plugin.py.
@@ -117,14 +119,33 @@ def replace_bytes(path,data):
         if os.path.exists(tmp):os.unlink(tmp)
 
 
-def radio_state(p):
+def radio_defaults(state):
+    """Effective defaults from WarderRadio.model.Store; no history migration."""
+    subscriptions=state.get('radio_subscriptions',[])
+    subscriptions=subscriptions if radio_valid('radio_subscriptions',subscriptions) else []
+    group=state.get('group','Slovensko')
+    group=group if radio_valid('group',group) else 'Slovensko'
+    return {'show_main_menu':False,'screensaver_delay':0,'group':'Slovensko',
+            'online_country':group,'radio_subscriptions':[],'radio_home_category':'',
+            'radio_subscription_category':next(iter(subscriptions),''),
+            'favourites':[],'custom':[]}
+
+
+def radio_state(p,allow_missing=False):
     table=mounts(p)
     owner=mount_owner(RADIO,table)
     if not owner or owner[2] not in LOCAL_FILE_SYSTEMS or owner[3]:return None
     try:
         raw=read_bytes(p.path(RADIO),16*1024*1024)
         value=json.loads(raw)
-        return (raw,value) if isinstance(value,dict) and value.get('schema',1)==1 else None
+        return (raw,value) if isinstance(value,dict) and type(value.get('schema',1)) is int and value.get('schema',1)==1 else None
+    except FileNotFoundError:
+        path=p.path(RADIO)
+        plugin=p.path(RADIO_PLUGIN)
+        if (allow_missing and safe_chain(path) and safe_chain(plugin)
+                and plugin.is_file() and p.path('/etc/enigma2').is_dir()):
+            return None,{'schema':1}
+        return None
     except (OSError,ValueError,UnicodeError,RecursionError):return None
 
 
@@ -252,18 +273,45 @@ def save(directory,products,probe=None,password=None):
         document={'payload':payload,'sha256':hashlib.sha256(canonical(payload)).hexdigest()}
     data=canonical(document)
     if len(data)>(crypto.MAX_ENVELOPE if private else LIMIT):raise ValueError('Backup too large')
-    fd,name=tempfile.mkstemp(prefix='warder-backup-'+datetime.now().strftime('%Y%m%d-%H%M%S-'),suffix='.json',dir=str(directory))
+    # Pin the opened directory: a detached USB must never redirect a write
+    # or cleanup into the receiver's fallback mount directory.
+    name='warder-backup-'+datetime.now().strftime('%Y%m%d-%H%M%S-')+'-'+secrets.token_hex(6)+'.json'
+    temporary='.'+name+'.writing'
+    dirfd=os.open(directory,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW)
+    created=False
+    def check_mount():
+        checked_dir(directory,p)
+        pinned,current=os.fstat(dirfd),directory.stat()
+        if (pinned.st_dev,pinned.st_ino)!=(current.st_dev,current.st_ino):
+            raise OSError('Backup storage changed')
     try:
-        with os.fdopen(fd,'wb') as handle:
+        check_mount()
+        fd=os.open(temporary,os.O_RDWR|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600,dir_fd=dirfd)
+        created=True
+        with os.fdopen(fd,'w+b') as handle:
             handle.write(data)
             handle.flush()
             os.fsync(handle.fileno())
-        path=Path(name)
+            handle.seek(0)
+            if handle.read(len(data)+1)!=data:raise OSError('Backup write verification failed')
+        check_mount()
+        try:
+            os.stat(name,dir_fd=dirfd,follow_symlinks=False)
+        except FileNotFoundError:pass
+        else:raise OSError('Backup name collision')
+        os.rename(temporary,name,src_dir_fd=dirfd,dst_dir_fd=dirfd)
+        created=False
+        os.fsync(dirfd)
+        check_mount()
+        path=directory/name
         if load(path,p,password)!=payload:raise ValueError('Backup verification failed')
+        check_mount()
         return path
-    except BaseException:
-        os.unlink(name)
-        raise
+    finally:
+        if created:
+            try:os.unlink(temporary,dir_fd=dirfd)
+            except OSError:pass
+        os.close(dirfd)
 
 
 def validate_payload(payload,private=False):
@@ -346,11 +394,11 @@ def plan(config,payload,selected=PRODUCTS,probe=None,private=False):
     for product,values in payload['projects'].items():
         if product not in selected:continue
         skipped[product]=0
-        if product=='Warder Radio':state=radio_state(p)
+        if product=='Warder Radio':state=radio_state(p,allow_missing=True)
         for key,value in values.items():
             if product=='Warder Radio':
                 if state is None or not radio_valid(key,value,private):skipped[product]+=1
-                elif state[1].get(key)!=value:radio[key]=value
+                elif state[1].get(key,radio_defaults(state[1]).get(key))!=value:radio[key]=value
             else:
                 obj=element(config,key)
                 if not native_valid(key,obj,value,private,p):skipped[product]+=1
@@ -377,6 +425,14 @@ def outcome(payload,selected,changes,radio,skipped):
     return rows
 
 
+class RestoreFailure(OSError):
+    """Only non-secret recovery metadata escapes an unsuccessful transaction."""
+    def __init__(self,rollback,recovered):
+        super().__init__('Restore failed')
+        self.rollback=rollback
+        self.recovered=recovered
+
+
 def restore(config,configfile,path,selected=PRODUCTS,probe=None,password=None,expected_digest=None,details=False):
     """Explicit apply, native choices/limits, verified rollback snapshot first."""
     p=probe or Probe()
@@ -390,37 +446,63 @@ def restore(config,configfile,path,selected=PRODUCTS,probe=None,password=None,ex
         return (*result,summary) if details else result
     previous=snapshot(config,selected,p,private)
     if any(key not in previous.get(product,{}) for product,key,_,_ in changes):raise ValueError('Native rollback unavailable')
-    if radio and (state is None or any(k not in previous.get('Warder Radio',{}) for k in radio)):
-        # No exact rollback for absent keys in this first schema.
-        raise ValueError('Radio rollback unavailable')
-    rollback=save(path.parent,previous,p,password)
-    originals=[(obj,obj.value,obj.saved_value) for _,_,obj,_ in changes]
+    if radio:
+        # Missing keys on a new image have documented effective defaults.
+        old=previous.setdefault('Warder Radio',{})
+        defaults=radio_defaults(state[1])
+        for key in radio:
+            value=state[1].get(key,defaults[key])
+            if not radio_valid(key,value,private):raise ValueError('Radio rollback unavailable')
+            old[key]=value
+    # Recovery must survive removal of the source USB. Never start changing
+    # settings until the internal, verified rollback archive exists.
+    rollback=save(p.path(ROOT),previous,p,password)
+    originals=[]
     def persist():
+        destination=Path(configfile.CONFIG_FILE)
+        if destination!=p.path('/etc/enigma2/settings') or not safe_chain(destination):
+            raise OSError('Unsafe native settings path')
         expected=config.pickle().encode('utf-8')
         configfile.save()
-        if read_bytes(Path(configfile.CONFIG_FILE),16*1024*1024)!=expected:
+        if read_bytes(destination,16*1024*1024)!=expected:
             raise OSError('Native configuration save failed')
+    radio_path=p.path(RADIO)
     radio_written=False
     try:
         for _,_,obj,value in changes:
+            originals.append((obj,obj.value,obj.saved_value))
             obj.value=value
             if obj.value!=value:raise ValueError('Native setting rejected')
             obj.save()
         if changes:persist()
         if radio:
-            if read_bytes(p.path(RADIO),16*1024*1024)!=state[0]:raise OSError('Radio settings changed')
+            # Compare raw original bytes, including the absence of a new file.
+            current=radio_state(p,allow_missing=True)
+            if current is None or current[0]!=state[0]:raise OSError('Radio settings changed')
+            if not safe_chain(radio_path):raise OSError('Unsafe radio path')
+            radio_path.parent.mkdir(mode=0o700,exist_ok=True)
             updated=dict(state[1],**radio)
-            replace_bytes(p.path(RADIO),canonical(updated))
+            raw=canonical(updated)
+            replace_bytes(radio_path,raw)
             radio_written=True
-            if json.loads(read_bytes(p.path(RADIO),16*1024*1024))!=updated:raise OSError('Radio verification failed')
+            if read_bytes(radio_path,16*1024*1024)!=raw:raise OSError('Radio verification failed')
     except BaseException:
+        recovered=True
         for obj,value,saved in originals:
-            obj.value=value
-            obj.saved_value=saved
-        try:
-            if changes:persist()
-        finally:
-            if radio_written:replace_bytes(p.path(RADIO),state[0])
-        raise
+            try:
+                obj.value=value
+                obj.saved_value=saved
+            except Exception:recovered=False
+        if originals:
+            try:persist()
+            except Exception:recovered=False
+        if radio_written:
+            try:
+                # Do not overwrite concurrent changes made by another writer.
+                if read_bytes(radio_path,16*1024*1024)!=raw:raise OSError('Radio changed')
+                if state[0] is None:radio_path.unlink()
+                else:replace_bytes(radio_path,state[0])
+            except Exception:recovered=False
+        raise RestoreFailure(rollback,recovered) from None
     result=(len(changes)+len(radio),skipped,rollback)
     return (*result,summary) if details else result

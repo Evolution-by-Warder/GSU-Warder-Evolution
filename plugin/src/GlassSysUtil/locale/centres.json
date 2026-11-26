@@ -148,7 +148,10 @@
     "Incompatible": "Incompatible",
     "Not selected": "Not selected",
     "Restore result": "Restore result",
-    "Backup before restore": "Backup before restore"
+    "Backup before restore": "Backup before restore",
+    "Restore failed": "Restore failed",
+    "Previous settings restored": "Previous settings restored",
+    "Recovery backup required": "Recovery backup required"
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -299,7 +302,10 @@
     "Incompatible": "Nekompatibilné",
     "Not selected": "Nevybrané",
     "Restore result": "Výsledok obnovy",
-    "Backup before restore": "Záloha pred obnovou"
+    "Backup before restore": "Záloha pred obnovou",
+    "Restore failed": "Obnova zlyhala",
+    "Previous settings restored": "Pôvodné nastavenia boli obnovené",
+    "Recovery backup required": "Použite bezpečnostnú zálohu na obnovu"
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -450,7 +456,10 @@
     "Incompatible": "Nekompatibilní",
     "Not selected": "Nevybráno",
     "Restore result": "Výsledek obnovy",
-    "Backup before restore": "Záloha před obnovou"
+    "Backup before restore": "Záloha před obnovou",
+    "Restore failed": "Obnova selhala",
+    "Previous settings restored": "Původní nastavení bylo obnoveno",
+    "Recovery backup required": "Použijte bezpečnostní zálohu k obnově"
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -601,7 +610,10 @@
     "Incompatible": "Inkompatibel",
     "Not selected": "Nicht ausgewählt",
     "Restore result": "Ergebnis",
-    "Backup before restore": "Sicherung vor Wiederherstellung"
+    "Backup before restore": "Sicherung vor Wiederherstellung",
+    "Restore failed": "Wiederherstellung fehlgeschlagen",
+    "Previous settings restored": "Vorherige Einstellungen wiederhergestellt",
+    "Recovery backup required": "Sicherung zur Wiederherstellung erforderlich"
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -752,7 +764,10 @@
     "Incompatible": "Niezgodne",
     "Not selected": "Niewybrane",
     "Restore result": "Wynik przywracania",
-    "Backup before restore": "Kopia przed przywróceniem"
+    "Backup before restore": "Kopia przed przywróceniem",
+    "Restore failed": "Przywracanie nie powiodło się",
+    "Previous settings restored": "Przywrócono poprzednie ustawienia",
+    "Recovery backup required": "Wymagana kopia do odzyskania"
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -903,7 +918,10 @@
     "Incompatible": "Nem kompatibilis",
     "Not selected": "Nincs kiválasztva",
     "Restore result": "Visszaállítás eredménye",
-    "Backup before restore": "Mentés visszaállítás előtt"
+    "Backup before restore": "Mentés visszaállítás előtt",
+    "Restore failed": "A visszaállítás sikertelen",
+    "Previous settings restored": "A korábbi beállítások visszaálltak",
+    "Recovery backup required": "Helyreállítási mentés szükséges"
   },
   "ru": {
     "System centre": "Системный центр",
@@ -1054,7 +1072,10 @@
     "Incompatible": "Несовместимо",
     "Not selected": "Не выбрано",
     "Restore result": "Результат восстановления",
-    "Backup before restore": "Копия перед восстановлением"
+    "Backup before restore": "Копия перед восстановлением",
+    "Restore failed": "Ошибка восстановления",
+    "Previous settings restored": "Прежние настройки восстановлены",
+    "Recovery backup required": "Необходима резервная копия для восстановления"
   },
   "fr": {
     "System centre": "Centre système",
@@ -1205,7 +1226,10 @@
     "Incompatible": "Incompatible",
     "Not selected": "Non sélectionné",
     "Restore result": "Résultat de la restauration",
-    "Backup before restore": "Sauvegarde avant restauration"
+    "Backup before restore": "Sauvegarde avant restauration",
+    "Restore failed": "Échec de la restauration",
+    "Previous settings restored": "Réglages précédents restaurés",
+    "Recovery backup required": "Sauvegarde de récupération nécessaire"
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -1356,7 +1380,10 @@
     "Incompatible": "Incompatibile",
     "Not selected": "Non selezionato",
     "Restore result": "Risultato del ripristino",
-    "Backup before restore": "Backup prima del ripristino"
+    "Backup before restore": "Backup prima del ripristino",
+    "Restore failed": "Ripristino non riuscito",
+    "Previous settings restored": "Impostazioni precedenti ripristinate",
+    "Recovery backup required": "Necessario il backup di recupero"
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -1507,7 +1534,10 @@
     "Incompatible": "Incompatible",
     "Not selected": "No seleccionado",
     "Restore result": "Resultado de restauración",
-    "Backup before restore": "Copia antes de restaurar"
+    "Backup before restore": "Copia antes de restaurar",
+    "Restore failed": "Error de restauración",
+    "Previous settings restored": "Ajustes anteriores restaurados",
+    "Recovery backup required": "Se requiere la copia de recuperación"
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -1658,7 +1688,10 @@
     "Incompatible": "E papërputhshme",
     "Not selected": "E pazgjedhur",
     "Restore result": "Rezultati i rikthimit",
-    "Backup before restore": "Kopje para rikthimit"
+    "Backup before restore": "Kopje para rikthimit",
+    "Restore failed": "Rikthimi dështoi",
+    "Previous settings restored": "Cilësimet e mëparshme u rikthyen",
+    "Recovery backup required": "Nevojitet kopja e rikuperimit"
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -1809,7 +1842,10 @@
     "Incompatible": "Μη συμβατά",
     "Not selected": "Μη επιλεγμένα",
     "Restore result": "Αποτέλεσμα επαναφοράς",
-    "Backup before restore": "Αντίγραφο πριν την επαναφορά"
+    "Backup before restore": "Αντίγραφο πριν την επαναφορά",
+    "Restore failed": "Αποτυχία επαναφοράς",
+    "Previous settings restored": "Επαναφέρθηκαν οι προηγούμενες ρυθμίσεις",
+    "Recovery backup required": "Απαιτείται αντίγραφο ανάκτησης"
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -1960,7 +1996,10 @@
     "Incompatible": "Ühildumatu",
     "Not selected": "Valimata",
     "Restore result": "Taastamise tulemus",
-    "Backup before restore": "Varukoopia enne taastamist"
+    "Backup before restore": "Varukoopia enne taastamist",
+    "Restore failed": "Taastamine ebaõnnestus",
+    "Previous settings restored": "Eelmised sätted taastatud",
+    "Recovery backup required": "Vajalik taastevarukoopia"
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -2111,7 +2150,10 @@
     "Incompatible": "ناسازگار",
     "Not selected": "انتخاب‌نشده",
     "Restore result": "نتیجه بازیابی",
-    "Backup before restore": "پشتیبان پیش از بازیابی"
+    "Backup before restore": "پشتیبان پیش از بازیابی",
+    "Restore failed": "بازیابی ناموفق بود",
+    "Previous settings restored": "تنظیمات قبلی بازیابی شدند",
+    "Recovery backup required": "نسخه پشتیبان بازیابی لازم است"
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -2262,7 +2304,10 @@
     "Incompatible": "Nesuderinama",
     "Not selected": "Nepasirinkta",
     "Restore result": "Atkūrimo rezultatas",
-    "Backup before restore": "Kopija prieš atkūrimą"
+    "Backup before restore": "Kopija prieš atkūrimą",
+    "Restore failed": "Atkūrimas nepavyko",
+    "Previous settings restored": "Ankstesnės nuostatos atkurtos",
+    "Recovery backup required": "Reikalinga atkūrimo kopija"
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -2413,7 +2458,10 @@
     "Incompatible": "Incompatibel",
     "Not selected": "Niet geselecteerd",
     "Restore result": "Herstelresultaat",
-    "Backup before restore": "Back-up vóór herstel"
+    "Backup before restore": "Back-up vóór herstel",
+    "Restore failed": "Herstel mislukt",
+    "Previous settings restored": "Vorige instellingen hersteld",
+    "Recovery backup required": "Herstelback-up vereist"
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -2564,7 +2612,10 @@
     "Incompatible": "Incompatível",
     "Not selected": "Não selecionado",
     "Restore result": "Resultado do restauro",
-    "Backup before restore": "Cópia antes do restauro"
+    "Backup before restore": "Cópia antes do restauro",
+    "Restore failed": "Falha no restauro",
+    "Previous settings restored": "Definições anteriores restauradas",
+    "Recovery backup required": "É necessária a cópia de recuperação"
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -2715,7 +2766,10 @@
     "Incompatible": "Incompatibil",
     "Not selected": "Neselectat",
     "Restore result": "Rezultat restaurare",
-    "Backup before restore": "Copie înainte de restaurare"
+    "Backup before restore": "Copie înainte de restaurare",
+    "Restore failed": "Restaurarea a eșuat",
+    "Previous settings restored": "Setările anterioare au fost restaurate",
+    "Recovery backup required": "Este necesară copia de recuperare"
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -2866,7 +2920,10 @@
     "Incompatible": "Uyumsuz",
     "Not selected": "Seçilmedi",
     "Restore result": "Geri yükleme sonucu",
-    "Backup before restore": "Geri yükleme öncesi yedek"
+    "Backup before restore": "Geri yükleme öncesi yedek",
+    "Restore failed": "Geri yükleme başarısız",
+    "Previous settings restored": "Önceki ayarlar geri yüklendi",
+    "Recovery backup required": "Kurtarma yedeği gerekli"
   },
   "uk": {
     "System centre": "Системний центр",
@@ -3017,7 +3074,10 @@
     "Incompatible": "Несумісне",
     "Not selected": "Не вибрано",
     "Restore result": "Результат відновлення",
-    "Backup before restore": "Копія перед відновленням"
+    "Backup before restore": "Копія перед відновленням",
+    "Restore failed": "Помилка відновлення",
+    "Previous settings restored": "Попередні налаштування відновлено",
+    "Recovery backup required": "Потрібна резервна копія для відновлення"
   },
   "zh": {
     "System centre": "系统中心",
@@ -3168,6 +3228,9 @@
     "Incompatible": "不兼容",
     "Not selected": "未选择",
     "Restore result": "恢复结果",
-    "Backup before restore": "恢复前备份"
+    "Backup before restore": "恢复前备份",
+    "Restore failed": "恢复失败",
+    "Previous settings restored": "已恢复原设置",
+    "Recovery backup required": "需要使用恢复备份"
   }
 }

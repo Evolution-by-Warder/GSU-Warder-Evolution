@@ -252,3 +252,61 @@ class BackupTests(unittest.TestCase):
                 self.assertEqual(count,0)
                 self.assertIsNone(rollback)
                 self.assertEqual(summary,{'YouTube':(0,1,1,0),'GSU':(0,0,0,1)})
+
+
+    def test_fresh_radio_install_restores_without_existing_state(self):
+        with TemporaryDirectory() as folder:
+            p=b.Probe(folder)
+            p.path('/etc/enigma2').mkdir(parents=True)
+            plugin=p.path(b.RADIO_PLUGIN)
+            plugin.parent.mkdir(parents=True)
+            plugin.write_text('# installed fixture')
+            config=SimpleNamespace(plugins=SimpleNamespace())
+            with patch.object(b,'mounts',return_value=[('/dev/root','/','ext4',False)]):
+                path=b.save(p.path(b.ROOT),{'Warder Radio':{'screensaver_delay':20,'show_main_menu':True}},p)
+                count,skipped,rollback=b.restore(config,None,path,probe=p)
+                self.assertEqual(count,2)
+                self.assertEqual(json.loads(p.path(b.RADIO).read_text()),
+                                 {'schema':1,'screensaver_delay':20,'show_main_menu':True})
+                self.assertEqual(b.load(rollback,p)['projects']['Warder Radio'],
+                                 {'screensaver_delay':0,'show_main_menu':False})
+
+    def test_local_recovery_copy_precedes_native_write_and_survives_usb_loss(self):
+        with TemporaryDirectory() as folder:
+            p=b.Probe(folder)
+            p.path('/etc/enigma2').mkdir(parents=True)
+            p.path('/media/usb').mkdir(parents=True)
+            table=[('/dev/root','/','ext4',False),('/dev/sda1','/media/usb','vfat',False)]
+            item=Item('720',['720','1080'])
+            config=SimpleNamespace(plugins=SimpleNamespace(warderyoutube=SimpleNamespace(max_quality=item)))
+            config.pickle=lambda:'config.plugins.warderyoutube.max_quality='+item.saved_value+'\n'
+            settings=p.path('/etc/enigma2/settings')
+            def fail_first_save():
+                self.assertTrue(b.inventory(p.path(b.ROOT),p))
+                if item.value=='1080':
+                    table.pop()
+                    raise OSError('simulated write failure')
+                settings.write_text(config.pickle())
+            configfile=SimpleNamespace(CONFIG_FILE=str(settings),save=fail_first_save)
+            with patch.object(b,'mounts',side_effect=lambda probe:list(table)):
+                path=b.save(p.path('/media/usb/warder-backups'),{'YouTube':{'warderyoutube.max_quality':'1080'}},p)
+                with self.assertRaises(b.RestoreFailure) as error:b.restore(config,configfile,path,probe=p)
+                self.assertTrue(error.exception.recovered)
+                self.assertEqual(error.exception.rollback.parent,p.path(b.ROOT))
+                self.assertEqual(item.value,'720')
+                self.assertEqual(b.load(error.exception.rollback,p)['projects']['YouTube']['warderyoutube.max_quality'],'720')
+
+    def test_unmounted_destination_aborts_without_publishing_backup(self):
+        with TemporaryDirectory() as folder:
+            p=b.Probe(folder)
+            p.path('/etc/enigma2').mkdir(parents=True)
+            p.path('/media/usb').mkdir(parents=True)
+            table=[('/dev/root','/','ext4',False),('/dev/sda1','/media/usb','vfat',False)]
+            real_fsync=b.os.fsync
+            def disconnect(fd):
+                real_fsync(fd)
+                if len(table)>1:table.pop()
+            with patch.object(b,'mounts',side_effect=lambda probe:list(table)),patch.object(b.os,'fsync',side_effect=disconnect):
+                with self.assertRaises((OSError,ValueError)):
+                    b.save(p.path('/media/usb/warder-backups'),{'GSU':{'GlassSysUtil.par0':True}},p)
+                self.assertEqual(list(p.path('/media/usb/warder-backups').iterdir()),[])
