@@ -135,14 +135,17 @@ def usage_categories(p, table, budget=100000, seconds=3, clock=time.monotonic, c
     return totals
 
 
-def smart(device, runner=subprocess.run):
+def smart_device(device):
+    match=re.fullmatch(r'(/dev/sd[a-z]+)\d*|(/dev/nvme\d+n\d+)(?:p\d+)?',device)
+    return (match.group(1) or match.group(2)) if match else None
+
+
+def smart(device, runner=subprocess.run, detailed=False):
     # Never wake a sleeping disk, start a self-test or change device settings.
     if not shutil.which('smartctl'):
         return None
-    match = re.fullmatch(r'(/dev/sd[a-z]+)\d*|(/dev/nvme\d+n\d+)(?:p\d+)?', device)
-    if not match:
-        return None
-    disk = match.group(1) or match.group(2)
+    disk=smart_device(device)
+    if not disk:return None
     try:
         result = runner(['smartctl', '-n', 'standby', '-H', '-A', disk], env={'LC_ALL':'C','PATH':os.defpath+':/usr/sbin:/sbin'},
                         stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=3, text=True)
@@ -154,7 +157,23 @@ def smart(device, runner=subprocess.run):
     temperature = re.search(r'^Temperature:\s+(-?\d+)\s+Celsius', result.stdout, re.M)
     if not temperature:
         temperature = re.search(r'^\s*(?:190|194)\s+\S+\s+(?:\S+\s+){7}(-?\d+)\b', result.stdout, re.M)
-    return (health.group(1).upper() if health else None, int(temperature.group(1)) if temperature else None)
+    status=(health.group(1).upper() if health else None,int(temperature.group(1)) if temperature else None)
+    if not detailed:return status
+    # Whitelist numeric SMART counters. Do not expose serials, WWNs, raw
+    # vendor strings or unrelated command output; unavailable stays unknown.
+    attrs={}
+    for line in result.stdout.splitlines():
+        fields=line.split()
+        if len(fields)>=10 and fields[0] in ('5','9','12','187','188','197','198','199'):
+            if re.fullmatch(r'[A-Za-z0-9_-]{1,60}',fields[1]) and fields[9].isdigit():
+                attrs[fields[1]]=int(fields[9])
+        elif ':' in line:
+            key,raw=line.split(':',1)
+            if key.strip() in ('Power On Hours','Power Cycles','Percentage Used','Media and Data Integrity Errors',
+                               'Unsafe Shutdowns','Available Spare','Critical Warning'):
+                value=raw.strip().replace(',','')
+                if re.fullmatch(r'\d+%?',value):attrs[key.strip()]=int(value.rstrip('%'))
+    return (*status,attrs)
 
 
 def category_snapshot(probe=None,cancelled=None):
@@ -194,11 +213,15 @@ def report(tr, detail=False, probe=None):
             else:rows.append('    '+tr('Unavailable'))
             if (path.startswith('/media/') or path.startswith('/mnt/')) and not ro and usage and usage.free > 0:
                 options.append((usage.free, path))
-            if dev not in smart_cache and len(smart_cache) < 4:
-                smart_cache[dev] = smart(dev)
-            health = smart_cache.get(dev)
-            if health and any(x is not None for x in health):
-                rows.append('    SMART   %s   %s' % (health[0] or '—', '—' if health[1] is None else '%d °C' % health[1]))
+            disk=smart_device(dev)
+            if disk and disk not in smart_cache and len(smart_cache)<4:
+                smart_cache[disk]=smart(disk,detailed=True)
+            health=smart_cache.get(disk)
+            if health:
+                rows.append('    SMART   %s   %s'%(health[0] or '—','—' if health[1] is None else '%d °C'%health[1]))
+                for key,value in health[2].items():
+                    rows.append('      %s   %d'%(key,value))
+            elif disk:rows.append('    SMART   —')
             rows.append('')
         if options:
             rows.extend(('', tr('Picon storage')+'   '+max(options)[1]))

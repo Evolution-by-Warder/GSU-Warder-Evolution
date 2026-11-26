@@ -240,6 +240,29 @@ class DiagnosticTests(unittest.TestCase):
             self.assertIn('standby',runner.call_args.args[0])
             self.assertIsNone(storage.smart('/dev/unknown',runner))
 
+    def test_smart_detail_uses_one_bounded_command_and_numeric_allowlist(self):
+        storage=module('warder_storage')
+        data=('SMART overall-health self-assessment test result: PASSED\n'
+              '  5 Reallocated_Sector_Ct 0x0033 100 100 036 Pre-fail Always - 7\n'
+              '197 Current_Pending_Sector 0x0012 100 100 000 Old_age Always - 2\n'
+              'Power On Hours: 1,234\nPercentage Used: 9%\nSerial Number: private\n')
+        with patch.object(storage.shutil,'which',return_value='smartctl'):
+            run=MagicMock(return_value=SimpleNamespace(stdout=data,returncode=0))
+            result=storage.smart('/dev/sda1',run,detailed=True)
+            self.assertEqual(result,('PASSED',None,{'Reallocated_Sector_Ct':7,'Current_Pending_Sector':2,'Power On Hours':1234,'Percentage Used':9}))
+            run.assert_called_once()
+            self.assertEqual(run.call_args.args[0][-1],'/dev/sda')
+            self.assertIn('standby',run.call_args.args[0])
+            self.assertEqual(storage.smart_device('/dev/sda2'),'/dev/sda')
+            self.assertEqual(storage.smart_device('/dev/nvme0n1p2'),'/dev/nvme0n1')
+            self.assertNotIn('private',str(result))
+        p=MagicMock()
+        p.entries.return_value=['1','2']
+        p.text.side_effect=lambda path,*args:'dropbear' if path=='/proc/1/comm' else 'enigma2'
+        sysdata=module('warder_system_data')
+        self.assertEqual(len(sysdata.observed_services(p)),5)
+        self.assertEqual(sysdata.observed_services(p,extended=True)[-1],True)
+
     def test_storage_profiles_fair_budget_and_cancel(self):
         storage=module('warder_storage')
         with TemporaryDirectory() as tmp:

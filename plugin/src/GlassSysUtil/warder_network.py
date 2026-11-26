@@ -255,7 +255,7 @@ def detail_report(kind,tr,cancelled,probe=None):
     elif kind=='network-services':
         from .warder_system_data import observed_services,PROTOCOLS
         rows.extend(name+'   '+(tr('Running') if state is True else tr('Not detected') if state is False else '—')
-                    for name,state in zip(PROTOCOLS,observed_services(p)))
+                    for name,state in zip(PROTOCOLS+('SSH',),observed_services(p,extended=True)))
         rows.extend(('',tr('Local ports')))
         for protocol,ports in listening_ports(p).items():
             rows.append(protocol.upper()+'   '+('—' if ports is None else ', '.join(map(str,ports)) or '0'))

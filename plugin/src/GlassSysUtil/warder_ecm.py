@@ -304,7 +304,8 @@ def open_history(session,api):
             tr=lambda key:for_api(api,key)
             samples=self.history.history.snapshot()
             def shown(v):return '—' if v is None else '%.1f ms'%v
-            self['history_current'].setText(tr('ECM Time:')+'   '+shown(self.history.current))
+            current=self.history.current if samples else None
+            self['history_current'].setText(tr('ECM Time:')+'   '+shown(current))
             _,top=chart_scale(samples,'ecm')
             self['history_top'].setText(shown(top) if any(v.get('ecm') is not None for _,v in samples) else '—')
             self['history_window'].setText('−60 s → 0 s')

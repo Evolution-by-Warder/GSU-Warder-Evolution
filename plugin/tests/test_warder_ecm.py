@@ -187,5 +187,10 @@ class ECMHistoryTests(unittest.TestCase):
                 self.assertLessEqual(y+h,height)
                 name=node.get('name') or node.get('source')
                 if name:self.assertIn(name,screen)
+        from unittest.mock import patch
+        screen.history.current=300
+        with patch.object(screen.history.history,'snapshot',return_value=()):
+            screen.render_history()
+        self.assertTrue(screen['history_current'].getText().endswith('—'))
         screen.cleanup_history()
         self.assertTrue(screen._history_closed)

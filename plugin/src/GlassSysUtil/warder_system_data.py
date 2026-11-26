@@ -139,7 +139,7 @@ def dashboard(cancel, p=None):
 PROTOCOLS=('FTP','Telnet','VPN','Samba','NFS')
 
 
-def observed_services(p):
+def observed_services(p,extended=False):
     """Local daemon observations, not a connectivity or authentication test."""
     names=set()
     for pid in p.entries('/proc',8192):
@@ -148,6 +148,7 @@ def observed_services(p):
             if name:names.add(name)
     patterns=(('vsftpd','proftpd','pure-ftpd','ftpd'),('telnetd','in.telnetd'),
               ('openvpn','wireguard','wg-quick'),('smbd','nmbd'),('nfsd','rpc.mountd','mountd'))
+    if extended:patterns+=(('sshd','dropbear'),)
     return tuple(any(n in names for n in group) if names else None for group in patterns)
 
 
