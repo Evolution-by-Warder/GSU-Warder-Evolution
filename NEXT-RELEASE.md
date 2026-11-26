@@ -1,3 +1,9 @@
+# 2026-11-26 — GSU PR #14 ninth legacy checkpoint
+
+Added final 32 direct legacy help/operation strings in all 21 languages. 174 common + 250 supplementary keys (424 total), all regex-inventoried literal `_()` calls in plugin.py covered except 11 explicitly retained protocol/path/device identifiers. Added an independent AST regression for coverage; if it reveals additional literals, translate them before merge. Exact HEAD c55c6387894b5d98cbf7fdd76f5305c81561c2c3 passed 10/10 CI. Remaining: inspect AST result and other runtime modules, activate r5 source/notes, prepare safe production publishing, verify CI and public artifact/feeds. No stable feed change.
+
+---
+
 # 2026-11-26 — GSU PR #14 eighth legacy checkpoint
 
 Added 38 real CAM, OSD, network mount and settings messages in 21 languages. 174 common + 218 supplementary keys (392 total); 43 remaining direct literal candidates include technical names and paths. Exact HEAD 90fdd87bf5c5c34a233084e9ec88a014fde0e049 passed 10/10 CI. No runtime behavior or stable feed change. New HEAD needs CI.

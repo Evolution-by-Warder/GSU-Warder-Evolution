@@ -30,7 +30,7 @@ class LocalizationTests(unittest.TestCase):
     def test_legacy_destructive_operation_warnings_are_translated(self):
         extra=json.loads((ROOT/'locale/legacy-supplement.json').read_text(encoding='utf-8'))
         self.assertEqual(set(extra),set(i18n.LANGUAGES))
-        self.assertEqual(len(extra['en']),218)
+        self.assertEqual(len(extra['en']),250)
         for code,catalog in extra.items():
             self.assertEqual(set(catalog),set(extra['en']))
             for key,value in catalog.items():
@@ -39,6 +39,18 @@ class LocalizationTests(unittest.TestCase):
                     self.assertNotEqual(i18n.translate(key,code),key,(code,key))
                 elif code!='en':
                     self.assertIn(key,('Disk','Source','Destination','Partition'),(code,key))
+
+    def test_legacy_plugin_literal_translation_inventory(self):
+        import ast
+        common=json.loads((ROOT/'locale/en.json').read_text(encoding='utf-8'))
+        extra=json.loads((ROOT/'locale/legacy-supplement.json').read_text(encoding='utf-8'))['en']
+        technical={'/etc/nfs_cifs.cfg','CAMs','CIFS','CIFS/NFS','HDD','ID','NFS','SRVs','SSD','TCP','UDP'}
+        tree=ast.parse((ROOT/'plugin.py').read_text(encoding='utf-8'))
+        keys={node.args[0].value for node in ast.walk(tree)
+              if isinstance(node,ast.Call) and isinstance(node.func,ast.Name)
+              and node.func.id=='_' and node.args and isinstance(node.args[0],ast.Constant)
+              and isinstance(node.args[0].value,str)}
+        self.assertFalse(keys-set(common)-set(extra)-technical)
 
     def test_normalizes_regions_and_falls_back_to_english_without_global_locale(self):
         for code in ('sk_SK','SK-sk','sk'):
