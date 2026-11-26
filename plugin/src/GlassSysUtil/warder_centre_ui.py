@@ -170,6 +170,8 @@ class CentreMenu(Screen):
         self._result_job=None
         self._result_queued=None
         self._result_closed=False
+        self._result_hidden=False
+        self._result_reload=False
         self._auto_key=None
         self._auto_timer=api['eTimer']()
         signal=getattr(self._auto_timer,'timeout',None)
@@ -180,6 +182,8 @@ class CentreMenu(Screen):
         else:
             self._auto_timer.callback.append(self.auto_result)
         self.onClose.append(self.close_results)
+        self.onHide.append(self.suspend_results)
+        self.onShow.append(self.resume_results)
         self['list'] = api['ListboxSys2']([])
         self['list'].l.setFont(0, api['gFont']('Regular', round(28*self.height/1080)))
         self['list'].l.setItemHeight(round(74*self.height/1080))
@@ -324,17 +328,26 @@ class CentreMenu(Screen):
         inline=self.inline_route(key)
         self['yellow'].setText(for_api(self.api,'Refresh') if inline and key!='17' else '')
         self['blue'].setText(for_api(self.api,'Details') if inline and key!='17' else '')
+        if changed:
+            self._result_reload=False
         if changed and inline and key not in MANUAL_INLINE:
-            # Debounce quick cursor movement while keeping all reads off the GUI
-            # thread, apart from existing image-owned native component queries.
-            self._auto_key=key
-            self['result_status'].setText(for_api(self.api,'Loading…'))
-            self._auto_timer.start(180,True)
+            self.schedule_result(key)
+
+    def schedule_result(self,key):
+        # Debounce quick cursor movement. A hidden screen records a pending
+        # passive refresh instead of launching a worker.
+        if self._result_closed:return
+        if self._result_hidden:
+            self._result_reload=True
+            return
+        self._auto_key=key
+        self['result_status'].setText(for_api(self.api,'Loading…'))
+        self._auto_timer.start(180,True)
 
     def auto_result(self):
         key=self._auto_key
         self._auto_key=None
-        if key is not None and key==self._result_key and key not in MANUAL_INLINE:
+        if not self._result_hidden and key is not None and key==self._result_key and key not in MANUAL_INLINE:
             self.request_result(key)
 
     def inline_route(self,key):
@@ -361,21 +374,47 @@ class CentreMenu(Screen):
 
     def close_results(self):
         self._result_closed=True
+        self._result_reload=False
         self.cancel_result()
+
+    def suspend_results(self):
+        if self._result_closed or self._result_hidden:return
+        self._result_hidden=True
+        key=self._result_key
+        passive=bool(self.inline_route(key)) and key not in MANUAL_INLINE
+        # A native child may have changed the tuned service or the installed
+        # package version. Refresh only passive data when it closes.
+        self._result_reload=passive
+        pending=self._auto_key is not None or self._result_queued is not None or self._result_job is not None
+        self.cancel_result()
+        if pending and not passive:
+            # Do not leave a canceled manual action showing Loading forever.
+            # The operation itself may already have completed; never repeat it.
+            self['result_status'].setText('')
+            row=next((e for e in self.entries() if e[0]==key),None)
+            self['descriptions'].setText(route_description(key,lambda k:for_api(self.api,k),row[2] if row else ''))
+
+    def resume_results(self):
+        if self._result_closed or not self._result_hidden:return
+        self._result_hidden=False
+        key=self._result_key
+        if self._result_reload and self.inline_route(key) and key not in MANUAL_INLINE:
+            self.schedule_result(key)
+        self._result_reload=False
 
     def refresh_result(self):
         key=self._result_key
         if self.inline_route(key) and key!='17':self.request_result(key)
 
     def full_result(self):
-        if self._result_closed:return
+        if self._result_closed or self._result_hidden:return
         key=self._result_key
         if self.inline_route(key) and key!='17':
             self.cancel_result()
             open_diagnostic(self.session,self.api,key)
 
     def request_result(self,key):
-        if self._result_closed or key!=self._result_key or not self.inline_route(key):return
+        if self._result_closed or self._result_hidden or key!=self._result_key or not self.inline_route(key):return
         self._auto_timer.stop()
         self._auto_key=None
         if self._result_job is not None:
@@ -393,7 +432,7 @@ class CentreMenu(Screen):
         def finish(value,failed=False):
             if self._result_job is not job:return
             self._result_job=None
-            if not self._result_closed and not token.is_set() and self._result_key==key:
+            if not self._result_closed and not self._result_hidden and not token.is_set() and self._result_key==key:
                 model=None
                 try:
                     if not failed:model=card_result(key,value,tr)
@@ -865,6 +904,7 @@ class ProjectMenu(CentreMenu):
             self.request_result(row[0])
 
     def full_result(self):
+        if self._result_closed or self._result_hidden:return
         key=self._result_key
         if key in self.projects:
             self.cancel_result()

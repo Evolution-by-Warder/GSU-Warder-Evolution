@@ -1,3 +1,9 @@
+# 26.11.2026 — Centre preview lifecycle and single-worker cancellation
+
+Previous exact HEAD `426e9fe8974cae66aed77fd04b55f9714337798b`: OpenATV/OpenPLi/package SUCCESS; architecture running at initial inspection. Centre and ProjectMenu now cancel pending automatic result work when hidden, reject late callbacks, and schedule a single passive refresh on return. Native child selection remains preserved; manual connection tests/diagnostic archives are never automatically repeated. No new collectors or menu IDs. Added regression for hidden worker, stale result, resumed passive refresh and no replay after explicit action or close. Fresh exact-head CI and physical validation remain required; no production change.
+
+---
+
 # 26.11.2026 — Compare explicitly saved satellite measurements
 
 Previous HEAD `a5062d2f6f4ad28ed3831bf4eb966213ff9deaaf`: OpenATV/OpenPLi/package SUCCESS, architecture pending at inspection. Reviewed actual OpenATV 8.0 and OpenPLi 9.2 native Satfinder satellite tuple/retune implementations. Existing measurement-only finder now supports explicit yellow Save and green Compare for recognized 15-field satellite configurations with at least three locked SNR samples; no scanning, automatic retuning or persistent writes. Maximum 12 snapshots live in the Enigma2 session (lost on GUI restart, oldest evicted at capacity). Existing 60-second history now retains SNR, AGC, dB, BER and lock; min/max/average on locked observations only, with coverage/duration/losses and full native tuple identity. No service URLs or CAM data. Unrecognized tuners/configurations do not offer saving. Comparison uses existing scrollable Warder info view; translated Compare label in all 21 catalogues. Added fixture coverage for explicit save, limits, unknown parameters, locked-only averages and retention after retune. New exact-head CI and physical receiver test required. No publication.

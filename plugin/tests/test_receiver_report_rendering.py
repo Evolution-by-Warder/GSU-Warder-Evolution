@@ -416,6 +416,48 @@ class ReceiverRenderingTests(unittest.TestCase):
             net.select()
             worker.assert_called_once()
 
+    def test_centre_suspends_passive_worker_and_refreshes_only_on_return(self):
+        ui=self.ui
+        session=MagicMock()
+        menu=ui.CentreMenu(session,self.api,[('network-overview','Network overview','Network')],
+            {'network-overview':True},'network')
+        menu.render()
+        self.assertIn(menu.suspend_results,menu.onHide)
+        self.assertIn(menu.resume_results,menu.onShow)
+        with patch.object(ui,'deferToThread') as worker:
+            menu.auto_result()
+            self.assertEqual(worker.call_count,1)
+            callback=worker.return_value.addCallbacks.call_args.args[0]
+            menu.suspend_results()
+            self.assertTrue(menu._result_job[1].is_set())
+            menu.refresh_result()
+            menu.auto_result()
+            self.assertEqual(worker.call_count,1)
+            callback('stale')
+            self.assertNotIn('stale',menu['descriptions'].getText())
+            menu.resume_results()
+            menu.auto_result()
+            self.assertEqual(worker.call_count,2)
+            worker.return_value.addCallbacks.call_args.args[0]('fresh')
+            self.assertEqual(menu['descriptions'].getText(),'fresh')
+            menu.suspend_results()
+            menu.close_results()
+            menu.resume_results()
+            menu.auto_result()
+            self.assertEqual(worker.call_count,2)
+        manual=ui.CentreMenu(session,self.api,[('network-test','Connection test','Test')],
+            {'network-test':True},'network')
+        manual.render()
+        with patch.object(ui,'deferToThread') as worker:
+            manual.select()
+            manual.suspend_results()
+            worker.return_value.addCallbacks.call_args.args[0]('late')
+            manual.resume_results()
+            manual.auto_result()
+            self.assertEqual(worker.call_count,1)
+            self.assertEqual(manual['result_status'].getText(),'')
+            self.assertNotIn('late',manual['descriptions'].getText())
+
     def test_channel_information_opens_above_centre_without_closing_it(self):
         session=MagicMock()
         target=MagicMock()
