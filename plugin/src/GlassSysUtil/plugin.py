@@ -1529,7 +1529,7 @@ class SysUtilMngMain(Screen):
             ('7', _('CAM/SRV Manager'), _('Start, stop, restart, download, unistall CAM/SRV or set start cfg of OScam')),
             ('8', _('OSD ECM Information'), _('Enable/Disable OSD ECM Info, will be showed in top - right (default) of TV screen, show changes in ECM info only')),
             ('9', _('Swap Management'), _('Create,remove and show single/multi swap on mapped devices on your hw')),
-            ('17', _warder_tools_ui.text(globals(), 'Tools'), _warder_tools_ui.text(globals(), 'Create one archive with system information and GSU logs.')),
+            ('17', _warder_tools_ui.text(globals(), 'Create diagnostic bundle'), _warder_tools_ui.text(globals(), 'Create one archive with system information and GSU logs.')),
             ('16', _plugin_update_text(globals(), 'Update'), _plugin_update_text(globals(), 'Check for a new version of Glass System Utility Warder Evolution'))]
         from .warder_centres import DIAGNOSTICS
         self.menuListAll.extend((ident, _(title), _(hint))

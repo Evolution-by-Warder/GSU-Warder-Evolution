@@ -330,6 +330,60 @@ class ReceiverRenderingTests(unittest.TestCase):
         menu.full_result()
         session.open.assert_not_called()
 
+    def test_highlight_loads_results_without_ok_but_never_creates_archives_or_probes(self):
+        ui=self.ui
+        session=MagicMock()
+        entries=[('service-health','Installation check','Health'),
+                 ('service-ipk','IPK','Packages'),('17','Create diagnostic bundle','Archive')]
+        menu=ui.CentreMenu(session,self.api,entries,{k:True for k,_,_ in entries},'service')
+        menu.render()
+        with patch.object(ui,'deferToThread') as worker:
+            menu.auto_result()
+            self.assertEqual(worker.call_count,1)
+            old=worker.return_value.addCallbacks.call_args.args[0]
+            menu['list'].moveToIndex(1)
+            menu.describe()
+            menu.auto_result()
+            self.assertEqual(worker.call_count,1)
+            old('stale health')
+            self.assertEqual(worker.call_count,2)
+            worker.return_value.addCallbacks.call_args.args[0]('Current package data')
+            self.assertEqual(menu['descriptions'].getText(),'Current package data')
+            menu['list'].moveToIndex(2)
+            menu.describe()
+            menu.auto_result()
+            menu.refresh_result()
+            menu.full_result()
+            self.assertEqual(worker.call_count,2)
+            menu.select()
+            self.assertEqual(worker.call_count,3)
+            from threading import Event
+            with patch.object(mod('warder_tools'),'run_task',return_value={'path':'/tmp/gsu-report.tar.gz','bytes':2048}) as task:
+                result=menu.collect_inline('17',lambda k:k,Event())
+                task.assert_called_once_with('bundle')
+            worker.return_value.addCallbacks.call_args.args[0](result)
+            self.assertIn('/tmp/gsu-report.tar.gz',menu['descriptions'].getText())
+            session.open.assert_not_called()
+            menu.close_results()
+        net=ui.CentreMenu(session,self.api,[('network-test','Connection test','Test')],{'network-test':True},'network')
+        net.render()
+        with patch.object(ui,'deferToThread') as worker:
+            net.auto_result()
+            worker.assert_not_called()
+            net.select()
+            worker.assert_called_once()
+
+    def test_channel_information_opens_above_centre_without_closing_it(self):
+        session=MagicMock()
+        target=MagicMock()
+        api=dict(self.api,channelInfoCenter=target)
+        menu=self.ui.CentreMenu(session,api,[('1','Channel Information','Details')],{'1':True},'reception')
+        menu.render()
+        menu.select()
+        session.open.assert_called_once_with(target)
+        self.assertEqual(menu['list'].getCurrent()[0],'1')
+        self.assertFalse(hasattr(menu,'result'))
+
     def test_menu_panels_are_disjoint_and_backings_cannot_cover_result(self):
         for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
             root=ET.fromstring(mod('warder_dashboard').skin(w,h,'menu'))

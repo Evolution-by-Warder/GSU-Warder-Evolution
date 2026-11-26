@@ -14,7 +14,9 @@ from .i18n import for_api, language
 # explicit native screens; graphs and full-size tables remain available in Details.
 INLINE_REPORTS=frozenset(('system-overview','system-processes','system-log',
     'tuner-details','transponder-services','storage-overview','storage-categories',
-    'network-overview','network-test','service-health','service-ipk','forum-report'))
+    'network-overview','network-test','service-health','service-ipk','forum-report','17'))
+# Explicit actions must never run merely because the cursor passes over them.
+MANUAL_INLINE=frozenset(('17','network-test'))
 NATIVE_REPORTS=frozenset(('tuner-details','transponder-services'))
 
 
@@ -148,6 +150,15 @@ class CentreMenu(Screen):
         self._result_job=None
         self._result_queued=None
         self._result_closed=False
+        self._auto_key=None
+        self._auto_timer=api['eTimer']()
+        signal=getattr(self._auto_timer,'timeout',None)
+        if hasattr(signal,'connect'):
+            self._auto_connection=signal.connect(self.auto_result)
+        elif hasattr(signal,'get'):
+            signal.get().append(self.auto_result)
+        else:
+            self._auto_timer.callback.append(self.auto_result)
         self.onClose.append(self.close_results)
         self['list'] = api['ListboxSys2']([])
         self['list'].l.setFont(0, api['gFont']('Regular', round(28*self.height/1080)))
@@ -280,7 +291,8 @@ class CentreMenu(Screen):
         if row and row[0] in self.native_actions and isinstance(backup,str):
             description+='\n\n'+for_api(self.api,'Verified channel backup')+'\n'+backup
         key=row[0] if row and entry else None
-        if key!=self._result_key:
+        changed=key!=self._result_key
+        if changed:
             self.cancel_result()
             self._result_key=key
             self.hide_cards()
@@ -290,19 +302,40 @@ class CentreMenu(Screen):
             self['descriptions'].setText(description)
         self['result_title'].setText(entry[1] if entry else '')
         inline=self.inline_route(key)
-        self['yellow'].setText(for_api(self.api,'Refresh') if inline else '')
-        self['blue'].setText(for_api(self.api,'Details') if inline else '')
+        self['yellow'].setText(for_api(self.api,'Refresh') if inline and key!='17' else '')
+        self['blue'].setText(for_api(self.api,'Details') if inline and key!='17' else '')
+        if changed and inline and key not in MANUAL_INLINE:
+            # Debounce quick cursor movement while keeping all reads off the GUI
+            # thread, apart from existing image-owned native component queries.
+            self._auto_key=key
+            self['result_status'].setText(for_api(self.api,'Loading…'))
+            self._auto_timer.start(180,True)
+
+    def auto_result(self):
+        key=self._auto_key
+        self._auto_key=None
+        if key is not None and key==self._result_key and key not in MANUAL_INLINE:
+            self.request_result(key)
 
     def inline_route(self,key):
         return key if key in INLINE_REPORTS and self.enabled.get(key,False) else None
 
     def collect_inline(self,key,tr,token):
+        if key=='17':
+            if token.is_set():return ''
+            from .warder_tools import run_task
+            from .warder_tools_ui import text
+            result=run_task('bundle')
+            return text(self.api,'Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.') % (
+                result['path'],max(1,(result['bytes']+1023)//1024))
         if key=='system-overview':
             from .warder_system_data import dashboard
             return dashboard(token)
         return collect_report(key,tr,token)
 
     def cancel_result(self):
+        self._auto_timer.stop()
+        self._auto_key=None
         self._result_queued=None
         if self._result_job is not None:self._result_job[1].set()
 
@@ -312,20 +345,23 @@ class CentreMenu(Screen):
 
     def refresh_result(self):
         key=self._result_key
-        if self.inline_route(key):self.request_result(key)
+        if self.inline_route(key) and key!='17':self.request_result(key)
 
     def full_result(self):
         if self._result_closed:return
         key=self._result_key
-        if self.inline_route(key):
+        if self.inline_route(key) and key!='17':
             self.cancel_result()
             open_diagnostic(self.session,self.api,key)
 
     def request_result(self,key):
         if self._result_closed or key!=self._result_key or not self.inline_route(key):return
+        self._auto_timer.stop()
+        self._auto_key=None
         if self._result_job is not None:
             if self._result_job[0]==key and not self._result_job[1].is_set():return
             self._result_queued=key
+            self['result_status'].setText(for_api(self.api,'Loading…'))
             return
         token=Event()
         job=(key,token)
@@ -352,7 +388,10 @@ class CentreMenu(Screen):
                 elif model:self.show_cards(model)
                 else:
                     self.hide_cards()
-                    self['descriptions'].setText(text if text.strip() else tr('Unavailable'))
+                    if failed and key=='17':
+                        from .warder_tools_ui import text as tool_text
+                        self['descriptions'].setText(tool_text(self.api,'Diagnostic collection failed.'))
+                    else:self['descriptions'].setText(text if text.strip() else tr('Unavailable'))
             queued=self._result_queued
             self._result_queued=None
             if queued is not None:self.request_result(queued)
@@ -390,6 +429,12 @@ class CentreMenu(Screen):
                 self.request_result(row[0])
             elif row[0] in DIAGNOSTICS:
                 open_diagnostic(self.session, self.api, row[0])
+            elif row[0] in ('0','1'):
+                # Open the child above this centre instead of closing the centre
+                # and asking the main screen to dispatch it.
+                name={'0':'GlassSysInfoBrowser','1':'channelInfoCenter'}[row[0]]
+                target=self.api.get(name)
+                if callable(target):self.session.open(target)
             else:
                 self.close(row[0])
 
