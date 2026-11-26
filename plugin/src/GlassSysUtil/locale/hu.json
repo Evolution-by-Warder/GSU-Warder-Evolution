@@ -139,5 +139,16 @@
   "After enabling, please wait for the change and client list refresh. A local DVBAPI account restarts OSCam in the background.": "Engedélyezés után várjon a változásra és a klienslista frissítésére. Helyi DVBAPI-fióknál az OSCam a háttérben újraindul.",
   "Press OK to edit": "Szerkesztéshez nyomja meg az OK gombot",
   "Yes": "Igen",
-  "No": "Nem"
+  "No": "Nem",
+  "Hourly": "Óránként",
+  "Daily": "Naponta",
+  "Weekly": "Hetente",
+  "Monthly": "Havonta",
+  "Monday": "Hétfő",
+  "Tuesday": "Kedd",
+  "Wednesday": "Szerda",
+  "Thursday": "Csütörtök",
+  "Friday": "Péntek",
+  "Saturday": "Szombat",
+  "Sunday": "Vasárnap"
 }

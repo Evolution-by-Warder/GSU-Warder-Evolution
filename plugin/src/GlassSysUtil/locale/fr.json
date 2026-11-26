@@ -139,5 +139,16 @@
   "After enabling, please wait for the change and client list refresh. A local DVBAPI account restarts OSCam in the background.": "Après activation, patientez pendant l’application du changement et l’actualisation de la liste. Pour un compte DVBAPI local, OSCam redémarre en arrière-plan.",
   "Press OK to edit": "Appuyez sur OK pour modifier",
   "Yes": "Oui",
-  "No": "Non"
+  "No": "Non",
+  "Hourly": "Toutes les heures",
+  "Daily": "Chaque jour",
+  "Weekly": "Chaque semaine",
+  "Monthly": "Chaque mois",
+  "Monday": "Lundi",
+  "Tuesday": "Mardi",
+  "Wednesday": "Mercredi",
+  "Thursday": "Jeudi",
+  "Friday": "Vendredi",
+  "Saturday": "Samedi",
+  "Sunday": "Dimanche"
 }
