@@ -1531,6 +1531,7 @@ class SysUtilMngMain(Screen):
             ('17', _warder_tools_ui.text(globals(), 'Tools'), _warder_tools_ui.text(globals(), 'Create one archive with system information and GSU logs.')),
             ('16', _plugin_update_text(globals(), 'Update'), _plugin_update_text(globals(), 'Check for a new version of Glass System Utility Warder Evolution'))]
         self.menuListAll.append(('network-overview', _('Network overview'), _('Network link')))
+        self.menuListAll.extend((('system-overview', _('System health check'), _('Available memory')), ('system-processes', _('Process Info'), _('Process Info')), ('system-log', _('Log view'), _('Log view'))))
         self.status = {}
         self['list'] = ListboxSys2(self.list)
         self['list'].onSelectionChanged.append(self.reactivate)
@@ -1597,6 +1598,12 @@ class SysUtilMngMain(Screen):
                 _warder_right.show(self, globals(), 'tools')
             elif selectedItem == '16':
                 self.updatechckact()
+            elif selectedItem == 'system-overview':
+                from .warder_centre_ui import SystemOverview
+                self.session.open(SystemOverview, globals())
+            elif selectedItem in ('system-processes', 'system-log'):
+                from .warder_centre_ui import SystemDetail
+                self.session.open(SystemDetail, globals(), 'processes' if selectedItem == 'system-processes' else 'log')
             elif selectedItem == 'network-overview':
                 from .warder_centre_ui import NetworkOverview
                 self.session.open(NetworkOverview, globals())
