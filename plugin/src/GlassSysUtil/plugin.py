@@ -1559,7 +1559,16 @@ class SysUtilMngMain(Screen):
     def selectedmenuitem(self):
         if self.size < 1280:
             self.close()
-        selectedItem = self['list'].getCurrent()[0]
+        current = self['list'].getCurrent()
+        if not current:return
+        selectedItem = current[0]
+        if selectedItem.startswith('centre:'):
+            from .warder_centre_ui import open_centre
+            return open_centre(self, globals(), selectedItem.split(':',1)[1])
+        return self.dispatch_menu_id(selectedItem)
+
+    def dispatch_menu_id(self, selectedItem):
+        if selectedItem is None:return
         enabledItem = self.status.get(selectedItem)
         if enabledItem:
             if selectedItem == '0':
@@ -1604,6 +1613,15 @@ class SysUtilMngMain(Screen):
             desktop = getDesktop(0).size()
             self.list.append(_warder_main.menu_row(globals(), x[0], x[1], self.status[x[0]], desktop.width(), desktop.height()))
 
+        from .warder_centres import legacy_routes
+        self.centre_entries = []
+        for key, label, entries in legacy_routes(self.menuListAll):
+            if not entries:continue
+            ident = 'centre:' + key
+            description = '\n'.join(entry[1] for entry in entries)
+            self.centre_entries.append((ident, _(label), description))
+        self.list = [_warder_main.menu_row(globals(), ident, label, True, desktop.width(), desktop.height())
+                     for ident, label, description in self.centre_entries]
         self['list'].l.setList(self.list)
         self.reactivate()
         return
@@ -1646,7 +1664,7 @@ class SysUtilMngMain(Screen):
     def reactivate(self):
         selection = self['list'].getCurrent()
         if selection:
-            entry = next((entry for entry in self.menuListAll if entry[0] == selection[0]), None)
+            entry = next((entry for entry in getattr(self, 'centre_entries', []) + self.menuListAll if entry[0] == selection[0]), None)
             self['info'].setText(str(entry[2]) if entry else '')
             _warder_main.selection(self, entry)
 
