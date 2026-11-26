@@ -4,6 +4,7 @@ from xml.etree import ElementTree as ET
 from . import warder_main as main
 from .warder_system import install as install_header
 from .warder_oscam import HeaderArtwork, PANEL_GLASS, CLEAR
+from .warder_menu_icons import ROOT as ICON_ROOT
 
 SLOTS={
  'config':(105,245,950,104,27),
@@ -17,8 +18,16 @@ SLOTS={
  'helpTXT':(1165,735,670,170,25),'select_pict':(1160,250,680,48,None),
  'srvArrowLeft':(75,300,15,27,None),'srvArrowRight':(1070,300,15,27,None),
 }
-for index,name in enumerate(('txt0','txt1','txt2','txt3','txt4','txt6','txt7','txt8')):
-    SLOTS[name]=(1190,250+index*56,640,48,26)
+ACTION_ICONS={0:'info',1:'package',2:'package',3:'update',4:'settings',
+              6:'history',7:'service',8:'health'}
+for index,ident in enumerate(ACTION_ICONS):
+    SLOTS['txt%s'%ident]=(1230,250+index*56,600,48,26)
+
+
+def position_selection(screen,api):
+    size=api['getDesktop'](0).size()
+    selected=screen['txt%s'%screen.idxAllFnc].instance.position()
+    screen['select_pict'].move(api['ePoint'](round(1160*size.width()/1920),selected.y()))
 
 
 def cam_skin(original,width,height,translator=lambda value:value):
@@ -60,6 +69,12 @@ def cam_skin(original,width,height,translator=lambda value:value):
             node.set('backgroundColor',CLEAR);node.set('transparent','1');node.set('foregroundColor','#00ffffff')
             node.set('valign','center');node.set('halign','left' if name!='helpTXT' else 'center')
         root.append(node)
+    for ident,icon in ACTION_ICONS.items():
+        path=ICON_ROOT/('nav-'+icon+'.png')
+        props={'name':'cam_icon_%s'%ident,'alphatest':'blend','scale':'1','zPosition':'3'}
+        if path.is_file():props['pixmap']=str(path)
+        node=ET.SubElement(root,'widget',**props)
+        place(node,1176,SLOTS['txt%s'%ident][1]+4,40,40)
     for name,bounds in {'workspace_list':(75,255,1010,650,26),'workspace_config':(75,255,1010,650,24),'workspace_title':(80,195,1000,40,28),'workspace_hint':(80,925,1000,38,22)}.items():
         node=ET.SubElement(root,'widget',name=name,backgroundColor=CLEAR,transparent='1',foregroundColor='#00ffffff',zPosition='4',scrollbarMode='showOnDemand')
         if name in ('workspace_list','workspace_config'):
@@ -91,6 +106,8 @@ def install(screen,api):
     screen['select_pict']=api['Label']('')
     screen['focus_hint']=api['Label']('')
     screen['cam_title']=api['Label'](main.text(api,'CAM/SRV Manager'))
+    for ident in ACTION_ICONS:screen['cam_icon_%s'%ident]=api['Pixmap']()
+    screen['cam_icon_7'].hide()
     screen._warder_cam_slots=SLOTS
     screen._warder_cam=Controls(screen,api)
     from .warder_cam_panes import Panes
@@ -140,8 +157,7 @@ class Controls:
             else:
                 valid=[0,1,2,3,4,6]+([7] if s.numSrv else [])+[8]
                 s.idxAllFnc=valid[(valid.index(s.idxAllFnc)-1)%len(valid)]
-                position=s['txt%s'%s.idxAllFnc].instance.position()
-                s['select_pict'].move(self.api['ePoint'](position.x()-self.api['fhd'](30),position.y()))
+                position_selection(s,self.api)
                 s['helpTXT'].setText(s.aa.get(s.idxAllFnc,''))
         elif s._cam_panes.active:return s._cam_panes.move(direction)
         elif s['config'].list:

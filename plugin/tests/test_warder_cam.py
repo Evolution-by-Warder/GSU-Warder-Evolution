@@ -86,3 +86,28 @@ class WarderCamTests(unittest.TestCase):
         self.assertEqual(self.screen.idxAllFnc,before)
         footers=[root.find("widget[@name='%s']"%name) for name in ('red','green','yellow')]
         self.assertEqual(len({n.get('size') for n in footers}),1)
+
+    def test_action_icons_are_inside_focus_and_do_not_overlap_labels(self):
+        original=self.plugin._srv_skin(self.plugin._compact_cam_menu(self.plugin.UCM))
+        for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160),(1920,1200)):
+            root=ET.fromstring(self.ui.cam_skin(original,width,height))
+            selection=root.find("widget[@name='select_pict']")
+            sx,sy=map(int,selection.get('position').split(','))
+            sw,sh=map(int,selection.get('size').split(','))
+            for ident,icon in self.ui.ACTION_ICONS.items():
+                node=root.find("widget[@name='cam_icon_%s']"%ident)
+                label=root.find("widget[@name='txt%s']"%ident)
+                self.assertTrue(node.get('pixmap').endswith('/nav-'+icon+'.png'))
+                ix,iy=map(int,node.get('position').split(','))
+                iw,ih=map(int,node.get('size').split(','))
+                lx,ly=map(int,label.get('position').split(','))
+                lw,lh=map(int,label.get('size').split(','))
+                self.assertGreaterEqual(ix,sx)
+                self.assertLessEqual(ix+iw,lx)
+                self.assertLessEqual(lx+lw,sx+sw)
+                self.assertGreaterEqual(iy,ly)
+                self.assertLessEqual(iy+ih,ly+lh)
+                self.assertLessEqual(iy+ih,ly+sh)
+                self.assertGreater(int(node.get('zPosition')),int(selection.get('zPosition')))
+        self.assertNotIn(5,self.ui.ACTION_ICONS)
+        self.assertFalse(self.screen['cam_icon_7'].visible)

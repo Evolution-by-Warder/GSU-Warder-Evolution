@@ -4090,7 +4090,10 @@ class univCamMng(Screen):
             self.idxAllFnc += 1
         if self.idxAllFnc > 8:
             self.idxAllFnc = 0
-        self['select_pict'].move(ePoint(self['txt%s' % self.idxAllFnc].instance.position().x() - fhd(30), self['txt%s' % self.idxAllFnc].instance.position().y()))
+        if hasattr(self,'_warder_cam'):
+            _warder_cam.position_selection(self,globals())
+        else:
+            self['select_pict'].move(ePoint(self['txt%s' % self.idxAllFnc].instance.position().x() - fhd(30), self['txt%s' % self.idxAllFnc].instance.position().y()))
         self['helpTXT'].setText(self.aa.get(self.idxAllFnc, ''))
         return
 
