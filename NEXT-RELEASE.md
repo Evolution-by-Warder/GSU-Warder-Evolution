@@ -1,3 +1,7 @@
+## 26.11.2026 — Additional runtime messages
+
+HEAD `816379658822e9a32a7d730c97065d31f58a83f9` completed all 10 CI checks successfully after schedule localization. Added 22 more shared messages in all 21 languages for CAM feeds, native startup, OSCam clients/readers and swap UI (174 common keys in total). Existing translations preserved. Fresh CI required. Legacy plugin.py audit remains open; no stable publication or feed change.
+
 ## 26.11.2026 — Night batch checkpoint, PR #14
 
 HEAD `7d042eb63623c910f4d1467c58f82f3638cd3481`: 10/10 checks passed, including both Python regressions, both layout matrices, 5 native image checks and hooks. Corrected historical migration fixture notes using actual r93 history and version-independent package identity tests; no immutable IPK or feed touched. Expanded all 21 catalogues with 11 recurring schedule / weekday labels (152 shared keys), preserving existing values. Latest changes need fresh CI. Audit found many additional legacy strings in plugin.py (278 literal candidates before schedule additions), CAM feed, OSCam clients/readers and swap UI; do not merge until actual user-visible text is localized and verified. Next: complete those catalogues, activate version/notes and inspect canonical stable publication mechanism. Production v13.41-r4 remains intact.

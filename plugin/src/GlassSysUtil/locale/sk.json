@@ -174,5 +174,16 @@
   "Thursday": "Štvrtok",
   "Friday": "Piatok",
   "Saturday": "Sobota",
-  "Sunday": "Nedeľa"
+  "Sunday": "Nedeľa",
+  "Download CAM/SRV": "Stiahnuť CAM/SRV",
+  "Loading package list...": "Načítavam zoznam balíkov...",
+  "Feed refresh failed; showing cached packages.": "Obnovenie zdrojov zlyhalo; zobrazujú sa uložené balíky.",
+  "No CAM packages in configured feeds.": "V nastavených zdrojoch nie sú balíky CAM.",
+  "Unable to set up or read package feeds.": "Nepodarilo sa nastaviť alebo načítať zdroje balíkov.",
+  "Before update OScam/OSEmu version, please, stop OScam/OSEmu": "Pred aktualizáciou OScam/OSEmu zastavte OScam/OSEmu.",
+  "Installing package": "Inštalujem balík",
+  "Press OK to select dir": "Stlačte OK na výber priečinka",
+  "Start in background": "Spustiť na pozadí",
+  "Pidfile name": "Názov PID súboru",
+  "OScam start cfg": "Nastavenia štartu OScam"
 }
