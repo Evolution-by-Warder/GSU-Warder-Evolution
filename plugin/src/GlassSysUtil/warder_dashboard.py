@@ -46,13 +46,19 @@ def skin(width, height, mode):
     label('heading', 92, 181, 1700, 72, 40, style.CYAN, valign='center',noWrap='1')
     element('eLabel', 92, 263, 1734, 2, backgroundColor='#00314b65', zPosition='3')
     if mode == 'menu':
-        element('widget', 92, 300, 1018, 626, name='list', scrollbarMode='showOnDemand',
-                backgroundColor=style.PANEL, foregroundColor='#00ffffff',
-                foregroundColorSelected='#00ffffff', backgroundColorSelected=style.SELECTION,
-                zPosition='3')
-        element('eLabel',1130,290,690,650,backgroundColor='#00172539',zPosition='-1')
-        element('eLabel',1130,315,3,600,backgroundColor=style.CYAN,zPosition='1')
-        label('descriptions', 1160, 320, 625, 570, 30, '#00d1e3f3')
+        # Separate navigation and result surfaces. Native ScrollLabel's parent
+        # remains at z=0, so every opaque backing is strictly below it.
+        for x,w in ((92,690),(806,1020)):
+            element('eLabel',x,286,w,650,backgroundColor=style.CYAN,zPosition='-2')
+            element('eLabel',x+2,288,w-4,646,backgroundColor=style.PANEL,zPosition='-1')
+        element('widget',108,304,658,612,name='list',scrollbarMode='showOnDemand',
+                backgroundColor=style.PANEL,foregroundColor='#00ffffff',
+                foregroundColorSelected='#00ffffff',backgroundColorSelected=style.SELECTION,zPosition='3')
+        label('result_title',834,303,960,54,32,style.CYAN,noWrap='1',valign='center')
+        label('result_status',834,361,960,37,23,'#00bcd2df',noWrap='1')
+        element('eLabel',834,406,960,2,backgroundColor='#00314b65',zPosition='-1')
+        label('descriptions',834,425,960,486,28,'#00e2edf5',
+              scrollbarMode='showOnDemand',valign='top')
     elif mode == 'overview':
         for index in range(6):
             col, row = index % 3, index // 3
