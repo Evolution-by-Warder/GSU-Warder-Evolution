@@ -4,7 +4,7 @@ on:
     paths: [plugin/**, .github/workflows/gsu-r5-stable.yml, compatibility/publish-gsu-r6.py, compatibility/verify-packaged-install.py]
   push:
     branches: [main]
-    paths: [plugin/src/GlassSysUtil/version, .github/workflows/gsu-r5-stable.yml]
+    paths: [plugin/src/GlassSysUtil/version, .github/workflows/gsu-r5-stable.yml, compatibility/publish-gsu-r6.py]
   workflow_dispatch:
 permissions:
   contents: read
