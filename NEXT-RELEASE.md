@@ -1,3 +1,7 @@
+# 26.11.2026 — Backup workspace visual usability and restore outcomes
+
+Previous 4631cb3 passed all four CI families. Existing product picons, readable archive date/time, preserved archive selection, explicit disjoint outcome counts per project and total from the same actual plan. Right-panel final report, rollback location and restart advice, no secret values. 21-language captions and regression tests. Exact-head CI and physical test remain open. Separate draft.
+
 # 26.11.2026 — Portable preferences and PiconHub profiles
 
 Expanded audited FullHDGlass appearance choices, GSU OSD preferences, PiconHub style/safe update method and satellite/provider/DTT/DAB selector fields. Validate against target installed catalog, exclude retired IPTV and replace-all deletion mode; device paths remain local. Exact predecessor source artifact 15124972304 independently verified: 10/10 backup tests pass including actual crypto. Corrected Spanish footer width failure and shortened long FR/DE labels. Current CI/physical receiver restore pending; separate draft only.

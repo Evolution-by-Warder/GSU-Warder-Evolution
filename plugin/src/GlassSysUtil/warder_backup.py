@@ -358,14 +358,36 @@ def plan(config,payload,selected=PRODUCTS,probe=None,private=False):
     return changes,radio,skipped,state
 
 
-def restore(config,configfile,path,selected=PRODUCTS,probe=None,password=None,expected_digest=None):
+def outcome(payload,selected,changes,radio,skipped):
+    """Disjoint counts from the same compatibility plan used for the restore.
+
+    Never include configuration values, URLs or credentials in a presentation.
+    """
+    rows={}
+    for product in PRODUCTS:
+        if product not in payload['projects']:continue
+        total=len(payload['projects'][product])
+        if product not in selected:
+            rows[product]=(0,0,0,total)
+            continue
+        changed=sum(change[0]==product for change in changes)
+        if product=='Warder Radio':changed+=len(radio)
+        incompatible=skipped.get(product,0)
+        rows[product]=(changed,total-changed-incompatible,incompatible,0)
+    return rows
+
+
+def restore(config,configfile,path,selected=PRODUCTS,probe=None,password=None,expected_digest=None,details=False):
     """Explicit apply, native choices/limits, verified rollback snapshot first."""
     p=probe or Probe()
     private=password is not None
     payload=load(path,p,password)
     if expected_digest is not None and fingerprint(payload)!=expected_digest:raise ValueError('Backup changed after preview')
     changes,radio,skipped,state=plan(config,payload,selected,p,private)
-    if not changes and not radio:return 0,skipped,None
+    summary=outcome(payload,selected,changes,radio,skipped)
+    if not changes and not radio:
+        result=(0,skipped,None)
+        return (*result,summary) if details else result
     previous=snapshot(config,selected,p,private)
     if any(key not in previous.get(product,{}) for product,key,_,_ in changes):raise ValueError('Native rollback unavailable')
     if radio and (state is None or any(k not in previous.get('Warder Radio',{}) for k in radio)):
@@ -400,4 +422,5 @@ def restore(config,configfile,path,selected=PRODUCTS,probe=None,password=None,ex
         finally:
             if radio_written:replace_bytes(p.path(RADIO),state[0])
         raise
-    return len(changes)+len(radio),skipped,rollback
+    result=(len(changes)+len(radio),skipped,rollback)
+    return (*result,summary) if details else result

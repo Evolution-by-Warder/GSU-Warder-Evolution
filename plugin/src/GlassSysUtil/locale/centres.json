@@ -141,7 +141,14 @@
     "Incorrect password or damaged backup": "Incorrect password or damaged backup",
     "Use arrows and OK to enter characters. Green confirms.": "Use arrows and OK to enter characters. Green confirms.",
     "At least 12 characters.": "At least 12 characters.",
-    "Erase character": "Erase character"
+    "Erase character": "Erase character",
+    "To restore": "To restore",
+    "Restored": "Restored",
+    "Unchanged": "Unchanged",
+    "Incompatible": "Incompatible",
+    "Not selected": "Not selected",
+    "Restore result": "Restore result",
+    "Backup before restore": "Backup before restore"
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -285,7 +292,14 @@
     "Incorrect password or damaged backup": "Nesprávne heslo alebo poškodená záloha",
     "Use arrows and OK to enter characters. Green confirms.": "Šípkami a OK zadávajte znaky. Zelené tlačidlo potvrdí.",
     "At least 12 characters.": "Najmenej 12 znakov.",
-    "Erase character": "Vymazať znak"
+    "Erase character": "Vymazať znak",
+    "To restore": "Na obnovu",
+    "Restored": "Obnovené",
+    "Unchanged": "Nezmenené",
+    "Incompatible": "Nekompatibilné",
+    "Not selected": "Nevybrané",
+    "Restore result": "Výsledok obnovy",
+    "Backup before restore": "Záloha pred obnovou"
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -429,7 +443,14 @@
     "Incorrect password or damaged backup": "Nesprávné heslo nebo poškozená záloha",
     "Use arrows and OK to enter characters. Green confirms.": "Šipkami a OK zadávejte znaky. Zelené tlačítko potvrdí.",
     "At least 12 characters.": "Nejméně 12 znaků.",
-    "Erase character": "Smazat znak"
+    "Erase character": "Smazat znak",
+    "To restore": "K obnově",
+    "Restored": "Obnoveno",
+    "Unchanged": "Nezměněno",
+    "Incompatible": "Nekompatibilní",
+    "Not selected": "Nevybráno",
+    "Restore result": "Výsledek obnovy",
+    "Backup before restore": "Záloha před obnovou"
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -573,7 +594,14 @@
     "Incorrect password or damaged backup": "Falsches Passwort oder beschädigte Sicherung",
     "Use arrows and OK to enter characters. Green confirms.": "Zeichen mit Pfeilen und OK eingeben. Grün bestätigt.",
     "At least 12 characters.": "Mindestens 12 Zeichen.",
-    "Erase character": "Zeichen löschen"
+    "Erase character": "Zeichen löschen",
+    "To restore": "Zur Wiederherstellung",
+    "Restored": "Wiederhergestellt",
+    "Unchanged": "Unverändert",
+    "Incompatible": "Inkompatibel",
+    "Not selected": "Nicht ausgewählt",
+    "Restore result": "Ergebnis",
+    "Backup before restore": "Sicherung vor Wiederherstellung"
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -717,7 +745,14 @@
     "Incorrect password or damaged backup": "Nieprawidłowe hasło lub uszkodzona kopia",
     "Use arrows and OK to enter characters. Green confirms.": "Strzałki i OK wprowadzają znaki. Zielony potwierdza.",
     "At least 12 characters.": "Co najmniej 12 znaków.",
-    "Erase character": "Usuń znak"
+    "Erase character": "Usuń znak",
+    "To restore": "Do przywrócenia",
+    "Restored": "Przywrócono",
+    "Unchanged": "Bez zmian",
+    "Incompatible": "Niezgodne",
+    "Not selected": "Niewybrane",
+    "Restore result": "Wynik przywracania",
+    "Backup before restore": "Kopia przed przywróceniem"
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -861,7 +896,14 @@
     "Incorrect password or damaged backup": "Hibás jelszó vagy sérült mentés",
     "Use arrows and OK to enter characters. Green confirms.": "Nyilakkal és OK-val adja meg a karaktereket. Zöld: jóváhagyás.",
     "At least 12 characters.": "Legalább 12 karakter.",
-    "Erase character": "Karakter törlése"
+    "Erase character": "Karakter törlése",
+    "To restore": "Visszaállítandó",
+    "Restored": "Visszaállítva",
+    "Unchanged": "Változatlan",
+    "Incompatible": "Nem kompatibilis",
+    "Not selected": "Nincs kiválasztva",
+    "Restore result": "Visszaállítás eredménye",
+    "Backup before restore": "Mentés visszaállítás előtt"
   },
   "ru": {
     "System centre": "Системный центр",
@@ -1005,7 +1047,14 @@
     "Incorrect password or damaged backup": "Неверный пароль или повреждённая копия",
     "Use arrows and OK to enter characters. Green confirms.": "Вводите символы стрелками и OK. Зелёная кнопка подтверждает.",
     "At least 12 characters.": "Не менее 12 символов.",
-    "Erase character": "Удалить символ"
+    "Erase character": "Удалить символ",
+    "To restore": "К восстановлению",
+    "Restored": "Восстановлено",
+    "Unchanged": "Без изменений",
+    "Incompatible": "Несовместимо",
+    "Not selected": "Не выбрано",
+    "Restore result": "Результат восстановления",
+    "Backup before restore": "Копия перед восстановлением"
   },
   "fr": {
     "System centre": "Centre système",
@@ -1149,7 +1198,14 @@
     "Incorrect password or damaged backup": "Mot de passe incorrect ou sauvegarde endommagée",
     "Use arrows and OK to enter characters. Green confirms.": "Saisissez les caractères avec les flèches et OK. Vert pour confirmer.",
     "At least 12 characters.": "Au moins 12 caractères.",
-    "Erase character": "Effacer un caractère"
+    "Erase character": "Effacer un caractère",
+    "To restore": "À restaurer",
+    "Restored": "Restauré",
+    "Unchanged": "Inchangé",
+    "Incompatible": "Incompatible",
+    "Not selected": "Non sélectionné",
+    "Restore result": "Résultat de la restauration",
+    "Backup before restore": "Sauvegarde avant restauration"
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -1293,7 +1349,14 @@
     "Incorrect password or damaged backup": "Password errata o backup danneggiato",
     "Use arrows and OK to enter characters. Green confirms.": "Inserire i caratteri con frecce e OK. Il verde conferma.",
     "At least 12 characters.": "Almeno 12 caratteri.",
-    "Erase character": "Cancella carattere"
+    "Erase character": "Cancella carattere",
+    "To restore": "Da ripristinare",
+    "Restored": "Ripristinato",
+    "Unchanged": "Invariato",
+    "Incompatible": "Incompatibile",
+    "Not selected": "Non selezionato",
+    "Restore result": "Risultato del ripristino",
+    "Backup before restore": "Backup prima del ripristino"
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -1437,7 +1500,14 @@
     "Incorrect password or damaged backup": "Contraseña incorrecta o copia dañada",
     "Use arrows and OK to enter characters. Green confirms.": "Introduzca caracteres con flechas y OK. Verde confirma.",
     "At least 12 characters.": "Al menos 12 caracteres.",
-    "Erase character": "Borrar carácter"
+    "Erase character": "Borrar carácter",
+    "To restore": "Por restaurar",
+    "Restored": "Restaurado",
+    "Unchanged": "Sin cambios",
+    "Incompatible": "Incompatible",
+    "Not selected": "No seleccionado",
+    "Restore result": "Resultado de restauración",
+    "Backup before restore": "Copia antes de restaurar"
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -1581,7 +1651,14 @@
     "Incorrect password or damaged backup": "Fjalëkalim i gabuar ose kopje e dëmtuar",
     "Use arrows and OK to enter characters. Green confirms.": "Përdorni shigjetat dhe OK për karakteret. Jeshilja konfirmon.",
     "At least 12 characters.": "Të paktën 12 karaktere.",
-    "Erase character": "Fshi karakterin"
+    "Erase character": "Fshi karakterin",
+    "To restore": "Për rikthim",
+    "Restored": "Rikthyer",
+    "Unchanged": "Pa ndryshim",
+    "Incompatible": "E papërputhshme",
+    "Not selected": "E pazgjedhur",
+    "Restore result": "Rezultati i rikthimit",
+    "Backup before restore": "Kopje para rikthimit"
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -1725,7 +1802,14 @@
     "Incorrect password or damaged backup": "Λάθος κωδικός ή κατεστραμμένο αντίγραφο",
     "Use arrows and OK to enter characters. Green confirms.": "Εισαγάγετε χαρακτήρες με βέλη και OK. Το πράσινο επιβεβαιώνει.",
     "At least 12 characters.": "Τουλάχιστον 12 χαρακτήρες.",
-    "Erase character": "Διαγραφή χαρακτήρα"
+    "Erase character": "Διαγραφή χαρακτήρα",
+    "To restore": "Προς επαναφορά",
+    "Restored": "Επαναφέρθηκαν",
+    "Unchanged": "Αμετάβλητα",
+    "Incompatible": "Μη συμβατά",
+    "Not selected": "Μη επιλεγμένα",
+    "Restore result": "Αποτέλεσμα επαναφοράς",
+    "Backup before restore": "Αντίγραφο πριν την επαναφορά"
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -1869,7 +1953,14 @@
     "Incorrect password or damaged backup": "Vale parool või rikutud varukoopia",
     "Use arrows and OK to enter characters. Green confirms.": "Sisesta märgid noolte ja OK-ga. Roheline kinnitab.",
     "At least 12 characters.": "Vähemalt 12 märki.",
-    "Erase character": "Kustuta märk"
+    "Erase character": "Kustuta märk",
+    "To restore": "Taastamiseks",
+    "Restored": "Taastatud",
+    "Unchanged": "Muutmata",
+    "Incompatible": "Ühildumatu",
+    "Not selected": "Valimata",
+    "Restore result": "Taastamise tulemus",
+    "Backup before restore": "Varukoopia enne taastamist"
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -2013,7 +2104,14 @@
     "Incorrect password or damaged backup": "رمز نادرست یا پشتیبان آسیب‌دیده",
     "Use arrows and OK to enter characters. Green confirms.": "با جهت‌ها و OK نویسه وارد کنید. دکمه سبز تأیید می‌کند.",
     "At least 12 characters.": "حداقل ۱۲ نویسه.",
-    "Erase character": "حذف نویسه"
+    "Erase character": "حذف نویسه",
+    "To restore": "برای بازیابی",
+    "Restored": "بازیابی‌شده",
+    "Unchanged": "بدون تغییر",
+    "Incompatible": "ناسازگار",
+    "Not selected": "انتخاب‌نشده",
+    "Restore result": "نتیجه بازیابی",
+    "Backup before restore": "پشتیبان پیش از بازیابی"
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -2157,7 +2255,14 @@
     "Incorrect password or damaged backup": "Neteisingas slaptažodis arba sugadinta kopija",
     "Use arrows and OK to enter characters. Green confirms.": "Įveskite simbolius rodyklėmis ir OK. Žalias mygtukas patvirtina.",
     "At least 12 characters.": "Bent 12 simbolių.",
-    "Erase character": "Ištrinti simbolį"
+    "Erase character": "Ištrinti simbolį",
+    "To restore": "Atkurti",
+    "Restored": "Atkurta",
+    "Unchanged": "Nepakeista",
+    "Incompatible": "Nesuderinama",
+    "Not selected": "Nepasirinkta",
+    "Restore result": "Atkūrimo rezultatas",
+    "Backup before restore": "Kopija prieš atkūrimą"
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -2301,7 +2406,14 @@
     "Incorrect password or damaged backup": "Onjuist wachtwoord of beschadigde back-up",
     "Use arrows and OK to enter characters. Green confirms.": "Voer tekens in met pijlen en OK. Groen bevestigt.",
     "At least 12 characters.": "Minstens 12 tekens.",
-    "Erase character": "Teken wissen"
+    "Erase character": "Teken wissen",
+    "To restore": "Te herstellen",
+    "Restored": "Hersteld",
+    "Unchanged": "Ongewijzigd",
+    "Incompatible": "Incompatibel",
+    "Not selected": "Niet geselecteerd",
+    "Restore result": "Herstelresultaat",
+    "Backup before restore": "Back-up vóór herstel"
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -2445,7 +2557,14 @@
     "Incorrect password or damaged backup": "Palavra-passe incorreta ou cópia danificada",
     "Use arrows and OK to enter characters. Green confirms.": "Introduza caracteres com setas e OK. Verde confirma.",
     "At least 12 characters.": "Pelo menos 12 caracteres.",
-    "Erase character": "Apagar carácter"
+    "Erase character": "Apagar carácter",
+    "To restore": "A restaurar",
+    "Restored": "Restaurado",
+    "Unchanged": "Sem alterações",
+    "Incompatible": "Incompatível",
+    "Not selected": "Não selecionado",
+    "Restore result": "Resultado do restauro",
+    "Backup before restore": "Cópia antes do restauro"
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -2589,7 +2708,14 @@
     "Incorrect password or damaged backup": "Parolă incorectă sau copie deteriorată",
     "Use arrows and OK to enter characters. Green confirms.": "Introduceți caractere cu săgeți și OK. Verde confirmă.",
     "At least 12 characters.": "Cel puțin 12 caractere.",
-    "Erase character": "Șterge caracterul"
+    "Erase character": "Șterge caracterul",
+    "To restore": "De restaurat",
+    "Restored": "Restaurat",
+    "Unchanged": "Neschimbat",
+    "Incompatible": "Incompatibil",
+    "Not selected": "Neselectat",
+    "Restore result": "Rezultat restaurare",
+    "Backup before restore": "Copie înainte de restaurare"
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -2733,7 +2859,14 @@
     "Incorrect password or damaged backup": "Yanlış parola veya hasarlı yedek",
     "Use arrows and OK to enter characters. Green confirms.": "Oklar ve OK ile karakter girin. Yeşil onaylar.",
     "At least 12 characters.": "En az 12 karakter.",
-    "Erase character": "Karakteri sil"
+    "Erase character": "Karakteri sil",
+    "To restore": "Geri yüklenecek",
+    "Restored": "Geri yüklendi",
+    "Unchanged": "Değişmedi",
+    "Incompatible": "Uyumsuz",
+    "Not selected": "Seçilmedi",
+    "Restore result": "Geri yükleme sonucu",
+    "Backup before restore": "Geri yükleme öncesi yedek"
   },
   "uk": {
     "System centre": "Системний центр",
@@ -2877,7 +3010,14 @@
     "Incorrect password or damaged backup": "Неправильний пароль або пошкоджена копія",
     "Use arrows and OK to enter characters. Green confirms.": "Вводьте символи стрілками й OK. Зелена кнопка підтверджує.",
     "At least 12 characters.": "Щонайменше 12 символів.",
-    "Erase character": "Видалити символ"
+    "Erase character": "Видалити символ",
+    "To restore": "До відновлення",
+    "Restored": "Відновлено",
+    "Unchanged": "Без змін",
+    "Incompatible": "Несумісне",
+    "Not selected": "Не вибрано",
+    "Restore result": "Результат відновлення",
+    "Backup before restore": "Копія перед відновленням"
   },
   "zh": {
     "System centre": "系统中心",
@@ -3021,6 +3161,13 @@
     "Incorrect password or damaged backup": "密码错误或备份损坏",
     "Use arrows and OK to enter characters. Green confirms.": "用方向键和 OK 输入字符，绿色键确认。",
     "At least 12 characters.": "至少 12 个字符。",
-    "Erase character": "删除字符"
+    "Erase character": "删除字符",
+    "To restore": "待恢复",
+    "Restored": "已恢复",
+    "Unchanged": "未更改",
+    "Incompatible": "不兼容",
+    "Not selected": "未选择",
+    "Restore result": "恢复结果",
+    "Backup before restore": "恢复前备份"
   }
 }

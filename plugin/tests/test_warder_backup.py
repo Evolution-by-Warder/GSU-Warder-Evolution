@@ -221,3 +221,34 @@ class BackupTests(unittest.TestCase):
                         'setupGlass17.par214','setupGlass17.descriptionScrollSpeed'})
         self.assertEqual(set(result['GSU']),{'GlassSysUtil.par4','GlassSysUtil.par60','GlassSysUtil.diagnosticAlerts'})
         self.assertNotIn('private',str(result))
+
+
+    def test_restore_outcome_reports_disjoint_counts_and_no_secrets(self):
+        payload={'projects':{'YouTube':{'a':'secret1','b':'secret2','c':'secret3'},
+                             'Warder Radio':{'a':'secret4'},'GSU':{'a':True}}}
+        summary=b.outcome(payload,('YouTube','Warder Radio'),
+                          [('YouTube','a',None,'secret1')],{'a':'secret4'},{'YouTube':1})
+        self.assertEqual(summary,{'YouTube':(1,1,1,0),'Warder Radio':(1,0,0,0),'GSU':(0,0,0,1)})
+        from Plugins.Extensions.GlassSysUtil.warder_backup_ui import summary_lines,archive_title
+        text='\n'.join(summary_lines(str,summary,completed=True))
+        self.assertIn('Restored: 2',text)
+        self.assertIn('Unchanged: 1',text)
+        self.assertIn('Incompatible: 1',text)
+        self.assertIn('Not selected: 1',text)
+        self.assertNotIn('secret',text)
+        self.assertEqual(archive_title(Path('warder-backup-20261126-151200-abcdefgh.json')),
+                         '26.11.2026  15:12:00  ·  abcdefgh')
+
+    def test_restore_details_report_actual_noop_and_incompatible(self):
+        with TemporaryDirectory() as folder:
+            p=b.Probe(folder)
+            p.path('/etc/enigma2').mkdir(parents=True)
+            config=SimpleNamespace(plugins=SimpleNamespace(warderyoutube=SimpleNamespace(
+                max_quality=Item('720',['720','1080']),player_mode=Item('auto',['auto','gst']))))
+            with patch.object(b,'mounts',return_value=[('/dev/root','/','ext4',False)]):
+                path=b.save(p.path(b.ROOT),{'YouTube':{'warderyoutube.max_quality':'720',
+                    'warderyoutube.player_mode':'unsupported'},'GSU':{'GlassSysUtil.par0':True}},p)
+                count,skipped,rollback,summary=b.restore(config,None,path,('YouTube',),p,details=True)
+                self.assertEqual(count,0)
+                self.assertIsNone(rollback)
+                self.assertEqual(summary,{'YouTube':(0,1,1,0),'GSU':(0,0,0,1)})

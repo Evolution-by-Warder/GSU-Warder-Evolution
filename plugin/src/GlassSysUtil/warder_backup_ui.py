@@ -8,6 +8,26 @@ from twisted.internet.threads import deferToThread
 from .warder_screen import Screen
 from . import warder_dashboard as dashboard, warder_backup as backup
 from .i18n import for_api
+from .warder_menu_icons import pixmap_entry
+
+
+def archive_title(path):
+    from datetime import datetime
+    try:
+        stamp=datetime.strptime(path.name[14:29],'%Y%m%d-%H%M%S')
+        return stamp.strftime('%d.%m.%Y  %H:%M:%S')+'  ·  '+path.stem[30:]
+    except ValueError:return path.stem
+
+
+def summary_lines(tr,summary,completed=False):
+    labels=(tr('Restored' if completed else 'To restore'),tr('Unchanged'),tr('Incompatible'),tr('Not selected'))
+    totals=tuple(sum(row[i] for row in summary.values()) for i in range(4))
+    lines=['%s: %d'%(label,count) for label,count in zip(labels,totals)]
+    lines.append('')
+    for name,counts in summary.items():
+        lines.append(name)
+        lines.append('    '+'  ·  '.join('%s: %d'%(label,count) for label,count in zip(labels,counts) if count) if any(counts) else '    0')
+    return lines
 
 
 class BackupMenu(Screen):
@@ -26,6 +46,7 @@ class BackupMenu(Screen):
         self.location=0
         self.browsing=False
         self.paths=[]
+        self.last_archive=None
         self.preview=None
         self.preview_digest=None
         self.locked=None
@@ -74,12 +95,22 @@ class BackupMenu(Screen):
         self['yellow'].setText(tr('Storage location'))
         self['blue'].setText(tr('Select projects' if self.browsing else 'Restore backup'))
         self.paths=backup.inventory(self.directory()) if self.browsing and self.directory() else []
-        items=[(path,path.name[14:-5]) for path in self.paths] if self.browsing else [
+        items=[(path,archive_title(path)) for path in self.paths] if self.browsing else [
             (name,('✓  ' if name in self.selected else '○  ')+name) for name in backup.PRODUCTS]
         sx,sy=self.width/1920,self.height/1080
-        self['list'].l.setList([[key,self.api['MultiContentEntryText'](
-            pos=(round(16*sx),round(10*sy)),size=(round(620*sx),round(54*sy)),font=0,text=label)]
-            for key,label in items])
+        rows=[]
+        for key,label in items:
+            icon=pixmap_entry(self.api,'project-backup' if self.browsing else key,
+                (round(12*sx),round(8*sy)),(round((54 if self.browsing else 120)*sx),round(58*sy)),
+                project=not self.browsing)
+            left=(80 if self.browsing else 148) if icon is not None else 16
+            row=[key,self.api['MultiContentEntryText'](pos=(round(left*sx),round(10*sy)),
+                size=(round((624-left)*sx),round(54*sy)),font=0,text=label,
+                color=0xffffff if self.browsing or key in self.selected else 0x8291a5)]
+            if icon is not None:row.append(icon)
+            rows.append(row)
+        self['list'].l.setList(rows)
+        if self.browsing and self.last_archive in self.paths:index=self.paths.index(self.last_archive)
         if items:self['list'].moveToIndex(min(index,len(items)-1))
         self.describe()
 
@@ -96,6 +127,7 @@ class BackupMenu(Screen):
         if self.browsing:
             row=self['list'].getCurrent()
             if row:
+                self.last_archive=row[0]
                 try:
                     if backup.file_kind(row[0])=='private':
                         self.locked=row[0]
@@ -143,11 +175,8 @@ class BackupMenu(Screen):
         changes,radio,skipped,_=backup.plan(self.api['config'],payload,self.selected,private=private)
         rows=[tr('Storage location'),str(path.parent),'',payload['created'],
               ('AES-256-GCM' if private else 'SHA-256')+' · OK','']
-        for name in backup.PRODUCTS:
-            if name in payload['projects']:
-                count=sum(c[0]==name for c in changes)+(len(radio) if name=='Warder Radio' else 0)
-                rows.append('%s  ·  %d / %d'%(name,count,len(payload['projects'][name])))
-                if skipped.get(name):rows.append('    '+tr('Unavailable')+'  %d'%skipped[name])
+        summary=backup.outcome(payload,self.selected,changes,radio,skipped)
+        rows.extend(summary_lines(tr,summary))
         rows.extend(('',tr('Restore selected compatible settings only.')))
         self.preview=path
         self.preview_digest=backup.fingerprint(payload)
@@ -251,11 +280,15 @@ class BackupMenu(Screen):
             self.password=None
             try:
                 from Components.config import configfile
-                count,skipped,rollback=backup.restore(self.api['config'],configfile,path,selected,
-                    password=password,expected_digest=digest)
+                count,skipped,rollback,summary=backup.restore(self.api['config'],configfile,path,selected,
+                    password=password,expected_digest=digest,details=True)
                 self.describe()
+                self['result_title'].setText(self.tr('Restore result'))
                 self['result_status'].setText('OK · %d'%count)
-                if rollback:self['descriptions'].setText(self['descriptions'].getText()+'\n\n'+self.tr('Restart GUI after restoring settings.')+'\n'+str(rollback))
+                rows=summary_lines(self.tr,summary,completed=True)
+                if rollback:rows.extend(('',self.tr('Restart GUI after restoring settings.'),
+                                         self.tr('Backup before restore'),str(rollback)))
+                self['descriptions'].setText('\n'.join(rows))
             except (OSError,ValueError,TypeError,RuntimeError,AttributeError,RecursionError):
                 self.describe()
                 self['result_status'].setText(self.tr('Unavailable'))
