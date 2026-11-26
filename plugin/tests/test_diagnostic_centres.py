@@ -240,6 +240,32 @@ class DiagnosticTests(unittest.TestCase):
             self.assertIn('standby',runner.call_args.args[0])
             self.assertIsNone(storage.smart('/dev/unknown',runner))
 
+    def test_storage_profiles_fair_budget_and_cancel(self):
+        storage=module('warder_storage')
+        with TemporaryDirectory() as tmp:
+            p=storage.Probe(tmp)
+            for path in ('/media/hdd/XPicons/picon','/media/hdd/custom','/usr/lib/enigma2/python/Plugins','/etc/enigma2','/var/cache'):
+                p.path(path).mkdir(parents=True,exist_ok=True)
+            p.path('/etc/enigma2/settings').write_text('config.plugins.chocholousekpicons.0.picon_folder=user_defined\nconfig.plugins.chocholousekpicons.0.picon_folder_user=/media/hdd/custom\nconfig.plugins.chocholousekpicons.1.picon_folder=/media/hdd\n')
+            for i in range(15):p.path('/media/hdd/XPicons/picon/%d.png'%i).write_bytes(b'x'*4096)
+            custom=p.path('/media/hdd/custom/a.png');custom.write_bytes(b'x'*4096)
+            p.path('/media/hdd/custom/other.txt').write_bytes(b'x'*65536)
+            plugin=p.path('/usr/lib/enigma2/python/Plugins/test.py');plugin.write_bytes(b'x'*4096)
+            epg=p.path('/etc/enigma2/epg.dat');epg.write_bytes(b'x'*4096)
+            table=[('/dev/sda1','/media/hdd','ext4',False)]
+            self.assertEqual(storage.configured_picons(p,['/media/hdd']),('/media/hdd/custom',))
+            values=storage.usage_categories(p,table,budget=12,seconds=100)
+            self.assertFalse(values['Picons'][1])
+            self.assertEqual(values['Plugins'],(plugin.stat().st_blocks*512,True))
+            self.assertEqual(values['EPG'],(epg.stat().st_blocks*512,True))
+            values=storage.usage_categories(p,table,budget=100,seconds=100)
+            self.assertEqual(values['Picons'],(16*custom.stat().st_blocks*512,True))
+            from threading import Event
+            cancel=Event();cancel.set()
+            self.assertTrue(all(not done and size==0 for size,done in storage.usage_categories(p,table,cancelled=cancel).values()))
+        self.assertEqual(storage.category_size(4096,False),'≥ 4 KiB')
+        self.assertEqual(storage.category_size(0,False),'—')
+
     def test_tuner_actions_fail_closed_before_backup(self):
         tuner=module('warder_tuners')
         nav=MagicMock()

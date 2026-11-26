@@ -27,7 +27,7 @@ def collect_report(kind,tr,cancelled,cpu_order=False):
         return detail_text('log',tr)
     if kind=='storage-categories':
         from .warder_storage import category_snapshot
-        return category_snapshot()
+        return category_snapshot(cancelled=cancelled)
     if kind=='storage-overview':
         from .warder_storage import report
         return report(tr,False)
@@ -66,8 +66,8 @@ def preview_text(kind,value,tr):
         return '\n'.join('%s   %s   %s MiB'%(pid,name,'—' if rss is None else '%.1f'%(rss/1024))
                          for pid,name,state,rss,cpu in value)
     if kind=='storage-categories' and isinstance(value,list):
-        return '\n'.join('%s    %s%s'%(tr(name),'%.1f MiB'%(size/1048576) if complete else
-                         '≥ %.1f MiB'%(size/1048576) if size else '—',
+        from .warder_storage import category_size
+        return '\n'.join('%s    %s%s'%(tr(name),category_size(size,complete),
                          '' if complete else ' · '+tr('Partial result')) for name,size,complete in value)
     if kind=='network-overview' and isinstance(value,tuple):
         return '\n\n'.join(value)
@@ -104,9 +104,10 @@ def card_result(kind, value, tr):
     if kind=='storage-categories' and isinstance(value,list) and len(value)==6:
         total=sum(size for _,size,_ in value)
         complete=all(done for _,_,done in value)
+        from .warder_storage import category_size
         cards=[]
         for name,size,done in value:
-            shown=('' if done else '≥ ')+'%.1f MiB'%(size/1048576) if size or done else '—'
+            shown=category_size(size,done)
             meter=round(100*size/total) if complete and total else None
             note='' if done else tr('Partial result')
             cards.append((tr(name),shown,meter,note))
@@ -422,10 +423,11 @@ class Report(Screen):
     def display_categories(self,rows):
         total=sum(size for _,size,_ in rows)
         complete=all(done for _,_,done in rows)
+        from .warder_storage import category_size
         self.show_categories(True)
         for i,(name,size,done) in enumerate(rows):
             self['category_name%d'%i].setText(self.tr(name))
-            self['category_size%d'%i].setText(('' if done else '≥ ')+'%.1f MiB'%(size/1048576) if size or done else '—')
+            self['category_size%d'%i].setText(category_size(size,done))
             meter=self['category_meter%d'%i]
             if complete and total:
                 share=100*size/total

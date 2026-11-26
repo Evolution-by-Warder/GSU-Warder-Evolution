@@ -302,6 +302,12 @@ class OriginalPortTests(unittest.TestCase):
         manifest=json.loads((BASE/'original-inventory.json').read_text())
         removed={'univCamMng.killDccamd','univCamMng.doLnk','univCamMng.chckDccamd'}
         removed.add('fill')
+        # The owner explicitly replaced this packed screen; its public class
+        # and constructor remain, while old duplicated process/log and legacy
+        # shell-based collection methods are intentionally retired.
+        removed.update(item['name'] for item in manifest['objects']
+                       if item['name'].startswith('GlassSysInfoBrowser.')
+                       and item['name']!='GlassSysInfoBrowser.__init__')
         retired=('settings_satxml','settings_center','autoInstallMain','autoInstallMngMain','autoInstStatus','cronMng','SetupCronConf','ipk_script_center','script_center','ipk_center','tar_center')
         removed.update(item['name'] for item in manifest['objects'] if item['name'].split('.')[0] in retired)
         self.assertTrue(removed.isdisjoint(actual))
@@ -310,6 +316,8 @@ class OriginalPortTests(unittest.TestCase):
                 self.assertTrue(item['name'] in actual,item['name'])
                 self.assertEqual(actual[item['name']],item['args'],item['name'])
         self.assertEqual(sum(isinstance(n,ast.ClassDef) for n in ast.walk(tree)),51)
+        self.assertIn('GlassSysInfoBrowser.__init__',actual)
+        self.assertTrue(issubclass(self.plugin.GlassSysInfoBrowser,self.plugin._warder_system.Information))
 
     def test_main_menu_keeps_eleven_legacy_actions_under_seven_centres(self):
         module=self.plugin
