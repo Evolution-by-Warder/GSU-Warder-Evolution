@@ -1,3 +1,11 @@
+# 26. 11. 2026 · meranie a optimalizácia teplotných čidiel
+
+Na 17f50f2745ade5e90757880722c8da09cdf59af4 uspeli OpenATV 45782325859, OpenPLi 45782325928, reprodukcia/migrácie 45782325936 aj kontrola inštalátora 45782325857. OpenBH prešiel aj kontrolou 3 024 ovládacích textov. Pri zostavovaní krížového CPython zachytilo CI 45782325842 problém s nesúvisiacimi rozšíreniami pre vývojový hostiteľ. Nové zostavenie cieli na skutočné natívne moduly potrebné na spustenie samplera a IPv4/IPv6 pod emuláciou.
+
+Meranie odhalilo zbytočné opakované čítanie pomalých tepelných senzorov. Živé meranie používa päťsekundový interval pre tento senzor, zobrazuje vek výsledku a štatistiku počíta z čerstvých pozorovaní. CPU a sieť zostávajú pri nastavenom intervale. Lokálne meranie na x86_64, 12 vzoriek po sekunde, priemer 0,539 ms, CPU 7,832 ms spolu, špička procesu 11 136 KiB. Čísla nepopisujú reálny prijímač. Ďalší krok je kontrola všetkých troch emulovaných ABI, presného kandidáta a produkčná verifikácia.
+
+Manuálne preskúmané vydávacie workflowy a ich volané skripty. Historické vydávacie vetvy spúšťa ich vlastná vetva, r6 má len manuálnu obnovu pôvodných bajtov. Moderné zverejnenie vyžaduje úspech všetkých štyroch volaných pracovných postupov, overený IPK z toho istého behu, stav hlavnej vetvy a historických feedov. Pri zhodnom už zverejnenom tagu iba kontroluje existujúce bajty. Zápis na main je bez force. Referenčné zdroje sa načítavajú v read-only joboch. Lokálne 465 testov, balík 3 871 820 bajtov, SHA-256 b0aee79b5566cfd6de66208143d0b8bc1d949f81e889c96685bb8c0110637a8a. Toto je kontrola pracovného balíka.
+
 # 26. 11. 2026 · výsledky kandidáta a rozhrania prijímača
 
 Na e08b766f399eceb865febd6ad3ff217bce6ba3cd prešli matice OpenATV (45781593896), OpenPLi (45781593863), kontrola balíka s migráciami a publikátorom (45781593912), inštalátor (45781594076) aj natívne rozhrania OpenBH. Kompilátor troch emulovaných cieľov nevedel pri konfigurácii CPython na hostiteľovi spustiť cieľový getaddrinfo. Overenie sa presúva do hotového cieľového interpretera pod QEMU pre IPv4 aj IPv6. Na vývojovej vetve sa zatiaľ nevydal žiadny IPK.

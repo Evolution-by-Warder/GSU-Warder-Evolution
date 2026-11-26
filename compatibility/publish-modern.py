@@ -104,6 +104,8 @@ def stable_assets(directory,revision):
         for name in expected:
             require((Path(temp)/name).read_bytes()==(directory/name).read_bytes(),'unexpected stored asset: '+name)
     if status['isDraft']:
+        latest=command('git','ls-remote','origin','refs/heads/main').split()
+        require(latest and latest[0]==revision,'main advanced before stable publication')
         command('gh','release','edit',TAG,'--repo',REPO,'--draft=false','--latest')
     for name in expected:
         verify_public(URL.rsplit('/',1)[0]+'/'+name,(directory/name).read_bytes())
@@ -125,6 +127,7 @@ def publish(directory,feed,install):
     require(revision==command('git','rev-parse','HEAD'),'wrong checkout')
     previous=json.loads(command('git','show','origin/main:'+MODERN))
     require(previous==dict(feed,release=None) or previous==feed,'another release is active')
+    record=json.loads((ROOT/'PRODUCTION.json').read_text())
     if previous==feed:
         recorded=json.loads(command('git','show','origin/main:reports/gsu-'+VERSION+'/public-verification.json'))
         tag_source=command('git','rev-parse',TAG+'^{commit}')
@@ -134,15 +137,14 @@ def publish(directory,feed,install):
             verify_public(URL.rsplit('/',1)[0]+'/'+name,(directory/name).read_bytes())
     else:
         require(revision==command('git','rev-parse','origin/main'),'main advanced')
+        require(record['release']['version']=='13.41-r6' and record['release']['sha256']=='a8e79609147666b27f18460b3340e099bb013664478a787746bcf56bb28052e2','production register has changed')
         stable_assets(directory,revision)
     item=feed['release']
-    record=json.loads((ROOT/'PRODUCTION.json').read_text())
     evidence=dict(source_commit=revision,workflow_run=int(os.environ['GITHUB_RUN_ID']),release=TAG,
                   public_bytes=item['bytes'],public_sha256=item['sha256'],public_sidecar_verified=True,
                   installed_regular_file_bytes=int((directory/'installed-bytes').read_text()),packaged_install=install,
                   physical_receiver_tested=False)
     if previous!=feed:
-        require(record['release']['version']=='13.41-r6' and record['release']['sha256']=='a8e79609147666b27f18460b3340e099bb013664478a787746bcf56bb28052e2','production register has changed')
         record.update(previous_release=record['release'],release=item,source_commit=revision,package_source_commit=revision,
                       status='production-update-active',validation=evidence,approved_on='2026-11-26',
                       approval='Owner-approved stable GSU 0.41.5 release',version_policy='Public 0.41.x, OPKG epoch 1. Immutable r6 and r93 migration feeds.',

@@ -20,6 +20,21 @@ def module(name):
 
 
 class DiagnosticTests(unittest.TestCase):
+    def test_thermal_polling_reuses_observation_with_age_and_refreshes(self):
+        live=module('warder_live')
+        p=MagicMock()
+        p.text.return_value=''
+        p.sensor_paths.return_value=[('temp','')]
+        p.temperatures.side_effect=[[{'celsius':51}],[{'celsius':52}]]
+        now=[0]
+        sampler=live.Sampler(p,lambda:now[0])
+        self.assertEqual(sampler.sample()['temp'],51)
+        now[0]=2
+        self.assertEqual(sampler.sample()['temp_age'],2)
+        now[0]=5
+        self.assertEqual(sampler.sample()['temp'],52)
+        self.assertEqual(p.temperatures.call_count,2)
+
     def test_remote_tuner_selection_is_passive_and_hides_unrelated_current_service(self):
         tuner=module('warder_tuners')
         from Components.NimManager import nimmanager

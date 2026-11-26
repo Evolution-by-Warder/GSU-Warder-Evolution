@@ -111,6 +111,8 @@ class LiveChart(Screen):
         low, high, mean = statistics(samples, key)
         stats = '%s  %s     %s  %s     %s  %s' % (self.tr('Minimum'), display(low, key),
                    self.tr('Maximum'), display(high, key), self.tr('Average'), display(mean, key))
+        if key=='temp' and samples and samples[-1][1].get('temp_age') is not None:
+            stats += '     ·     Δt  %.0f s' % samples[-1][1]['temp_age']
         if self.signal:
             losses=lock_losses(samples)
             stats += '\n%s  %d' % (self.tr('Lock losses'),losses)

@@ -14,6 +14,8 @@ class Sampler:
         self.history=History(seconds=60,capacity=61,clock=clock)
         self.previous=None
         self.sensors=None
+        self.temperature=None
+        self.last_temperature=None
     def reset(self):
         self.previous=None
     def sample(self):
@@ -28,8 +30,14 @@ class Sampler:
                 'rx':None,'tx':None}
         if self.sensors is None:
             self.sensors = p.sensor_paths() if hasattr(p, 'sensor_paths') else ()
-        temperatures = p.temperatures(self.sensors) if self.sensors else ()
-        values['temp'] = max((s['celsius'] for s in temperatures), default=None)
+        # hwmon reads can wait for the sensor's conversion. Reuse the last reading
+        # between thermal polls and carry its age alongside faster CPU/network data.
+        if self.last_temperature is None or not 0<=now-self.last_temperature<5:
+            readings = p.temperatures(self.sensors) if self.sensors else ()
+            self.temperature = max((s['celsius'] for s in readings),default=None)
+            self.last_temperature = now
+        values['temp'] = self.temperature
+        values['temp_age'] = now-self.last_temperature if self.temperature is not None else None
         if self.previous is not None:
             stamp,old_cpu,old_net=self.previous
             values['cpu']=cpu_percent(old_cpu,cpu)
@@ -43,5 +51,6 @@ class Sampler:
         return values
 
 def statistics(samples,key):
-    values=[v.get(key) for _,v in samples if v.get(key) is not None]
+    values=[v[key] for _,v in samples if v.get(key) is not None and
+            (key!='temp' or not v.get('temp_age'))]
     return (min(values),max(values),sum(values)/len(values)) if values else (None,None,None)
