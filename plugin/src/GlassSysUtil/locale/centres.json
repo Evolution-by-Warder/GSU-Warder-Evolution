@@ -81,7 +81,8 @@
     "Roll-off": "Roll-off",
     "PLS code": "PLS code",
     "FBC root": "FBC root",
-    "FBC link": "FBC link"
+    "FBC link": "FBC link",
+    "Measured categories total": "Measured categories total"
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -165,7 +166,8 @@
     "Roll-off": "Tvarovanie spektra",
     "PLS code": "Kód PLS",
     "FBC root": "Hlavný tuner FBC",
-    "FBC link": "Prepojený tuner FBC"
+    "FBC link": "Prepojený tuner FBC",
+    "Measured categories total": "Súčet meraných kategórií"
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -249,7 +251,8 @@
     "Roll-off": "Tvarování spektra",
     "PLS code": "Kód PLS",
     "FBC root": "Hlavní tuner FBC",
-    "FBC link": "Připojený tuner FBC"
+    "FBC link": "Připojený tuner FBC",
+    "Measured categories total": "Součet měřených kategorií"
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -333,7 +336,8 @@
     "Roll-off": "Roll-off-Faktor",
     "PLS code": "PLS-Code",
     "FBC root": "FBC-Haupttuner",
-    "FBC link": "Verknüpfter FBC-Tuner"
+    "FBC link": "Verknüpfter FBC-Tuner",
+    "Measured categories total": "Summe der gemessenen Kategorien"
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -417,7 +421,8 @@
     "Roll-off": "Współczynnik roll-off",
     "PLS code": "Kod PLS",
     "FBC root": "Główny tuner FBC",
-    "FBC link": "Powiązany tuner FBC"
+    "FBC link": "Powiązany tuner FBC",
+    "Measured categories total": "Suma zmierzonych kategorii"
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -501,7 +506,8 @@
     "Roll-off": "Lekerekítési tényező",
     "PLS code": "PLS-kód",
     "FBC root": "Elsődleges FBC tuner",
-    "FBC link": "Kapcsolt FBC tuner"
+    "FBC link": "Kapcsolt FBC tuner",
+    "Measured categories total": "Mért kategóriák összesen"
   },
   "ru": {
     "System centre": "Системный центр",
@@ -585,7 +591,8 @@
     "Roll-off": "Коэффициент сглаживания",
     "PLS code": "Код PLS",
     "FBC root": "Основной тюнер FBC",
-    "FBC link": "Связанный тюнер FBC"
+    "FBC link": "Связанный тюнер FBC",
+    "Measured categories total": "Сумма измеренных категорий"
   },
   "fr": {
     "System centre": "Centre système",
@@ -669,7 +676,8 @@
     "Roll-off": "Facteur de retombée",
     "PLS code": "Code PLS",
     "FBC root": "Tuner FBC principal",
-    "FBC link": "Tuner FBC lié"
+    "FBC link": "Tuner FBC lié",
+    "Measured categories total": "Total des catégories mesurées"
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -753,7 +761,8 @@
     "Roll-off": "Fattore di roll-off",
     "PLS code": "Codice PLS",
     "FBC root": "Tuner FBC principale",
-    "FBC link": "Tuner FBC collegato"
+    "FBC link": "Tuner FBC collegato",
+    "Measured categories total": "Totale delle categorie misurate"
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -837,7 +846,8 @@
     "Roll-off": "Factor de caída",
     "PLS code": "Código PLS",
     "FBC root": "Sintonizador FBC principal",
-    "FBC link": "Sintonizador FBC vinculado"
+    "FBC link": "Sintonizador FBC vinculado",
+    "Measured categories total": "Total de las categorías medidas"
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -921,7 +931,8 @@
     "Roll-off": "Faktori i rënies",
     "PLS code": "Kodi PLS",
     "FBC root": "Tuneri kryesor FBC",
-    "FBC link": "Tuneri i lidhur FBC"
+    "FBC link": "Tuneri i lidhur FBC",
+    "Measured categories total": "Totali i kategorive të matura"
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -1005,7 +1016,8 @@
     "Roll-off": "Συντελεστής εξασθένησης",
     "PLS code": "Κωδικός PLS",
     "FBC root": "Κύριος δέκτης FBC",
-    "FBC link": "Συνδεδεμένος δέκτης FBC"
+    "FBC link": "Συνδεδεμένος δέκτης FBC",
+    "Measured categories total": "Σύνολο μετρημένων κατηγοριών"
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -1089,7 +1101,8 @@
     "Roll-off": "Ümardustegur",
     "PLS code": "PLS-kood",
     "FBC root": "FBC põhituuner",
-    "FBC link": "Seotud FBC-tuuner"
+    "FBC link": "Seotud FBC-tuuner",
+    "Measured categories total": "Mõõdetud kategooriate summa"
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -1173,7 +1186,8 @@
     "Roll-off": "ضریب افت طیف",
     "PLS code": "کد PLS",
     "FBC root": "تیونر اصلی FBC",
-    "FBC link": "تیونر پیوندی FBC"
+    "FBC link": "تیونر پیوندی FBC",
+    "Measured categories total": "مجموع دسته‌های اندازه‌گیری‌شده"
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -1257,7 +1271,8 @@
     "Roll-off": "Spektro nuolydžio koeficientas",
     "PLS code": "PLS kodas",
     "FBC root": "Pagrindinis FBC imtuvas",
-    "FBC link": "Susietas FBC imtuvas"
+    "FBC link": "Susietas FBC imtuvas",
+    "Measured categories total": "Išmatuotų kategorijų suma"
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -1341,7 +1356,8 @@
     "Roll-off": "Roll-offfactor",
     "PLS code": "PLS-code",
     "FBC root": "FBC-hoofdtuner",
-    "FBC link": "Gekoppelde FBC-tuner"
+    "FBC link": "Gekoppelde FBC-tuner",
+    "Measured categories total": "Totaal van gemeten categorieën"
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -1425,7 +1441,8 @@
     "Roll-off": "Fator de decaimento",
     "PLS code": "Código PLS",
     "FBC root": "Sintonizador FBC principal",
-    "FBC link": "Sintonizador FBC associado"
+    "FBC link": "Sintonizador FBC associado",
+    "Measured categories total": "Total das categorias medidas"
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -1509,7 +1526,8 @@
     "Roll-off": "Factor de atenuare",
     "PLS code": "Cod PLS",
     "FBC root": "Tuner FBC principal",
-    "FBC link": "Tuner FBC asociat"
+    "FBC link": "Tuner FBC asociat",
+    "Measured categories total": "Totalul categoriilor măsurate"
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -1593,7 +1611,8 @@
     "Roll-off": "Yuvarlanma katsayısı",
     "PLS code": "PLS kodu",
     "FBC root": "Ana FBC alıcısı",
-    "FBC link": "Bağlı FBC alıcısı"
+    "FBC link": "Bağlı FBC alıcısı",
+    "Measured categories total": "Ölçülen kategorilerin toplamı"
   },
   "uk": {
     "System centre": "Системний центр",
@@ -1677,7 +1696,8 @@
     "Roll-off": "Коефіцієнт згладжування",
     "PLS code": "Код PLS",
     "FBC root": "Основний тюнер FBC",
-    "FBC link": "Пов’язаний тюнер FBC"
+    "FBC link": "Пов’язаний тюнер FBC",
+    "Measured categories total": "Сума виміряних категорій"
   },
   "zh": {
     "System centre": "系统中心",
@@ -1761,6 +1781,7 @@
     "Roll-off": "滚降系数",
     "PLS code": "PLS 码",
     "FBC root": "FBC 主调谐器",
-    "FBC link": "FBC 关联调谐器"
+    "FBC link": "FBC 关联调谐器",
+    "Measured categories total": "已测量类别合计"
   }
 }
