@@ -124,7 +124,8 @@ class ReceiverRenderingTests(unittest.TestCase):
         with patch.object(mod('warder_services'),'services',return_value=[('tv','ref','Channel fixture')]) as provider:
             report.start()
             provider.assert_called_once()
-            self.assertEqual(report['file_info'].getText(),'Channel fixture')
+            self.assertIn('Channel fixture',report['file_info'].getText())
+            self.assertIn('TV  ·  1',report['file_info'].getText())
 
     def test_process_table_and_category_rows_are_bound_to_measured_values(self):
         ui=self.ui
