@@ -196,3 +196,32 @@ class ReceiverRenderingTests(unittest.TestCase):
                         nw,nh=map(int,n.get('size').split(','))
                         if nx<x+tw and nx+nw>x and ny<y+th and ny+nh>y:
                             self.assertLess(int(n.get('zPosition','0')),0,(mode,n.attrib))
+
+    def test_forum_preview_is_readable_and_retains_exact_export(self):
+        import json
+        report=self.ui.Report(MagicMock(),self.api,'forum-report','Forum report')
+        snapshot={'schema':2,'gsu':'0.41.5','python':[3,14],'architecture':'aarch64',
+                  'available_percent':{'RAM':55.2,'Flash':None},'temperature_c':48.0,
+                  'crash_classes':['TypeError']}
+        raw=json.dumps(snapshot)
+        report.done(raw)
+        shown=report['file_info'].getText()
+        self.assertIn('3.14',shown)
+        self.assertIn('55.2 %',shown)
+        self.assertIn('48.0 °C',shown)
+        self.assertIn('TypeError',shown)
+        self.assertEqual(report.preview,raw)
+        self.assertNotIn('"available_percent"',shown)
+        raw_unknown=json.dumps(dict(snapshot,extra='not hidden'))
+        report.done(raw_unknown)
+        self.assertEqual(report['file_info'].getText(),raw_unknown)
+
+    def test_transponder_preview_separates_tv_and_radio_without_mutation(self):
+        rows=[('tv','ref1','TV station'),('radio','ref2','Radio station')]
+        expected=list(rows)
+        value=mod('warder_services').display(rows,str)
+        self.assertIn('TV  ·  1',value)
+        self.assertIn('Radio  ·  1',value)
+        self.assertIn('Radio station',value)
+        self.assertEqual(rows,expected)
+        self.assertEqual(mod('warder_services').display([],str),'Unavailable')
