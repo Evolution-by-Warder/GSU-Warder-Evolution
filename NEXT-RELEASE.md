@@ -1,3 +1,9 @@
+# 26.11.2026 — Owner receiver feedback: simultaneous signal history
+
+Previous exact HEAD `eec3b5bb2617d997035a25a22fcf1edb126c7e72` all four workflow families SUCCESS (OpenATV 45812773440, OpenPLi 45812773622, architectures 45812773545, reproducibility 45812773433). Owner screenshots show single-plot SNR/AGC selection and request the same one-page design as live system monitoring. New signal dashboard uses shared six-card layout: five actual SNR%, AGC%, SNR dB, BER and LOCK plots, min/max/average and sixth lock-loss/current-lock summary. All five read one shared history snapshot and existing sampler, no new frontend allocations or tuning, no directional switching; 1/2/5-second intervals, pause/resume, CSV of all five metrics retained. Export confirmation uses shared information view. Unknown values remain unknown; fractional averages of BER/LOCK no longer truncated. Existing strings, no new locale keys. Added layout, real data, summary, export and no-selection regression. Fresh exact-head CI and physical retest pending. No release or feed change.
+
+---
+
 # 26.11.2026 — Native process table in right-hand centre panel
 
 Predecessor `62f37297312f713a657105d38aa9e3193e518fab` passed OpenATV, OpenPLi and reproducibility; architecture job still running at inspection. Replaced the compact process text preview with five aligned native columns (PID, name, state, measured RAM MiB, CPU %), actual values and unknown markers. Same data-to-row renderer as full detail; left/right pages the compact table while up/down retains navigation in the left menu. Blue opens existing full detail with CPU/RAM sorting, yellow refreshes. Table hidden and data cleared when leaving route, refreshing or replacing result; existing cancellation/stale callback gates retained. Added actual data, pagination and visibility regression. No production change; exact-head CI and physical retest required.

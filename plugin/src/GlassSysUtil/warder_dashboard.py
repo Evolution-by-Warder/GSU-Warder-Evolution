@@ -44,7 +44,7 @@ def skin(width, height, mode):
         label(name,x,y,w,h,points,color,halign=align,valign='center',noWrap='1')
     element('eLabel',1392,25,2,84,backgroundColor=style.CYAN,zPosition='1')
     element('eLabel',1664,25,2,84,backgroundColor=style.CYAN,zPosition='1')
-    label('heading', 92, 181, 1340 if mode=='multichart' else 1700, 72, 40, style.CYAN, valign='center',noWrap='1')
+    label('heading', 92, 181, 1340 if mode in ('multichart','signal-multichart') else 1700, 72, 40, style.CYAN, valign='center',noWrap='1')
     element('eLabel', 92, 263, 1734, 2, backgroundColor='#00314b65', zPosition='3')
     if mode == 'menu':
         # Separate navigation and result surfaces. Native ScrollLabel's parent
@@ -96,13 +96,20 @@ def skin(width, height, mode):
                 label('sub%d'%index,x+24,y+162,505,38,22,'#00bcd2df',noWrap='1')
         element('eLabel',92,755,1734,178,backgroundColor='#00172539',zPosition='-1')
         label('summary', 116, 775, 1680, 135, 29, style.CYAN)
-    elif mode == 'multichart':
-        # Six bounded plots share one sampler and the same 60-second time axis.
+    elif mode in ('multichart','signal-multichart'):
+        # Six cards share one sampler and the same 60-second time axis.
         label('window',1470,190,350,60,25,'#00bcd2df',halign='right',noWrap='1',valign='center')
         for i in range(6):
             x,y=92+(i%3)*586,290+(i//3)*324
             element('eLabel',x,y,558,308,backgroundColor='#00172539',zPosition='-1')
             element('eLabel',x,y,558,3,backgroundColor=style.CYAN,zPosition='1')
+            if mode=='signal-multichart' and i==5:
+                label('signal_summary_title',x+18,y+12,520,50,27,'#00bcd2df',noWrap='1',valign='center')
+                label('signal_loss_count',x+18,y+72,520,92,60,style.CYAN,halign='center',valign='center',noWrap='1')
+                element('eLabel',x+18,y+172,520,2,backgroundColor='#00314b65',zPosition='1')
+                label('signal_lock_state',x+18,y+183,520,50,30,'#00ffffff',halign='center',valign='center',noWrap='1')
+                label('signal_summary_note',x+18,y+240,520,55,25,'#00bcd2df',halign='center',valign='center')
+                continue
             label('metric_name%d'%i,x+18,y+12,288,58,28,'#00bcd2df',noWrap='1',valign='center')
             label('metric_value%d'%i,x+322,y+12,216,58,34,'#00ffffff',halign='right',noWrap='1',valign='center')
             element('widget',x+96,y+87,440,140,source='plot%d'%i,render='Canvas',zPosition='3')

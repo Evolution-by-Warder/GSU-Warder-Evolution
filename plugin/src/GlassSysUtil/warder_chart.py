@@ -71,31 +71,33 @@ def draw_trend(canvas,samples,key,width,height,bound=None,interval=2):
 class LiveChart(Screen):
     def __init__(self, session, api, signal=False):
         self.width, self.height = dimensions(api)
-        self.skin = skin(self.width, self.height, 'chart' if signal else 'multichart')
+        self.skin = skin(self.width, self.height, 'signal-multichart' if signal else 'multichart')
         Screen.__init__(self, session)
         self.api, self.signal = api, signal
         install_header(self,api)
         self.source = SignalMonitor(session.nav) if signal else Sampler()
         self.metrics = SIGNAL if signal else SYSTEM
-        self.index = 0
         self.interval = 2
         self.closed = self.paused = self.pending = False
-        self['history'] = CanvasSource()
         for name, key in [('heading', 'Signal history' if signal else 'Live monitoring'),
-                          ('metric', ''), ('details', ''), ('axis_top',''), ('axis_bottom',''), ('axis_start','−60 s'), ('axis_end','0 s'), ('red', 'Back'), ('green', 'Pause'),
-                          ('yellow', 'Interval'), ('blue', 'Export CSV' if signal else '')]:
+                          ('red', 'Back'), ('green', 'Pause'), ('yellow', 'Interval'),
+                          ('blue', 'Export CSV' if signal else '')]:
             self[name] = Label(self.tr(key))
-        if not signal:
-            self['window']=Label('−60 s → 0 s')
-            for i,(_,caption,unit) in enumerate(SYSTEM):
-                self['plot%d'%i]=CanvasSource()
-                self['metric_name%d'%i]=Label(self.tr(caption))
-                self['metric_value%d'%i]=Label('— '+unit)
-                self['plot_top%d'%i]=Label('—')
-                self['plot_bottom%d'%i]=Label('—')
-                for k,name in enumerate(('Minimum','Maximum','Average')):
-                    self['stat_name%d_%d'%(i,k)]=Label(self.tr(name))
-                    self['stat_value%d_%d'%(i,k)]=Label('—')
+        self['window']=Label('−60 s → 0 s')
+        for i,(key,caption,unit) in enumerate(self.metrics):
+            self['plot%d'%i]=CanvasSource()
+            self['metric_name%d'%i]=Label(self.tr(caption)+(' · '+unit if key in ('snr','db') else ''))
+            self['metric_value%d'%i]=Label('— '+unit if unit else '—')
+            self['plot_top%d'%i]=Label('—')
+            self['plot_bottom%d'%i]=Label('—')
+            for k,name in enumerate(('Minimum','Maximum','Average')):
+                self['stat_name%d_%d'%(i,k)]=Label(self.tr(name))
+                self['stat_value%d_%d'%(i,k)]=Label('—')
+        if signal:
+            self['signal_summary_title']=Label(self.tr('Lock losses'))
+            self['signal_loss_count']=Label('—')
+            self['signal_lock_state']=Label('—')
+            self['signal_summary_note']=Label('—')
         self.timer = api['eTimer']()
         sig = getattr(self.timer, 'timeout', None)
         if hasattr(sig, 'connect'):
@@ -105,9 +107,7 @@ class LiveChart(Screen):
         else:
             self.timer.callback.append(self.tick)
         self['actions'] = ActionMap(['DirectionActions', 'ColorActions', 'SetupActions'],
-            {'left': lambda: self.move(-1), 'right': lambda: self.move(1),
-             'up': lambda: self.move(-1), 'down': lambda: self.move(1),
-             'green': self.pause, 'ok': self.pause, 'yellow': self.change_interval,
+            {'green': self.pause, 'ok': self.pause, 'yellow': self.change_interval,
              'blue': self.export_or_next, 'red': self.close, 'cancel': self.close}, -2)
         self.onLayoutFinish.append(self.render)
         self.onLayoutFinish.append(self.tick)
@@ -147,44 +147,32 @@ class LiveChart(Screen):
             return
         samples = self.source.history.snapshot()
         self['yellow'].setText('%s · %d s' % (self.tr('Interval'),self.interval))
-        if not self.signal:
-            self.render_all(samples)
-            return
-        key, label, unit = self.metrics[self.index]
-        current = samples[-1][1].get(key) if samples else None
-        self['metric'].setText('‹  %s    %s %s  ›' % (self.tr(label), display(current, key), unit))
-        low, high, mean = statistics(samples, key)
-        stats = '%s  %s     %s  %s     %s  %s' % (self.tr('Minimum'), display(low, key),
-                   self.tr('Maximum'), display(high, key), self.tr('Average'), display(mean, key))
-        if key=='temp' and samples and samples[-1][1].get('temp_age') is not None:
-            stats += '     ·     Δt  %.0f s' % samples[-1][1]['temp_age']
-        if self.signal:
-            losses=lock_losses(samples)
-            stats += '\n%s  %d' % (self.tr('Lock losses'),losses)
-            if losses:
-                stats += '   ·   '+self.tr('Unstable reception')
-            elif samples and samples[-1][1].get('lock')==0:
-                stats += '   ·   '+self.tr('No signal lock')
-        self['details'].setText(stats)
-        self['yellow'].setText('%s · %d s' % (self.tr('Interval'), self.interval))
-        bound=100 if unit=='%' else 1 if key=='lock' else None
-        low_axis,high_axis=chart_scale(samples,key,bound)
-        self['axis_top'].setText(display(high_axis,key))
-        self['axis_bottom'].setText(display(low_axis,key))
-        draw(self['history'],samples,key,round(1600*self.width/1920),round(298*self.height/1080),bound)
+        self.render_all(samples)
 
     def render_all(self,samples):
-        for i,(key,caption,unit) in enumerate(SYSTEM):
+        for i,(key,caption,unit) in enumerate(self.metrics):
             current=samples[-1][1].get(key) if samples else None
-            self['metric_value%d'%i].setText('%s %s'%(display(current,key),unit))
-            bound=100 if unit=='%' else None
+            self['metric_value%d'%i].setText((display(current,key)+' '+unit).rstrip())
+            bound=100 if unit=='%' else 1 if key=='lock' else None
             low_axis,high_axis=chart_scale(samples,key,bound)
             self['plot_top%d'%i].setText(display(high_axis,key))
             self['plot_bottom%d'%i].setText(display(low_axis,key))
             for k,value in enumerate(statistics(samples,key)):
-                self['stat_value%d_%d'%(i,k)].setText(display(value,key))
+                # An average of binary lock or integer errors is not necessarily integer.
+                shown='%.1f'%value if k==2 and key in ('lock','ber') and value is not None else display(value,key)
+                self['stat_value%d_%d'%(i,k)].setText(shown)
             draw_trend(self['plot%d'%i],samples,key,round(440*self.width/1920),
                        round(140*self.height/1080),bound,self.interval)
+        if self.signal:
+            valid=any(v.get('lock') is not None for _,v in samples)
+            latest=samples[-1][1].get('lock') if samples else None
+            losses=lock_losses(samples)
+            self['signal_loss_count'].setText(str(losses) if valid else '—')
+            self['signal_lock_state'].setText('LOCK   '+display(latest,'lock'))
+            if latest==0:note=self.tr('No signal lock')
+            elif losses:note=self.tr('Unstable reception')
+            else:note='—'
+            self['signal_summary_note'].setText(note)
 
     def pause(self):
         self.paused = not self.paused
@@ -195,11 +183,6 @@ class LiveChart(Screen):
                 self.source.reset()
             self.tick()
 
-    def move(self, amount):
-        if not self.signal:return
-        self.index = (self.index+amount) % len(self.metrics)
-        self.render()
-
     def change_interval(self):
         choices = (1, 2, 5)
         self.interval = choices[(choices.index(self.interval)+1) % len(choices)]
@@ -209,12 +192,12 @@ class LiveChart(Screen):
 
     def export_or_next(self):
         if not self.signal:return
-        from Screens.MessageBox import MessageBox
+        from .warder_dialog import show_info
         try:
             message = export(self.source.history.snapshot())
         except OSError:
             message = self.tr('Unavailable')
-        self.session.open(MessageBox, message, type=MessageBox.TYPE_INFO)
+        show_info(self.session,self.api,message,self.tr('Export CSV'))
 
     def cleanup(self):
         self.closed = True

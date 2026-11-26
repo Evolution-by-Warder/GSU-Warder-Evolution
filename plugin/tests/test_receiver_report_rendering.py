@@ -211,7 +211,7 @@ class ReceiverRenderingTests(unittest.TestCase):
     def test_new_modes_fit_all_resolutions_and_keep_native_backings_behind_content(self):
         view=mod('warder_dashboard')
         for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
-            for mode in ('menu','overview','chart','multichart','detail','process','categories','network'):
+            for mode in ('menu','overview','chart','multichart','signal-multichart','detail','process','categories','network'):
                 root=ET.fromstring(view.skin(w,h,mode))
                 names=[n.get('name') for n in root if n.get('name')]
                 self.assertEqual(len(names),len(set(names)),mode)
@@ -368,6 +368,42 @@ class ReceiverRenderingTests(unittest.TestCase):
         screen.render()
         self.assertEqual(screen['metric_value0'].getText(),'— %')
         self.assertEqual(screen['stat_value0_0'].getText(),'—')
+
+    def test_signal_dashboard_displays_five_simultaneous_plots_and_lock_losses(self):
+        chart=mod('warder_chart')
+        screen=chart.LiveChart(MagicMock(),self.api,True)
+        screen.source=MagicMock()
+        samples=[(10,{'snr':70,'agc':88,'db':10.7,'ber':0,'lock':1}),
+                 (12,{'snr':68,'agc':87,'db':10.1,'ber':3,'lock':0}),
+                 (14,{'snr':71,'agc':88,'db':10.8,'ber':1,'lock':1})]
+        screen.source.history.snapshot.return_value=samples
+        with patch.object(chart,'draw_trend') as draw:
+            screen.render()
+            self.assertEqual(draw.call_count,5)
+            self.assertEqual([call.args[2] for call in draw.call_args_list],[key for key,_,_ in chart.SIGNAL])
+        self.assertEqual(screen.source.history.snapshot.call_count,1)
+        self.assertEqual([screen['metric_value%d'%i].getText() for i in range(5)],
+                         ['71.0 %','88.0 %','10.8 dB','1','1'])
+        self.assertEqual(screen['signal_loss_count'].getText(),'1')
+        self.assertEqual(screen['signal_lock_state'].getText(),'LOCK   1')
+        self.assertEqual(screen['stat_value4_2'].getText(),'0.7')
+        self.assertEqual(screen['signal_summary_note'].getText(),screen.tr('Unstable reception'))
+        self.assertNotIn('right',screen['actions'].actions)
+        with patch.object(chart,'export',return_value='/tmp/signal.csv') as save:
+            screen.export_or_next()
+            save.assert_called_once_with(samples)
+            screen.session.open.assert_called_once_with(mod('warder_dialog').InformationDialog,
+                self.api,'/tmp/signal.csv',screen.tr('Export CSV'))
+        screen.source.history.snapshot.return_value=[]
+        screen.render()
+        self.assertEqual(screen['signal_loss_count'].getText(),'—')
+        self.assertEqual(screen['metric_value4'].getText(),'—')
+        for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160),(1920,1200)):
+            root=ET.fromstring(mod('warder_dashboard').skin(w,h,'signal-multichart'))
+            self.assertEqual(len(root.findall("widget[@render='Canvas']")),5)
+            for node in root:
+                name=node.get('name') or node.get('source')
+                if name:self.assertIn(name,screen)
 
     def test_trends_do_not_connect_missing_or_old_samples(self):
         chart=mod('warder_chart')
