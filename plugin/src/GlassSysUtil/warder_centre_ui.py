@@ -481,6 +481,9 @@ def open_legacy_child(session,api,key):
     elif key=='6':
         from .warder_ecm import open_history
         return open_history(session,api)
+    elif key in ('8','9'):
+        from .warder_right import open_management
+        return open_management(session,api,'osd' if key=='8' else 'swap')
     elif key=='16':
         from .warder_projects import PROJECTS
         return session.open(ProjectReport,api,next(p for p in PROJECTS if p[0]=='GSU'))

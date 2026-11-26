@@ -100,7 +100,13 @@
     "Installed plugin packages": "Installed plugin packages",
     "Memory details": "Memory details",
     "Disk activity": "Disk activity",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Priority",
+    "Duplex": "Duplex",
+    "Detected": "Detected",
+    "Not detected": "Not detected",
+    "No active link detected": "No active link detected",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested."
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -203,7 +209,13 @@
     "Installed plugin packages": "Nainštalované balíky pluginov",
     "Memory details": "Podrobnosti pamäte",
     "Disk activity": "Aktivita diskov",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Priorita",
+    "Duplex": "Duplex",
+    "Detected": "Zistené",
+    "Not detected": "Nezistené",
+    "No active link detected": "Aktívne spojenie nezistené",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Táto kontrola iba číta údaje. Prístup na internet, integrita disku a dekódovanie CAM sa netestujú."
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -306,7 +318,13 @@
     "Installed plugin packages": "Nainstalované balíčky pluginů",
     "Memory details": "Podrobnosti paměti",
     "Disk activity": "Aktivita disků",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Priorita",
+    "Duplex": "Duplex",
+    "Detected": "Zjištěno",
+    "Not detected": "Nezjištěno",
+    "No active link detected": "Aktivní spojení nezjištěno",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Tato kontrola pouze čte data. Přístup k internetu, integrita disku a dekódování CAM se netestují."
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -409,7 +427,13 @@
     "Installed plugin packages": "Installierte Plugin-Pakete",
     "Memory details": "Speicherdetails",
     "Disk activity": "Datenträgeraktivität",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Priorität",
+    "Duplex": "Duplex",
+    "Detected": "Erkannt",
+    "Not detected": "Nicht erkannt",
+    "No active link detected": "Keine aktive Verbindung erkannt",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Diese Prüfung ist schreibgeschützt. Internetzugang, Datenträgerintegrität und CAM-Dekodierung werden nicht geprüft."
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -512,7 +536,13 @@
     "Installed plugin packages": "Zainstalowane pakiety wtyczek",
     "Memory details": "Szczegóły pamięci",
     "Disk activity": "Aktywność dysków",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Priorytet",
+    "Duplex": "Dupleks",
+    "Detected": "Wykryto",
+    "Not detected": "Nie wykryto",
+    "No active link detected": "Nie wykryto aktywnego połączenia",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Ta kontrola jest tylko do odczytu. Dostęp do internetu, integralność dysku i dekodowanie CAM nie są testowane."
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -615,7 +645,13 @@
     "Installed plugin packages": "Telepített bővítménycsomagok",
     "Memory details": "Memóriaadatok",
     "Disk activity": "Lemezaktivitás",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Prioritás",
+    "Duplex": "Duplex",
+    "Detected": "Észlelve",
+    "Not detected": "Nem észlelhető",
+    "No active link detected": "Nincs észlelt aktív kapcsolat",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Ez csak olvasási ellenőrzés. Az internetelérés, a lemez épsége és a CAM dekódolása nincs tesztelve."
   },
   "ru": {
     "System centre": "Системный центр",
@@ -718,7 +754,13 @@
     "Installed plugin packages": "Установленные пакеты плагинов",
     "Memory details": "Сведения о памяти",
     "Disk activity": "Активность дисков",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Приоритет",
+    "Duplex": "Дуплекс",
+    "Detected": "Обнаружено",
+    "Not detected": "Не обнаружено",
+    "No active link detected": "Активное соединение не обнаружено",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Проверка выполняется только для чтения. Доступ в интернет, целостность диска и декодирование CAM не проверяются."
   },
   "fr": {
     "System centre": "Centre système",
@@ -821,7 +863,13 @@
     "Installed plugin packages": "Paquets de plugins installés",
     "Memory details": "Détails de la mémoire",
     "Disk activity": "Activité des disques",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Priorité",
+    "Duplex": "Duplex",
+    "Detected": "Détecté",
+    "Not detected": "Non détecté",
+    "No active link detected": "Aucune liaison active détectée",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Ce contrôle est en lecture seule. L’accès à Internet, l’intégrité du disque et le décodage CAM ne sont pas testés."
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -924,7 +972,13 @@
     "Installed plugin packages": "Pacchetti plugin installati",
     "Memory details": "Dettagli memoria",
     "Disk activity": "Attività disco",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Priorità",
+    "Duplex": "Duplex",
+    "Detected": "Rilevato",
+    "Not detected": "Non rilevato",
+    "No active link detected": "Nessun collegamento attivo rilevato",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Questo controllo è in sola lettura. Accesso a Internet, integrità del disco e decodifica CAM non vengono verificati."
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -1027,7 +1081,13 @@
     "Installed plugin packages": "Paquetes de plugins instalados",
     "Memory details": "Detalles de memoria",
     "Disk activity": "Actividad de discos",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Prioridad",
+    "Duplex": "Dúplex",
+    "Detected": "Detectado",
+    "Not detected": "No detectado",
+    "No active link detected": "No se detectó un enlace activo",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Esta comprobación es de solo lectura. No se prueban el acceso a Internet, la integridad del disco ni la decodificación CAM."
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -1130,7 +1190,13 @@
     "Installed plugin packages": "Paketat e shtojcave të instaluara",
     "Memory details": "Detajet e memories",
     "Disk activity": "Aktiviteti i disqeve",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Përparësia",
+    "Duplex": "Dupleks",
+    "Detected": "U zbulua",
+    "Not detected": "Nuk u zbulua",
+    "No active link detected": "Nuk u zbulua lidhje aktive",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Ky kontroll është vetëm për lexim. Qasja në internet, integriteti i diskut dhe dekodimi CAM nuk testohen."
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -1233,7 +1299,13 @@
     "Installed plugin packages": "Εγκατεστημένα πακέτα προσθέτων",
     "Memory details": "Λεπτομέρειες μνήμης",
     "Disk activity": "Δραστηριότητα δίσκων",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Προτεραιότητα",
+    "Duplex": "Αμφίδρομη λειτουργία",
+    "Detected": "Εντοπίστηκε",
+    "Not detected": "Δεν εντοπίστηκε",
+    "No active link detected": "Δεν εντοπίστηκε ενεργή σύνδεση",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Ο έλεγχος είναι μόνο για ανάγνωση. Δεν ελέγχονται η πρόσβαση στο διαδίκτυο, η ακεραιότητα του δίσκου και η αποκωδικοποίηση CAM."
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -1336,7 +1408,13 @@
     "Installed plugin packages": "Paigaldatud pluginate paketid",
     "Memory details": "Mälu üksikasjad",
     "Disk activity": "Ketta aktiivsus",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Prioriteet",
+    "Duplex": "Dupleks",
+    "Detected": "Tuvastatud",
+    "Not detected": "Ei tuvastatud",
+    "No active link detected": "Aktiivset ühendust ei tuvastatud",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "See kontroll on kirjutuskaitstud. Internetiühendust, ketta terviklust ja CAM-dekodeerimist ei testita."
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -1439,7 +1517,13 @@
     "Installed plugin packages": "بسته‌های افزونه نصب‌شده",
     "Memory details": "جزئیات حافظه",
     "Disk activity": "فعالیت دیسک",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "اولویت",
+    "Duplex": "دوسویه",
+    "Detected": "شناسایی شد",
+    "Not detected": "شناسایی نشد",
+    "No active link detected": "اتصال فعالی شناسایی نشد",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "این بررسی فقط خواندنی است. دسترسی به اینترنت، یکپارچگی دیسک و رمزگشایی CAM آزمایش نمی‌شوند."
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -1542,7 +1626,13 @@
     "Installed plugin packages": "Įdiegti įskiepių paketai",
     "Memory details": "Atminties informacija",
     "Disk activity": "Diskų aktyvumas",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Prioritetas",
+    "Duplex": "Dvipusis ryšys",
+    "Detected": "Aptikta",
+    "Not detected": "Neaptikta",
+    "No active link detected": "Aktyvus ryšys neaptiktas",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Ši patikra skirta tik skaityti. Interneto prieiga, disko vientisumas ir CAM dekodavimas netikrinami."
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -1645,7 +1735,13 @@
     "Installed plugin packages": "Geïnstalleerde pluginpakketten",
     "Memory details": "Geheugendetails",
     "Disk activity": "Schijfactiviteit",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Prioriteit",
+    "Duplex": "Duplex",
+    "Detected": "Gedetecteerd",
+    "Not detected": "Niet gedetecteerd",
+    "No active link detected": "Geen actieve verbinding gedetecteerd",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Deze controle is alleen-lezen. Internettoegang, schijfintegriteit en CAM-decodering worden niet getest."
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -1748,7 +1844,13 @@
     "Installed plugin packages": "Pacotes de plugins instalados",
     "Memory details": "Detalhes da memória",
     "Disk activity": "Atividade dos discos",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Prioridade",
+    "Duplex": "Duplex",
+    "Detected": "Detetado",
+    "Not detected": "Não detetado",
+    "No active link detected": "Nenhuma ligação ativa detetada",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Esta verificação é apenas de leitura. O acesso à Internet, a integridade do disco e a descodificação CAM não são testados."
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -1851,7 +1953,13 @@
     "Installed plugin packages": "Pachete de pluginuri instalate",
     "Memory details": "Detalii memorie",
     "Disk activity": "Activitate discuri",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Prioritate",
+    "Duplex": "Duplex",
+    "Detected": "Detectat",
+    "Not detected": "Nedetectat",
+    "No active link detected": "Nicio conexiune activă detectată",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Această verificare este doar pentru citire. Accesul la internet, integritatea discului și decodarea CAM nu sunt testate."
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -1954,7 +2062,13 @@
     "Installed plugin packages": "Kurulu eklenti paketleri",
     "Memory details": "Bellek ayrıntıları",
     "Disk activity": "Disk etkinliği",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Öncelik",
+    "Duplex": "Dupleks",
+    "Detected": "Algılandı",
+    "Not detected": "Algılanmadı",
+    "No active link detected": "Etkin bağlantı algılanmadı",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Bu kontrol salt okunurdur. İnternet erişimi, disk bütünlüğü ve CAM kod çözme işlemi test edilmez."
   },
   "uk": {
     "System centre": "Системний центр",
@@ -2057,7 +2171,13 @@
     "Installed plugin packages": "Встановлені пакети плагінів",
     "Memory details": "Відомості про пам’ять",
     "Disk activity": "Активність дисків",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "Пріоритет",
+    "Duplex": "Дуплекс",
+    "Detected": "Виявлено",
+    "Not detected": "Не виявлено",
+    "No active link detected": "Активне з’єднання не виявлено",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Перевірка лише для читання. Доступ до інтернету, цілісність диска та декодування CAM не перевіряються."
   },
   "zh": {
     "System centre": "系统中心",
@@ -2160,6 +2280,12 @@
     "Installed plugin packages": "已安装的插件软件包",
     "Memory details": "内存详情",
     "Disk activity": "磁盘活动",
-    "Smart Diagnostics": "Smart Diagnostics"
+    "Smart Diagnostics": "Smart Diagnostics",
+    "Priority": "优先级",
+    "Duplex": "双工",
+    "Detected": "已检测到",
+    "Not detected": "未检测到",
+    "No active link detected": "未检测到活动连接",
+    "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "此检查为只读操作。不测试互联网访问、磁盘完整性或 CAM 解码。"
   }
 }

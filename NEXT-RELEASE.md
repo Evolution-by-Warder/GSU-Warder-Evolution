@@ -1,3 +1,9 @@
+# 26.11.2026 — Native management child presentation and catalogue parity
+
+Previous exact HEAD `63e3e30c1eaa4ce00404dc4531dc668fab7e0238`: OpenATV/OpenPLi/package SUCCESS; architecture check running at initial inspection. SWAP management, creation and OSD ECM configuration now open as branded full-screen child views when selected in their owning centre. Native controllers, config settings, callbacks, busy guard, confirmation, and swap operations unchanged; geometry and header only. Shared table columns in the SWAP view and renderer, original legacy main workspace unaffected. This is child-screen integration, not full inline editing. Added missing local diagnostic labels and read-only disclaimer across all 21 centre catalogues; explicit parity/placeholder regression. Added five-resolution layout and callback/row identity coverage. Further physical verification required. Optional PSS, DNS-specific test, saved TP comparison and advanced inline editing remain documented as unimplemented rather than silently duplicating collectors. No publication.
+
+---
+
 # 26.11.2026 — Extend existing SMART and service observations
 
 Previous HEAD `9f5a959effe5f6ed68e9aba23c714d4725634246`: OpenATV/OpenPLi SUCCESS, package and architectures in progress at inspection. Existing SMART command now optionally returns allowlisted numerical ATA/NVMe counters; storage report reuses a single result per physical device, at most four, preserving the previous summary API. No serials/WWN, extra commands, self-tests or forced wakeups. Missing data explicitly unknown. Existing daemon observation optionally includes SSH (dropbear/sshd) for network view while original five-service summary remains unchanged. ECM current time no longer displays an old measurement after the history window empties. Regression covers unit/metadata privacy, shared command, partition normalization and SSH detection; new exact-head CI and physical check pending. No release changes.

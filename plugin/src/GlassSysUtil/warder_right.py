@@ -363,3 +363,82 @@ class UpdateInfo(Screen):
     def title(self):self.setTitle(_update_display(self.api,'Update'))
     def install(self):
         if self.release is not None and self.checker is not None:self.checker.answer(self.release,True)
+
+
+# Child management views use the same Warder diagnostic frame as their centre.
+# Only geometry and header change; native config and SwapStore controllers stay intact.
+SWAP_COLUMNS=((0,842),(858,176),(1050,208),(1274,208),(1498,164))
+
+
+def management_skin(width,height,kind,tr):
+    from .warder_dashboard import skin
+    root=ET.fromstring(skin(width,height,'detail'))
+    for node in list(root):
+        if node.get('name') in ('file_info','report_status'):root.remove(node)
+    sx,sy=width/1920,height/1080
+    def add(tag,x,y,w,h,**attrs):
+        return ET.SubElement(root,tag,position='%d,%d'%(round(x*sx),round(y*sy)),
+            size='%d,%d'%(round(w*sx),round(h*sy)),**attrs)
+    for x,y,w,h in ((92,286,1734,2),(92,934,1734,2),(92,288,2,646),(1824,288,2,646)):
+        add('eLabel',x,y,w,h,backgroundColor=main.CYAN,zPosition='1')
+    if kind=='swap':
+        for (offset,span),key in zip(SWAP_COLUMNS,('Name','Type','Size','Used:','Priority')):
+            add('eLabel',116+offset,306,span,48,text=tr(key),font='Regular;%d'%round(27*sy),
+                foregroundColor=main.CYAN,backgroundColor=main.PANEL,transparent='1',zPosition='3')
+        row=max(1,round(48*sy))
+        node=add('widget',116,364,1680,542,name='list',scrollbarMode='showOnDemand',
+                 backgroundColor=main.PANEL,foregroundColor='#00ffffff',backgroundColorSelected=main.SELECTION,
+                 foregroundColorSelected='#00ffffff',zPosition='3',itemHeight=str(row))
+        w,h=map(int,node.get('size').split(','));node.set('size','%d,%d'%(w,h//row*row))
+    else:
+        row=max(1,round(52*sy))
+        node=add('widget',108,306,1698,532,name='config',scrollbarMode='showOnDemand',
+                 font='Regular;%d'%round(28*sy),itemHeight=str(row),
+                 backgroundColor=main.PANEL,foregroundColor='#00ffffff',
+                 backgroundColorSelected=main.SELECTION,foregroundColorSelected='#00ffffff',zPosition='3')
+        w,h=map(int,node.get('size').split(','));node.set('size','%d,%d'%(w,h//row*row))
+        if kind=='osd':
+            add('widget',116,850,1680,65,name='info',font='Regular;%d'%round(25*sy),
+                foregroundColor='#00bcd2df',backgroundColor=main.PANEL,transparent='1',
+                halign='center',valign='center',zPosition='3')
+    return ET.tostring(root,encoding='unicode')
+
+
+def management_class(api,kind):
+    from .warder_dashboard import dimensions,install_header
+    from .i18n import for_api
+    original=api.get({'swap':'swap_manager','create':'SwapCreate','osd':'OSD_ECM_Menu'}[kind])
+    if not isinstance(original,type):return original
+    title={'swap':'Swap Management','create':'Create','osd':'OSD ECM Information'}[kind]
+    class WarderManagement(original):
+        def __init__(self,session):
+            super().__init__(session)
+            width,height=dimensions(api)
+            if width<1280 or height<720:return
+            self.skin=management_skin(width,height,kind,lambda key:for_api(api,key))
+            self.skinName=['WarderManagement'+kind.title()]
+            self.parsedSkin=None
+            self['heading']=api['Label'](for_api(api,title))
+            for name in ('red','green','yellow','blue'):
+                if name not in self:self[name]=api['Label']('')
+            install_header(self,api)
+            if kind=='swap':
+                sx,sy=width/1920,height/1080
+                row=max(1,round(48*sy))
+                self._warder_swap_geometry=(tuple((round(x*sx),round(w*sx)) for x,w in SWAP_COLUMNS),row)
+                self['list'].l.setFont(0,api['gFont']('Regular',round(26*sy)))
+                self['list'].l.setItemHeight(row)
+        def setTitle(self,value,*args,**kwargs):
+            result=super().setTitle(value,*args,**kwargs)
+            if 'heading' in self:self['heading'].setText(value)
+            return result
+        def add(self):
+            if kind!='swap':return super().add()
+            if not self._swap_busy:
+                self.session.openWithCallback(self.readSwapInfo,management_class(api,'create'))
+    return WarderManagement
+
+
+def open_management(session,api,kind):
+    target=management_class(api,kind)
+    if callable(target):return session.open(target)

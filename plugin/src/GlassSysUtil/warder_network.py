@@ -234,8 +234,8 @@ def detail_report(kind,tr,cancelled,probe=None):
                          'IP   '+(', '.join(item['addresses']) or '—'),
                          'MAC   '+(mac or '—'),
                          'Mb/s   '+(str(item['speed']) if item['speed'] is not None else '—'),
-                         'Duplex   '+(duplex or '—'),
-                         'Link   '+(str(carrier) if carrier is not None else '—')))
+                         tr('Duplex')+'   '+(duplex or '—'),
+                         tr('Network link')+'   '+(str(carrier) if carrier is not None else '—')))
             if wifi is not None:
                 rows.append('Wi-Fi   LQ %.0f   RSSI %.0f   Noise %.0f'%wifi)
             rows.append('')

@@ -138,14 +138,18 @@ def read_info(screen, api):
         return
     screen.list = []
     scale = api['fhd']
-    columns = ((0, 380), (400, 80), (490, 100), (600, 100), (690, 40))
+    geometry=getattr(screen,'_warder_swap_geometry',None)
+    if geometry is None:
+        columns=tuple((scale(x),scale(w)) for x,w in ((0,380),(400,80),(490,100),(600,100),(690,40)))
+        height=scale(20)
+    else:columns,height=geometry
     if not rows:
         rows = [('No swapfile', '****', '****', '****', '****')]
     for row in rows:
         item = [row[0]]
         for index, (left, width) in enumerate(columns):
             text = api['_']('No swapfile') if row[0] == 'No swapfile' and index == 0 else str(row[index])
-            item.append(api['MultiContentEntryText'](pos=(scale(left), 0), size=(scale(width), scale(20)), font=0, text=text))
+            item.append(api['MultiContentEntryText'](pos=(left, 0), size=(width, height), font=0, text=text))
         screen.list.append(item)
     screen['list'].l.setList(screen.list)
 

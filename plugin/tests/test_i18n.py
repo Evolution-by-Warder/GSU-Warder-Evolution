@@ -27,6 +27,16 @@ class LocalizationTests(unittest.TestCase):
                 self.assertEqual(re.findall(r'%[sdi]',key),re.findall(r'%[sdi]',value),(lang,key))
             if lang!='en':self.assertNotEqual(i18n.translate('System Information',lang),'System Information')
 
+    def test_centre_catalogues_match_all_twenty_one_languages(self):
+        values=json.loads((ROOT/'locale/centres.json').read_text(encoding='utf-8'))
+        self.assertEqual(set(values),set(i18n.LANGUAGES))
+        for lang,catalog in values.items():
+            self.assertEqual(set(catalog),set(values['en']),lang)
+            for key,value in catalog.items():
+                self.assertIsInstance(value,str)
+                self.assertTrue(value.strip(),(lang,key))
+                self.assertEqual(re.findall(r'%[sdi]',key),re.findall(r'%[sdi]',value),(lang,key))
+
     def test_legacy_destructive_operation_warnings_are_translated(self):
         extra=json.loads((ROOT/'locale/legacy-supplement.json').read_text(encoding='utf-8'))
         self.assertEqual(set(extra),set(i18n.LANGUAGES))
