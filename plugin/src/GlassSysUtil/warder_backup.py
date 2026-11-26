@@ -208,11 +208,13 @@ def inventory(directory,probe=None):
     try:directory=checked_dir(directory,p)
     except (OSError,ValueError):return []
     rows=[]
-    with os.scandir(directory) as entries:
-        for index,entry in enumerate(entries):
-            if index>=512:break
-            if NAME.fullmatch(entry.name) and entry.is_file(follow_symlinks=False):
-                rows.append(directory/entry.name)
+    try:
+        with os.scandir(directory) as entries:
+            for index,entry in enumerate(entries):
+                if index>=512:break
+                if NAME.fullmatch(entry.name) and entry.is_file(follow_symlinks=False):
+                    rows.append(directory/entry.name)
+    except OSError:return []
     return sorted(rows,reverse=True)[:50]
 
 

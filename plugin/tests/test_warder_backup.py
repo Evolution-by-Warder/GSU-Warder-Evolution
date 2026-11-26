@@ -1,7 +1,7 @@
 from pathlib import Path
 from types import SimpleNamespace
 from tempfile import TemporaryDirectory
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 import hashlib
 import json
 import unittest
@@ -72,3 +72,19 @@ class BackupTests(unittest.TestCase):
             with patch.object(b,'mounts',return_value=[('/dev/root','/','ext4',False)]):
                 self.assertEqual(b.snapshot(SimpleNamespace(plugins=SimpleNamespace()),('Warder Radio',),p),
                     {'Warder Radio':{'show_main_menu':True,'screensaver_delay':20}})
+
+
+    def test_backup_ui_uses_existing_warder_panels_and_never_writes_on_selection(self):
+        from Plugins.Extensions.GlassSysUtil import warder_backup_ui as ui
+        api=vars(load(ROOT))
+        session=MagicMock()
+        with patch.object(b,'destinations',return_value=[Path('/media/hdd/warder-backups')]),patch.object(b,'snapshot',return_value={'YouTube':{'warderyoutube.max_quality':'720'}}),patch.object(b,'save') as save,patch.object(b,'restore') as restore:
+            menu=ui.BackupMenu(session,api)
+            menu.refresh()
+            self.assertEqual(len(menu['list'].l.list),5)
+            self.assertIn('YouTube',menu['descriptions'].getText())
+            menu.select()
+            self.assertEqual(len(menu.selected),4)
+            save.assert_not_called()
+            restore.assert_not_called()
+            session.openWithCallback.assert_not_called()

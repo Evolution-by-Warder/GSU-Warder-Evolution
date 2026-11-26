@@ -26,6 +26,7 @@ class BackupMenu(Screen):
         self.browsing=False
         self.paths=[]
         self.preview=None
+        self.snapshot={}
         self['list']=api['ListboxSys2']([])
         self['list'].l.setFont(0,api['gFont']('Regular',round(28*self.height/1080)))
         self['list'].l.setItemHeight(round(74*self.height/1080))
@@ -49,6 +50,7 @@ class BackupMenu(Screen):
         current=self.directory()
         self.locations=backup.destinations()
         self.location=self.locations.index(current) if current in self.locations else 0
+        self.snapshot=backup.snapshot(self.api['config'])
         self.render()
 
     def render(self,index=0):
@@ -91,9 +93,9 @@ class BackupMenu(Screen):
                 except (OSError,ValueError,TypeError,RecursionError):rows.append(tr('Invalid backup'))
             else:rows.append(tr('No backups'))
         else:
-            data=backup.snapshot(self.api['config'],self.selected)
+            data=self.snapshot
             for name in backup.PRODUCTS:
-                rows.append(('✓  ' if name in self.selected else '○  ')+name+'  ·  '+str(len(data.get(name,{}))))
+                rows.append(('✓  ' if name in self.selected else '○  ')+name+'  ·  '+str(len(data.get(name,{})) if name in self.selected else 0))
             rows.extend(('',tr('Portable settings only. Passwords and tokens are excluded.'),
                          tr('Open each installed plugin once before backup or restore.')))
         self['descriptions'].setText('\n'.join(rows))
