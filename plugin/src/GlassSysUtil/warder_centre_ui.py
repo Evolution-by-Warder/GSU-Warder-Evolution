@@ -161,6 +161,12 @@ class CentreMenu(Screen):
     def inline_route(self,key):
         return key if key in INLINE_REPORTS and self.enabled.get(key,False) else None
 
+    def collect_inline(self,key,tr,token):
+        if key=='system-overview':
+            from .warder_system_data import dashboard
+            return dashboard(token)
+        return collect_report(key,tr,token)
+
     def cancel_result(self):
         self._result_queued=None
         if self._result_job is not None:self._result_job[1].set()
@@ -217,10 +223,7 @@ class CentreMenu(Screen):
                 finish(None,True)
         else:
             def collect():
-                if key=='system-overview':
-                    from .warder_system_data import dashboard
-                    return dashboard(token)
-                return collect_report(key,tr,token)
+                return self.collect_inline(key,tr,token)
             try:deferToThread(collect).addCallbacks(finish,lambda failure:finish(None,True))
             except (RuntimeError,TypeError,OSError):finish(None,True)
 
@@ -557,10 +560,26 @@ class ProjectMenu(CentreMenu):
         super().render()
         self['heading'].setText(self.tr('Warder Evolution centre'))
 
+    def inline_route(self,key):
+        return key if key in self.projects else None
+
+    def collect_inline(self,key,tr,token):
+        from .warder_projects import report
+        config=self.api['config']
+        locale=language(config.osd.language.value) if config.plugins.GlassSysUtil.par62.value else 'en'
+        return report(tr,locale,token,projects=(self.projects[key],))
+
     def select(self):
         row=self['list'].getCurrent()
         if row and row[0] in self.projects:
-            self.session.open(ProjectReport,self.api,self.projects[row[0]])
+            if self._result_key!=row[0]:self.describe()
+            self.request_result(row[0])
+
+    def full_result(self):
+        key=self._result_key
+        if key in self.projects:
+            self.cancel_result()
+            self.session.open(ProjectReport,self.api,self.projects[key])
 
 
 class ProjectReport(Report):
