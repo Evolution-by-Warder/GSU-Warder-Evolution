@@ -4,7 +4,7 @@ from Components.Label import Label
 from Components.Sources.CanvasSource import CanvasSource
 from twisted.internet.threads import deferToThread
 from .i18n import for_api
-from .warder_dashboard import dimensions, skin
+from .warder_dashboard import dimensions, skin, install_header
 from .warder_screen import Screen
 from .warder_live import Sampler, statistics
 from .warder_signal import SignalMonitor, export, lock_losses
@@ -23,6 +23,11 @@ def display(value, key):
     return str(int(value)) if key in ('lock', 'ber') else '%.1f' % value
 
 
+def chart_scale(samples,key,bound=None):
+    values=[v.get(key) for _,v in samples if v.get(key) is not None]
+    return min([0]+values), bound if bound is not None else max([1]+values)
+
+
 def draw(canvas, samples, key, width, height, bound=None):
     canvas.clear()
     canvas.fill(0, 0, width, height, 0x102136)
@@ -30,8 +35,7 @@ def draw(canvas, samples, key, width, height, bound=None):
         canvas.fill(0, round(fraction*height), width, 1, 0x314b65)
     if samples:
         points = [(stamp, values.get(key)) for stamp, values in samples if values.get(key) is not None]
-        floor = min([0] + [v for _, v in points])
-        ceiling = bound or max([1] + [v for _, v in points])
+        floor,ceiling=chart_scale(samples,key,bound)
         for stamp, value in points:
             x = round((stamp-samples[-1][0]+60) * (width-1)/60)
             bar = max(1, min(height, round((value-floor)/(ceiling-floor)*(height-1))))
@@ -46,6 +50,7 @@ class LiveChart(Screen):
         self.skin = skin(self.width, self.height, 'chart')
         Screen.__init__(self, session)
         self.api, self.signal = api, signal
+        install_header(self,api)
         self.source = SignalMonitor(session.nav) if signal else Sampler()
         self.metrics = SIGNAL if signal else SYSTEM
         self.index = 0
@@ -53,7 +58,7 @@ class LiveChart(Screen):
         self.closed = self.paused = self.pending = False
         self['history'] = CanvasSource()
         for name, key in [('heading', 'Signal history' if signal else 'Live monitoring'),
-                          ('metric', ''), ('details', ''), ('red', 'Back'), ('green', 'Pause'),
+                          ('metric', ''), ('details', ''), ('axis_top',''), ('axis_bottom',''), ('axis_start','−60 s'), ('axis_end','0 s'), ('red', 'Back'), ('green', 'Pause'),
                           ('yellow', 'Interval'), ('blue', 'Export CSV' if signal else 'Details')]:
             self[name] = Label(self.tr(key))
         self.timer = api['eTimer']()
@@ -122,8 +127,11 @@ class LiveChart(Screen):
                 stats += '   ·   '+self.tr('No signal lock')
         self['details'].setText(stats)
         self['yellow'].setText('%s · %d s' % (self.tr('Interval'), self.interval))
-        draw(self['history'], samples, key, round(1730*self.width/1920), round(330*self.height/1080),
-             100 if unit == '%' else 1 if key == 'lock' else None)
+        bound=100 if unit=='%' else 1 if key=='lock' else None
+        low_axis,high_axis=chart_scale(samples,key,bound)
+        self['axis_top'].setText(display(high_axis,key))
+        self['axis_bottom'].setText(display(low_axis,key))
+        draw(self['history'],samples,key,round(1600*self.width/1920),round(298*self.height/1080),bound)
 
     def pause(self):
         self.paused = not self.paused
