@@ -602,6 +602,36 @@ class DiagnosticTests(unittest.TestCase):
         self.assertEqual(projects.report(str,'sk',cancelled,opener),'')
         opener.assert_not_called()
 
+    def test_network_detail_reports_use_local_counters_and_never_access_remote_mounts(self):
+        net=module('warder_network')
+        p=MagicMock()
+        fixtures={'/proc/net/dev':'eth0: 1048576 12 3 4 0 0 0 0 2097152 20 5 6 0 0 0 0',
+                  '/proc/mounts':'//user:secret@host/share /media/net/a cifs rw,username=secret 0 0',
+                  '/proc/net/tcp':'header\n  0: 00000000:0016 00000000:0000 0A\n  1: 00000000:0050 00000000:0000 01',
+                  '/proc/net/udp':'header\n  0: 00000000:0035 00000000:0000 07',
+                  '/sys/class/net/eth0/address':'aa:bb:cc:dd:ee:ff',
+                  '/sys/class/net/eth0/duplex':'full','/sys/class/net/eth0/carrier':'1'}
+        p.text.side_effect=lambda path,*args:fixtures.get(path,'')
+        p.entries.return_value=[]
+        with patch.object(net,'collect',return_value={'interfaces':[{'name':'eth0','state':'up','speed':1000,'addresses':['192.0.2.1']}]}):
+            output=net.detail_report('network-interfaces',str,Event(),p)
+            self.assertIn('aa:bb:cc:dd:ee:ff',output)
+            self.assertIn('192.0.2.1',output)
+        stats=net.detail_report('network-statistics',str,Event(),p)
+        self.assertIn('RX   1.00 MiB',stats)
+        self.assertIn('TX   2.00 MiB',stats)
+        self.assertIn('Errors 3',stats)
+        mounts=net.detail_report('network-mounts',str,Event(),p)
+        self.assertIn('/media/net/a',mounts)
+        self.assertNotIn('secret',mounts)
+        p.usage.assert_not_called()
+        self.assertEqual(net.listening_ports(p),{'tcp':[22],'tcp6':None,'udp':[53],'udp6':None})
+        output=net.detail_report('network-services',str,Event(),p)
+        self.assertIn('TCP   22',output)
+        self.assertNotIn('TCP   80',output)
+        cancel=Event();cancel.set()
+        self.assertEqual(net.detail_report('network-statistics',str,cancel,p),'')
+
     def test_ping_loss_is_distinct_from_unsupported_ping(self):
         net=module('warder_network')
         good=MagicMock(return_value=SimpleNamespace(stdout='3 packets transmitted, 2 received, 33% packet loss\nrtt min/avg/max = 1.0/2.0/3.0 ms'))

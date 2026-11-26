@@ -88,7 +88,14 @@
     "Use this tool to inspect: %s.": "Use this tool to inspect: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.",
-    "A channel backup is created before active tuning; live TV may stop.": "A channel backup is created before active tuning; live TV may stop."
+    "A channel backup is created before active tuning; live TV may stop.": "A channel backup is created before active tuning; live TV may stop.",
+    "Network interfaces": "Network interfaces",
+    "Network statistics": "Network statistics",
+    "Network services": "Network services",
+    "Packets": "Packets",
+    "Errors": "Errors",
+    "Dropped packets": "Dropped packets",
+    "Local ports": "Local ports"
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -179,7 +186,14 @@
     "Use this tool to inspect: %s.": "Pomocou tejto funkcie môžete skontrolovať: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "zaťaženie CPU, využitie RAM a swapu, voľné miesto vo flash a na disku, teplotu a stav zdrojov",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Bežiace procesy s PID, stavom a využitím CPU a pamäte. Zoradenie podľa CPU alebo RAM.",
-    "A channel backup is created before active tuning; live TV may stop.": "Pred aktívnym ladením sa vytvorí záloha staníc; živé vysielanie sa môže prerušiť."
+    "A channel backup is created before active tuning; live TV may stop.": "Pred aktívnym ladením sa vytvorí záloha staníc; živé vysielanie sa môže prerušiť.",
+    "Network interfaces": "Sieťové rozhrania",
+    "Network statistics": "Štatistika siete",
+    "Network services": "Sieťové služby",
+    "Packets": "Pakety",
+    "Errors": "Chyby",
+    "Dropped packets": "Zahodené pakety",
+    "Local ports": "Lokálne porty"
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -270,7 +284,14 @@
     "Use this tool to inspect: %s.": "Pomocí této funkce můžete zkontrolovat: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "zatížení CPU, využití RAM a swapu, volné místo ve flash a na disku, teplotu a stav prostředků",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Běžící procesy s PID, stavem a využitím CPU a paměti. Řazení podle CPU nebo RAM.",
-    "A channel backup is created before active tuning; live TV may stop.": "Před aktivním laděním se vytvoří záloha stanic; živé vysílání se může přerušit."
+    "A channel backup is created before active tuning; live TV may stop.": "Před aktivním laděním se vytvoří záloha stanic; živé vysílání se může přerušit.",
+    "Network interfaces": "Síťová rozhraní",
+    "Network statistics": "Statistika sítě",
+    "Network services": "Síťové služby",
+    "Packets": "Pakety",
+    "Errors": "Chyby",
+    "Dropped packets": "Zahozené pakety",
+    "Local ports": "Místní porty"
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -361,7 +382,14 @@
     "Use this tool to inspect: %s.": "Mit dieser Funktion können Sie Folgendes prüfen: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "CPU-Auslastung, RAM- und Swap-Nutzung, freien Flash- und Plattenspeicher, Temperatur und Ressourcenstatus",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Laufende Prozesse mit PID, Status, CPU- und Speichernutzung. Sortierung nach CPU oder RAM.",
-    "A channel backup is created before active tuning; live TV may stop.": "Vor dem aktiven Suchlauf wird die Senderliste gesichert; Live-TV kann unterbrochen werden."
+    "A channel backup is created before active tuning; live TV may stop.": "Vor dem aktiven Suchlauf wird die Senderliste gesichert; Live-TV kann unterbrochen werden.",
+    "Network interfaces": "Netzwerkschnittstellen",
+    "Network statistics": "Netzwerkstatistik",
+    "Network services": "Netzwerkdienste",
+    "Packets": "Pakete",
+    "Errors": "Fehler",
+    "Dropped packets": "Verworfene Pakete",
+    "Local ports": "Lokale Ports"
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -452,7 +480,14 @@
     "Use this tool to inspect: %s.": "Ta funkcja umożliwia sprawdzenie: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "obciążenie CPU, użycie RAM i swapu, wolne miejsce we flash i na dysku, temperaturę oraz stan zasobów",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Uruchomione procesy z PID, stanem i użyciem CPU oraz pamięci. Sortowanie według CPU lub RAM.",
-    "A channel backup is created before active tuning; live TV may stop.": "Przed strojeniem zostanie utworzona kopia kanałów; telewizja na żywo może zostać przerwana."
+    "A channel backup is created before active tuning; live TV may stop.": "Przed strojeniem zostanie utworzona kopia kanałów; telewizja na żywo może zostać przerwana.",
+    "Network interfaces": "Interfejsy sieciowe",
+    "Network statistics": "Statystyki sieci",
+    "Network services": "Usługi sieciowe",
+    "Packets": "Pakiety",
+    "Errors": "Błędy",
+    "Dropped packets": "Odrzucone pakiety",
+    "Local ports": "Porty lokalne"
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -543,7 +578,14 @@
     "Use this tool to inspect: %s.": "Ezzel a funkcióval ellenőrizhető: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "CPU-terhelés, RAM és swap használata, szabad flash- és lemezterület, hőmérséklet és erőforrásállapot",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Futó folyamatok PID-del, állapottal, CPU- és memóriahasználattal. Rendezés CPU vagy RAM szerint.",
-    "A channel backup is created before active tuning; live TV may stop.": "Aktív hangolás előtt csatornamentés készül; az élő adás megszakadhat."
+    "A channel backup is created before active tuning; live TV may stop.": "Aktív hangolás előtt csatornamentés készül; az élő adás megszakadhat.",
+    "Network interfaces": "Hálózati interfészek",
+    "Network statistics": "Hálózati statisztika",
+    "Network services": "Hálózati szolgáltatások",
+    "Packets": "Csomagok",
+    "Errors": "Hibák",
+    "Dropped packets": "Eldobott csomagok",
+    "Local ports": "Helyi portok"
   },
   "ru": {
     "System centre": "Системный центр",
@@ -634,7 +676,14 @@
     "Use this tool to inspect: %s.": "Эта функция позволяет проверить: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "нагрузку CPU, использование RAM и swap, свободное место во флеш-памяти и на диске, температуру и состояние ресурсов",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Запущенные процессы с PID, состоянием, нагрузкой CPU и памятью. Сортировка по CPU или RAM.",
-    "A channel backup is created before active tuning; live TV may stop.": "Перед активной настройкой создаётся резервная копия каналов; эфир может прерваться."
+    "A channel backup is created before active tuning; live TV may stop.": "Перед активной настройкой создаётся резервная копия каналов; эфир может прерваться.",
+    "Network interfaces": "Сетевые интерфейсы",
+    "Network statistics": "Статистика сети",
+    "Network services": "Сетевые службы",
+    "Packets": "Пакеты",
+    "Errors": "Ошибки",
+    "Dropped packets": "Отброшенные пакеты",
+    "Local ports": "Локальные порты"
   },
   "fr": {
     "System centre": "Centre système",
@@ -725,7 +774,14 @@
     "Use this tool to inspect: %s.": "Cette fonction permet de vérifier : %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "la charge CPU, la RAM et le swap utilisés, l'espace libre en flash et sur disque, la température et l'état des ressources",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Processus actifs avec PID, état et utilisation CPU et mémoire. Tri par CPU ou RAM.",
-    "A channel backup is created before active tuning; live TV may stop.": "Une sauvegarde des chaînes précède la recherche active ; la télévision peut être interrompue."
+    "A channel backup is created before active tuning; live TV may stop.": "Une sauvegarde des chaînes précède la recherche active ; la télévision peut être interrompue.",
+    "Network interfaces": "Interfaces réseau",
+    "Network statistics": "Statistiques réseau",
+    "Network services": "Services réseau",
+    "Packets": "Paquets",
+    "Errors": "Erreurs",
+    "Dropped packets": "Paquets rejetés",
+    "Local ports": "Ports locaux"
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -816,7 +872,14 @@
     "Use this tool to inspect: %s.": "Questa funzione consente di verificare: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "carico CPU, uso di RAM e swap, spazio libero in flash e su disco, temperatura e stato delle risorse",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Processi attivi con PID, stato e utilizzo di CPU e memoria. Ordinamento per CPU o RAM.",
-    "A channel backup is created before active tuning; live TV may stop.": "Prima della sintonia attiva viene salvata la lista dei canali; la TV in diretta può interrompersi."
+    "A channel backup is created before active tuning; live TV may stop.": "Prima della sintonia attiva viene salvata la lista dei canali; la TV in diretta può interrompersi.",
+    "Network interfaces": "Interfacce di rete",
+    "Network statistics": "Statistiche di rete",
+    "Network services": "Servizi di rete",
+    "Packets": "Pacchetti",
+    "Errors": "Errori",
+    "Dropped packets": "Pacchetti scartati",
+    "Local ports": "Porte locali"
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -907,7 +970,14 @@
     "Use this tool to inspect: %s.": "Esta función permite comprobar: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "carga de CPU, uso de RAM y swap, espacio libre en flash y disco, temperatura y estado de los recursos",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Procesos activos con PID, estado y uso de CPU y memoria. Orden por CPU o RAM.",
-    "A channel backup is created before active tuning; live TV may stop.": "Antes de sintonizar se guarda una copia de los canales; la televisión en directo puede interrumpirse."
+    "A channel backup is created before active tuning; live TV may stop.": "Antes de sintonizar se guarda una copia de los canales; la televisión en directo puede interrumpirse.",
+    "Network interfaces": "Interfaces de red",
+    "Network statistics": "Estadísticas de red",
+    "Network services": "Servicios de red",
+    "Packets": "Paquetes",
+    "Errors": "Errores",
+    "Dropped packets": "Paquetes descartados",
+    "Local ports": "Puertos locales"
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -998,7 +1068,14 @@
     "Use this tool to inspect: %s.": "Me këtë funksion mund të kontrolloni: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "ngarkesën e CPU, përdorimin e RAM dhe swap, hapësirën e lirë në flash dhe disk, temperaturën dhe gjendjen e burimeve",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Proceset aktive me PID, gjendje dhe përdorim të CPU dhe memories. Renditje sipas CPU ose RAM.",
-    "A channel backup is created before active tuning; live TV may stop.": "Para kërkimit aktiv ruhet lista e kanaleve; transmetimi mund të ndërpritet."
+    "A channel backup is created before active tuning; live TV may stop.": "Para kërkimit aktiv ruhet lista e kanaleve; transmetimi mund të ndërpritet.",
+    "Network interfaces": "Ndërfaqet e rrjetit",
+    "Network statistics": "Statistikat e rrjetit",
+    "Network services": "Shërbimet e rrjetit",
+    "Packets": "Paketat",
+    "Errors": "Gabime",
+    "Dropped packets": "Paketa të hedhura",
+    "Local ports": "Portat lokale"
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -1089,7 +1166,14 @@
     "Use this tool to inspect: %s.": "Με αυτή τη λειτουργία μπορείτε να ελέγξετε: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "φόρτο CPU, χρήση RAM και swap, ελεύθερο χώρο flash και δίσκου, θερμοκρασία και κατάσταση πόρων",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Ενεργές διεργασίες με PID, κατάσταση και χρήση CPU και μνήμης. Ταξινόμηση κατά CPU ή RAM.",
-    "A channel backup is created before active tuning; live TV may stop.": "Πριν από τον ενεργό συντονισμό δημιουργείται αντίγραφο καναλιών· η ζωντανή TV μπορεί να διακοπεί."
+    "A channel backup is created before active tuning; live TV may stop.": "Πριν από τον ενεργό συντονισμό δημιουργείται αντίγραφο καναλιών· η ζωντανή TV μπορεί να διακοπεί.",
+    "Network interfaces": "Διεπαφές δικτύου",
+    "Network statistics": "Στατιστικά δικτύου",
+    "Network services": "Υπηρεσίες δικτύου",
+    "Packets": "Πακέτα",
+    "Errors": "Σφάλματα",
+    "Dropped packets": "Απορριφθέντα πακέτα",
+    "Local ports": "Τοπικές θύρες"
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -1180,7 +1264,14 @@
     "Use this tool to inspect: %s.": "Selle funktsiooniga saab kontrollida: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "CPU koormusest, RAM-i ja saaleala kasutusest, vabast välkmälu- ja kettaruumist, temperatuurist ning ressursside olekust",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Töötavad protsessid koos PID, oleku, CPU ja mälukasutusega. Sortimine CPU või RAM-i järgi.",
-    "A channel backup is created before active tuning; live TV may stop.": "Enne aktiivset häälestamist varundatakse kanalid; telesaade võib katkeda."
+    "A channel backup is created before active tuning; live TV may stop.": "Enne aktiivset häälestamist varundatakse kanalid; telesaade võib katkeda.",
+    "Network interfaces": "Võrguliidesed",
+    "Network statistics": "Võrgustatistika",
+    "Network services": "Võrguteenused",
+    "Packets": "Paketid",
+    "Errors": "Vead",
+    "Dropped packets": "Hüljatud paketid",
+    "Local ports": "Kohalikud pordid"
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -1271,7 +1362,14 @@
     "Use this tool to inspect: %s.": "با این ابزار می‌توانید موارد زیر را بررسی کنید: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "بار CPU، مصرف RAM و swap، فضای آزاد فلش و دیسک، دما و وضعیت منابع",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "فرایندهای فعال همراه با PID، وضعیت و مصرف CPU و حافظه. مرتب‌سازی بر اساس CPU یا RAM.",
-    "A channel backup is created before active tuning; live TV may stop.": "پیش از تنظیم فعال، از کانال‌ها پشتیبان تهیه می‌شود؛ پخش زنده ممکن است قطع شود."
+    "A channel backup is created before active tuning; live TV may stop.": "پیش از تنظیم فعال، از کانال‌ها پشتیبان تهیه می‌شود؛ پخش زنده ممکن است قطع شود.",
+    "Network interfaces": "رابط‌های شبکه",
+    "Network statistics": "آمار شبکه",
+    "Network services": "سرویس‌های شبکه",
+    "Packets": "بسته‌ها",
+    "Errors": "خطاها",
+    "Dropped packets": "بسته‌های حذف‌شده",
+    "Local ports": "درگاه‌های محلی"
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -1362,7 +1460,14 @@
     "Use this tool to inspect: %s.": "Šia funkcija galima patikrinti: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "CPU apkrova, RAM ir swap naudojimas, laisva „flash“ ir disko vieta, temperatūra ir išteklių būklė",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Veikiantys procesai su PID, būsena, CPU ir atminties naudojimu. Rikiavimas pagal CPU arba RAM.",
-    "A channel backup is created before active tuning; live TV may stop.": "Prieš aktyvų derinimą sukuriama kanalų kopija; tiesioginė TV gali nutrūkti."
+    "A channel backup is created before active tuning; live TV may stop.": "Prieš aktyvų derinimą sukuriama kanalų kopija; tiesioginė TV gali nutrūkti.",
+    "Network interfaces": "Tinklo sąsajos",
+    "Network statistics": "Tinklo statistika",
+    "Network services": "Tinklo paslaugos",
+    "Packets": "Paketai",
+    "Errors": "Klaidos",
+    "Dropped packets": "Atmesti paketai",
+    "Local ports": "Vietiniai prievadai"
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -1453,7 +1558,14 @@
     "Use this tool to inspect: %s.": "Met deze functie kunt u het volgende controleren: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "CPU-belasting, RAM- en swapgebruik, vrije flash- en schijfruimte, temperatuur en bronstatus",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Actieve processen met PID, status, CPU- en geheugengebruik. Sorteren op CPU of RAM.",
-    "A channel backup is created before active tuning; live TV may stop.": "Voor actief afstemmen wordt de zenderlijst opgeslagen; live-tv kan worden onderbroken."
+    "A channel backup is created before active tuning; live TV may stop.": "Voor actief afstemmen wordt de zenderlijst opgeslagen; live-tv kan worden onderbroken.",
+    "Network interfaces": "Netwerkinterfaces",
+    "Network statistics": "Netwerkstatistieken",
+    "Network services": "Netwerkdiensten",
+    "Packets": "Pakketten",
+    "Errors": "Fouten",
+    "Dropped packets": "Verworpen pakketten",
+    "Local ports": "Lokale poorten"
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -1544,7 +1656,14 @@
     "Use this tool to inspect: %s.": "Esta função permite verificar: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "carga da CPU, utilização de RAM e swap, espaço livre na flash e disco, temperatura e estado dos recursos",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Processos ativos com PID, estado e utilização de CPU e memória. Ordenação por CPU ou RAM.",
-    "A channel backup is created before active tuning; live TV may stop.": "Antes da sintonia ativa é criada uma cópia dos canais; a TV em direto pode ser interrompida."
+    "A channel backup is created before active tuning; live TV may stop.": "Antes da sintonia ativa é criada uma cópia dos canais; a TV em direto pode ser interrompida.",
+    "Network interfaces": "Interfaces de rede",
+    "Network statistics": "Estatísticas de rede",
+    "Network services": "Serviços de rede",
+    "Packets": "Pacotes",
+    "Errors": "Erros",
+    "Dropped packets": "Pacotes descartados",
+    "Local ports": "Portas locais"
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -1635,7 +1754,14 @@
     "Use this tool to inspect: %s.": "Această funcție permite verificarea: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "încărcarea CPU, utilizarea RAM și swap, spațiul liber în flash și pe disc, temperatura și starea resurselor",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Procese active cu PID, stare și utilizare CPU și memorie. Sortare după CPU sau RAM.",
-    "A channel backup is created before active tuning; live TV may stop.": "Înainte de acordarea activă se salvează canalele; televiziunea în direct poate fi întreruptă."
+    "A channel backup is created before active tuning; live TV may stop.": "Înainte de acordarea activă se salvează canalele; televiziunea în direct poate fi întreruptă.",
+    "Network interfaces": "Interfețe de rețea",
+    "Network statistics": "Statistici de rețea",
+    "Network services": "Servicii de rețea",
+    "Packets": "Pachete",
+    "Errors": "Erori",
+    "Dropped packets": "Pachete eliminate",
+    "Local ports": "Porturi locale"
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -1726,7 +1852,14 @@
     "Use this tool to inspect: %s.": "Bu işlevle şunları kontrol edebilirsiniz: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "CPU yükü, RAM ve swap kullanımı, boş flash ve disk alanı, sıcaklık ve kaynak durumu",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "PID, durum, CPU ve bellek kullanımıyla çalışan işlemler. CPU veya RAM'e göre sıralama.",
-    "A channel backup is created before active tuning; live TV may stop.": "Etkin ayarlama öncesi kanal yedeği alınır; canlı TV kesilebilir."
+    "A channel backup is created before active tuning; live TV may stop.": "Etkin ayarlama öncesi kanal yedeği alınır; canlı TV kesilebilir.",
+    "Network interfaces": "Ağ arayüzleri",
+    "Network statistics": "Ağ istatistikleri",
+    "Network services": "Ağ hizmetleri",
+    "Packets": "Paketler",
+    "Errors": "Hatalar",
+    "Dropped packets": "Atılan paketler",
+    "Local ports": "Yerel bağlantı noktaları"
   },
   "uk": {
     "System centre": "Системний центр",
@@ -1817,7 +1950,14 @@
     "Use this tool to inspect: %s.": "Ця функція дозволяє перевірити: %s.",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "навантаження CPU, використання RAM і swap, вільне місце у флеш-пам'яті й на диску, температуру та стан ресурсів",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "Запущені процеси з PID, станом, використанням CPU та пам'яті. Сортування за CPU або RAM.",
-    "A channel backup is created before active tuning; live TV may stop.": "Перед активним налаштуванням створюється копія каналів; прямий ефір може перерватися."
+    "A channel backup is created before active tuning; live TV may stop.": "Перед активним налаштуванням створюється копія каналів; прямий ефір може перерватися.",
+    "Network interfaces": "Мережеві інтерфейси",
+    "Network statistics": "Статистика мережі",
+    "Network services": "Мережеві служби",
+    "Packets": "Пакети",
+    "Errors": "Помилки",
+    "Dropped packets": "Відкинуті пакети",
+    "Local ports": "Локальні порти"
   },
   "zh": {
     "System centre": "系统中心",
@@ -1908,6 +2048,13 @@
     "Use this tool to inspect: %s.": "此功能可用于检查：%s。",
     "CPU load, RAM and swap usage, free flash and disk space, temperature and resource status": "CPU 负载、RAM 和交换空间使用量、闪存和磁盘剩余空间、温度及资源状态",
     "Running processes with PID, state, CPU and memory use. Sort by CPU or RAM.": "查看运行进程的 PID、状态、CPU 和内存使用率，可按 CPU 或 RAM 排序。",
-    "A channel backup is created before active tuning; live TV may stop.": "主动调谐前会备份频道列表，直播可能中断。"
+    "A channel backup is created before active tuning; live TV may stop.": "主动调谐前会备份频道列表，直播可能中断。",
+    "Network interfaces": "网络接口",
+    "Network statistics": "网络统计",
+    "Network services": "网络服务",
+    "Packets": "数据包",
+    "Errors": "错误",
+    "Dropped packets": "丢弃的数据包",
+    "Local ports": "本地端口"
   }
 }

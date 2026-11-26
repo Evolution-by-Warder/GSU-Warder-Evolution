@@ -1,3 +1,9 @@
+# 26.11.2026 — Owner-approved expansion without duplicate network functions
+
+Previous HEAD `fd1ddfea7712ab33963d4994ced5c675a1bc477e`: OpenATV/OpenPLi/package SUCCESS, architecture in progress at initial inspection. Added four distinct passive network views to the existing network centre: interfaces (local IP/MAC/link/duplex/driver Wi-Fi readings), cumulative per-interface RX/TX bytes/packets/errors/drops, mounted remote filesystem local paths (never access remote filesystem or display source/credentials), and existing daemon observations plus local TCP listening/UDP unconnected port numbers (not service attribution or remote reachability). Reuses existing collectors, no separate live sampler, active connection test remains explicit. New menu labels and statistic terms in all 21 language catalogues; regression covers real fixture values, missing data, privacy and cancellation. DNS resolver-specific test, per-interface live history and further navigation/service/system work remain pending. No production changes.
+
+---
+
 # 26.11.2026 — Owner instruction: prevent duplicate functionality before expansion
 
 Reviewed exact HEAD `3038602601ccd527fb458bda731d2c31320949e4`, existing source modules and original reference audit; recorded [functional inventory and reuse decisions](docs/GSU-0.41.6-FUNCTION-INVENTORY.md). Existing RX/TX, SMART, FBC/HDR/audio, network link/gateway/DNS/ping/HTTPS, package dependency checks, channel backups, project update/version paths and diagnostic exports must be reused. New expansion not implemented in this checkpoint. Latest predecessor OpenATV/OpenPLi regression failed only on old legacy route 17 label expectation (511 tests, one failure), package reproduction and architectures SUCCESS. Updated obsolete expected label to the explicitly approved new Create diagnostic bundle label; retained legacy controller/about coverage and new inline route tests. Fresh exact-head CI required. No production mutation.

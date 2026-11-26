@@ -14,7 +14,7 @@ from .i18n import for_api, language
 # explicit native screens; graphs and full-size tables remain available in Details.
 INLINE_REPORTS=frozenset(('system-overview','system-processes','system-log',
     'tuner-details','transponder-services','storage-overview','storage-categories',
-    'network-overview','network-test','service-health','service-ipk','forum-report','17'))
+    'network-overview','network-test','network-interfaces','network-statistics','network-mounts','network-services','service-health','service-ipk','forum-report','17'))
 # Explicit actions must never run merely because the cursor passes over them.
 MANUAL_INLINE=frozenset(('17','network-test'))
 NATIVE_REPORTS=frozenset(('tuner-details','transponder-services'))
@@ -34,8 +34,10 @@ def collect_report(kind,tr,cancelled,cpu_order=False):
         from .warder_storage import report
         return report(tr,False)
     if kind.startswith('network-'):
-        from .warder_network import collect, overview_panels, diagnostics
-        return overview_panels(collect(include_addresses=True),tr) if kind=='network-overview' else diagnostics(tr,cancelled)
+        from .warder_network import collect, overview_panels, diagnostics, detail_report
+        if kind=='network-overview':return overview_panels(collect(include_addresses=True),tr)
+        if kind=='network-test':return diagnostics(tr,cancelled)
+        return detail_report(kind,tr,cancelled)
     if kind == 'forum-report':
         import json
         from .warder_service import forum_snapshot

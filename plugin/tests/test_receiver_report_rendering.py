@@ -47,6 +47,7 @@ class ReceiverRenderingTests(unittest.TestCase):
         routes=mod('warder_centres').DIAGNOSTICS
         kinds={'system-processes','system-log','tuner-details','transponder-services',
                'storage-overview','storage-categories','network-overview','network-test',
+               'network-interfaces','network-statistics','network-mounts','network-services',
                'service-health','service-ipk','forum-report'}
         for kind in kinds:
             with self.subTest(kind=kind):

@@ -1,8 +1,9 @@
 """Local, read-only network overview; no probes or private configuration export."""
-from pathlib import Path
 from ipaddress import ip_address
 import re
-from .warder_tools import Probe
+from .warder_tools import Probe, unescape_mount
+
+REMOTE_FS=frozenset(('nfs','nfs4','cifs','smbfs','fuse.sshfs'))
 
 def collect(probe=None, include_addresses=False):
     p=probe or Probe()
@@ -33,8 +34,7 @@ def collect(probe=None, include_addresses=False):
     result=dict(interfaces=rows,gateways=list(dict.fromkeys(gateways)),dns=list(dict.fromkeys(dns)))
     if include_addresses:
         for item in rows:item['addresses']=local_addresses(item['name'],p)
-        table=p.text('/proc/mounts',65536).splitlines()
-        result['network_mounts']=sum(1 for line in table if len(line.split())>2 and line.split()[2] in ('nfs','nfs4','cifs','smbfs','fuse.sshfs'))
+        result['network_mounts']=len(network_mounts(p))
     return result
 
 def summary(report,tr):
@@ -133,8 +133,7 @@ def diagnostics(tr, cancelled, probe=None, opener=None):
         lines.append(tr('No active link detected'))
     else:
         lines.append(tr('Not exposed'))
-    table = p.text('/proc/mounts', 65536).splitlines()
-    count = sum(1 for line in table if len(line.split()) > 2 and line.split()[2] in ('nfs','nfs4','cifs','smbfs','fuse.sshfs'))
+    count = len(network_mounts(p))
     lines.append(tr('Network mounts')+'   '+str(count))
     return '\n'.join(lines)
 
@@ -155,3 +154,110 @@ def overview_panels(report,tr):
     if 'network_mounts' in report:
         right.extend(('',tr('Network mounts'),'    '+str(report['network_mounts'])))
     return ('\n'.join(left).strip() or tr('Unavailable'),'\n'.join(right))
+
+
+def network_mounts(p):
+    """List local mount points only: never stat remote storage or expose credentials."""
+    rows=[]
+    for line in p.text('/proc/mounts',65536).splitlines():
+        fields=line.split()
+        if len(fields)>=4 and fields[2] in REMOTE_FS:
+            target=unescape_mount(fields[1])
+            if target.startswith('/') and target.isprintable():
+                rows.append((target,fields[2],'ro' in fields[3].split(',')))
+    return rows
+
+
+def interface_details(p,row):
+    base='/sys/class/net/'+row['name']
+    mac=p.text(base+'/address',32)
+    duplex=p.text(base+'/duplex',16).lower()
+    carrier=p.text(base+'/carrier',8)
+    wifi=None
+    for line in p.text('/proc/net/wireless',8192).splitlines():
+        name,sep,body=line.partition(':')
+        if not sep or name.strip()!=row['name']:continue
+        fields=body.split()
+        try:
+            quality,level,noise=(float(v.rstrip('.')) for v in fields[1:4])
+            if all(-1000<=v<=1000 for v in (quality,level,noise)):
+                wifi=(quality,level,noise)
+        except (ValueError,TypeError):pass
+        break
+    return (mac if re.fullmatch(r'(?:[0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}',mac) else None,
+            duplex if duplex in ('full','half') else None,
+            int(carrier) if carrier in ('0','1') else None,wifi)
+
+
+def interface_statistics(p):
+    result={}
+    for line in p.text('/proc/net/dev',32768).splitlines():
+        name,sep,body=line.rpartition(':')
+        name=name.strip()
+        if not sep or name=='lo' or not re.fullmatch(r'[A-Za-z0-9_.:-]{1,32}',name):continue
+        try:fields=tuple(int(v) for v in body.split())
+        except ValueError:continue
+        if len(fields)>=16 and min(fields)>=0:
+            result[name]=(fields[:4],fields[8:12])
+    return result
+
+
+def listening_ports(p):
+    """Observed local socket tables, never a remote port scan or service attribution."""
+    result={}
+    for protocol in ('tcp','tcp6','udp','udp6'):
+        raw=p.text('/proc/net/'+protocol,65536)
+        if not raw:
+            result[protocol]=None
+            continue
+        ports=set()
+        for line in raw.splitlines()[1:]:
+            fields=line.split()
+            if len(fields)<4 or fields[3]!=('0A' if protocol.startswith('tcp') else '07'):continue
+            try:port=int(fields[1].rsplit(':',1)[1],16)
+            except (ValueError,IndexError):continue
+            if 0<port<=65535:ports.add(port)
+        result[protocol]=sorted(ports)
+    return result
+
+
+def detail_report(kind,tr,cancelled,probe=None):
+    p=probe or Probe()
+    if cancelled.is_set():return ''
+    rows=[]
+    if kind=='network-interfaces':
+        data=collect(p,include_addresses=True)
+        for item in data['interfaces']:
+            if cancelled.is_set():return ''
+            mac,duplex,carrier,wifi=interface_details(p,item)
+            rows.extend((item['name']+'  ·  '+tr({'up':'Running','down':'Unavailable'}.get(item['state'],'Not exposed')),
+                         'IP   '+(', '.join(item['addresses']) or '—'),
+                         'MAC   '+(mac or '—'),
+                         'Mb/s   '+(str(item['speed']) if item['speed'] is not None else '—'),
+                         'Duplex   '+(duplex or '—'),
+                         'Link   '+(str(carrier) if carrier is not None else '—')))
+            if wifi is not None:
+                rows.append('Wi-Fi   LQ %.0f   RSSI %.0f   Noise %.0f'%wifi)
+            rows.append('')
+    elif kind=='network-statistics':
+        for name,(rx,tx) in sorted(interface_statistics(p).items()):
+            if cancelled.is_set():return ''
+            rows.extend((name,'RX   %.2f MiB   ·   %s %d'%(rx[0]/1048576,tr('Packets'),rx[1]),
+                         '     %s %d   ·   %s %d'%(tr('Errors'),rx[2],tr('Dropped packets'),rx[3]),
+                         'TX   %.2f MiB   ·   %s %d'%(tx[0]/1048576,tr('Packets'),tx[1]),
+                         '     %s %d   ·   %s %d'%(tr('Errors'),tx[2],tr('Dropped packets'),tx[3]),''))
+    elif kind=='network-mounts':
+        for target,fs,readonly in network_mounts(p):
+            rows.append(target+'   ·   '+fs+('   ·   '+tr('read-only') if readonly else ''))
+        # Empty means no known remote mounts; absence of proc table is unknown.
+        if not rows and p.text('/proc/mounts',65536):
+            rows.append(tr('Network mounts')+'   0')
+    elif kind=='network-services':
+        from .warder_system_data import observed_services,PROTOCOLS
+        rows.extend(name+'   '+(tr('Running') if state is True else tr('Not detected') if state is False else '—')
+                    for name,state in zip(PROTOCOLS,observed_services(p)))
+        rows.extend(('',tr('Local ports')))
+        for protocol,ports in listening_ports(p).items():
+            rows.append(protocol.upper()+'   '+('—' if ports is None else ', '.join(map(str,ports)) or '0'))
+    else:raise ValueError('unknown network report')
+    return '\n'.join(rows).strip() or tr('Unavailable')
