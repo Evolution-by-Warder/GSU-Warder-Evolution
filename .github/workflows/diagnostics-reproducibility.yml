@@ -1,0 +1,36 @@
+name: Diagnostics package reproducibility
+on:
+  pull_request:
+    paths:
+      - 'plugin/**'
+      - '.github/workflows/diagnostics-reproducibility.yml'
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Archive exact build inputs for independent reproduction
+        run: git archive --format=tar.gz -o /tmp/gsu-build-inputs.tar.gz HEAD plugin
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gsu-build-inputs-${{ github.event.pull_request.head.sha }}
+          path: /tmp/gsu-build-inputs.tar.gz
+          retention-days: 7
+      - name: Compare two packages and measure installed file bytes
+        run: |
+          set -eu
+          python plugin/tools/build_ipk.py --output /tmp/gsu-first
+          python plugin/tools/build_ipk.py --output /tmp/gsu-second
+          cmp /tmp/gsu-first/*.ipk /tmp/gsu-second/*.ipk
+          sha256sum /tmp/gsu-first/*.ipk
+          wc -c /tmp/gsu-first/*.ipk
+          ar p /tmp/gsu-first/*.ipk data.tar.gz | python -c 'import sys,tarfile; print("Installed regular file bytes:",sum(m.size for m in tarfile.open(fileobj=sys.stdin.buffer,mode="r|gz") if m.isfile()))'

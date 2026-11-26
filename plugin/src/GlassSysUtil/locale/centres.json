@@ -9,7 +9,18 @@
     "Warder Evolution centre": "Warder Evolution centre",
     "Network overview": "Network overview",
     "Loading…": "Loading…",
-    "Other": "Other"
+    "Other": "Other",
+    "System health check": "System health check",
+    "Available memory": "Available memory",
+    "Network link": "Network link",
+    "Resource score": "Resource score",
+    "Measured checks": "Measured checks",
+    "free": "free",
+    "Critical": "Critical",
+    "Warning": "Warning",
+    "Not exposed": "Not exposed",
+    "Default gateway": "Default gateway",
+    "DNS configuration": "DNS configuration"
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -21,7 +32,18 @@
     "Warder Evolution centre": "Centrum Warder Evolution",
     "Network overview": "Prehľad siete",
     "Loading…": "Načítavam…",
-    "Other": "Ostatné"
+    "Other": "Ostatné",
+    "System health check": "Kontrola stavu systému",
+    "Available memory": "Dostupná pamäť",
+    "Network link": "Sieťové spojenie",
+    "Resource score": "Hodnotenie zdrojov",
+    "Measured checks": "Vyhodnotené kontroly",
+    "free": "voľné",
+    "Critical": "Kritický stav",
+    "Warning": "Upozornenie",
+    "Not exposed": "Údaj nedostupný",
+    "Default gateway": "Predvolená brána",
+    "DNS configuration": "Nastavenie DNS"
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -33,7 +55,18 @@
     "Warder Evolution centre": "Centrum Warder Evolution",
     "Network overview": "Přehled sítě",
     "Loading…": "Načítání…",
-    "Other": "Ostatní"
+    "Other": "Ostatní",
+    "System health check": "Kontrola stavu systému",
+    "Available memory": "Dostupná paměť",
+    "Network link": "Síťové spojení",
+    "Resource score": "Hodnocení prostředků",
+    "Measured checks": "Vyhodnocené kontroly",
+    "free": "volné",
+    "Critical": "Kritický stav",
+    "Warning": "Upozornění",
+    "Not exposed": "Údaj nedostupný",
+    "Default gateway": "Výchozí brána",
+    "DNS configuration": "Nastavení DNS"
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -45,7 +78,18 @@
     "Warder Evolution centre": "Warder-Evolution-Zentrale",
     "Network overview": "Netzwerkübersicht",
     "Loading…": "Wird geladen…",
-    "Other": "Sonstiges"
+    "Other": "Sonstiges",
+    "System health check": "Systemzustand prüfen",
+    "Available memory": "Verfügbarer Speicher",
+    "Network link": "Netzwerkverbindung",
+    "Resource score": "Ressourcenbewertung",
+    "Measured checks": "Ausgewertete Prüfungen",
+    "free": "frei",
+    "Critical": "Kritisch",
+    "Warning": "Warnung",
+    "Not exposed": "Keine Angabe",
+    "Default gateway": "Standardgateway",
+    "DNS configuration": "DNS-Konfiguration"
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -57,7 +101,18 @@
     "Warder Evolution centre": "Centrum Warder Evolution",
     "Network overview": "Przegląd sieci",
     "Loading…": "Ładowanie…",
-    "Other": "Inne"
+    "Other": "Inne",
+    "System health check": "Kontrola stanu systemu",
+    "Available memory": "Dostępna pamięć",
+    "Network link": "Połączenie sieciowe",
+    "Resource score": "Ocena zasobów",
+    "Measured checks": "Wykonane pomiary",
+    "free": "wolne",
+    "Critical": "Stan krytyczny",
+    "Warning": "Ostrzeżenie",
+    "Not exposed": "Brak danych",
+    "Default gateway": "Brama domyślna",
+    "DNS configuration": "Konfiguracja DNS"
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -69,7 +124,18 @@
     "Warder Evolution centre": "Warder Evolution központ",
     "Network overview": "Hálózati áttekintés",
     "Loading…": "Betöltés…",
-    "Other": "Egyéb"
+    "Other": "Egyéb",
+    "System health check": "Rendszerállapot ellenőrzése",
+    "Available memory": "Elérhető memória",
+    "Network link": "Hálózati kapcsolat",
+    "Resource score": "Erőforrások értékelése",
+    "Measured checks": "Elvégzett mérések",
+    "free": "szabad",
+    "Critical": "Kritikus",
+    "Warning": "Figyelmeztetés",
+    "Not exposed": "Nincs adat",
+    "Default gateway": "Alapértelmezett átjáró",
+    "DNS configuration": "DNS-beállítások"
   },
   "ru": {
     "System centre": "Системный центр",
@@ -81,7 +147,18 @@
     "Warder Evolution centre": "Центр Warder Evolution",
     "Network overview": "Обзор сети",
     "Loading…": "Загрузка…",
-    "Other": "Прочее"
+    "Other": "Прочее",
+    "System health check": "Проверка состояния системы",
+    "Available memory": "Доступная память",
+    "Network link": "Сетевое соединение",
+    "Resource score": "Оценка ресурсов",
+    "Measured checks": "Выполненные проверки",
+    "free": "свободно",
+    "Critical": "Критическое состояние",
+    "Warning": "Предупреждение",
+    "Not exposed": "Нет данных",
+    "Default gateway": "Основной шлюз",
+    "DNS configuration": "Настройки DNS"
   },
   "fr": {
     "System centre": "Centre système",
@@ -93,7 +170,18 @@
     "Warder Evolution centre": "Centre Warder Evolution",
     "Network overview": "Vue du réseau",
     "Loading…": "Chargement…",
-    "Other": "Autres"
+    "Other": "Autres",
+    "System health check": "État du système",
+    "Available memory": "Mémoire disponible",
+    "Network link": "Liaison réseau",
+    "Resource score": "Évaluation des ressources",
+    "Measured checks": "Contrôles effectués",
+    "free": "libre",
+    "Critical": "Critique",
+    "Warning": "Avertissement",
+    "Not exposed": "Non disponible",
+    "Default gateway": "Passerelle par défaut",
+    "DNS configuration": "Configuration DNS"
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -105,7 +193,18 @@
     "Warder Evolution centre": "Centro Warder Evolution",
     "Network overview": "Panoramica rete",
     "Loading…": "Caricamento…",
-    "Other": "Altro"
+    "Other": "Altro",
+    "System health check": "Verifica stato del sistema",
+    "Available memory": "Memoria disponibile",
+    "Network link": "Collegamento di rete",
+    "Resource score": "Valutazione risorse",
+    "Measured checks": "Controlli eseguiti",
+    "free": "libero",
+    "Critical": "Critico",
+    "Warning": "Avviso",
+    "Not exposed": "Dato non disponibile",
+    "Default gateway": "Gateway predefinito",
+    "DNS configuration": "Configurazione DNS"
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -117,7 +216,18 @@
     "Warder Evolution centre": "Centro Warder Evolution",
     "Network overview": "Resumen de red",
     "Loading…": "Cargando…",
-    "Other": "Otros"
+    "Other": "Otros",
+    "System health check": "Comprobación del sistema",
+    "Available memory": "Memoria disponible",
+    "Network link": "Enlace de red",
+    "Resource score": "Puntuación de recursos",
+    "Measured checks": "Comprobaciones realizadas",
+    "free": "libre",
+    "Critical": "Crítico",
+    "Warning": "Advertencia",
+    "Not exposed": "Sin datos",
+    "Default gateway": "Puerta de enlace predeterminada",
+    "DNS configuration": "Configuración DNS"
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -129,7 +239,18 @@
     "Warder Evolution centre": "Qendra Warder Evolution",
     "Network overview": "Përmbledhja e rrjetit",
     "Loading…": "Duke ngarkuar…",
-    "Other": "Të tjera"
+    "Other": "Të tjera",
+    "System health check": "Kontrolli i gjendjes së sistemit",
+    "Available memory": "Kujtesa e disponueshme",
+    "Network link": "Lidhja e rrjetit",
+    "Resource score": "Vlerësimi i burimeve",
+    "Measured checks": "Kontrollet e kryera",
+    "free": "e lirë",
+    "Critical": "Kritike",
+    "Warning": "Paralajmërim",
+    "Not exposed": "Nuk ka të dhëna",
+    "Default gateway": "Porta e parazgjedhur",
+    "DNS configuration": "Konfigurimi DNS"
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -141,7 +262,18 @@
     "Warder Evolution centre": "Κέντρο Warder Evolution",
     "Network overview": "Επισκόπηση δικτύου",
     "Loading…": "Φόρτωση…",
-    "Other": "Άλλα"
+    "Other": "Άλλα",
+    "System health check": "Έλεγχος κατάστασης συστήματος",
+    "Available memory": "Διαθέσιμη μνήμη",
+    "Network link": "Σύνδεση δικτύου",
+    "Resource score": "Βαθμολογία πόρων",
+    "Measured checks": "Έλεγχοι με μέτρηση",
+    "free": "ελεύθερα",
+    "Critical": "Κρίσιμη κατάσταση",
+    "Warning": "Προειδοποίηση",
+    "Not exposed": "Χωρίς δεδομένα",
+    "Default gateway": "Προεπιλεγμένη πύλη",
+    "DNS configuration": "Ρύθμιση DNS"
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -153,7 +285,18 @@
     "Warder Evolution centre": "Warder Evolutioni keskus",
     "Network overview": "Võrgu ülevaade",
     "Loading…": "Laadimine…",
-    "Other": "Muu"
+    "Other": "Muu",
+    "System health check": "Süsteemi seisundi kontroll",
+    "Available memory": "Saadaolev mälu",
+    "Network link": "Võrguühendus",
+    "Resource score": "Ressursside hinnang",
+    "Measured checks": "Tehtud mõõtmised",
+    "free": "vaba",
+    "Critical": "Kriitiline",
+    "Warning": "Hoiatus",
+    "Not exposed": "Andmed puuduvad",
+    "Default gateway": "Vaikelüüs",
+    "DNS configuration": "DNS-i seadistus"
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -165,7 +308,18 @@
     "Warder Evolution centre": "مرکز Warder Evolution",
     "Network overview": "نمای کلی شبکه",
     "Loading…": "در حال بارگذاری…",
-    "Other": "سایر"
+    "Other": "سایر",
+    "System health check": "بررسی سلامت سیستم",
+    "Available memory": "حافظهٔ در دسترس",
+    "Network link": "اتصال شبکه",
+    "Resource score": "امتیاز منابع",
+    "Measured checks": "بررسی‌های انجام‌شده",
+    "free": "آزاد",
+    "Critical": "بحرانی",
+    "Warning": "هشدار",
+    "Not exposed": "داده‌ای در دسترس نیست",
+    "Default gateway": "دروازهٔ پیش‌فرض",
+    "DNS configuration": "تنظیمات DNS"
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -177,7 +331,18 @@
     "Warder Evolution centre": "Warder Evolution centras",
     "Network overview": "Tinklo apžvalga",
     "Loading…": "Įkeliama…",
-    "Other": "Kita"
+    "Other": "Kita",
+    "System health check": "Sistemos būklės patikra",
+    "Available memory": "Prieinama atmintis",
+    "Network link": "Tinklo ryšys",
+    "Resource score": "Išteklių įvertinimas",
+    "Measured checks": "Atliktos patikros",
+    "free": "laisva",
+    "Critical": "Kritinė būklė",
+    "Warning": "Įspėjimas",
+    "Not exposed": "Nėra duomenų",
+    "Default gateway": "Numatytasis šliuzas",
+    "DNS configuration": "DNS nuostatos"
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -189,7 +354,18 @@
     "Warder Evolution centre": "Warder Evolution-centrum",
     "Network overview": "Netwerkoverzicht",
     "Loading…": "Laden…",
-    "Other": "Overig"
+    "Other": "Overig",
+    "System health check": "Systeemstatus controleren",
+    "Available memory": "Beschikbaar geheugen",
+    "Network link": "Netwerkverbinding",
+    "Resource score": "Beoordeling van bronnen",
+    "Measured checks": "Uitgevoerde controles",
+    "free": "vrij",
+    "Critical": "Kritiek",
+    "Warning": "Waarschuwing",
+    "Not exposed": "Geen gegevens",
+    "Default gateway": "Standaardgateway",
+    "DNS configuration": "DNS-instellingen"
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -201,7 +377,18 @@
     "Warder Evolution centre": "Centro Warder Evolution",
     "Network overview": "Visão geral da rede",
     "Loading…": "A carregar…",
-    "Other": "Outros"
+    "Other": "Outros",
+    "System health check": "Verificação do estado do sistema",
+    "Available memory": "Memória disponível",
+    "Network link": "Ligação de rede",
+    "Resource score": "Avaliação dos recursos",
+    "Measured checks": "Verificações efetuadas",
+    "free": "livre",
+    "Critical": "Crítico",
+    "Warning": "Aviso",
+    "Not exposed": "Sem dados",
+    "Default gateway": "Gateway predefinido",
+    "DNS configuration": "Configuração DNS"
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -213,7 +400,18 @@
     "Warder Evolution centre": "Centru Warder Evolution",
     "Network overview": "Prezentarea rețelei",
     "Loading…": "Se încarcă…",
-    "Other": "Altele"
+    "Other": "Altele",
+    "System health check": "Verificarea stării sistemului",
+    "Available memory": "Memorie disponibilă",
+    "Network link": "Conexiune la rețea",
+    "Resource score": "Evaluarea resurselor",
+    "Measured checks": "Verificări efectuate",
+    "free": "liber",
+    "Critical": "Critic",
+    "Warning": "Avertisment",
+    "Not exposed": "Date indisponibile",
+    "Default gateway": "Gateway implicit",
+    "DNS configuration": "Configurare DNS"
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -225,7 +423,18 @@
     "Warder Evolution centre": "Warder Evolution merkezi",
     "Network overview": "Ağ özeti",
     "Loading…": "Yükleniyor…",
-    "Other": "Diğer"
+    "Other": "Diğer",
+    "System health check": "Sistem durumu denetimi",
+    "Available memory": "Kullanılabilir bellek",
+    "Network link": "Ağ bağlantısı",
+    "Resource score": "Kaynak puanı",
+    "Measured checks": "Yapılan ölçümler",
+    "free": "boş",
+    "Critical": "Kritik",
+    "Warning": "Uyarı",
+    "Not exposed": "Veri yok",
+    "Default gateway": "Varsayılan ağ geçidi",
+    "DNS configuration": "DNS yapılandırması"
   },
   "uk": {
     "System centre": "Системний центр",
@@ -237,7 +446,18 @@
     "Warder Evolution centre": "Центр Warder Evolution",
     "Network overview": "Огляд мережі",
     "Loading…": "Завантаження…",
-    "Other": "Інше"
+    "Other": "Інше",
+    "System health check": "Перевірка стану системи",
+    "Available memory": "Доступна пам’ять",
+    "Network link": "Мережеве з’єднання",
+    "Resource score": "Оцінка ресурсів",
+    "Measured checks": "Виконані перевірки",
+    "free": "вільно",
+    "Critical": "Критичний стан",
+    "Warning": "Попередження",
+    "Not exposed": "Немає даних",
+    "Default gateway": "Типовий шлюз",
+    "DNS configuration": "Налаштування DNS"
   },
   "zh": {
     "System centre": "系统中心",
@@ -249,6 +469,17 @@
     "Warder Evolution centre": "Warder Evolution 中心",
     "Network overview": "网络概览",
     "Loading…": "正在加载…",
-    "Other": "其他"
+    "Other": "其他",
+    "System health check": "系统健康检查",
+    "Available memory": "可用内存",
+    "Network link": "网络连接",
+    "Resource score": "资源评分",
+    "Measured checks": "已完成的检查",
+    "free": "可用",
+    "Critical": "严重",
+    "Warning": "警告",
+    "Not exposed": "无数据",
+    "Default gateway": "默认网关",
+    "DNS configuration": "DNS 配置"
   }
 }

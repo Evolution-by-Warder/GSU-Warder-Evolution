@@ -327,14 +327,16 @@ class OriginalPortTests(unittest.TestCase):
                 self.assertEqual(actual[item['name']],item['args'],item['name'])
         self.assertEqual(sum(isinstance(n,ast.ClassDef) for n in ast.walk(tree)),51)
 
-    def test_main_menu_keeps_eleven_entries_with_tools_update_and_real_contexts(self):
+    def test_main_menu_keeps_eleven_legacy_actions_under_seven_centres(self):
         module=self.plugin
         screen=module.SysUtilMngMain(types.SimpleNamespace())
-        self.assertEqual(len(screen.menuListAll),11)
+        self.assertEqual([row[0] for row in screen.menuListAll if row[0].isdigit()],
+                         '0 1 2 3 4 6 7 8 9 17 16'.split())
         self.assertTrue({'5','10','11','12','13','14','15'}.isdisjoint(item[0] for item in screen.menuListAll))
         self.assertEqual(screen['actions'].contexts,['SetupActions','ColorActions','GlobalActions','WizardActions','MenuActions'])
         screen.updatemenulist()
-        self.assertEqual(len(screen['list'].list),11)
+        self.assertEqual([row[0] for row in screen['list'].list],
+                         ['centre:'+name for name in 'system reception storage network cam service warder'.split()])
 
     def test_main_menu_help_and_dispatch_follow_ids_after_importer_removal(self):
         from unittest.mock import MagicMock
