@@ -1,0 +1,10 @@
+# Warder Evolution — spoločný ikonový štandard
+Schválené vlastníkom 26.11.2026. Priorita: dokončiť GSU 0.41.6, až potom ostatné štyri projekty. Toto je schválený rozsah, nie tvrdenie o hotovej implementácii.
+
+- Malé funkčné picony v hlavnom menu, podmenu a nastaveniach. Modro-tyrkysová žiarivá linka podľa existujúceho Radio a YouTube; transparentné PNG, spoločný význam symbolov. Nominálne 48×48 pri FHD; v hustých zoznamoch podľa výšky riadka bez zmeny počtu riadkov. Škálovanie HD/FHD/WQHD/UHD, konzistentné odsadenie a fokus, čitateľnosť 21 jazykov.
+- Prednostne použiť schválené PNG z Radio src/WarderRadio/artwork/menu a YouTube plugin/Plugins/Extensions/WarderYouTube/images/nav_*.png po overení významu a identity. Nové symboly iba pre chýbajúce funkcie. Zachovať schválené hlavičky, logá, picony staníc a ikonové sady Infobaru. Lokálne pribalené súbory a cache, bezpečný textový fallback, žiadna nová povinná runtime knižnica.
+- FullHDGlass: nahradiť navigačné modré/zelené bodky v nastavení funkčnými ikonami (sťahovanie, história, aktualizácia, obnova, reset, ECM, infobary, HDD/SSD, sieť, ponuka, kanály, EPG, info o programe, špeciálne info, používateľ, OLED, cesty a ďalšie). Zachovať PIG, písmo, rozloženie, počet riadkov, identitu nastavení a akcie. Zachovať význam farebného rozlíšenia, ak označuje typ akcie. Stavové indikátory ponechať.
+- GSU: sedem centier, všetky podmenu, nastavenia, diagnostika a centrum produktov. Funkčný symbol a nezávislý indikátor dostupnosti. Logá piatich projektov v projektovom centre.
+- Radio a YouTube: zachovať schválené vizuály, zjednotiť len rozdiely významu/rozmerov. PiconHub: navigácia a funkcie, nie dátové picony, SAT Manager ani rádio plánovač.
+- Popisy: vysvetliť účel, zobrazované údaje a následky akcie v zrozumiteľných vetách, nie osamelé heslo (napr. Dostupná pamäť). Skutočné preklady v 21 jazykoch, zalamovanie a čitateľnosť; netvrdiť nepodporované funkcie.
+- Testy: mapovanie podľa stabilných ID, fallback, škálovanie, fokus, stav, cache, nezmenené akcie/konfigurácia, presný HEAD CI a fyzická kontrola. Žiadne prepísanie historických vydaní.
