@@ -7,10 +7,10 @@ from Components.Label import Label
 from Components.ScrollLabel import ScrollLabel
 
 class CentreMenu(Screen):
-    def __init__(self, session, api, entries, enabled, dispatch):
+    def __init__(self, session, api, entries, enabled):
         self.skin = api['ipkScript_center']
         Screen.__init__(self, session)
-        self.api, self.dispatch = api, dispatch
+        self.api = api
         self.groups = legacy_routes(entries)
         self.enabled = dict(enabled)
         self.group = None
@@ -73,3 +73,8 @@ class DetailText(Screen):
              'right':self['file_info'].pageDown},-2)
         self.onLayoutFinish.append(self.prepare)
     def prepare(self):self.setTitle(self.title_text)
+
+def open_legacy_centres(screen, api):
+    """Keep the parent alive; return a stable action ID to its existing dispatcher."""
+    screen.session.openWithCallback(screen.dispatch_menu_id, CentreMenu, api,
+                                    tuple(screen.menuListAll), dict(screen.status))
