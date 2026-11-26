@@ -175,7 +175,7 @@ class WarderMainTests(unittest.TestCase):
                 paths.add(ROOT/'images'/('nav-'+icons.icon_name(ident)+'.png'))
         for path in paths:
             raw=path.read_bytes()
-            self.assertEqual(raw[:8],b'\\x89PNG\\r\\n\\x1a\\n',path)
+            self.assertEqual(raw[:8],bytes.fromhex('89504e470d0a1a0a'),path)
             w,h=struct.unpack('>II',raw[16:24])
             self.assertEqual(w,h,path)
             self.assertIn(raw[25],(4,6),path)
