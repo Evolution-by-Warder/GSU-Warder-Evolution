@@ -37,7 +37,7 @@ from Components.ActionMap import ActionMap, HelpableActionMap
 from enigma import ePixmap, eTimer, eListboxPythonMultiContent, eListbox, gFont, getDesktop, ePoint, addFont
 from Components.Pixmap import *
 from Tools.LoadPixmap import LoadPixmap
-from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmapAlphaTest
+from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmapAlphaTest, MultiContentEntryPixmapAlphaBlend
 from Screens.MessageBox import MessageBox
 from os import system, path, statvfs, remove, listdir, rename, symlink, unlink, mkdir
 from Components.ConfigList import ConfigListScreen, ConfigList
