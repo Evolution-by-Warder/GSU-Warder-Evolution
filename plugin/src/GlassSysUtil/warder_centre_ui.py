@@ -114,3 +114,62 @@ class NetworkOverview(DetailText):
         if not self.closed:self['file_info'].setText(for_api(self.api,'Unavailable'))
         return None
     def cleanup(self):self.closed=True
+
+
+class SystemOverview(DetailText):
+    """Small initial resource overview. Detailed process/log collection is separate."""
+    def __init__(self,session,api):
+        self.api=api
+        self.closed=False
+        self.started=False
+        DetailText.__init__(self,session,api,for_api(api,'System centre'),for_api(api,'Loading…'))
+        self.onLayoutFinish.append(self.start)
+        self.onClose.append(self.cleanup)
+    def start(self):
+        if self.closed or self.started:return
+        self.started=True
+        from twisted.internet.threads import deferToThread
+        from .warder_system_data import overview
+        request=deferToThread(overview)
+        request.addCallback(self.done)
+        request.addErrback(self.failed)
+    def done(self,report):
+        if self.closed:return
+        tr=lambda key:for_api(self.api,key)
+        rows=[tr('System health check')]
+        for c in report['checks']:
+            pct=c['available_percent']
+            rows.append(c['name']+' — '+tr({'ok':'OK','warning':'Warning','critical':'Critical','unknown':'Unavailable'}[c['state']])+
+                        (' · %.1f%% '%pct+tr('free') if pct is not None else ''))
+        h=report['health']
+        rows += ['',tr('Resource score')+': '+(str(h['score'])+'/100' if h['score'] is not None else '—'),
+                 tr('Measured checks')+': %d/%d'%h['coverage']]
+        self['file_info'].setText('\n'.join(rows))
+    def failed(self,failure):
+        if not self.closed:self['file_info'].setText(for_api(self.api,'Unavailable'))
+        return None
+    def cleanup(self):self.closed=True
+
+class SystemDetail(DetailText):
+    """Separate on-demand process and log screens; ignore results after close."""
+    def __init__(self,session,api,kind):
+        self.api,self.kind=api,kind
+        self.closed=False
+        self.started=False
+        DetailText.__init__(self,session,api,for_api(api,{'processes':'Process Info','log':'Log view'}[kind]),for_api(api,'Loading…'))
+        self.onLayoutFinish.append(self.start)
+        self.onClose.append(self.cleanup)
+    def start(self):
+        if self.closed or self.started:return
+        self.started=True
+        from twisted.internet.threads import deferToThread
+        from .warder_system_data import detail_text
+        request=deferToThread(detail_text,self.kind,lambda key:for_api(self.api,key))
+        request.addCallback(self.done)
+        request.addErrback(self.failed)
+    def done(self,result):
+        if not self.closed:self['file_info'].setText(result)
+    def failed(self,failure):
+        if not self.closed:self['file_info'].setText(for_api(self.api,'Unavailable'))
+        return None
+    def cleanup(self):self.closed=True
