@@ -283,13 +283,16 @@ class ReceiverRenderingTests(unittest.TestCase):
             done('Kernel log content')
             self.assertEqual(menu['descriptions'].getText(),'Kernel log content')
             session.open.assert_not_called()
+            menu.full_result()
+            session.open.assert_called_once_with(ui.Report,self.api,'system-log','Log view')
+            session.open.reset_mock()
             menu.refresh_result()
             late=worker.return_value.addCallbacks.call_args.args[0]
             menu.close_results()
             late('stale')
             self.assertNotEqual(menu['descriptions'].getText(),'stale')
         menu.full_result()
-        session.open.assert_called_once_with(ui.Report,self.api,'system-log','Log view')
+        session.open.assert_not_called()
 
     def test_menu_panels_are_disjoint_and_backings_cannot_cover_result(self):
         for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
