@@ -1,0 +1,27 @@
+{
+  "source_commit": "30a420d5019446c1b33f48fe586addc5f9ead153",
+  "workflow_run": 45786453936,
+  "release": "v0.41.5",
+  "public_bytes": 3873060,
+  "public_sha256": "115bc57d4c842049d72864a0e2deaf0eceb35f0bb7d53f515cc5533e9abc48fc",
+  "public_sidecar_verified": true,
+  "installed_regular_file_bytes": 6500779,
+  "packaged_install": {
+    "version": "0.41.5",
+    "package": "enigma2-plugin-extensions-gsu-warder-evolution",
+    "bytes": 3873060,
+    "sha256": "115bc57d4c842049d72864a0e2deaf0eceb35f0bb7d53f515cc5533e9abc48fc",
+    "shipped_postinst_verifier_exit": 0,
+    "installed_version_parser_passed": true,
+    "updater_empty_feed_passed": true,
+    "minimal_python_without_dataclasses_passed": true
+  },
+  "migration": {
+    "allocated_installed_package_file_bytes": {
+      "13.40-r93": 7073792,
+      "13.41-r4": 7073792,
+      "13.41-r5": 7073792
+    }
+  },
+  "physical_receiver_tested": false
+}

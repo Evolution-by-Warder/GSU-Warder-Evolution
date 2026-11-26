@@ -2,5 +2,36 @@
   "schema": 1,
   "product": "Glass System Utility Warder Evolution",
   "channel": "stable-modern",
-  "release": null
+  "release": {
+    "version": "0.41.5",
+    "tag": "v0.41.5",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v0.41.5/enigma2-plugin-extensions-gsu_0.41.5_all.ipk",
+    "sha256": "115bc57d4c842049d72864a0e2deaf0eceb35f0bb7d53f515cc5533e9abc48fc",
+    "bytes": 3873060,
+    "notes": "Seven diagnostic centres with live system and signal graphs, storage analysis and local forum reports. Receiver functions depend on the tuner and image. Restart the GUI after updating.",
+    "notes_i18n": {
+      "en": "Seven diagnostic centres with live system and signal graphs, storage analysis and local forum reports. Receiver functions depend on the tuner and image. Restart the GUI after updating.",
+      "sk": "Sedem diagnostických centier so živými grafmi systému a signálu, analýzou úložiska a lokálnou správou pre fórum. Funkcie príjmu závisia od tunera a image. Po aktualizácii reštartujte GUI.",
+      "cs": "Sedm diagnostických center s živými grafy systému a signálu, analýzou úložiště a místní zprávou pro fórum. Funkce příjmu závisejí na tuneru a image. Po aktualizaci restartujte GUI.",
+      "de": "Sieben Diagnosezentren mit Live-Diagrammen für System und Empfang, Speicheranalyse und lokalem Forumsbericht. Empfangsfunktionen hängen von Tuner und Image ab. Nach dem Update die GUI neu starten.",
+      "pl": "Siedem centrów diagnostycznych z wykresami systemu i sygnału na żywo, analizą pamięci i lokalnym raportem na forum. Funkcje odbioru zależą od głowicy i obrazu. Po aktualizacji uruchom ponownie interfejs.",
+      "hu": "Hét diagnosztikai központ élő rendszer- és jelgrafikonokkal, tárhelyelemzéssel és helyi fórumjelentéssel. A vételi lehetőségek a tunertől és a rendszertől függenek. Frissítés után indítsa újra a kezelőfelületet.",
+      "ru": "Семь центров диагностики с графиками системы и сигнала в реальном времени, анализом хранилища и локальным отчётом для форума. Возможности приёма зависят от тюнера и образа. После обновления перезапустите интерфейс.",
+      "fr": "Sept centres de diagnostic avec graphiques système et signal en direct, analyse du stockage et rapport local pour le forum. Les fonctions de réception dépendent du tuner et de l’image. Redémarrez l’interface après la mise à jour.",
+      "it": "Sette centri diagnostici con grafici di sistema e segnale in tempo reale, analisi dello spazio e rapporto locale per il forum. Le funzioni di ricezione dipendono dal sintonizzatore e dall’immagine. Riavviare la GUI dopo l’aggiornamento.",
+      "es": "Siete centros de diagnóstico con gráficos de sistema y señal en directo, análisis de almacenamiento e informe local para el foro. Las funciones de recepción dependen del sintonizador y de la imagen. Reinicie la interfaz tras actualizar.",
+      "al": "Shtatë qendra diagnostikimi me grafikë të sistemit dhe sinjalit në kohë reale, analizë të hapësirës dhe raport lokal për forumin. Mundësitë e marrjes varen nga akorduesi dhe sistemi. Rinisni ndërfaqen pas përditësimit.",
+      "el": "Επτά κέντρα διάγνωσης με ζωντανά γραφήματα συστήματος και σήματος, ανάλυση χώρου και τοπική αναφορά για το φόρουμ. Οι λειτουργίες λήψης εξαρτώνται από τον δέκτη και την εικόνα. Επανεκκινήστε τη διεπαφή μετά την ενημέρωση.",
+      "et": "Seitse diagnostikakeskust süsteemi ja signaali reaalajagraafikute, salvestusruumi analüüsi ning kohaliku foorumiaruandega. Vastuvõtufunktsioonid sõltuvad tuunerist ja süsteemitõmmisest. Pärast uuendust taaskäivitage kasutajaliides.",
+      "fa": "هفت مرکز عیب‌یابی با نمودارهای زندهٔ سیستم و سیگنال، تحلیل فضای ذخیره‌سازی و گزارش محلی برای انجمن. امکانات دریافت به تیونر و ایمیج بستگی دارد. پس از به‌روزرسانی رابط کاربری را دوباره راه‌اندازی کنید.",
+      "lt": "Septyni diagnostikos centrai su tiesioginiais sistemos ir signalo grafikais, saugyklos analize ir vietine forumo ataskaita. Priėmimo galimybės priklauso nuo imtuvo ir sistemos atvaizdo. Po naujinimo paleiskite sąsają iš naujo.",
+      "nl": "Zeven diagnosecentra met livegrafieken voor systeem en signaal, opslaganalyse en een lokaal forumrapport. De ontvangstfuncties hangen af van de tuner en het image. Herstart de interface na het bijwerken.",
+      "pt": "Sete centros de diagnóstico com gráficos do sistema e do sinal em tempo real, análise do armazenamento e relatório local para o fórum. As funções de receção dependem do sintonizador e da imagem. Reinicie a interface após a atualização.",
+      "ro": "Șapte centre de diagnostic cu grafice în timp real pentru sistem și semnal, analiza spațiului și raport local pentru forum. Funcțiile de recepție depind de tuner și de imagine. Reporniți interfața după actualizare.",
+      "tr": "Yedi tanı merkezinde canlı sistem ve sinyal grafikleri, depolama analizi ve yerel forum raporu bulunur. Alım işlevleri tunere ve imaja bağlıdır. Güncellemeden sonra arayüzü yeniden başlatın.",
+      "uk": "Сім діагностичних центрів із графіками системи й сигналу наживо, аналізом сховища та локальним звітом для форуму. Можливості приймання залежать від тюнера й образу. Після оновлення перезапустіть інтерфейс.",
+      "zh": "七个诊断中心提供实时系统和信号图表、存储分析及保存在本机的论坛报告。接收功能取决于调谐器和系统镜像。更新后请重启图形界面。"
+    },
+    "release_url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/tag/v0.41.5"
+  }
 }

@@ -1,14 +1,14 @@
 # GSU Warder Evolution
 
-## Spoločné ostré vydanie — 26. november 2026
+## Stabilné vydanie 0.41.5
 
-**GSU 13.41-r6** pre OpenPLi a OpenATV. [Poznámky k vydaniu](docs/CURRENT-RELEASE.md). [Stiahnuť IPK](https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.41-r6/enigma2-plugin-extensions-gsu_13.41-r6_all.ipk).
+Sedem diagnostických centier so živými grafmi systému a signálu, analýzou úložiska a lokálnou správou pre fórum. Funkcie príjmu závisia od tunera a image. Po aktualizácii reštartujte GUI. [Poznámky](docs/CURRENT-RELEASE.md) · [IPK](https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v0.41.5/enigma2-plugin-extensions-gsu_0.41.5_all.ipk).
 
 Plugin pre Enigma2: informácie o prijímači a kanáli, ECM a OSCam, správa CAM, swap a diagnostika v spoločnom vzhľade Warder Evolution.
 
 **r92 prináša tichú prevádzku: bez automatických gsu.log, autostart a bitrate logov; df/dmesg sa spracúva v pamäti. Zachováva schválené rozhranie a funkcie r90.**
 
-**Stabilné vydanie: 13.41-r6. Zaradenie GSU do rozšírení a názov gsu-warder-evolution požadoval vlastník 30. októbra 2026.** Rozhranie a prejdené funkcie schválil používateľ na GigaBlue Quad 4K Pro s OpenATV 8. Vydanie je verejné **Latest**, bez označenia prerelease.
+**Stabilné vydanie: 0.41.5. Zaradenie GSU do rozšírení a názov gsu-warder-evolution požadoval vlastník 30. októbra 2026.** Fyzická skúška na GigaBlue Quad 4K Pro sa týkala predchádzajúcej generácie. Vydanie je verejné **Latest**, bez označenia prerelease.
 
 [Stiahnuť aktuálne vydanie](https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/latest) · [Používanie](docs/POUZIVANIE.md) · [Zmeny](CHANGELOG.md) · [Overenie a údržba](plugin/TESTOVANIE.md)
 
@@ -23,13 +23,13 @@ Plugin pre Enigma2: informácie o prijímači a kanáli, ECM a OSCam, správa CA
 
 ## Inštalácia a aktualizácia
 
-Pri novej inštalácii stiahnite `enigma2-plugin-extensions-gsu_13.41-r6_all.ipk` a použite správcu lokálnych balíkov. Pri existujúcej GSU použite vstavaný aktualizátor a prechod r93 → reštart GUI → 13.41-r6. Existujúce inštalácie použijú aktualizátor priamo v GSU. Inštalačná identita a adresár `Plugins/Extensions/GlassSysUtil` sa nemenia, aby zostali zachované nastavenia a existujúce vstupy do pluginu.
+Pri novej inštalácii stiahnite `enigma2-plugin-extensions-gsu_0.41.5_all.ipk` a použite správcu lokálnych balíkov. Pri existujúcej GSU použite vstavaný aktualizátor a prechod r93 → reštart GUI → 13.41-r6 → reštart GUI → 0.41.5. Existujúce inštalácie použijú aktualizátor priamo v GSU. Inštalačná identita a adresár `Plugins/Extensions/GlassSysUtil` sa nemenia, aby zostali zachované nastavenia a existujúce vstupy do pluginu.
 
 Aktualizátor overuje veľkosť, SHA256 a obsah balíka pred inštaláciou. Automatická aj ručná ponuka používa preložené potvrdenie **Nie / Áno**. Bez novej verzie alebo pri chybe zostáva **Naspäť**.
 
 ## Jazyky a kompatibilita
 
-Rozhranie sleduje jazyk prijímača a podporuje 21 jazykov. Dni, mesiace, aktualizácie a 431 udržiavaných spoločných a doplnkových textov; pôvodné preklady a anglický fallback sú zachované. [Rozsah lokalizácie](plugin/LOCALIZATION.md).
+Rozhranie sleduje jazyk prijímača a podporuje 21 jazykov. Dni, mesiace, aktualizácie a texty diagnostických centier; pôvodné preklady a anglický fallback sú zachované. [Rozsah lokalizácie](plugin/LOCALIZATION.md).
 
 Vývojové kontroly používajú Python 3.14.7; používateľské overenie prebehlo na OpenATV 8. Nie je tým potvrdená funkčnosť na každom modeli a image ani nepoužívané CCcam/Mbox/samostatné SRV služby.
 
@@ -50,4 +50,4 @@ Projekt vychádza z Glass System Utility 13.20. Pôvodné autorstvo a potrebné 
 
 ## Zaradenie v správcovi pluginov — 30. október 2026
 
-**Balíčky s rozšíreniami → gsu-warder-evolution**. Inštalačný súbor: `enigma2-plugin-extensions-gsu_13.41-r6_all.ipk`. Staršie verzie cez vstavaný aktualizátor najskôr nainštalujú kompatibilný r93; po reštarte GUI nasleduje 13.41-r6. [Prechod, zachovanie nastavení a overenie](docs/PACKAGE-GROUP-MIGRATION.md). [Kontrola všetkých troch skupín](docs/PLUGIN-PACKAGE-GROUPS.json).
+**Balíčky s rozšíreniami → gsu-warder-evolution**. Inštalačný súbor: `enigma2-plugin-extensions-gsu_0.41.5_all.ipk`. Staršie verzie cez vstavaný aktualizátor najskôr nainštalujú kompatibilný r93; po reštarte GUI nasleduje 13.41-r6. [Prechod, zachovanie nastavení a overenie](docs/PACKAGE-GROUP-MIGRATION.md). [Kontrola všetkých troch skupín](docs/PLUGIN-PACKAGE-GROUPS.json).

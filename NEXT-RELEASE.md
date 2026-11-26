@@ -1,3 +1,7 @@
+# Produkčná aktivácia v0.41.5
+
+Zdroj 30a420d5019446c1b33f48fe586addc5f9ead153, workflow 45786453936, overených 3873060 bajtov, SHA-256 115bc57d4c842049d72864a0e2deaf0eceb35f0bb7d53f515cc5533e9abc48fc. Samostatný stabilný feed je aktívny. Ďalší krok je aktualizácia webu SK/EN/DE/RU a kontrola Pages.
+
 # 26. 11. 2026 · konečná kontrola balíka a alokácie
 
 Na 9809b5f5083081d68668cd20f9f269b2ac57bf93 mali dve CI zostavy a lokálne bajty zhodný SHA-256 115bc57d4c842049d72864a0e2deaf0eceb35f0bb7d53f515cc5533e9abc48fc. Job 45784968376 overil tri cesty migrácie, veľkosť 3 873 060 bajtov a 6 500 779 bajtov súborov po rozbalení. Na natívnom CI AArch64 trvalo jedno odčítanie v priemere 0,423 ms (12 vzoriek po sekunde), CPU 5,908 ms spolu, špička procesu 14 312 KiB. OpenATV 45784968596, OpenPLi 45784968381, inštalátor 45784968501 a OpenBH uspeli. V emulácii už cieľové interpretery bežali. V izolovanej zostave chýbal modul unicodedata pre IDNA pri getaddrinfo, ktorý sa doplnil do cieľového interpretera. Plugin používa štandardné moduly image.

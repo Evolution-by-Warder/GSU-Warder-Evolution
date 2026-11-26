@@ -1,9 +1,7 @@
-# GSU 13.41-r6
+# GSU 0.41.5
 
-Prechodová verzia pripravuje aktualizátor na nové číslovanie 0.41.x. Nastavenia zostávajú zachované. Po aktualizácii reštartujte GUI.
+Sedem diagnostických centier so živými grafmi systému a signálu, analýzou úložiska a lokálnou správou pre fórum. Funkcie príjmu závisia od tunera a image. Po aktualizácii reštartujte GUI.
 
-[Stiahnuť IPK](https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.41-r6/enigma2-plugin-extensions-gsu_13.41-r6_all.ipk)
+[IPK](https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v0.41.5/enigma2-plugin-extensions-gsu_0.41.5_all.ipk) · [Vydanie](https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/tag/v0.41.5)
 
-SHA-256: `a8e79609147666b27f18460b3340e099bb013664478a787746bcf56bb28052e2`
-
-Overené verejné bajty, inštalačný test a natívne CI; fyzické prijímače neboli testované.
+SHA-256 115bc57d4c842049d72864a0e2deaf0eceb35f0bb7d53f515cc5533e9abc48fc
