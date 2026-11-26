@@ -44,10 +44,34 @@ def draw(canvas, samples, key, width, height, bound=None):
     canvas.flush()
 
 
+def draw_trend(canvas,samples,key,width,height,bound=None,interval=2):
+    """Small native plots, real timestamps, no interpolated missing observations."""
+    canvas.clear()
+    canvas.fill(0,0,width,height,0x102136)
+    for fraction in (0.25,0.5,0.75):
+        canvas.fill(0,min(height-1,round(fraction*height)),width,1,0x314b65)
+    floor,ceiling=chart_scale(samples,key,bound)
+    previous=None
+    latest=samples[-1][0] if samples else 0
+    line=getattr(canvas,'line',None)
+    for stamp,values in samples:
+        value=values.get(key)
+        if value is None:
+            previous=None
+            continue
+        x=max(0,min(width-1,round((stamp-latest+60)*(width-1)/60)))
+        y=max(0,min(height-1,height-1-round((value-floor)/(ceiling-floor)*(height-1))))
+        if previous and stamp-previous[0]<=max(2,interval*2.5) and callable(line):
+            line(previous[1],previous[2],x,y,0x34cfce)
+        canvas.fill(max(0,x-1),max(0,y-1),min(3,width-max(0,x-1)),min(3,height-max(0,y-1)),0x34cfce)
+        previous=(stamp,x,y)
+    canvas.flush()
+
+
 class LiveChart(Screen):
     def __init__(self, session, api, signal=False):
         self.width, self.height = dimensions(api)
-        self.skin = skin(self.width, self.height, 'chart')
+        self.skin = skin(self.width, self.height, 'chart' if signal else 'multichart')
         Screen.__init__(self, session)
         self.api, self.signal = api, signal
         install_header(self,api)
@@ -59,8 +83,19 @@ class LiveChart(Screen):
         self['history'] = CanvasSource()
         for name, key in [('heading', 'Signal history' if signal else 'Live monitoring'),
                           ('metric', ''), ('details', ''), ('axis_top',''), ('axis_bottom',''), ('axis_start','−60 s'), ('axis_end','0 s'), ('red', 'Back'), ('green', 'Pause'),
-                          ('yellow', 'Interval'), ('blue', 'Export CSV' if signal else 'Details')]:
+                          ('yellow', 'Interval'), ('blue', 'Export CSV' if signal else '')]:
             self[name] = Label(self.tr(key))
+        if not signal:
+            self['window']=Label('−60 s → 0 s')
+            for i,(_,caption,unit) in enumerate(SYSTEM):
+                self['plot%d'%i]=CanvasSource()
+                self['metric_name%d'%i]=Label(self.tr(caption))
+                self['metric_value%d'%i]=Label('— '+unit)
+                self['plot_top%d'%i]=Label('—')
+                self['plot_bottom%d'%i]=Label('—')
+                for k,name in enumerate(('Minimum','Maximum','Average')):
+                    self['stat_name%d_%d'%(i,k)]=Label(self.tr(name))
+                    self['stat_value%d_%d'%(i,k)]=Label('—')
         self.timer = api['eTimer']()
         sig = getattr(self.timer, 'timeout', None)
         if hasattr(sig, 'connect'):
@@ -74,6 +109,7 @@ class LiveChart(Screen):
              'up': lambda: self.move(-1), 'down': lambda: self.move(1),
              'green': self.pause, 'ok': self.pause, 'yellow': self.change_interval,
              'blue': self.export_or_next, 'red': self.close, 'cancel': self.close}, -2)
+        self.onLayoutFinish.append(self.render)
         self.onLayoutFinish.append(self.tick)
         self.onClose.append(self.cleanup)
 
@@ -109,8 +145,12 @@ class LiveChart(Screen):
         # A worker owns the system sampler until the deferred has fired.
         if self.pending or self.closed:
             return
-        key, label, unit = self.metrics[self.index]
         samples = self.source.history.snapshot()
+        self['yellow'].setText('%s · %d s' % (self.tr('Interval'),self.interval))
+        if not self.signal:
+            self.render_all(samples)
+            return
+        key, label, unit = self.metrics[self.index]
         current = samples[-1][1].get(key) if samples else None
         self['metric'].setText('‹  %s    %s %s  ›' % (self.tr(label), display(current, key), unit))
         low, high, mean = statistics(samples, key)
@@ -133,6 +173,19 @@ class LiveChart(Screen):
         self['axis_bottom'].setText(display(low_axis,key))
         draw(self['history'],samples,key,round(1600*self.width/1920),round(298*self.height/1080),bound)
 
+    def render_all(self,samples):
+        for i,(key,caption,unit) in enumerate(SYSTEM):
+            current=samples[-1][1].get(key) if samples else None
+            self['metric_value%d'%i].setText('%s %s'%(display(current,key),unit))
+            bound=100 if unit=='%' else None
+            low_axis,high_axis=chart_scale(samples,key,bound)
+            self['plot_top%d'%i].setText(display(high_axis,key))
+            self['plot_bottom%d'%i].setText(display(low_axis,key))
+            for k,value in enumerate(statistics(samples,key)):
+                self['stat_value%d_%d'%(i,k)].setText(display(value,key))
+            draw_trend(self['plot%d'%i],samples,key,round(440*self.width/1920),
+                       round(140*self.height/1080),bound,self.interval)
+
     def pause(self):
         self.paused = not self.paused
         self.timer.stop()
@@ -143,6 +196,7 @@ class LiveChart(Screen):
             self.tick()
 
     def move(self, amount):
+        if not self.signal:return
         self.index = (self.index+amount) % len(self.metrics)
         self.render()
 
@@ -154,9 +208,7 @@ class LiveChart(Screen):
             self.timer.start(self.interval*1000, True)
 
     def export_or_next(self):
-        if not self.signal:
-            self.move(1)
-            return
+        if not self.signal:return
         from Screens.MessageBox import MessageBox
         try:
             message = export(self.source.history.snapshot())
