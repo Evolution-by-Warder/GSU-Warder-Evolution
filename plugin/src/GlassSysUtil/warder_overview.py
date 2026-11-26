@@ -5,7 +5,7 @@ from Components.ActionMap import ActionMap
 from Components.Label import Label
 from twisted.internet.threads import deferToThread
 from .i18n import for_api
-from .warder_dashboard import dimensions, skin
+from .warder_dashboard import dimensions, skin, install_header
 from .warder_screen import Screen
 from .warder_system_data import dashboard
 
@@ -17,6 +17,7 @@ class Overview(Screen):
         self.skin = skin(*dimensions(api), 'overview')
         Screen.__init__(self, session)
         self.api = api
+        install_header(self,api)
         self.cancelled = Event()
         self.pending = False
         for name, label in [('heading','System centre'), ('summary','Loading…'), ('red','Back'),
@@ -25,6 +26,11 @@ class Overview(Screen):
         for i, title in enumerate(('CPU', 'RAM', 'Swap', 'Flash', 'HDD / SSD / USB', 'Temperature')):
             self['label%d'%i] = Label(self.tr(title))
             self['value%d'%i] = Label('—')
+            if i<4:
+                self['meter%d'%i]=api['ProgressBar']()
+                self['meter%d'%i].hide()
+            else:
+                self['sub%d'%i]=Label('')
         self['actions'] = ActionMap(['ColorActions','SetupActions'],
               {'red':self.close,'cancel':self.close,'ok':self.live,'green':self.live,
                'yellow':self.refresh,'blue':self.toggle}, -2)
@@ -72,12 +78,20 @@ class Overview(Screen):
             else:
                 text = '%.0f %%' % value
             self['value%d'%i].setText(text)
+            if i<4:
+                meter=self['meter%d'%i]
+                if value is None:meter.hide()
+                else:
+                    meter.setValue(round(max(0,min(100,value))))
+                    meter.show()
         self['label1'].setText('RAM · '+self.tr('Used(%):').rstrip(':'))
         self['label3'].setText('Flash · '+self.tr('free'))
         self['label4'].setText('HDD / SSD / USB · '+self.tr('free'))
+        self['sub4'].setText(str(report.get('disk_mount') or ''))
+        self['sub5'].setText(str(report.get('temperature_source') or ''))
         h = report['health']
         score = str(h['score'])+'/100' if h['score'] is not None else '—'
-        message = '%s   %s     ·     %s   %d/%d' % (self.tr('Resource score'),score,
+        message = '%s   %s     ·     %s   %d/%d (RAM / Flash)' % (self.tr('Resource score'),score,
                                                       self.tr('Measured checks'),*h['coverage'])
         if h['state'] in ('warning','critical'):
             advice = self.tr('Review memory and storage')
