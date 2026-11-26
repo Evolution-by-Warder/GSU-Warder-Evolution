@@ -990,6 +990,9 @@ def open_diagnostic(session, api, kind):
         return
     if kind == 'projects':
         session.open(ProjectMenu, api)
+    elif kind == 'project-backup':
+        from .warder_backup_ui import BackupMenu
+        session.open(BackupMenu,api)
     elif kind == 'signal-quick':
         tr=lambda key:for_api(api,key)
         title,hint=DIAGNOSTICS[kind]

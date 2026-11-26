@@ -14,7 +14,7 @@ ROUTE_ICONS={
     'network-overview':'network','network-test':'signal','network-interfaces':'network',
     'network-statistics':'trend','network-mounts':'storage','network-services':'service','2':'key','3':'key','4':'key',
     '6':'info','7':'settings','8':'tv','service-health':'health','service-smart':'health','service-crashes':'log','service-plugins':'package','service-ipk':'package',
-    'forum-report':'clipboard','17':'service','16':'update','projects':'ecosystem',
+    'forum-report':'clipboard','17':'service','16':'update','projects':'ecosystem','project-backup':'storage',
     'FullHDGlass':'tv','PiconHub':'ecosystem','Warder Radio':'signal','YouTube':'tv','GSU':'system',
 }
 

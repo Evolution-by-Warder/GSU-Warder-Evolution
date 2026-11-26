@@ -119,7 +119,18 @@
     "Selected local folders only": "Selected local folders only",
     "Press OK to scan selected local folders. No files are changed.": "Press OK to scan selected local folders. No files are changed.",
     "Release notes": "Release notes",
-    "Status": "Status"
+    "Status": "Status",
+    "Backup and restore": "Backup and restore",
+    "Create backup": "Create backup",
+    "Restore backup": "Restore backup",
+    "Storage location": "Storage location",
+    "Select projects": "Select projects",
+    "Restore selected compatible settings only.": "Restore selected compatible settings only.",
+    "Invalid backup": "Invalid backup",
+    "No backups": "No backups",
+    "Portable settings only. Passwords and tokens are excluded.": "Portable settings only. Passwords and tokens are excluded.",
+    "Open each installed plugin once before backup or restore.": "Open each installed plugin once before backup or restore.",
+    "Restart GUI after restoring settings.": "Restart GUI after restoring settings."
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -241,7 +252,18 @@
     "Selected local folders only": "Len vybrané lokálne priečinky",
     "Press OK to scan selected local folders. No files are changed.": "Stlačením OK prehľadáte vybrané lokálne priečinky. Žiadne súbory sa nemenia.",
     "Release notes": "Poznámky k vydaniu",
-    "Status": "Stav"
+    "Status": "Stav",
+    "Backup and restore": "Záloha a obnova",
+    "Create backup": "Vytvoriť zálohu",
+    "Restore backup": "Obnoviť zálohu",
+    "Storage location": "Umiestnenie zálohy",
+    "Select projects": "Výber projektov",
+    "Restore selected compatible settings only.": "Obnoviť len vybrané kompatibilné nastavenia.",
+    "Invalid backup": "Neplatná záloha",
+    "No backups": "Žiadne zálohy",
+    "Portable settings only. Passwords and tokens are excluded.": "Len prenosné nastavenia. Heslá a tokeny sa vynechávajú.",
+    "Open each installed plugin once before backup or restore.": "Pred zálohou alebo obnovou raz otvorte každý nainštalovaný plugin.",
+    "Restart GUI after restoring settings.": "Po obnove nastavení reštartujte GUI."
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -363,7 +385,18 @@
     "Selected local folders only": "Pouze vybrané místní složky",
     "Press OK to scan selected local folders. No files are changed.": "Stisknutím OK prohledáte vybrané místní složky. Žádné soubory se nemění.",
     "Release notes": "Poznámky k vydání",
-    "Status": "Stav"
+    "Status": "Stav",
+    "Backup and restore": "Záloha a obnova",
+    "Create backup": "Vytvořit zálohu",
+    "Restore backup": "Obnovit zálohu",
+    "Storage location": "Umístění zálohy",
+    "Select projects": "Výběr projektů",
+    "Restore selected compatible settings only.": "Obnovit pouze vybraná kompatibilní nastavení.",
+    "Invalid backup": "Neplatná záloha",
+    "No backups": "Žádné zálohy",
+    "Portable settings only. Passwords and tokens are excluded.": "Pouze přenosná nastavení. Hesla a tokeny jsou vynechány.",
+    "Open each installed plugin once before backup or restore.": "Před zálohou nebo obnovou jednou otevřete každý nainstalovaný plugin.",
+    "Restart GUI after restoring settings.": "Po obnově nastavení restartujte GUI."
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -485,7 +518,18 @@
     "Selected local folders only": "Nur ausgewählte lokale Ordner",
     "Press OK to scan selected local folders. No files are changed.": "OK drücken, um ausgewählte lokale Ordner zu durchsuchen. Es werden keine Dateien geändert.",
     "Release notes": "Versionshinweise",
-    "Status": "Status"
+    "Status": "Status",
+    "Backup and restore": "Sicherung und Wiederherstellung",
+    "Create backup": "Sicherung erstellen",
+    "Restore backup": "Sicherung wiederherstellen",
+    "Storage location": "Speicherort",
+    "Select projects": "Projekte auswählen",
+    "Restore selected compatible settings only.": "Nur ausgewählte kompatible Einstellungen wiederherstellen.",
+    "Invalid backup": "Ungültige Sicherung",
+    "No backups": "Keine Sicherungen",
+    "Portable settings only. Passwords and tokens are excluded.": "Nur übertragbare Einstellungen. Passwörter und Token werden ausgelassen.",
+    "Open each installed plugin once before backup or restore.": "Vor Sicherung oder Wiederherstellung jedes installierte Plugin einmal öffnen.",
+    "Restart GUI after restoring settings.": "GUI nach Wiederherstellung neu starten."
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -607,7 +651,18 @@
     "Selected local folders only": "Tylko wybrane foldery lokalne",
     "Press OK to scan selected local folders. No files are changed.": "Naciśnij OK, aby przeszukać wybrane foldery lokalne. Żadne pliki nie są zmieniane.",
     "Release notes": "Informacje o wydaniu",
-    "Status": "Stan"
+    "Status": "Stan",
+    "Backup and restore": "Kopia i przywracanie",
+    "Create backup": "Utwórz kopię",
+    "Restore backup": "Przywróć kopię",
+    "Storage location": "Miejsce zapisu",
+    "Select projects": "Wybierz projekty",
+    "Restore selected compatible settings only.": "Przywróć tylko wybrane zgodne ustawienia.",
+    "Invalid backup": "Nieprawidłowa kopia",
+    "No backups": "Brak kopii",
+    "Portable settings only. Passwords and tokens are excluded.": "Tylko przenośne ustawienia. Hasła i tokeny są pomijane.",
+    "Open each installed plugin once before backup or restore.": "Przed kopią lub przywróceniem otwórz każdy zainstalowany plugin.",
+    "Restart GUI after restoring settings.": "Po przywróceniu uruchom ponownie GUI."
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -729,7 +784,18 @@
     "Selected local folders only": "Csak kijelölt helyi mappák",
     "Press OK to scan selected local folders. No files are changed.": "Az OK gombbal kereshet a kijelölt helyi mappákban. A fájlok nem módosulnak.",
     "Release notes": "Kiadási megjegyzések",
-    "Status": "Állapot"
+    "Status": "Állapot",
+    "Backup and restore": "Mentés és visszaállítás",
+    "Create backup": "Mentés készítése",
+    "Restore backup": "Mentés visszaállítása",
+    "Storage location": "Tárolási hely",
+    "Select projects": "Projektek kiválasztása",
+    "Restore selected compatible settings only.": "Csak a kiválasztott kompatibilis beállítások visszaállítása.",
+    "Invalid backup": "Érvénytelen mentés",
+    "No backups": "Nincs mentés",
+    "Portable settings only. Passwords and tokens are excluded.": "Csak hordozható beállítások. Jelszavak és tokenek nélkül.",
+    "Open each installed plugin once before backup or restore.": "Mentés vagy visszaállítás előtt nyisson meg minden telepített plugint.",
+    "Restart GUI after restoring settings.": "Visszaállítás után indítsa újra a GUI-t."
   },
   "ru": {
     "System centre": "Системный центр",
@@ -851,7 +917,18 @@
     "Selected local folders only": "Только выбранные локальные папки",
     "Press OK to scan selected local folders. No files are changed.": "Нажмите OK для поиска в выбранных локальных папках. Файлы не изменяются.",
     "Release notes": "Примечания к выпуску",
-    "Status": "Состояние"
+    "Status": "Состояние",
+    "Backup and restore": "Резервное копирование и восстановление",
+    "Create backup": "Создать копию",
+    "Restore backup": "Восстановить копию",
+    "Storage location": "Место хранения",
+    "Select projects": "Выбрать проекты",
+    "Restore selected compatible settings only.": "Восстановить только выбранные совместимые настройки.",
+    "Invalid backup": "Недействительная копия",
+    "No backups": "Нет резервных копий",
+    "Portable settings only. Passwords and tokens are excluded.": "Только переносимые настройки. Пароли и токены исключены.",
+    "Open each installed plugin once before backup or restore.": "Перед копированием или восстановлением откройте каждый установленный плагин.",
+    "Restart GUI after restoring settings.": "После восстановления перезапустите GUI."
   },
   "fr": {
     "System centre": "Centre système",
@@ -973,7 +1050,18 @@
     "Selected local folders only": "Dossiers locaux sélectionnés uniquement",
     "Press OK to scan selected local folders. No files are changed.": "Appuyez sur OK pour analyser les dossiers locaux sélectionnés. Aucun fichier n’est modifié.",
     "Release notes": "Notes de version",
-    "Status": "État"
+    "Status": "État",
+    "Backup and restore": "Sauvegarde et restauration",
+    "Create backup": "Créer une sauvegarde",
+    "Restore backup": "Restaurer la sauvegarde",
+    "Storage location": "Emplacement de stockage",
+    "Select projects": "Sélectionner les projets",
+    "Restore selected compatible settings only.": "Restaurer uniquement les réglages compatibles sélectionnés.",
+    "Invalid backup": "Sauvegarde invalide",
+    "No backups": "Aucune sauvegarde",
+    "Portable settings only. Passwords and tokens are excluded.": "Réglages portables uniquement. Mots de passe et jetons exclus.",
+    "Open each installed plugin once before backup or restore.": "Ouvrez une fois chaque plugin installé avant la sauvegarde ou la restauration.",
+    "Restart GUI after restoring settings.": "Redémarrez l’interface après la restauration."
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -1095,7 +1183,18 @@
     "Selected local folders only": "Solo cartelle locali selezionate",
     "Press OK to scan selected local folders. No files are changed.": "Premere OK per esaminare le cartelle locali selezionate. Nessun file viene modificato.",
     "Release notes": "Note di rilascio",
-    "Status": "Stato"
+    "Status": "Stato",
+    "Backup and restore": "Backup e ripristino",
+    "Create backup": "Crea backup",
+    "Restore backup": "Ripristina backup",
+    "Storage location": "Posizione di archiviazione",
+    "Select projects": "Seleziona progetti",
+    "Restore selected compatible settings only.": "Ripristina solo le impostazioni compatibili selezionate.",
+    "Invalid backup": "Backup non valido",
+    "No backups": "Nessun backup",
+    "Portable settings only. Passwords and tokens are excluded.": "Solo impostazioni portabili. Password e token esclusi.",
+    "Open each installed plugin once before backup or restore.": "Aprire ogni plugin installato prima del backup o del ripristino.",
+    "Restart GUI after restoring settings.": "Riavviare la GUI dopo il ripristino."
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -1217,7 +1316,18 @@
     "Selected local folders only": "Solo carpetas locales seleccionadas",
     "Press OK to scan selected local folders. No files are changed.": "Pulse OK para examinar las carpetas locales seleccionadas. No se modifica ningún archivo.",
     "Release notes": "Notas de la versión",
-    "Status": "Estado"
+    "Status": "Estado",
+    "Backup and restore": "Copia y restauración",
+    "Create backup": "Crear copia",
+    "Restore backup": "Restaurar copia",
+    "Storage location": "Ubicación de almacenamiento",
+    "Select projects": "Seleccionar proyectos",
+    "Restore selected compatible settings only.": "Restaurar solo los ajustes compatibles seleccionados.",
+    "Invalid backup": "Copia no válida",
+    "No backups": "No hay copias",
+    "Portable settings only. Passwords and tokens are excluded.": "Solo ajustes portátiles. Se excluyen contraseñas y tokens.",
+    "Open each installed plugin once before backup or restore.": "Abra cada plugin instalado antes de la copia o restauración.",
+    "Restart GUI after restoring settings.": "Reinicie la interfaz después de restaurar."
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -1339,7 +1449,18 @@
     "Selected local folders only": "Vetëm dosjet lokale të zgjedhura",
     "Press OK to scan selected local folders. No files are changed.": "Shtypni OK për të kontrolluar dosjet lokale të zgjedhura. Asnjë skedar nuk ndryshohet.",
     "Release notes": "Shënime të versionit",
-    "Status": "Gjendja"
+    "Status": "Gjendja",
+    "Backup and restore": "Kopje dhe rikthim",
+    "Create backup": "Krijo kopje",
+    "Restore backup": "Rikthe kopjen",
+    "Storage location": "Vendndodhja e ruajtjes",
+    "Select projects": "Zgjidh projektet",
+    "Restore selected compatible settings only.": "Rikthe vetëm cilësimet e zgjedhura të përputhshme.",
+    "Invalid backup": "Kopje e pavlefshme",
+    "No backups": "Nuk ka kopje",
+    "Portable settings only. Passwords and tokens are excluded.": "Vetëm cilësime të transferueshme. Fjalëkalimet dhe tokenët përjashtohen.",
+    "Open each installed plugin once before backup or restore.": "Hapni çdo plugin të instaluar para kopjimit ose rikthimit.",
+    "Restart GUI after restoring settings.": "Rinisni GUI pas rikthimit."
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -1461,7 +1582,18 @@
     "Selected local folders only": "Μόνο επιλεγμένοι τοπικοί φάκελοι",
     "Press OK to scan selected local folders. No files are changed.": "Πατήστε OK για σάρωση των επιλεγμένων τοπικών φακέλων. Δεν αλλάζει κανένα αρχείο.",
     "Release notes": "Σημειώσεις έκδοσης",
-    "Status": "Κατάσταση"
+    "Status": "Κατάσταση",
+    "Backup and restore": "Αντίγραφο και επαναφορά",
+    "Create backup": "Δημιουργία αντιγράφου",
+    "Restore backup": "Επαναφορά αντιγράφου",
+    "Storage location": "Θέση αποθήκευσης",
+    "Select projects": "Επιλογή έργων",
+    "Restore selected compatible settings only.": "Επαναφορά μόνο επιλεγμένων συμβατών ρυθμίσεων.",
+    "Invalid backup": "Μη έγκυρο αντίγραφο",
+    "No backups": "Δεν υπάρχουν αντίγραφα",
+    "Portable settings only. Passwords and tokens are excluded.": "Μόνο μεταφέρσιμες ρυθμίσεις. Εξαιρούνται κωδικοί και διακριτικά.",
+    "Open each installed plugin once before backup or restore.": "Ανοίξτε κάθε εγκατεστημένο πρόσθετο πριν την αντιγραφή ή επαναφορά.",
+    "Restart GUI after restoring settings.": "Επανεκκινήστε το GUI μετά την επαναφορά."
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -1583,7 +1715,18 @@
     "Selected local folders only": "Ainult valitud kohalikud kaustad",
     "Press OK to scan selected local folders. No files are changed.": "Valitud kohalike kaustade skannimiseks vajutage OK. Faile ei muudeta.",
     "Release notes": "Väljalaskemärkmed",
-    "Status": "Olek"
+    "Status": "Olek",
+    "Backup and restore": "Varundamine ja taastamine",
+    "Create backup": "Loo varukoopia",
+    "Restore backup": "Taasta varukoopia",
+    "Storage location": "Salvestuskoht",
+    "Select projects": "Vali projektid",
+    "Restore selected compatible settings only.": "Taasta ainult valitud ühilduvad sätted.",
+    "Invalid backup": "Vigane varukoopia",
+    "No backups": "Varukoopiaid pole",
+    "Portable settings only. Passwords and tokens are excluded.": "Ainult ülekantavad sätted. Paroolid ja tõendid jäetakse välja.",
+    "Open each installed plugin once before backup or restore.": "Ava enne varundamist või taastamist iga paigaldatud plugin.",
+    "Restart GUI after restoring settings.": "Taaskäivita GUI pärast taastamist."
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -1705,7 +1848,18 @@
     "Selected local folders only": "فقط پوشه‌های محلی منتخب",
     "Press OK to scan selected local folders. No files are changed.": "برای بررسی پوشه‌های محلی منتخب، OK را فشار دهید. هیچ فایلی تغییر نمی‌کند.",
     "Release notes": "یادداشت‌های انتشار",
-    "Status": "وضعیت"
+    "Status": "وضعیت",
+    "Backup and restore": "پشتیبان‌گیری و بازیابی",
+    "Create backup": "ایجاد پشتیبان",
+    "Restore backup": "بازیابی پشتیبان",
+    "Storage location": "محل ذخیره‌سازی",
+    "Select projects": "انتخاب پروژه‌ها",
+    "Restore selected compatible settings only.": "فقط تنظیمات سازگار انتخاب‌شده را بازیابی کنید.",
+    "Invalid backup": "پشتیبان نامعتبر",
+    "No backups": "بدون پشتیبان",
+    "Portable settings only. Passwords and tokens are excluded.": "فقط تنظیمات قابل انتقال. رمزها و توکن‌ها حذف می‌شوند.",
+    "Open each installed plugin once before backup or restore.": "پیش از پشتیبان‌گیری یا بازیابی هر افزونه نصب‌شده را یک بار باز کنید.",
+    "Restart GUI after restoring settings.": "پس از بازیابی رابط کاربری را راه‌اندازی مجدد کنید."
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -1827,7 +1981,18 @@
     "Selected local folders only": "Tik pasirinkti vietiniai aplankai",
     "Press OK to scan selected local folders. No files are changed.": "Paspauskite OK, kad patikrintumėte pasirinktus vietinius aplankus. Failai nekeičiami.",
     "Release notes": "Laidos pastabos",
-    "Status": "Būsena"
+    "Status": "Būsena",
+    "Backup and restore": "Atsarginė kopija ir atkūrimas",
+    "Create backup": "Sukurti kopiją",
+    "Restore backup": "Atkurti kopiją",
+    "Storage location": "Saugojimo vieta",
+    "Select projects": "Pasirinkti projektus",
+    "Restore selected compatible settings only.": "Atkurti tik pasirinktas suderinamas nuostatas.",
+    "Invalid backup": "Netinkama kopija",
+    "No backups": "Kopijų nėra",
+    "Portable settings only. Passwords and tokens are excluded.": "Tik perkeliamos nuostatos. Slaptažodžiai ir žetonai neįtraukiami.",
+    "Open each installed plugin once before backup or restore.": "Prieš kopijavimą ar atkūrimą atidarykite kiekvieną įdiegtą įskiepį.",
+    "Restart GUI after restoring settings.": "Atkūrę paleiskite GUI iš naujo."
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -1949,7 +2114,18 @@
     "Selected local folders only": "Alleen geselecteerde lokale mappen",
     "Press OK to scan selected local folders. No files are changed.": "Druk op OK om geselecteerde lokale mappen te doorzoeken. Er worden geen bestanden gewijzigd.",
     "Release notes": "Versie-informatie",
-    "Status": "Status"
+    "Status": "Status",
+    "Backup and restore": "Back-up en herstel",
+    "Create backup": "Back-up maken",
+    "Restore backup": "Back-up herstellen",
+    "Storage location": "Opslaglocatie",
+    "Select projects": "Projecten selecteren",
+    "Restore selected compatible settings only.": "Herstel alleen geselecteerde compatibele instellingen.",
+    "Invalid backup": "Ongeldige back-up",
+    "No backups": "Geen back-ups",
+    "Portable settings only. Passwords and tokens are excluded.": "Alleen overdraagbare instellingen. Wachtwoorden en tokens uitgesloten.",
+    "Open each installed plugin once before backup or restore.": "Open elke geïnstalleerde plugin eenmaal voor back-up of herstel.",
+    "Restart GUI after restoring settings.": "Herstart de GUI na herstel."
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -2071,7 +2247,18 @@
     "Selected local folders only": "Apenas pastas locais selecionadas",
     "Press OK to scan selected local folders. No files are changed.": "Prima OK para analisar as pastas locais selecionadas. Nenhum ficheiro é alterado.",
     "Release notes": "Notas da versão",
-    "Status": "Estado"
+    "Status": "Estado",
+    "Backup and restore": "Cópia e restauro",
+    "Create backup": "Criar cópia",
+    "Restore backup": "Restaurar cópia",
+    "Storage location": "Local de armazenamento",
+    "Select projects": "Selecionar projetos",
+    "Restore selected compatible settings only.": "Restaurar apenas as definições compatíveis selecionadas.",
+    "Invalid backup": "Cópia inválida",
+    "No backups": "Sem cópias",
+    "Portable settings only. Passwords and tokens are excluded.": "Só definições portáteis. Palavras-passe e tokens excluídos.",
+    "Open each installed plugin once before backup or restore.": "Abra cada plugin instalado antes da cópia ou restauro.",
+    "Restart GUI after restoring settings.": "Reinicie a GUI após o restauro."
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -2193,7 +2380,18 @@
     "Selected local folders only": "Numai dosarele locale selectate",
     "Press OK to scan selected local folders. No files are changed.": "Apăsați OK pentru a scana dosarele locale selectate. Niciun fișier nu este modificat.",
     "Release notes": "Note de lansare",
-    "Status": "Stare"
+    "Status": "Stare",
+    "Backup and restore": "Copie și restaurare",
+    "Create backup": "Creează copie",
+    "Restore backup": "Restaurează copia",
+    "Storage location": "Locație de stocare",
+    "Select projects": "Selectează proiectele",
+    "Restore selected compatible settings only.": "Restaurează doar setările compatibile selectate.",
+    "Invalid backup": "Copie nevalidă",
+    "No backups": "Nu există copii",
+    "Portable settings only. Passwords and tokens are excluded.": "Doar setări portabile. Parolele și tokenurile sunt excluse.",
+    "Open each installed plugin once before backup or restore.": "Deschide fiecare plugin instalat înainte de copiere sau restaurare.",
+    "Restart GUI after restoring settings.": "Repornește GUI după restaurare."
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -2315,7 +2513,18 @@
     "Selected local folders only": "Yalnızca seçili yerel klasörler",
     "Press OK to scan selected local folders. No files are changed.": "Seçili yerel klasörleri taramak için OK tuşuna basın. Hiçbir dosya değiştirilmez.",
     "Release notes": "Sürüm notları",
-    "Status": "Durum"
+    "Status": "Durum",
+    "Backup and restore": "Yedekleme ve geri yükleme",
+    "Create backup": "Yedek oluştur",
+    "Restore backup": "Yedeği geri yükle",
+    "Storage location": "Depolama konumu",
+    "Select projects": "Projeleri seç",
+    "Restore selected compatible settings only.": "Yalnızca seçili uyumlu ayarları geri yükle.",
+    "Invalid backup": "Geçersiz yedek",
+    "No backups": "Yedek yok",
+    "Portable settings only. Passwords and tokens are excluded.": "Yalnızca taşınabilir ayarlar. Parolalar ve belirteçler hariç.",
+    "Open each installed plugin once before backup or restore.": "Yedeklemeden veya geri yüklemeden önce her kurulu eklentiyi açın.",
+    "Restart GUI after restoring settings.": "Geri yüklemeden sonra GUI'yi yeniden başlatın."
   },
   "uk": {
     "System centre": "Системний центр",
@@ -2437,7 +2646,18 @@
     "Selected local folders only": "Лише вибрані локальні папки",
     "Press OK to scan selected local folders. No files are changed.": "Натисніть OK для сканування вибраних локальних папок. Файли не змінюються.",
     "Release notes": "Примітки до випуску",
-    "Status": "Стан"
+    "Status": "Стан",
+    "Backup and restore": "Резервне копіювання та відновлення",
+    "Create backup": "Створити копію",
+    "Restore backup": "Відновити копію",
+    "Storage location": "Місце зберігання",
+    "Select projects": "Вибрати проєкти",
+    "Restore selected compatible settings only.": "Відновити лише вибрані сумісні налаштування.",
+    "Invalid backup": "Недійсна копія",
+    "No backups": "Немає резервних копій",
+    "Portable settings only. Passwords and tokens are excluded.": "Лише переносні налаштування. Паролі й токени виключено.",
+    "Open each installed plugin once before backup or restore.": "Перед копіюванням або відновленням відкрийте кожен встановлений плагін.",
+    "Restart GUI after restoring settings.": "Після відновлення перезапустіть GUI."
   },
   "zh": {
     "System centre": "系统中心",
@@ -2559,6 +2779,17 @@
     "Selected local folders only": "仅限选定的本地文件夹",
     "Press OK to scan selected local folders. No files are changed.": "按 OK 扫描选定的本地文件夹。不会修改任何文件。",
     "Release notes": "发行说明",
-    "Status": "状态"
+    "Status": "状态",
+    "Backup and restore": "备份和恢复",
+    "Create backup": "创建备份",
+    "Restore backup": "恢复备份",
+    "Storage location": "存储位置",
+    "Select projects": "选择项目",
+    "Restore selected compatible settings only.": "仅恢复选定的兼容设置。",
+    "Invalid backup": "无效备份",
+    "No backups": "没有备份",
+    "Portable settings only. Passwords and tokens are excluded.": "仅限可迁移设置。不包含密码和令牌。",
+    "Open each installed plugin once before backup or restore.": "备份或恢复前请先打开每个已安装的插件一次。",
+    "Restart GUI after restoring settings.": "恢复设置后请重启图形界面。"
   }
 }

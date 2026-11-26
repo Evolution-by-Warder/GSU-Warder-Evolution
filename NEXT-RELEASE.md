@@ -1,3 +1,7 @@
+# 26.11.2026 — Portable backup workspace (separate development branch for 0.41.7)
+
+Owner approved a simple local Backup & Restore workspace. Added bounded portable settings selection, local storage destinations, integrity-checked JSON and explicit native restore with compatibility checks and a pre-restore snapshot. 21 localized caption sets, backend fixture tests. No credentials, tokens, whole settings file, remote mount or uploads in this first implementation. Optional private-data backup and receiver verification remain open. Does not change PR #19 or stable release. See docs/GSU-PORTABLE-BACKUP.md.
+
 # 26.11.2026 — Receiver feedback: inline quick signal
 
 Owner screenshot shows external QuickSignal overlay; explicitly requests the right panel instead. Reuse SignalMonitor, Tone and existing six-card UI with automatic one-second refresh only while selected. Preserve opt-in sound on blue, stop sampler/tone on hide/close/navigation. No external overlay from the menu. Added regressions; exact-head CI and physical retest required. No production change.
