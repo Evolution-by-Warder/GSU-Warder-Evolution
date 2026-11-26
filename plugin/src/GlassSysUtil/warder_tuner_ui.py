@@ -3,6 +3,8 @@ from xml.etree import ElementTree as ET
 from . import warder_dashboard as dashboard, warder_main as main
 
 METRICS=('SNR','AGC','BER','LOCK')
+FINDER_PLOT_SIZE=(522,196)
+FINDER_QUALITY_SIZE=(522,10)
 
 
 def skin(width,height,finder,components):
@@ -36,22 +38,23 @@ def skin(width,height,finder,components):
     w,h=map(int,cfg.get('size').split(','));cfg.set('size','%d,%d'%(w,h//row*row))
     if finder:
         panel(1236,286,590,620)
-        # Compact measurement cards leave room for a live 60-second plot.
-        for i,(x,y,w,h) in enumerate(((1254,306,554,126),(1254,442,554,100),
-                                       (1254,552,268,94),(1540,552,268,94))):
+        # Four stacked measurement rows: caption and value share a baseline.
+        # The freed space belongs to the history plot, not more decoration.
+        for i,(y,h) in enumerate(((306,70),(384,70),(462,48),(518,48))):
+            x,w=1254,554
             add('eLabel',x,y,w,h,backgroundColor='#00172539',zPosition='-1')
             add('eLabel',x,y,4,h,backgroundColor=main.CYAN,zPosition='1')
-            label('warder_metric_name%d'%i,x+16,y+5,w-32,32,25,'#00bcd2df',noWrap='1')
-            label('warder_metric%d'%i,x+16,y+39,w-32,47,34,noWrap='1')
+            label('warder_metric_name%d'%i,x+16,y+5,116,38,27,'#00bcd2df',noWrap='1',valign='center')
+            label('warder_metric%d'%i,x+140,y+5,398,38,27,noWrap='1',valign='center')
             if i==0:
-                add('widget',x+16,y+106,w-32,10,source='warder_quality',render='Canvas',zPosition='3')
+                add('widget',x+16,y+51,*FINDER_QUALITY_SIZE,source='warder_quality',render='Canvas',zPosition='3')
             elif i==1:
-                add('widget',x+16,y+88,w-32,8,name='warder_meter1',
+                add('widget',x+16,y+51,522,8,name='warder_meter1',
                     backgroundColor='#002f465a',foregroundColor=main.CYAN,borderWidth='0',zPosition='3')
-        add('eLabel',1254,656,554,234,backgroundColor='#00172539',zPosition='-1')
-        label('warder_history_title',1270,662,522,34,25,main.CYAN,noWrap='1')
-        add('widget',1270,702,522,112,source='warder_signal_history',render='Canvas',zPosition='3')
-        label('warder_history_window',1270,816,522,27,21,'#00bcd2df',halign='right',noWrap='1')
+        add('eLabel',1254,576,554,314,backgroundColor='#00172539',zPosition='-1')
+        label('warder_history_title',1270,582,522,34,25,main.CYAN,noWrap='1')
+        add('widget',1270,622,*FINDER_PLOT_SIZE,source='warder_signal_history',render='Canvas',zPosition='3')
+        label('warder_history_window',1270,820,522,27,21,'#00bcd2df',halign='right',noWrap='1')
         label('warder_lock_losses',1270,850,522,32,23,'#00ffffff',noWrap='1')
         label('warder_audio_state',92,914,1734,55,23,'#00bcd2df',halign='center',valign='center')
         label('warder_audio_key',1420,990,443,81,28,'#0045b9ff',halign='center',valign='center',noWrap='1')
@@ -166,13 +169,13 @@ class Header(dashboard.DiagnosticHeader):
         if agc is None:meter.hide()
         else:meter.setValue(agc);meter.show()
         width,height=dashboard.dimensions(self.api)
-        draw_quality(self.screen['warder_quality'],snr,lock,round(522*width/1920),round(10*height/1080))
+        draw_quality(self.screen['warder_quality'],snr,lock,round(FINDER_QUALITY_SIZE[0]*width/1920),round(FINDER_QUALITY_SIZE[1]*height/1080))
         self.history.append({'snr':snr,'lock':lock})
         samples=self.history.snapshot()
         from .warder_chart import draw_trend
         from .warder_signal import lock_losses
         draw_trend(self.screen['warder_signal_history'],samples,'snr',
-            round(522*width/1920),round(112*height/1080),100,1)
+            round(FINDER_PLOT_SIZE[0]*width/1920),round(FINDER_PLOT_SIZE[1]*height/1080),100,1)
         tr=lambda key:main.text(self.api,key)
         losses=str(lock_losses(samples)) if any(v.get('lock') is not None for _,v in samples) else '—'
         self.screen['warder_lock_losses'].setText(tr('Lock losses')+'  '+losses)
@@ -200,7 +203,7 @@ def install(screen,api,finder):
     for name in ('day','date','clock','seconds','version_title','version'):screen[name]=api['Label']('')
     if finder:
         for i,name in enumerate(METRICS):
-            screen['warder_metric_name%d'%i]=api['Label'](name)
+            screen['warder_metric_name%d'%i]=api['Label'](name+':')
             screen['warder_metric%d'%i]=api['Label']('—')
         from Components.Sources.CanvasSource import CanvasSource
         screen['warder_meter1']=api['ProgressBar']()

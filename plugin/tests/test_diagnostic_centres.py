@@ -434,7 +434,10 @@ class DiagnosticTests(unittest.TestCase):
             header.tick()
             draw.assert_called_once()
             self.assertEqual(draw.call_args.args[2],'snr')
+            width,height=ui.dashboard.dimensions(api)
+            self.assertEqual(draw.call_args.args[3:5],(round(ui.FINDER_PLOT_SIZE[0]*width/1920),round(ui.FINDER_PLOT_SIZE[1]*height/1080)))
         self.assertTrue(screen['warder_lock_losses'].getText().endswith('1'))
+        self.assertEqual([screen['warder_metric_name%d'%i].getText() for i in range(4)],['SNR:','AGC:','BER:','LOCK:'])
         header.reset_history()
         self.assertEqual(header.history.snapshot(),())
         header.suspend()
@@ -447,6 +450,33 @@ class DiagnosticTests(unittest.TestCase):
                 self.assertIsNotNone(node)
                 x,y=map(int,node.get('position').split(','));w,h=map(int,node.get('size').split(','))
                 self.assertLessEqual(x+w,width);self.assertLessEqual(y+h,height)
+
+    def test_finder_measurements_share_aligned_single_rows_and_larger_plot(self):
+        ui=module('warder_tuner_ui')
+        for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160),(1920,1200)):
+            root=ET.fromstring(ui.skin(width,height,True,{'config','Frontend','key_red'}))
+            def rect(node):
+                return tuple(map(int,node.get('position').split(',')))+tuple(map(int,node.get('size').split(',')))
+            previous_bottom=0
+            lefts=set()
+            for i in range(4):
+                caption=root.find("widget[@name='warder_metric_name%d']"%i)
+                value=root.find("widget[@name='warder_metric%d']"%i)
+                x,y,w,h=rect(caption);vx,vy,vw,vh=rect(value)
+                self.assertEqual((y,h),(vy,vh))
+                self.assertEqual(caption.get('font'),value.get('font'))
+                self.assertLessEqual(x+w,vx)
+                self.assertGreater(y,previous_bottom)
+                previous_bottom=y+h
+                lefts.add((x,vx))
+            self.assertEqual(len(lefts),1)
+            plot=root.find("widget[@source='warder_signal_history']")
+            px,py,pw,ph=rect(plot)
+            self.assertGreater(py,previous_bottom)
+            self.assertEqual(ph,round(196*height/1080))
+            self.assertEqual(pw,round(522*width/1920))
+            self.assertLessEqual(px+pw,width)
+            self.assertLessEqual(py+ph,height)
 
     def test_manual_scan_preserves_user_clear_flags_and_recording_guard(self):
         tuner=module('warder_tuners')

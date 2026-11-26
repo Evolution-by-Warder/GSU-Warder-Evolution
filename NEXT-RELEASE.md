@@ -1,3 +1,9 @@
+# 26.11.2026 — Owner request: single-line signal finder metrics
+
+Previous exact HEAD `60b0b1923bd709c7c31ce95e316c6f3ddab7f8aa` passed all four CI workflows (OpenATV 45816544714, OpenPLi 45816544939, reproducibility 45816544915, architectures 45816544745). Owner requests SNR, AGC, BER and LOCK one below another with caption and value on the same line. Four full-width aligned measurement rows, shared font and colon labels; SNR retains percentage and dB. SNR/AGC bars stay beneath their own rows. History canvas enlarged from 112 to 196 FHD pixels (75% more height), renderer uses same dimensions. No change to measurement logic, audio, scan behavior or manual scan. Geometry regression verifies aligned baselines, consistent columns, nonoverlap and canvas bounds at five resolutions. Fresh CI and physical receiver confirmation required; no publication.
+
+---
+
 # 26.11.2026 — Owner request: improved measurement-only signal finder
 
 Previous HEAD `7b37bde91748883bb6314555a5d59f8ca41a70b7`: OpenATV/OpenPLi/package SUCCESS, architecture check still running at inspection. Improved right panel: SNR/AGC, BER and LOCK, compact 60-second SNR history and actual observed lock-loss count. Relative red/yellow/green SNR guide with lock-aware color (not universal reception thresholds); missing data remains unknown. Native retune clears history without changing its operation. Optional blue-key sound uses existing bounded PulseAudio Tone only if paplay is available, off by default, locked signal only, worker failure disables sound and hide/close stops it. No new binaries, no service scan, no native tuner parameter changes or changes to manual scan. Reused existing translated labels. Added quality/history/audio capability and resolution regression. Fresh CI and physical receiver retest pending. No publication.
