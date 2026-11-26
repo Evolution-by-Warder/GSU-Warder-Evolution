@@ -77,6 +77,45 @@ def preview_text(kind,value,tr):
     return value if isinstance(value,str) else ''
 
 
+def card_result(kind, value, tr):
+    """Build truthful, compact card data from the same collectors as Details."""
+    if kind=='system-overview' and isinstance(value,dict):
+        numbers=value['values']
+        if len(numbers)!=6:raise ValueError('system card count')
+        cards=[]
+        for i,(caption,number) in enumerate(zip(('CPU','RAM','Swap','Flash','HDD / SSD / USB','Temperature'),numbers)):
+            title=tr(caption)
+            if i in (3,4):title+=' · '+tr('free')
+            if number is None:shown='—'
+            elif i==4:shown='%.1f GiB'%(number/1073741824)
+            elif i==5:shown='%.1f °C'%number
+            else:shown='%.0f %%'%number
+            meter=round(max(0,min(100,number))) if i<4 and number is not None else None
+            note=(str(value.get('disk_mount') or '') if i==4 else
+                  str(value.get('temperature_source') or '').rsplit('/',1)[-1] if i==5 else '')
+            cards.append((title,shown,meter,note))
+        health=value['health']
+        summary='%s  %s   ·   %s  %d/%d (RAM / Flash)'%(tr('Resource score'),
+            str(health['score'])+'/100' if health['score'] is not None else '—',
+            tr('Measured checks'),*health['coverage'])
+        if health.get('state') in ('warning','critical'):
+            summary+='\n'+tr('Review memory and storage')
+        return cards,summary
+    if kind=='storage-categories' and isinstance(value,list) and len(value)==6:
+        total=sum(size for _,size,_ in value)
+        complete=all(done for _,_,done in value)
+        cards=[]
+        for name,size,done in value:
+            shown=('' if done else '≥ ')+'%.1f MiB'%(size/1048576) if size or done else '—'
+            meter=round(100*size/total) if complete and total else None
+            note='' if done else tr('Partial result')
+            cards.append((tr(name),shown,meter,note))
+        summary=tr('Measured categories total')+': '+('' if complete else '≥ ')+'%.1f MiB'%(total/1048576)
+        if not complete:summary+=' · '+tr('Partial result')
+        return cards,summary
+    return None
+
+
 class CentreMenu(Screen):
     def __init__(self, session, api, entries, enabled, initial=None):
         self.width, self.height = dashboard.dimensions(api)
@@ -101,6 +140,13 @@ class CentreMenu(Screen):
         for name, key in [('heading',''), ('result_title',''), ('result_status',''), ('red','Back'), ('green','Select'), ('yellow',''), ('blue','')]:
             self[name] = Label(for_api(api, key))
         self['descriptions']=ScrollLabel('')
+        self.cards_visible=False
+        for i in range(6):
+            for field in ('bg','name','value','note'):
+                self['inline_%s%d'%(field,i)]=Label('')
+            self['inline_meter%d'%i]=api['ProgressBar']()
+        self['inline_summary']=Label('')
+        self.hide_cards()
         self['actions'] = ActionMap(['WizardActions', 'ColorActions', 'SetupActions','DirectionActions'],
             {'ok':self.select, 'green':self.select, 'red':self.back, 'back':self.back, 'cancel':self.back,
              'yellow':self.refresh_result,'blue':self.full_result,
@@ -144,6 +190,34 @@ class CentreMenu(Screen):
         self['list'].l.setList(rows)
         self.describe()
 
+    def hide_cards(self):
+        self.cards_visible=False
+        for i in range(6):
+            for field in ('bg','name','value','note','meter'):
+                self['inline_%s%d'%(field,i)].hide()
+        self['inline_summary'].hide()
+        self['descriptions'].show()
+
+    def show_cards(self,model):
+        cards,summary=model
+        self['descriptions'].hide()
+        self.cards_visible=True
+        for i,(title,value,meter,note) in enumerate(cards):
+            for field,text in (('name',title),('value',value),('note',note)):
+                self['inline_%s%d'%(field,i)].setText(text)
+            for field in ('bg','name','value'):
+                self['inline_%s%d'%(field,i)].show()
+            if meter is None:
+                self['inline_meter%d'%i].hide()
+                self['inline_note%d'%i].show()
+            else:
+                self['inline_note%d'%i].hide()
+                bar=self['inline_meter%d'%i]
+                bar.setValue(meter)
+                bar.show()
+        self['inline_summary'].setText(summary)
+        self['inline_summary'].show()
+
     def describe(self):
         row = self['list'].getCurrent()
         entry = next((e for e in self.entries() if row and e[0] == row[0]), None)
@@ -155,6 +229,7 @@ class CentreMenu(Screen):
         if key!=self._result_key:
             self.cancel_result()
             self._result_key=key
+            self.hide_cards()
             self['result_status'].setText('')
             self['descriptions'].setText(description)
         elif key in self.native_actions:
@@ -201,6 +276,7 @@ class CentreMenu(Screen):
         token=Event()
         job=(key,token)
         self._result_job=job
+        self.hide_cards()
         self['result_status'].setText(for_api(self.api,'Loading…'))
         self['descriptions'].setText('')
         tr=lambda k:for_api(self.api,k)
@@ -208,11 +284,19 @@ class CentreMenu(Screen):
             if self._result_job is not job:return
             self._result_job=None
             if not self._result_closed and not token.is_set() and self._result_key==key:
-                try:text=preview_text(key,value,tr) if not failed else ''
-                except (ValueError,TypeError,AttributeError,KeyError):text=''
+                model=None
+                try:
+                    if not failed:model=card_result(key,value,tr)
+                    text=preview_text(key,value,tr) if not failed and model is None else ''
+                except (ValueError,TypeError,AttributeError,KeyError,OverflowError):
+                    model=None
+                    text=''
                 from time import strftime
-                self['result_status'].setText(strftime('%H:%M:%S') if text.strip() else tr('Unavailable'))
-                self['descriptions'].setText(text if text.strip() else tr('Unavailable'))
+                self['result_status'].setText(strftime('%H:%M:%S') if model or text.strip() else tr('Unavailable'))
+                if model:self.show_cards(model)
+                else:
+                    self.hide_cards()
+                    self['descriptions'].setText(text if text.strip() else tr('Unavailable'))
             queued=self._result_queued
             self._result_queued=None
             if queued is not None:self.request_result(queued)
