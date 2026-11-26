@@ -119,6 +119,12 @@ def smart(device, runner=subprocess.run):
     return (health.group(1).upper() if health else None, int(temperature.group(1)) if temperature else None)
 
 
+def category_snapshot(probe=None):
+    p=probe or Probe()
+    values=usage_categories(p,mounts(p))
+    return [(name,*values.get(name,(0,False))) for name,_ in CATEGORIES]
+
+
 def report(tr, detail=False, probe=None):
     p = probe or Probe()
     table = mounts(p)
