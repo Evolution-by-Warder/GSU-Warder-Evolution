@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'plugin/**'
+      - 'compatibility/verify-modern-migration.py'
       - '.github/workflows/diagnostics-reproducibility.yml'
 permissions:
   contents: read
@@ -34,3 +35,29 @@ jobs:
           sha256sum /tmp/gsu-first/*.ipk
           wc -c /tmp/gsu-first/*.ipk
           ar p /tmp/gsu-first/*.ipk data.tar.gz | python -c 'import sys,tarfile; print("Installed regular file bytes:",sum(m.size for m in tarfile.open(fileobj=sys.stdin.buffer,mode="r|gz") if m.isfile()))'
+      - name: Verify shipped runtime, minimal Python and OPKG epoch
+        run: python compatibility/verify-packaged-install.py /tmp/gsu-first/*.ipk --product gsu --version 0.41.5 --report /tmp/gsu-install.json
+      - uses: actions/checkout@v4
+        with:
+          repository: shr-project/opkg
+          ref: eed3359acfff5cb90cd8e91949df32f089db50be
+          path: upstream/opkg
+          persist-credentials: false
+      - name: Build the pinned offline OPKG
+        working-directory: upstream/opkg
+        run: |
+          set -eu
+          sed -i '/AC_CONFIG_MACRO_DIR(\[m4\])/d' configure.ac
+          autoreconf -fi
+          ./configure --disable-curl --disable-gpg --disable-openssl --disable-ssl-curl --disable-sha256 CFLAGS='-include sys/sysmacros.h -fcommon'
+          make -j2
+      - name: Exercise public historical packages and exact r6 updater
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/gsu-history
+          for version in 13.40-r93 13.41-r4 13.41-r5 13.41-r6; do
+            gh release download "v$version" --repo "$GITHUB_REPOSITORY" --pattern '*.ipk' --dir /tmp/gsu-history
+          done
+          python compatibility/verify-modern-migration.py upstream/opkg/src/opkg-cl /tmp/gsu-history /tmp/gsu-first/*.ipk

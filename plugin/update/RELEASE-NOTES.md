@@ -1,5 +1,5 @@
-GSU 13.41-r6
+GSU 0.41.5
 
-Prechodová verzia pripravuje aktualizátor na nové číslovanie 0.41.x. Nastavenia zostávajú zachované. Po aktualizácii reštartujte GUI.
+Sedem diagnostických centier so živými grafmi systému a signálu, analýzou úložiska a lokálnou správou pre fórum. Funkcie príjmu závisia od tunera a image. Po aktualizácii reštartujte GUI.
 
-This transition release prepares the updater for the new 0.41.x numbering. Existing settings are preserved. Restart the GUI after updating.
+Seven diagnostic centres with live system and signal graphs, storage analysis and local forum reports. Receiver functions depend on the tuner and image. Restart the GUI after updating.

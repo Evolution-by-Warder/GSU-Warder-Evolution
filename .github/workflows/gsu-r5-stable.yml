@@ -1,10 +1,6 @@
 name: GSU 13.41-r6 verified stable release
 on:
-  pull_request:
-    paths: [plugin/**, .github/workflows/gsu-r5-stable.yml, compatibility/publish-gsu-r6.py, compatibility/verify-packaged-install.py]
-  push:
-    branches: [main]
-    paths: [plugin/src/GlassSysUtil/version, .github/workflows/gsu-r5-stable.yml, compatibility/publish-gsu-r6.py]
+  # Frozen transition release. Manual recovery still verifies its immutable source and bytes.
   workflow_dispatch:
 permissions:
   contents: read
