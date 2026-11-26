@@ -81,7 +81,8 @@ def open_centre(screen, api, key):
 
 class Report(Screen):
     def __init__(self, session, api, kind, title):
-        self.skin = dashboard.skin(*dashboard.dimensions(api), 'detail')
+        self.width,self.height=dashboard.dimensions(api)
+        self.skin = dashboard.skin(self.width,self.height,'process' if kind=='system-processes' else 'detail')
         Screen.__init__(self, session)
         self.api, self.kind = api, kind
         dashboard.install_header(self,api)
@@ -94,24 +95,67 @@ class Report(Screen):
         self.cpu_order = False
         self.history = []
         self['file_info'] = ScrollLabel('')
+        if kind=='system-processes':
+            self['process_list']=api['ListboxSys2']([])
+            self['process_list'].l.setFont(0,api['gFont']('Regular',round(28*self.height/1080)))
+            self['process_list'].l.setItemHeight(round(48*self.height/1080))
+            for i,title in enumerate(('PID','Process Info','S','RAM (MiB)','CPU (%)')):
+                self['column%d'%i]=Label(self.tr(title) if i==1 else title)
+            self.show_process_table(False)
         for name, key in [('heading',title), ('red','Back'), ('green','TV' if kind == 'transponder-services' else ''), ('yellow','Refresh'),
                           ('blue','Tuner interfaces' if kind == 'tuner-details' else 'Radio' if kind == 'transponder-services' else 'Save' if kind == 'forum-report' else 'CPU / RAM' if kind == 'system-processes' else '')]:
             self[name] = Label(self.tr(key))
         self['actions'] = ActionMap(['ColorActions','SetupActions','DirectionActions'],
             {'red':self.close,'cancel':self.close,'yellow':self.start,'blue':self.action,'green':lambda:self.export_services('tv'),
-             'up':self['file_info'].pageUp, 'down':self['file_info'].pageDown,
-             'left':self['file_info'].pageUp,'right':self['file_info'].pageDown}, -2)
+             'up':lambda:self.scroll(-1), 'down':lambda:self.scroll(1),
+             'left':lambda:self.scroll(-1,True),'right':lambda:self.scroll(1,True)}, -2)
         self.onLayoutFinish.append(self.start)
         self.onClose.append(self.cancelled.set)
 
     def tr(self, key):
         return for_api(self.api, key)
 
+    def show_process_table(self, visible):
+        self.table_visible=bool(visible)
+        if self.kind!='system-processes':return
+        for key in ('process_list',)+tuple('column%d'%i for i in range(5)):
+            (self[key].show if visible else self[key].hide)()
+        (self['file_info'].hide if visible else self['file_info'].show)()
+
+    def scroll(self,direction,page=False):
+        if getattr(self,'table_visible',False):
+            widget=self['process_list']
+            method=('pageUp' if direction<0 else 'pageDown') if page else ('up' if direction<0 else 'down')
+            getattr(widget,method)()
+        else:
+            (self['file_info'].pageUp if direction<0 else self['file_info'].pageDown)()
+
+    def display_process_table(self,rows):
+        api=self.api
+        sx,sy=self.width/1920,self.height/1080
+        content=[]
+        for pid,name,state,rss,cpu in rows:
+            values=(str(pid),name,str(state),'—' if rss is None else '%.1f'%(rss/1024),
+                    '—' if cpu is None else '%.1f'%cpu)
+            row=[pid]
+            for i,((offset,span),value) in enumerate(zip(dashboard.PROCESS_COLUMNS,values)):
+                row.append(api['MultiContentEntryText'](
+                    pos=(round(offset*sx),0),size=(round(span*sx),round(48*sy)),
+                    font=0,text=value,color=0xbcd2df if i==2 else 0xffffff))
+            content.append(row)
+        self['process_list'].l.setList(content)
+        self['process_list'].moveToIndex(0)
+        self.show_process_table(True)
+        from time import strftime
+        self['report_status'].setText('%s   ·   %s %d   ·   %s ↓' %
+            (strftime('%H:%M:%S'),self.tr('Total:'),len(rows),'CPU' if self.cpu_order else 'RAM'))
+
     def start(self):
         if self.pending or self.cancelled.is_set():
             return
         self.pending = True
         self.preview = None
+        self.show_process_table(False)
         self['report_status'].setText(self.tr('Loading…'))
         self['file_info'].setText(self.tr('Loading…'))
         if self.kind == 'transponder-services':
@@ -134,11 +178,12 @@ class Report(Screen):
 
     def collect(self):
         kind, tr = self.kind, self.tr
-        if kind in ('system-processes','system-log'):
-            from .warder_system_data import detail_text, cpu_processes
-            if kind == 'system-processes' and self.cpu_order:
-                return cpu_processes(tr, self.cancelled)
-            return detail_text('log' if kind == 'system-log' else 'processes', tr)
+        if kind=='system-processes':
+            from .warder_system_data import process_table
+            return process_table(self.cancelled,self.cpu_order)
+        if kind=='system-log':
+            from .warder_system_data import detail_text
+            return detail_text('log',tr)
         if kind.startswith('storage-'):
             from .warder_storage import report
             return report(tr, kind == 'storage-categories')
@@ -161,6 +206,10 @@ class Report(Screen):
         self.pending = False
         if self.cancelled.is_set():
             return
+        if self.kind=='system-processes' and isinstance(result,list) and result:
+            self.display_process_table(result)
+            return
+        self.show_process_table(False)
         # Never display an empty screen on a missing/empty result. Only a real
         # report may become an export preview.
         if not isinstance(result, str) or not result.strip():
@@ -181,6 +230,7 @@ class Report(Screen):
     def failed(self, failure):
         self.pending = False
         if not self.cancelled.is_set():
+            self.show_process_table(False)
             self['report_status'].setText(self.tr('Unavailable'))
             self['file_info'].setText(self.tr('Unavailable'))
 
