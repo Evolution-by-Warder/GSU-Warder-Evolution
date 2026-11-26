@@ -1,3 +1,9 @@
+# 2026-11-26 — GSU PR #14 third legacy checkpoint
+
+Previous HEAD `9f656a4373af26d0196783d221f94d4421a885cd` passed 10/10 CI. Added 30 further user-facing labels across 21 languages: device manager, expert settings, CAM search and client status. Supplement now 58 keys; common catalogues 174 keys. 203 remaining direct literal candidates, including technical identifiers. No release, feed, storage operation or CAM behavior changed.
+
+---
+
 # 2026-11-26 — GSU PR #14 second legacy checkpoint
 
 Previous HEAD `6bfa300fdbcaad9ba733e94f4b3e32eeb5d75649` passed all 10 CI checks, including Python 3.9/3.14, OpenATV master/8.0/8.0-next, OpenPLi develop/release-9.2 and hooks. Added 20 further real legacy status/error/action strings to all 21 languages (28 supplementary keys total), including mount/unmount, partition creation/deletion, untrusted downloads and uninstall/OSCam restart. Existing translation precedence unchanged. Remaining legacy inventory 233 distinct raw literal candidates (includes technical terms and paths); review before release. No version or feed change.
