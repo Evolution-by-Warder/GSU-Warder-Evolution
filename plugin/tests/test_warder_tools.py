@@ -147,7 +147,7 @@ class WarderToolsUITests(unittest.TestCase):
 
     def test_main_menu_tools_opens_local_bundle_or_anonymous_preview_and_blue_opens_about(self):
         session=MagicMock();screen=self.plugin.SysUtilMngMain(session)
-        self.assertIn(('17','Nástroje'),[(item[0],item[1]) for item in screen.menuListAll])
+        self.assertIn(('17','Vytvoriť diagnostický balík'),[(item[0],item[1]) for item in screen.menuListAll])
         screen.status={'17':True};screen['list'].getCurrent=lambda:['17']
         screen.selectedmenuitem();session.open.assert_not_called()
         self.assertEqual(screen._rightpane.kind,'tools')
