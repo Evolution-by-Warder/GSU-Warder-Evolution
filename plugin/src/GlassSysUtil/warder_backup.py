@@ -10,6 +10,7 @@ from pathlib import Path
 
 from .warder_storage import mounts, LOCAL_FILE_SYSTEMS
 from .warder_tools import Probe
+from . import warder_backup_crypto as crypto
 
 PRODUCTS=('FullHDGlass','PiconHub','Warder Radio','YouTube','GSU')
 LIMIT=512*1024
@@ -29,6 +30,16 @@ NATIVE={
 }
 RADIO_KEYS=('show_main_menu','screensaver_delay','group','online_country',
             'radio_subscriptions','radio_home_category','radio_subscription_category')
+PRIVATE_NATIVE={'YouTube':('warderyoutube.api_key',)}
+PRIVATE_RADIO=('favourites','custom')
+
+
+def native_keys(product,private=False):
+    return NATIVE[product]+(PRIVATE_NATIVE.get(product,()) if private else ())
+
+
+def radio_keys(private=False):
+    return RADIO_KEYS+(PRIVATE_RADIO if private else ())
 
 
 def canonical(value):
@@ -109,11 +120,40 @@ def plain(value,limit=240):
     return isinstance(value,str) and len(value)<=limit and (not value or value.isprintable())
 
 
-def radio_valid(key,value):
+def radio_valid(key,value,private=False):
+    if private and key in PRIVATE_RADIO:return station_list(value)
     if key=='show_main_menu':return type(value) is bool
     if key=='screensaver_delay':return type(value) is int and value in (0,10,20,30,60)
     if key=='radio_subscriptions':return isinstance(value,list) and len(value)<=80 and all(plain(v,60) for v in value)
     return key in RADIO_KEYS and plain(value,240 if key in ('group','online_country') else 60)
+
+
+def station_list(value):
+    """Validate all rows, never partially overwrite a user's favourite list."""
+    from urllib.parse import urlsplit
+    if not isinstance(value,list) or len(value)>1000:return False
+    fields={'id','name','url','group','reference','stationuuid','codec','bitrate',
+            'favicon','original_url','homepage','countrycode'}
+    def url(v):
+        if not plain(v,4096) or not v:return False
+        try:
+            parts=urlsplit(v)
+            return (parts.scheme in ('http','https') and bool(parts.hostname)
+                    and parts.username is None and parts.password is None
+                    and (parts.port is None or 0<parts.port<=65535))
+        except ValueError:return False
+    for row in value:
+        if not isinstance(row,dict) or not set(row).issubset(fields):return False
+        if not plain(row.get('name'),240) or not row['name'] or not url(row.get('url')):return False
+        for k,v in row.items():
+            if k in ('url','favicon','original_url','homepage'):
+                if not url(v):return False
+            elif k=='bitrate':
+                if type(v) is not int or not 1<=v<=10000:return False
+            elif not plain(v,240):return False
+        ref=row.get('reference','')
+        if ref and not re.fullmatch(r'[0-9A-Fa-f]+(?::[0-9A-Fa-f]+){9}',ref):return False
+    return True
 
 
 def element(config,key):
@@ -125,8 +165,9 @@ def element(config,key):
     except (AttributeError,KeyError,IndexError,TypeError):return None
 
 
-def native_valid(key,obj,value):
+def native_valid(key,obj,value,private=False):
     if obj is None or type(value) is not type(obj.value):return False
+    if key in PRIVATE_NATIVE.get('YouTube',()):return private and plain(value,512) and (not value or re.fullmatch(r'[A-Za-z0-9_-]{10,256}',value) is not None)
     if key.endswith('.sats'):
         return plain(value,512) and all(re.fullmatch(r'\d{1,3}(?:\.\d)?[EW]',v) for v in value.split())
     choices=getattr(obj,'choices',None)
@@ -141,7 +182,7 @@ def native_valid(key,obj,value):
     return False
 
 
-def snapshot(config,selected=PRODUCTS,probe=None):
+def snapshot(config,selected=PRODUCTS,probe=None,private=False):
     p=probe or Probe()
     result={}
     for product in PRODUCTS:
@@ -150,23 +191,28 @@ def snapshot(config,selected=PRODUCTS,probe=None):
         if product=='Warder Radio':
             state=radio_state(p)
             if state:
-                values={k:state[1][k] for k in RADIO_KEYS if k in state[1] and radio_valid(k,state[1][k])}
+                values={k:state[1][k] for k in radio_keys(private) if k in state[1] and radio_valid(k,state[1][k],private)}
         else:
-            for key in NATIVE[product]:
+            for key in native_keys(product,private):
                 obj=element(config,key)
-                if obj is not None and native_valid(key,obj,obj.value):values[key]=obj.value
+                if obj is not None and native_valid(key,obj,obj.value,private):values[key]=obj.value
         if values:result[product]=values
     return result
 
 
-def save(directory,products,probe=None):
+def save(directory,products,probe=None,password=None):
     p=probe or Probe()
     if not products:raise ValueError('No portable settings')
     directory=checked_dir(directory,p,True)
     payload={'schema':1,'created':datetime.now().strftime('%Y-%m-%d %H:%M:%S'),'projects':products}
-    document={'payload':payload,'sha256':hashlib.sha256(canonical(payload)).hexdigest()}
+    private=password is not None
+    validate_payload(payload,private)
+    if private:
+        document=crypto.seal(canonical(payload),password)
+    else:
+        document={'payload':payload,'sha256':hashlib.sha256(canonical(payload)).hexdigest()}
     data=canonical(document)
-    if len(data)>LIMIT:raise ValueError('Backup too large')
+    if len(data)>(crypto.MAX_ENVELOPE if private else LIMIT):raise ValueError('Backup too large')
     fd,name=tempfile.mkstemp(prefix='warder-backup-'+datetime.now().strftime('%Y%m%d-%H%M%S-'),suffix='.json',dir=str(directory))
     try:
         with os.fdopen(fd,'wb') as handle:
@@ -174,33 +220,44 @@ def save(directory,products,probe=None):
             handle.flush()
             os.fsync(handle.fileno())
         path=Path(name)
-        if load(path,p)!=payload:raise ValueError('Backup verification failed')
+        if load(path,p,password)!=payload:raise ValueError('Backup verification failed')
         return path
     except BaseException:
         os.unlink(name)
         raise
 
 
-def load(path,probe=None):
-    p=probe or Probe()
-    path=Path(path)
-    checked_dir(path.parent,p)
-    if not NAME.fullmatch(path.name):raise ValueError('Invalid backup name')
-    document=json.loads(read_bytes(path))
-    if not isinstance(document,dict) or set(document)!= {'payload','sha256'}:raise ValueError('Invalid backup')
-    payload=document['payload']
-    if hashlib.sha256(canonical(payload)).hexdigest()!=document['sha256']:raise ValueError('Checksum mismatch')
+def validate_payload(payload,private=False):
     if not isinstance(payload,dict) or set(payload)!= {'schema','created','projects'} or type(payload['schema']) is not int or payload['schema']!=1:raise ValueError('Unsupported backup')
     if not plain(payload['created'],32) or not isinstance(payload['projects'],dict):raise ValueError('Invalid backup')
     for product,values in payload['projects'].items():
         if product not in PRODUCTS or not isinstance(values,dict):raise ValueError('Unknown product')
-        allowed=RADIO_KEYS if product=='Warder Radio' else NATIVE[product]
+        allowed=radio_keys(private) if product=='Warder Radio' else native_keys(product,private)
         if not set(values).issubset(allowed):raise ValueError('Unsupported setting')
         for key,value in values.items():
             if product=='Warder Radio':
-                if not radio_valid(key,value):raise ValueError('Invalid radio setting')
+                if not radio_valid(key,value,private):raise ValueError('Invalid radio setting')
+            elif key in PRIVATE_NATIVE.get(product,()):
+                if not private or not plain(value,512) or (value and not re.fullmatch(r'[A-Za-z0-9_-]{10,256}',value)):raise ValueError('Invalid private setting')
             elif not (type(value) in (bool,int) or plain(value,512)):raise ValueError('Invalid setting')
     return payload
+
+
+def load(path,probe=None,password=None):
+    p=probe or Probe()
+    path=Path(path)
+    checked_dir(path.parent,p)
+    if not NAME.fullmatch(path.name):raise ValueError('Invalid backup name')
+    raw=read_bytes(path,crypto.MAX_ENVELOPE)
+    document=json.loads(raw)
+    if isinstance(document,dict) and document.get('format')==crypto.FORMAT:
+        if password is None:raise ValueError('Private backup requires password')
+        return validate_payload(json.loads(crypto.unseal(document,password)),True)
+    if password is not None or len(raw)>LIMIT:raise ValueError('Invalid backup')
+    if not isinstance(document,dict) or set(document)!= {'payload','sha256'}:raise ValueError('Invalid backup')
+    payload=document['payload']
+    if hashlib.sha256(canonical(payload)).hexdigest()!=document['sha256']:raise ValueError('Checksum mismatch')
+    return validate_payload(payload)
 
 
 def inventory(directory,probe=None):
@@ -218,7 +275,8 @@ def inventory(directory,probe=None):
     return sorted(rows,reverse=True)[:50]
 
 
-def plan(config,payload,selected=PRODUCTS,probe=None):
+def plan(config,payload,selected=PRODUCTS,probe=None,private=False):
+    validate_payload(payload,private)
     p=probe or Probe()
     changes=[]
     radio={}
@@ -230,26 +288,28 @@ def plan(config,payload,selected=PRODUCTS,probe=None):
         if product=='Warder Radio':state=radio_state(p)
         for key,value in values.items():
             if product=='Warder Radio':
-                if state is None or not radio_valid(key,value):skipped[product]+=1
+                if state is None or not radio_valid(key,value,private):skipped[product]+=1
                 elif state[1].get(key)!=value:radio[key]=value
             else:
                 obj=element(config,key)
-                if not native_valid(key,obj,value):skipped[product]+=1
+                if not native_valid(key,obj,value,private):skipped[product]+=1
                 elif obj.value!=value:changes.append((product,key,obj,value))
     return changes,radio,skipped,state
 
 
-def restore(config,configfile,path,selected=PRODUCTS,probe=None):
+def restore(config,configfile,path,selected=PRODUCTS,probe=None,password=None):
     """Explicit apply, native choices/limits, verified rollback snapshot first."""
     p=probe or Probe()
-    payload=load(path,p)
-    changes,radio,skipped,state=plan(config,payload,selected,p)
+    private=password is not None
+    payload=load(path,p,password)
+    changes,radio,skipped,state=plan(config,payload,selected,p,private)
     if not changes and not radio:return 0,skipped,None
-    previous=snapshot(config,selected,p)
+    previous=snapshot(config,selected,p,private)
+    if any(key not in previous.get(product,{}) for product,key,_,_ in changes):raise ValueError('Native rollback unavailable')
     if radio and (state is None or any(k not in previous.get('Warder Radio',{}) for k in radio)):
         # No exact rollback for absent keys in this first schema.
         raise ValueError('Radio rollback unavailable')
-    rollback=save(path.parent,previous,p)
+    rollback=save(path.parent,previous,p,password)
     originals=[(obj,obj.value,obj.saved_value) for _,_,obj,_ in changes]
     def persist():
         expected=config.pickle().encode('utf-8')

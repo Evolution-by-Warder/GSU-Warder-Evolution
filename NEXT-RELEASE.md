@@ -1,3 +1,7 @@
+# 26.11.2026 — Private local backup backend
+
+Separate 0.41.7 draft PR #20: previous OpenATV/OpenPLi/package CI SUCCESS, architecture pending at inspection. Added optional AES-GCM/scrypt encrypted format for explicitly allowlisted YouTube API key and Radio favourites/custom lists. Reject plaintext private payloads before writes; encrypted rollback; no network, auto-install, OAuth tokens or arbitrary credentials. Masked GUI password entry, actual receiver crypto availability and full end-to-end testing still open. No production change.
+
 # 26.11.2026 — Portable backup workspace (separate development branch for 0.41.7)
 
 Owner approved a simple local Backup & Restore workspace. Added bounded portable settings selection, local storage destinations, integrity-checked JSON and explicit native restore with compatibility checks and a pre-restore snapshot. 21 localized caption sets, backend fixture tests. No credentials, tokens, whole settings file, remote mount or uploads in this first implementation. Optional private-data backup and receiver verification remain open. Does not change PR #19 or stable release. See docs/GSU-PORTABLE-BACKUP.md.
