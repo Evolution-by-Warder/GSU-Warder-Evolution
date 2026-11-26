@@ -119,18 +119,19 @@ def report(tr, language, cancelled, opener=_open, projects=None):
             available = item[0] if item else tr('None')
         except (ValueError, TypeError, KeyError, AttributeError, OSError, URLError):
             item, available = None, tr('Unavailable')
-        lines.extend((name, '%s   %s     ·     %s   %s' % (tr('Installed version'), current or '—',
-                                                          tr('Stable version'), available)))
+        lines.extend((name, '', '%s    %s' % (tr('Installed version'),current or '—'),
+                      '%s    %s' % (tr('Stable version'),available)))
         if item and current:
             try:
                 lines.append(tr(status_label(name,current,item[0])))
             except ValueError:
                 lines.append(tr('Unavailable'))
         if record:
+            lines.append('')
             lines.append(tr('Package dependencies')+'   '+tr(dependency_state(project[4],records,manager)))
             lines.append(tr('Architecture')+'   '+record.get('Architecture','—'))
         if item and item[1]:
-            lines.append(item[1])
+            lines.extend(('',item[1]))
         lines.append('')
     return '\n'.join(lines)
 
