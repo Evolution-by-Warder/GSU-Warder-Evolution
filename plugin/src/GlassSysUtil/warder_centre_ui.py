@@ -104,7 +104,8 @@ class CentreMenu(Screen):
         self['actions'] = ActionMap(['WizardActions', 'ColorActions', 'SetupActions','DirectionActions'],
             {'ok':self.select, 'green':self.select, 'red':self.back, 'back':self.back, 'cancel':self.back,
              'yellow':self.refresh_result,'blue':self.full_result,
-             'left':self['descriptions'].pageUp,'right':self['descriptions'].pageDown}, -2)
+             'left':self['descriptions'].pageUp,'right':self['descriptions'].pageDown,
+             'up':self['list'].up,'down':self['list'].down}, -2)
         self.onLayoutFinish.append(self.render)
 
     def entries(self):
@@ -180,6 +181,7 @@ class CentreMenu(Screen):
         if self.inline_route(key):self.request_result(key)
 
     def full_result(self):
+        if self._result_closed:return
         key=self._result_key
         if self.inline_route(key):
             self.cancel_result()
