@@ -7,13 +7,14 @@ from Components.Label import Label
 from Components.ScrollLabel import ScrollLabel
 
 class CentreMenu(Screen):
-    def __init__(self, session, api, entries, enabled):
+    def __init__(self, session, api, entries, enabled, initial=None):
         self.skin = api['ipkScript_center']
         Screen.__init__(self, session)
         self.api = api
         self.groups = legacy_routes(entries)
         self.enabled = dict(enabled)
-        self.group = None
+        self.group = next((g for g in self.groups if g[0]==initial),None)
+        self.direct = initial is not None
         self['list'] = api['ListboxSys2']([])
         self['list'].onSelectionChanged.append(self.describe)
         self['descriptions'] = Label('')
@@ -54,7 +55,7 @@ class CentreMenu(Screen):
             self.close(row[0])
 
     def back(self):
-        if self.group is not None:
+        if self.group is not None and not self.direct:
             self.group=None
             self.render()
         else:self.close(None)
@@ -78,3 +79,11 @@ def open_legacy_centres(screen, api):
     """Keep the parent alive; return a stable action ID to its existing dispatcher."""
     screen.session.openWithCallback(screen.dispatch_menu_id, CentreMenu, api,
                                     tuple(screen.menuListAll), dict(screen.status))
+
+
+def open_centre(screen, api, key):
+    groups = legacy_routes(screen.menuListAll)
+    group = next((g for g in groups if g[0]==key and g[2]),None)
+    if group is None:return
+    screen.session.openWithCallback(screen.dispatch_menu_id, CentreMenu, api,
+                                    tuple(screen.menuListAll), dict(screen.status), key)
