@@ -10,6 +10,73 @@ from .warder_centres import legacy_routes, DIAGNOSTICS, description as route_des
 from .i18n import for_api, language
 
 
+# Read-only result routes. Actions changing tuner state or configuration remain
+# explicit native screens; graphs and full-size tables remain available in Details.
+INLINE_REPORTS=frozenset(('system-overview','system-processes','system-log',
+    'tuner-details','transponder-services','storage-overview','storage-categories',
+    'network-overview','network-test','service-health','service-ipk','forum-report'))
+NATIVE_REPORTS=frozenset(('tuner-details','transponder-services'))
+
+
+def collect_report(kind,tr,cancelled,cpu_order=False):
+    if kind=='system-processes':
+        from .warder_system_data import process_table
+        return process_table(cancelled,cpu_order)
+    if kind=='system-log':
+        from .warder_system_data import detail_text
+        return detail_text('log',tr)
+    if kind=='storage-categories':
+        from .warder_storage import category_snapshot
+        return category_snapshot()
+    if kind=='storage-overview':
+        from .warder_storage import report
+        return report(tr,False)
+    if kind.startswith('network-'):
+        from .warder_network import collect, overview_panels, diagnostics
+        return overview_panels(collect(include_addresses=True),tr) if kind=='network-overview' else diagnostics(tr,cancelled)
+    if kind == 'forum-report':
+        import json
+        from .warder_service import forum_snapshot
+        return json.dumps(forum_snapshot(), ensure_ascii=False, indent=2)
+    if kind == 'service-ipk':
+        from .warder_ipk import review
+        return review(tr)
+    if kind == 'service-health':
+        from .warder_service import health
+        return health(tr)
+    raise ValueError('unknown diagnostic')
+
+
+def preview_text(kind,value,tr):
+    if kind=='system-overview' and isinstance(value,dict):
+        lines=[]
+        for i,(label,number) in enumerate(zip(('CPU','RAM','Swap','Flash','HDD / SSD / USB','Temperature'),value['values'])):
+            title=tr(label)
+            if i in (3,4):title+=' · '+tr('free')
+            if number is None:shown='—'
+            elif i==4:shown='%.1f GiB'%(number/1073741824)
+            elif i==5:shown='%.1f °C'%number
+            else:shown='%.0f %%'%number
+            lines.append(title+'    '+shown)
+        health=value['health']
+        lines.extend(('',tr('Resource score')+'    '+(str(health['score'])+'/100' if health['score'] is not None else '—'),
+                      tr('Measured checks')+'    %d/%d (RAM / Flash)'%health['coverage']))
+        return '\n'.join(lines)
+    if kind=='system-processes' and isinstance(value,list):
+        return '\n'.join('%s   %s   %s MiB'%(pid,name,'—' if rss is None else '%.1f'%(rss/1024))
+                         for pid,name,state,rss,cpu in value)
+    if kind=='storage-categories' and isinstance(value,list):
+        return '\n'.join('%s    %s%s'%(tr(name),'%.1f MiB'%(size/1048576) if complete else
+                         '≥ %.1f MiB'%(size/1048576) if size else '—',
+                         '' if complete else ' · '+tr('Partial result')) for name,size,complete in value)
+    if kind=='network-overview' and isinstance(value,tuple):
+        return '\n\n'.join(value)
+    if kind=='forum-report' and isinstance(value,str) and value:
+        from .warder_service import format_preview
+        return format_preview(value,tr)
+    return value if isinstance(value,str) else ''
+
+
 class CentreMenu(Screen):
     def __init__(self, session, api, entries, enabled, initial=None):
         self.width, self.height = dashboard.dimensions(api)
@@ -22,14 +89,22 @@ class CentreMenu(Screen):
         self.group = next((g for g in self.groups if g[0] == initial), None)
         self.direct = initial is not None
         self.native_actions = {}
+        self._result_key=None
+        self._result_job=None
+        self._result_queued=None
+        self._result_closed=False
+        self.onClose.append(self.close_results)
         self['list'] = api['ListboxSys2']([])
-        self['list'].l.setFont(0, api['gFont']('Regular', round(34*self.height/1080)))
+        self['list'].l.setFont(0, api['gFont']('Regular', round(28*self.height/1080)))
         self['list'].l.setItemHeight(round(74*self.height/1080))
         self['list'].onSelectionChanged.append(self.describe)
-        for name, key in [('heading',''), ('descriptions',''), ('red','Back'), ('green','Select'), ('yellow',''), ('blue','')]:
+        for name, key in [('heading',''), ('result_title',''), ('result_status',''), ('red','Back'), ('green','Select'), ('yellow',''), ('blue','')]:
             self[name] = Label(for_api(api, key))
-        self['actions'] = ActionMap(['WizardActions', 'ColorActions', 'SetupActions'],
-            {'ok':self.select, 'green':self.select, 'red':self.back, 'back':self.back, 'cancel':self.back}, -2)
+        self['descriptions']=ScrollLabel('')
+        self['actions'] = ActionMap(['WizardActions', 'ColorActions', 'SetupActions','DirectionActions'],
+            {'ok':self.select, 'green':self.select, 'red':self.back, 'back':self.back, 'cancel':self.back,
+             'yellow':self.refresh_result,'blue':self.full_result,
+             'left':self['descriptions'].pageUp,'right':self['descriptions'].pageDown}, -2)
         self.onLayoutFinish.append(self.render)
 
     def entries(self):
@@ -58,7 +133,7 @@ class CentreMenu(Screen):
         rows = []
         for key, label, description, enabled in self.entries():
             rows.append([key, self.api['MultiContentEntryText'](pos=(round(20*self.width/1920),round(12*self.height/1080)),
-                size=(round(960*self.width/1920),round(52*self.height/1080)), font=0, text=label,
+                size=(round(610*self.width/1920),round(52*self.height/1080)), font=0, text=label,
                 color=0xffffff if enabled else 0x8291a5)])
         self['list'].l.setList(rows)
         self.describe()
@@ -70,7 +145,84 @@ class CentreMenu(Screen):
         backup=getattr(self,'_gsu_last_channel_backup',None)
         if row and row[0] in self.native_actions and isinstance(backup,str):
             description+='\n\n'+for_api(self.api,'Verified channel backup')+'\n'+backup
-        self['descriptions'].setText(description)
+        key=row[0] if row and entry else None
+        if key!=self._result_key:
+            self.cancel_result()
+            self._result_key=key
+            self['result_status'].setText('')
+            self['descriptions'].setText(description)
+        elif key in self.native_actions:
+            self['descriptions'].setText(description)
+        self['result_title'].setText(entry[1] if entry else '')
+        inline=self.inline_route(key)
+        self['yellow'].setText(for_api(self.api,'Refresh') if inline else '')
+        self['blue'].setText(for_api(self.api,'Details') if inline else '')
+
+    def inline_route(self,key):
+        return key if key in INLINE_REPORTS and self.enabled.get(key,False) else None
+
+    def cancel_result(self):
+        self._result_queued=None
+        if self._result_job is not None:self._result_job[1].set()
+
+    def close_results(self):
+        self._result_closed=True
+        self.cancel_result()
+
+    def refresh_result(self):
+        key=self._result_key
+        if self.inline_route(key):self.request_result(key)
+
+    def full_result(self):
+        key=self._result_key
+        if self.inline_route(key):
+            self.cancel_result()
+            open_diagnostic(self.session,self.api,key)
+
+    def request_result(self,key):
+        if self._result_closed or key!=self._result_key or not self.inline_route(key):return
+        if self._result_job is not None:
+            if self._result_job[0]==key and not self._result_job[1].is_set():return
+            self._result_queued=key
+            return
+        token=Event()
+        job=(key,token)
+        self._result_job=job
+        self['result_status'].setText(for_api(self.api,'Loading…'))
+        self['descriptions'].setText('')
+        tr=lambda k:for_api(self.api,k)
+        def finish(value,failed=False):
+            if self._result_job is not job:return
+            self._result_job=None
+            if not self._result_closed and not token.is_set() and self._result_key==key:
+                try:text=preview_text(key,value,tr) if not failed else ''
+                except (ValueError,TypeError,AttributeError,KeyError):text=''
+                from time import strftime
+                self['result_status'].setText(strftime('%H:%M:%S') if text.strip() else tr('Unavailable'))
+                self['descriptions'].setText(text if text.strip() else tr('Unavailable'))
+            queued=self._result_queued
+            self._result_queued=None
+            if queued is not None:self.request_result(queued)
+        if key in NATIVE_REPORTS:
+            try:
+                if key=='tuner-details':
+                    from .warder_tuners import details
+                    value=details(self.session,self.api,tr)
+                else:
+                    from enigma import eServiceCenter,eServiceReference
+                    from .warder_services import services,display
+                    value=display(services(self.session.nav,eServiceCenter.getInstance(),eServiceReference),tr)
+                finish(value)
+            except (AttributeError,RuntimeError,TypeError,OSError,ImportError,ValueError):
+                finish(None,True)
+        else:
+            def collect():
+                if key=='system-overview':
+                    from .warder_system_data import dashboard
+                    return dashboard(token)
+                return collect_report(key,tr,token)
+            try:deferToThread(collect).addCallbacks(finish,lambda failure:finish(None,True))
+            except (RuntimeError,TypeError,OSError):finish(None,True)
 
     def select(self):
         row = self['list'].getCurrent()
@@ -83,7 +235,10 @@ class CentreMenu(Screen):
             from .warder_tuners import open_native
             open_native(self.session,lambda key:for_api(self.api,key),self.native_actions[row[0]][1])
         elif self.enabled.get(row[0], False):
-            if row[0] in DIAGNOSTICS:
+            if self.inline_route(row[0]):
+                if self._result_key!=row[0]:self.describe()
+                self.request_result(row[0])
+            elif row[0] in DIAGNOSTICS:
                 open_diagnostic(self.session, self.api, row[0])
             else:
                 self.close(row[0])
@@ -276,33 +431,7 @@ class Report(Screen):
             deferToThread(self.collect).addCallbacks(self.done, self.failed)
 
     def collect(self):
-        kind, tr = self.kind, self.tr
-        if kind=='system-processes':
-            from .warder_system_data import process_table
-            return process_table(self.cancelled,self.cpu_order)
-        if kind=='system-log':
-            from .warder_system_data import detail_text
-            return detail_text('log',tr)
-        if kind=='storage-categories':
-            from .warder_storage import category_snapshot
-            return category_snapshot()
-        if kind=='storage-overview':
-            from .warder_storage import report
-            return report(tr,False)
-        if kind.startswith('network-'):
-            from .warder_network import collect, overview_panels, diagnostics
-            return overview_panels(collect(include_addresses=True),tr) if kind=='network-overview' else diagnostics(tr,self.cancelled)
-        if kind == 'forum-report':
-            import json
-            from .warder_service import forum_snapshot
-            return json.dumps(forum_snapshot(), ensure_ascii=False, indent=2)
-        if kind == 'service-ipk':
-            from .warder_ipk import review
-            return review(tr)
-        if kind == 'service-health':
-            from .warder_service import health
-            return health(tr)
-        raise ValueError('unknown diagnostic')
+        return collect_report(self.kind,self.tr,self.cancelled,self.cpu_order)
 
     def done(self, result):
         self.pending = False
