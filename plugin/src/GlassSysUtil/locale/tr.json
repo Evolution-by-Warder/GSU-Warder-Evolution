@@ -139,5 +139,16 @@
   "After enabling, please wait for the change and client list refresh. A local DVBAPI account restarts OSCam in the background.": "Etkinleştirdikten sonra değişikliği ve istemci listesinin yenilenmesini bekleyin. Yerel bir DVBAPI hesabı OSCam'ı arka planda yeniden başlatır.",
   "Press OK to edit": "Düzenlemek için OK tuşuna basın",
   "Yes": "Evet",
-  "No": "Hayır"
+  "No": "Hayır",
+  "Hourly": "Saatlik",
+  "Daily": "Günlük",
+  "Weekly": "Haftalık",
+  "Monthly": "Aylık",
+  "Monday": "Pazartesi",
+  "Tuesday": "Salı",
+  "Wednesday": "Çarşamba",
+  "Thursday": "Perşembe",
+  "Friday": "Cuma",
+  "Saturday": "Cumartesi",
+  "Sunday": "Pazar"
 }

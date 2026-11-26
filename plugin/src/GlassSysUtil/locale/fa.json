@@ -139,5 +139,16 @@
   "After enabling, please wait for the change and client list refresh. A local DVBAPI account restarts OSCam in the background.": "پس از فعال‌سازی، منتظر تغییر و تازه‌سازی فهرست کلاینت‌ها بمانید. حساب محلی DVBAPI، برنامه OSCam را در پس‌زمینه دوباره راه‌اندازی می‌کند.",
   "Press OK to edit": "برای ویرایش OK را فشار دهید",
   "Yes": "بله",
-  "No": "خیر"
+  "No": "خیر",
+  "Hourly": "هر ساعت",
+  "Daily": "روزانه",
+  "Weekly": "هفتگی",
+  "Monthly": "ماهانه",
+  "Monday": "دوشنبه",
+  "Tuesday": "سه‌شنبه",
+  "Wednesday": "چهارشنبه",
+  "Thursday": "پنجشنبه",
+  "Friday": "جمعه",
+  "Saturday": "شنبه",
+  "Sunday": "یکشنبه"
 }

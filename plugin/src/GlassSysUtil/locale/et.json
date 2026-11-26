@@ -139,5 +139,16 @@
   "After enabling, please wait for the change and client list refresh. A local DVBAPI account restarts OSCam in the background.": "Pärast lubamist oota muudatust ja klientide loendi värskendamist. Kohalik DVBAPI konto taaskäivitab OSCam-i taustal.",
   "Press OK to edit": "Redigeerimiseks vajuta OK",
   "Yes": "Jah",
-  "No": "Ei"
+  "No": "Ei",
+  "Hourly": "Iga tund",
+  "Daily": "Iga päev",
+  "Weekly": "Iga nädal",
+  "Monthly": "Iga kuu",
+  "Monday": "Esmaspäev",
+  "Tuesday": "Teisipäev",
+  "Wednesday": "Kolmapäev",
+  "Thursday": "Neljapäev",
+  "Friday": "Reede",
+  "Saturday": "Laupäev",
+  "Sunday": "Pühapäev"
 }

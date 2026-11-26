@@ -139,5 +139,16 @@
   "After enabling, please wait for the change and client list refresh. A local DVBAPI account restarts OSCam in the background.": "Pas aktivizimit, prit ndryshimin dhe rifreskimin e listës së klientëve. Një llogari lokale DVBAPI rinis OSCam në sfond.",
   "Press OK to edit": "Shtyp OK për të redaktuar",
   "Yes": "Po",
-  "No": "Jo"
+  "No": "Jo",
+  "Hourly": "Çdo orë",
+  "Daily": "Çdo ditë",
+  "Weekly": "Çdo javë",
+  "Monthly": "Çdo muaj",
+  "Monday": "E hënë",
+  "Tuesday": "E martë",
+  "Wednesday": "E mërkurë",
+  "Thursday": "E enjte",
+  "Friday": "E premte",
+  "Saturday": "E shtunë",
+  "Sunday": "E diel"
 }

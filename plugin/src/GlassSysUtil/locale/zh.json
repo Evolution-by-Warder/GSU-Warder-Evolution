@@ -139,5 +139,16 @@
   "After enabling, please wait for the change and client list refresh. A local DVBAPI account restarts OSCam in the background.": "启用后，请等待变更和客户端列表刷新。本地 DVBAPI 账户将在后台重启 OSCam。",
   "Press OK to edit": "按 OK 编辑",
   "Yes": "是",
-  "No": "否"
+  "No": "否",
+  "Hourly": "每小时",
+  "Daily": "每天",
+  "Weekly": "每周",
+  "Monthly": "每月",
+  "Monday": "星期一",
+  "Tuesday": "星期二",
+  "Wednesday": "星期三",
+  "Thursday": "星期四",
+  "Friday": "星期五",
+  "Saturday": "星期六",
+  "Sunday": "星期日"
 }

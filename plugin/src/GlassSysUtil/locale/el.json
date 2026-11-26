@@ -139,5 +139,16 @@
   "After enabling, please wait for the change and client list refresh. A local DVBAPI account restarts OSCam in the background.": "Μετά την ενεργοποίηση, περιμένετε την αλλαγή και την ανανέωση της λίστας πελατών. Ένας τοπικός λογαριασμός DVBAPI επανεκκινεί το OSCam στο παρασκήνιο.",
   "Press OK to edit": "Πατήστε OK για επεξεργασία",
   "Yes": "Ναι",
-  "No": "Όχι"
+  "No": "Όχι",
+  "Hourly": "Κάθε ώρα",
+  "Daily": "Καθημερινά",
+  "Weekly": "Εβδομαδιαία",
+  "Monthly": "Μηνιαία",
+  "Monday": "Δευτέρα",
+  "Tuesday": "Τρίτη",
+  "Wednesday": "Τετάρτη",
+  "Thursday": "Πέμπτη",
+  "Friday": "Παρασκευή",
+  "Saturday": "Σάββατο",
+  "Sunday": "Κυριακή"
 }

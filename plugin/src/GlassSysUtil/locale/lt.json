@@ -139,5 +139,16 @@
   "After enabling, please wait for the change and client list refresh. A local DVBAPI account restarts OSCam in the background.": "Įjungę palaukite pakeitimo ir klientų sąrašo atnaujinimo. Vietinė DVBAPI paskyra fone iš naujo paleidžia OSCam.",
   "Press OK to edit": "Norėdami redaguoti, spauskite OK",
   "Yes": "Taip",
-  "No": "Ne"
+  "No": "Ne",
+  "Hourly": "Kas valandą",
+  "Daily": "Kasdien",
+  "Weekly": "Kas savaitę",
+  "Monthly": "Kas mėnesį",
+  "Monday": "Pirmadienis",
+  "Tuesday": "Antradienis",
+  "Wednesday": "Trečiadienis",
+  "Thursday": "Ketvirtadienis",
+  "Friday": "Penktadienis",
+  "Saturday": "Šeštadienis",
+  "Sunday": "Sekmadienis"
 }
