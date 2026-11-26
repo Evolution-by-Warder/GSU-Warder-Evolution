@@ -59,14 +59,22 @@ class Probe:
             base='/sys/class/hwmon/'+monitor
             for name in self.entries(base):
                 if name.startswith('temp') and name.endswith('_input'):sensors.append((base+'/'+name,base+'/'+name[:-6]+'_label'))
-        sensors.extend([('/proc/stb/sensors/temp0/value',''),('/proc/stb/fp/temp_sensor','')])
+        sensors.extend([('/proc/stb/sensors/temp0/value',''),('/proc/stb/fp/temp_sensor',''),
+                        ('/proc/hisi/msp/pm_cpu','')])
         return sensors[:128]
 
     def temperatures(self, paths):
         temperatures=[];seen=set()
         for path,label in paths:
             try:
-                value=float(self.text(path,64))
+                if path == '/proc/hisi/msp/pm_cpu':
+                    raw = self.text(path, 8192)
+                    match = re.search(r'(?im)^\s*(?:cpu\s+|current\s+)?(?:temperature|temp)\s*[:=]\s*(-?\d+(?:\.\d+)?)\s*(?:°?\s*[cC](?:elsius)?\b|$)',raw)
+                    if not match:
+                        continue
+                    value = float(match.group(1))
+                else:
+                    value=float(self.text(path,64))
                 if abs(value)>=1000:value/=1000
                 real=str(self.path(path).resolve())
                 if not -20<=value<=150 or real in seen:continue

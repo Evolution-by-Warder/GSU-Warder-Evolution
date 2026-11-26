@@ -1,3 +1,9 @@
+# 26. 11. 2026 · diagnostika a ochrana zoznamu staníc
+
+Commit cf26ac4e881d110f6162507910d291d4967455ac v PR #16 prešiel OpenATV (45778734178), OpenPLi (45778734177), reprodukciou s migráciami a natívnym meraním x86_64/AArch64 (45778734238) a kontrolou inštalátora (45778734218).
+Ďalšia zmena pridáva stav závislostí balíka, samostatné stránky piatich projektov, kanonický vstup do aktualizácií a náhľad anonymného výstupu aj z pôvodných Nástrojov. Pred vstupom do natívneho ladenia sa vytvorí lokálna súkromná kópia lamedb a bouquetov so spätným overením každého súboru. Obnova spočíva v spätnom skopírovaní overených súborov do konfiguračného adresára Enigma2 pri zastavenom GUI. Umiestnenie zálohy sa zobrazí pred ladením. Súbor settings sa nekopíruje.
+Referenčné jadrá OpenPLi release-9.2 a OpenATV master poskytujú isTimeshiftActive aj isTimeshiftEnabled a zhodný vstup do manuálneho ladenia. Pribudli kontrola lokalizačných súborov, HiSilicon a meranie pod emulovanými MIPS/MIPSEL/ARMv7. Fyzické zariadenia neboli pripojené. Produkčný r6 aj staré feedy zostávajú aktívne. Nasleduje kontrola emulovaných výsledkov a vydávacieho postupu.
+
 # 26. 11. 2026 · overenie migrácie a auditu
 
 Implementačný commit 0f76366b94dbb97e002318064823bc489640296b prešiel štyrmi workflowmi. Nasledujúci commit 4088a82731a3fb5734faf0ca32847e912ddf1973 zaviedol verejnú verziu 0.41.5 a interné balíkové číslo 1:0.41.5. Tri relevantné workflowy uspeli (45776767657, 45776767676, 45776767689). Job 139762183252 overil tri izolované aktualizácie r93/r4/r5 → r6 → 1:0.41.5 so skutočnými historickými IPK a zachovaným nastavením. CI meranie tohto medzistupňa: 3851822 komprimovaných bajtov, 6428850 bajtov regulárnych súborov; SHA-256 fa86333b6051139f8c9315558b6ad4018111d19723fc81c075397ed63084885f. Vývojový balík sa nevydával.

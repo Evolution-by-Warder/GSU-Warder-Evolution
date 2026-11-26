@@ -140,10 +140,6 @@ class Report(Screen):
         if kind.startswith('network-'):
             from .warder_network import collect, summary, diagnostics
             return summary(collect(), tr) if kind == 'network-overview' else diagnostics(tr, self.cancelled)
-        if kind == 'projects':
-            from .warder_projects import report
-            locale = language(self.api['config'].osd.language.value) if self.api['config'].plugins.GlassSysUtil.par62.value else 'en'
-            return report(tr, locale, self.cancelled)
         if kind == 'forum-report':
             import json
             from .warder_service import forum_snapshot
@@ -206,7 +202,9 @@ class Report(Screen):
 def open_diagnostic(session, api, kind):
     if kind not in DIAGNOSTICS:
         return
-    if kind == 'signal-quick':
+    if kind == 'projects':
+        session.open(ProjectMenu, api)
+    elif kind == 'signal-quick':
         from .warder_quick import QuickSignal
         session.open(QuickSignal, api)
     elif kind == 'system-overview':
@@ -220,3 +218,63 @@ def open_diagnostic(session, api, kind):
         choose_native(session, lambda value: for_api(api, value))
     else:
         session.open(Report, api, kind, DIAGNOSTICS[kind][0])
+
+
+class ProjectMenu(CentreMenu):
+    def __init__(self, session, api):
+        from .warder_projects import PROJECTS
+        self.projects = {p[0]:p for p in PROJECTS}
+        super().__init__(session,api,(),{},None)
+
+    def entries(self):
+        return [(name,name,self.tr('Installed version')+' · '+self.tr('Stable version'),True)
+                for name in self.projects]
+
+    def tr(self,key):
+        return for_api(self.api,key)
+
+    def render(self):
+        super().render()
+        self['heading'].setText(self.tr('Warder Evolution centre'))
+
+    def select(self):
+        row=self['list'].getCurrent()
+        if row and row[0] in self.projects:
+            self.session.open(ProjectReport,self.api,self.projects[row[0]])
+
+
+class ProjectReport(Report):
+    def __init__(self,session,api,project):
+        self.project=project
+        super().__init__(session,api,'project',project[0])
+        self['blue'].setText(self.tr('Update' if project[0] == 'GSU' else 'Open plugin'))
+
+    def collect(self):
+        from .warder_projects import report
+        config=self.api['config']
+        locale=language(config.osd.language.value) if config.plugins.GlassSysUtil.par62.value else 'en'
+        return report(self.tr,locale,self.cancelled,projects=(self.project,))
+
+    def action(self):
+        from .warder_projects import entrypoint
+        from Screens.MessageBox import MessageBox
+        if self.project[0] == 'GSU':
+            # The canonical in-plugin updater owns check, confirmation and installation.
+            from .plugin_update_ui import StartupUpdateCheck
+            if not hasattr(self,'update_controller'):
+                self.update_controller=StartupUpdateCheck(self,self.api)
+            self.update_controller.request(manual=True)
+            return
+        descriptor=entrypoint(self.project[0])
+        if descriptor:
+            descriptor(session=self.session)
+        else:
+            self.session.open(MessageBox,self.tr('Unavailable'),type=MessageBox.TYPE_INFO)
+
+    def update_status(self, value):
+        self['file_info'].setText(value)
+
+    def readVersion(self):
+        from .warder_tools import read
+        from pathlib import Path
+        return read(Path(__file__).with_name('version'),128)

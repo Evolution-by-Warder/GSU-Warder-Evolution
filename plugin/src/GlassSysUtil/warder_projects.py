@@ -67,7 +67,7 @@ def installed(package, runner=subprocess.run):
         return None
     for paragraph in result.stdout.split('\n\n'):
         fields = dict(line.split(': ', 1) for line in paragraph.splitlines() if ': ' in line and not line.startswith(' '))
-        if fields.get('Package') == package and fields.get('Status') == 'install ok installed':
+        if fields.get('Package') == package and fields.get('Status') in ('install ok installed','install user installed','hold ok installed'):
             value = fields.get('Version', '')
             if re.fullmatch(r'[0-9][0-9a-z.+:~-]{0,63}', value):
                 return value
@@ -99,13 +99,16 @@ def read_feed(url, opener):
     return raw
 
 
-def report(tr, language, cancelled, opener=_open):
+def report(tr, language, cancelled, opener=_open, projects=None):
+    from .warder_package_status import database, dependency_state
+    records, manager = database()
     lines = []
-    for project in PROJECTS:
+    for project in PROJECTS if projects is None else projects:
         if cancelled.is_set():
             break
         name, repo, path = project[:3]
-        current = installed(project[4])
+        record = records.get(project[4], {})
+        current = record.get('Version') or installed(project[4])
         try:
             url = RAW+repo+'/main/'+path
             item = release(project, read_feed(url,opener), language)
@@ -123,7 +126,28 @@ def report(tr, language, cancelled, opener=_open):
                 lines.append(tr(status_label(name,current,item[0])))
             except ValueError:
                 lines.append(tr('Unavailable'))
+        if record:
+            lines.append(tr('Package dependencies')+'   '+tr(dependency_state(project[4],records,manager)))
+            lines.append(tr('Architecture')+'   '+record.get('Architecture','—'))
         if item and item[1]:
             lines.append(item[1])
         lines.append('')
     return '\n'.join(lines)
+
+
+ENTRY_DIRS = {'FullHDGlass':'setupGlass17', 'PiconHub':'WarderPiconHub','Warder Radio':'WarderRadio',
+              'YouTube':'WarderYouTube','GSU':'GlassSysUtil'}
+
+
+def entrypoint(name):
+    """Open only an already registered official product from its installed directory."""
+    from pathlib import Path
+    from Components.PluginComponent import plugins
+    from Plugins.Plugin import PluginDescriptor
+    from Tools.Directories import resolveFilename, SCOPE_PLUGINS
+    base = Path(resolveFilename(SCOPE_PLUGINS,'Extensions')) / ENTRY_DIRS[name]
+    for descriptor in plugins.getPlugins(PluginDescriptor.WHERE_PLUGINMENU):
+        path = getattr(descriptor,'path',None)
+        if path and Path(path) == base and callable(descriptor):
+            return descriptor
+    return None

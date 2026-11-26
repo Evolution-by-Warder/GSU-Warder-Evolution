@@ -74,7 +74,7 @@ def recording_safe(nav, now=time):
     try:
         service = nav.getCurrentService()
         timeshift = service and service.timeshift()
-        if timeshift and timeshift.isTimeshiftActive():
+        if timeshift and (timeshift.isTimeshiftActive() or timeshift.isTimeshiftEnabled()):
             return False
         if nav.getRecordings():
             return False
@@ -126,7 +126,25 @@ def choose_native(session, tr):
                 return
             if not recording_safe(session.nav):
                 return info('Tuner in use')
-            item[1](session)
+            from twisted.internet.threads import deferToThread
+            from Tools.Directories import resolveFilename, SCOPE_CONFIG
+            from .warder_scan_backup import create
+            owner = session.current_dialog
+            def offer(folder):
+                if session.current_dialog is not owner:
+                    return
+                def launch(accepted):
+                    if accepted is True:
+                        if recording_safe(session.nav):
+                            item[1](session)
+                        else:
+                            info('Tuner in use')
+                message = tr('Verified channel backup')+'\n'+folder+'\n\n'+tr('Open tuner setup? Live TV may stop.')
+                session.openWithCallback(launch,MessageBox,message,type=MessageBox.TYPE_YESNO,default=False)
+            def failed(_failure):
+                if session.current_dialog is owner:
+                    info('Recording or channel-list protection stopped the scan.')
+            deferToThread(create,resolveFilename(SCOPE_CONFIG)).addCallbacks(offer,failed)
         session.openWithCallback(confirmed, MessageBox, tr('Open tuner setup? Live TV may stop.'), type=MessageBox.TYPE_YESNO, default=False)
     session.openWithCallback(selected, ChoiceBox, title=tr('Tuner setup'), list=options)
 
@@ -140,7 +158,7 @@ def manual_scan(session):
     class AdditiveScan(ScanSetup):
         def startScan(self, tlist, flags, feid, *args, **kwargs):
             if not recording_safe(self.session.nav) or flags & eComponentScan.scanRemoveServices:
-                self.session.open(MessageBox, _('Protected scan'), type=MessageBox.TYPE_INFO)
+                self.session.open(MessageBox, _('Recording or channel-list protection stopped the scan.'), type=MessageBox.TYPE_INFO)
                 return
             return super().startScan(tlist, flags, feid, *args, **kwargs)
 

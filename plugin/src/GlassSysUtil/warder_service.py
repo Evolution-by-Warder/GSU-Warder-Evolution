@@ -48,6 +48,9 @@ def health(tr, p=None):
     except (OSError, ValueError, TypeError):
         result = tr('Warning')
     packages = [cmd for cmd in ('opkg', 'apt', 'dpkg-query') if shutil.which(cmd)]
+    from .warder_package_status import database, dependency_state
+    records, manager = database(p.path('/'))
+    dependencies = dependency_state(install_health.PACKAGE,records,manager)
     exceptions = crash_summary(p)
     messages = {'ModuleNotFoundError':'Check plugin dependencies', 'ImportError':'Check plugin dependencies',
                 'MemoryError':'Review memory and storage', 'PermissionError':'Check file permissions',
@@ -55,4 +58,4 @@ def health(tr, p=None):
                 'TypeError':'Check image compatibility'}
     suggestions = [tr(messages[name]) for name in dict.fromkeys(exceptions) if name in messages]
     return '\n'.join(('GSU   '+result, tr('Package manager')+'   '+(', '.join(packages) or '—'),
-                      tr('Crash logs')+'   '+(', '.join(exceptions) or '—'), *dict.fromkeys(suggestions)))
+                      tr('Package dependencies')+'   '+tr(dependencies), tr('Crash logs')+'   '+(', '.join(exceptions) or '—'), *dict.fromkeys(suggestions)))

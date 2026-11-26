@@ -20,6 +20,65 @@ def module(name):
 
 
 class DiagnosticTests(unittest.TestCase):
+    def test_backup_recreates_native_files_privately_and_ignores_settings(self):
+        from hashlib import sha256
+        backup = module('warder_scan_backup')
+        with TemporaryDirectory() as d:
+            root=Path(d)/'enigma2';root.mkdir()
+            original={'lamedb':b'new\x00lines','userbouquet.favourites.tv':b'#NAME Favourite'}
+            for name,value in original.items():
+                (root/name).write_bytes(value)
+            (root/'settings').write_bytes(b'private')
+            saved=Path(backup.create(root,d))
+            checks=json.loads((saved/'SHA256.json').read_text())
+            self.assertEqual(set(checks),set(original))
+            self.assertEqual(saved.stat().st_mode & 0o777,0o700)
+            for name,value in original.items():
+                self.assertEqual((saved/name).read_bytes(),value)
+                self.assertEqual(checks[name],sha256(value).hexdigest())
+            (root/'userbouquet.link.tv').symlink_to(root/'settings')
+            with self.assertRaises(OSError):
+                backup.create(root,d)
+            self.assertEqual(len(list(Path(d).glob('gsu-channel-backup-*'))),1)
+
+    def test_native_package_database_handles_alternative_and_virtual_dependencies(self):
+        packages=module('warder_package_status')
+        with TemporaryDirectory() as d:
+            root=Path(d);db=root/'var/lib/opkg/status';db.parent.mkdir(parents=True)
+            db.write_text('Package: receiver\nStatus: install user installed\nDepends: bad | enigma2 (>= 5), skin\nArchitecture: all\n\nPackage: enigma2\nStatus: hold ok installed\nVersion: 6\nProvides: skin\n')
+            records,manager=packages.database(root)
+            compare=MagicMock(return_value=True)
+            self.assertEqual(packages.dependency_state('receiver',records,manager,compare),'Ready')
+            compare.assert_called_once_with('opkg','6','>=','5')
+            self.assertEqual(packages.dependency_state('receiver',records,manager,lambda *a:False),'Check plugin dependencies')
+            self.assertEqual(packages.dependency_state('missing',records,manager),'Unavailable')
+
+    def test_hisilicon_sensor_only_accepts_explicit_temperature(self):
+        tools=module('warder_tools')
+        with TemporaryDirectory() as d:
+            probe=tools.Probe(d);path=probe.path('/proc/hisi/msp/pm_cpu');path.parent.mkdir(parents=True)
+            path.write_text('CPU clock = 1800 MHz\nCPU temperature = 61 C\n')
+            self.assertEqual([s['celsius'] for s in probe.temperatures(probe.sensor_paths())],[61])
+            path.write_text('CPU clock = 42 MHz\n')
+            self.assertEqual(probe.temperatures(probe.sensor_paths()),[])
+
+    def test_project_selection_and_canonical_update_status(self):
+        ui=module('warder_centre_ui')
+        projects=module('warder_projects')
+        session=MagicMock()
+        menu=ui.ProjectMenu(session,api)
+        self.assertEqual([r[0] for r in menu.entries()],[p[0] for p in projects.PROJECTS])
+        menu['list'].getCurrent=lambda:['GSU'];menu.select()
+        session.open.assert_called_once_with(ui.ProjectReport,api,projects.PROJECTS[-1])
+        view=ui.ProjectReport(session,api,projects.PROJECTS[-1])
+        view.update_status('checking')
+        self.assertEqual(view['file_info'].text,'checking')
+        self.assertEqual(view.readVersion(),(ROOT/'version').read_text().strip())
+        with patch.object(module('plugin_update_ui'),'StartupUpdateCheck') as updater:
+            view.action();view.action()
+        updater.assert_called_once_with(view,api)
+        self.assertEqual(updater.return_value.request.call_count,2)
+
     def test_every_new_layout_fits_and_binds(self):
         layouts = module('warder_dashboard')
         for w, h in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):

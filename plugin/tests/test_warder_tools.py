@@ -145,17 +145,20 @@ class WarderToolsUITests(unittest.TestCase):
         cls.plugin=load(ROOT)
         cls.ui=cls.plugin._warder_tools_ui
 
-    def test_main_menu_tools_contains_only_bundle_and_blue_opens_about(self):
+    def test_main_menu_tools_opens_local_bundle_or_anonymous_preview_and_blue_opens_about(self):
         session=MagicMock();screen=self.plugin.SysUtilMngMain(session)
         self.assertIn(('17','Nástroje'),[(item[0],item[1]) for item in screen.menuListAll])
         screen.status={'17':True};screen['list'].getCurrent=lambda:['17']
         screen.selectedmenuitem();session.open.assert_not_called()
         self.assertEqual(screen._rightpane.kind,'tools')
         menu=self.ui.ToolsScreen(session,vars(self.plugin));menu.prepare()
-        self.assertEqual([row[0] for row in menu['list'].list],['bundle'])
+        self.assertEqual([row[0] for row in menu['list'].list],['bundle','forum-report'])
         self.assertIn('Vytvorenie',menu['descriptions'].text)
         menu['list'].moveToIndex(0);menu.select()
         session.open.assert_called_with(self.ui.DiagnosticScreen,'bundle',vars(self.plugin))
+        menu['list'].moveToIndex(1);menu.select()
+        from Plugins.Extensions.GlassSysUtil.warder_centre_ui import Report
+        session.open.assert_called_with(Report,vars(self.plugin),'forum-report','Forum report')
         self.assertEqual(screen['blue'].text,'O plugine')
         session.reset_mock()
         screen['actions'].actions['blue']()

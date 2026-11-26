@@ -27,9 +27,13 @@ def verify_files(expected_version=None, runtime=None):
         if relative.is_absolute() or '..' in relative.parts:
             raise ValueError('Invalid installed GSU file path')
         path = runtime / name
-        if path.is_symlink() or not path.is_file():
+        if path.is_symlink() or not path.is_file() or path.resolve() != runtime.resolve() / relative:
             raise ValueError('Incomplete GSU installation: missing ' + name)
-        if hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+        checksum = hashlib.sha256()
+        with path.open('rb') as source:
+            for block in iter(lambda:source.read(65536),b''):
+                checksum.update(block)
+        if checksum.hexdigest() != digest:
             raise ValueError('Installed GSU file is damaged: ' + name)
     return version
 

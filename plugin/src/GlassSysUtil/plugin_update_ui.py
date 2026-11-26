@@ -66,7 +66,11 @@ class StartupUpdateCheck:
             return False
         self.busy,self.manual=True,manual
         self.current_version=self.screen.readVersion()
-        if manual:self.screen['info'].setText(text(self.api,'Checking for plugin updates…'))
+        if manual:
+            status = getattr(self.screen, 'update_status', None)
+            if status is None:
+                status = self.screen['info'].setText
+            status(text(self.api,'Checking for plugin updates…'))
         try:self.thread_factory(target=self.work,daemon=True).start()
         except Exception as error:self.results.put((None,str(error)))
         self.timer.start(250,False)
@@ -83,7 +87,10 @@ class StartupUpdateCheck:
         try:release,error=self.results.get_nowait()
         except queue.Empty:return
         self.timer.stop();self.busy=False
-        if self.manual:self.screen.reactivate()
+        if self.manual:
+            reactivate = getattr(self.screen,'reactivate',None)
+            if reactivate is not None:
+                reactivate()
         pane=getattr(self.screen,'_rightpane',None)
         if self.manual and pane is not None:
             if not pane.active or pane.kind!='update':return
