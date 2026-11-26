@@ -232,29 +232,29 @@ def choose_native(session, tr):
 
 def manual_scan(session):
     from Screens.ScanSetup import ScanSetup
-    from enigma import eComponentScan
     from .plugin import _
 
-    class AdditiveScan(ScanSetup):
+    class WarderManualScan(ScanSetup):
         def __init__(self,session):
             super().__init__(session)
             # Enigma2's Screen constructor defaults to the actual subclass name.
-            # No image ships a skin named AdditiveScan. Keep the native ScanSetup
-            # and any explicit fallbacks supplied by the image.
+            # Keep the native ScanSetup fallback on images with unfamiliar components.
             names=getattr(self,'skinName',None)
             names=names if isinstance(names,(list,tuple)) else [names]
             self.skinName=['ScanSetup']+[name for name in names
-                if isinstance(name,str) and name not in ('ScanSetup','AdditiveScan')]
+                if isinstance(name,str) and name not in ('ScanSetup','WarderManualScan')]
             from . import plugin
             from .warder_tuner_ui import install
             install(self,vars(plugin),False)
 
         def startScan(self, tlist, flags, feid, *args, **kwargs):
-            if not recording_safe(self.session.nav) or flags & eComponentScan.scanRemoveServices:
-                tuner_info(self.session,_,'Recording or channel-list protection stopped the scan.')
+            # The user's native clear-before-scan selection is authoritative.
+            # The verified backup was created before opening this tool.
+            if not recording_safe(self.session.nav):
+                tuner_info(self.session,_,'Tuner in use')
                 return
             from .warder_tuner_ui import run_with_scan_progress
             return run_with_scan_progress(super().startScan,tlist,flags,feid,*args,**kwargs)
 
     if recording_safe(session.nav):
-        session.open(AdditiveScan)
+        session.open(WarderManualScan)

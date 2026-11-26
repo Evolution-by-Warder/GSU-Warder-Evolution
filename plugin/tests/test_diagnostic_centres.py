@@ -355,7 +355,7 @@ class DiagnosticTests(unittest.TestCase):
             self.assertIs(launch.call_args.args[2],action)
             session.openWithCallback.assert_not_called()
 
-    def test_manual_scan_subclass_uses_native_skin_and_retains_scan_guard(self):
+    def test_manual_scan_preserves_user_clear_flags_and_recording_guard(self):
         tuner=module('warder_tuners')
         native=importlib.import_module('Screens.ScanSetup')
         from Screens.MessageBox import MessageBox
@@ -376,13 +376,16 @@ class DiagnosticTests(unittest.TestCase):
                 self.assertEqual(screen.skinName,expected)
                 calls.clear()
                 screen.startScan(['tp'],4,0)
-                self.assertEqual(calls,[])
+                self.assertEqual(calls,[(['tp'],4,0,(),{})])
                 safe.return_value=False
                 screen.startScan(['tp'],0,0)
-                self.assertEqual(calls,[])
+                screen.startScan(['tp'],4,0)
+                self.assertEqual(calls,[(['tp'],4,0,(),{})])
                 safe.return_value=True
                 screen.startScan(['tp'],0,0,networkid=1)
-                self.assertEqual(calls,[(['tp'],0,0,(),{'networkid':1})])
+                screen.startScan(['tp'],5,1,networkid=123)
+                self.assertEqual(calls,[(['tp'],4,0,(),{}),(['tp'],0,0,(),{'networkid':1}),
+                                        (['tp'],5,1,(),{'networkid':123})])
 
     def test_manual_scan_progress_keeps_native_components_and_callbacks(self):
         from Components.Sources.StaticText import StaticText
