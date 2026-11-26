@@ -305,6 +305,7 @@ if os.path.isfile('/etc/version_act'):
         pass
 
 config.plugins.GlassSysUtil = ConfigSubsection()
+config.plugins.GlassSysUtil.diagnosticAlerts = ConfigYesNo(default=False)
 config.plugins.GlassSysUtil.par0 = ConfigYesNo(default=False)
 config.plugins.GlassSysUtil.par1 = ConfigInteger(default=1030)
 config.plugins.GlassSysUtil.par2 = ConfigInteger(default=70)
@@ -2597,7 +2598,8 @@ class channelInfoCenter(Screen):
 class cccamInfo(Screen):
 
     def __init__(self, session, url='http://127.0.0.1:16001', srv_name='Box'):
-        self.skin = cccam_Info
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_Info, globals())
         self.session = session
         Screen.__init__(self, session)
         self.url = url
@@ -2756,7 +2758,8 @@ class cccamInfo(Screen):
 class serversStatus(Screen):
 
     def __init__(self, session, url):
-        self.skin = cccam_servers_Info
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_servers_Info, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -2952,7 +2955,8 @@ class serversStatus(Screen):
 class providerStatus(Screen):
 
     def __init__(self, session, url):
-        self.skin = cccam_providers_Info
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_providers_Info, globals())
         self.session = session
         Screen.__init__(self, session)
         self.url = url
@@ -3018,7 +3022,8 @@ class providerStatus(Screen):
 class sharesStatus(Screen):
 
     def __init__(self, session, url):
-        self.skin = cccam_shares_Info
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_shares_Info, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -3084,7 +3089,8 @@ class sharesStatus(Screen):
 class clientsStatus(Screen):
 
     def __init__(self, session, url):
-        self.skin = cccam_clients_Info
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_clients_Info, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -3278,7 +3284,8 @@ class clientsStatus(Screen):
 class activeClientsStatus(Screen):
 
     def __init__(self, session, url):
-        self.skin = cccam_activeClients_Info
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_activeClients_Info, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -3349,7 +3356,8 @@ class activeClientsStatus(Screen):
 class entitlements(Screen):
 
     def __init__(self, session, url):
-        self.skin = cccam_entitlements
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_entitlements, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -3411,7 +3419,8 @@ class entitlements(Screen):
 class cccamSummary(Screen):
 
     def __init__(self, session, url):
-        self.skin = cccam_summary_Info
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_summary_Info, globals())
         self.session = session
         Screen.__init__(self, session)
         self.url = url
@@ -3502,7 +3511,8 @@ class cccamSummary(Screen):
 class cccamInfoChoiceServer(Screen):
 
     def __init__(self, session):
-        self.skin = cccam_InfoChoiseServer
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_InfoChoiseServer, globals())
         self.session = session
         Screen.__init__(self, session)
         self.status = {}
@@ -3629,7 +3639,8 @@ class cccamInfoChoiceServer(Screen):
 class providerCardView(Screen):
 
     def __init__(self, session, url):
-        self.skin = cccam_providerCardView_Info
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(cccam_providerCardView_Info, globals())
         self.session = session
         Screen.__init__(self, session)
         self.url = url
@@ -7446,7 +7457,8 @@ class SelectPosition(Screen):
 class mboxInfo(Screen):
 
     def __init__(self, session):
-        self.skin = mbox_Main
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(mbox_Main, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -7566,7 +7578,8 @@ class mboxInfo(Screen):
 class m_pid(Screen):
 
     def __init__(self, session):
-        self.skin = mbox_pid_scr
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(mbox_pid_scr, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -7630,7 +7643,8 @@ class m_pid(Screen):
 class m_servers(Screen):
 
     def __init__(self, session):
-        self.skin = mbox_servers_scr
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(mbox_servers_scr, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -7691,7 +7705,8 @@ class m_servers(Screen):
 class m_stat(Screen):
 
     def __init__(self, session):
-        self.skin = mbox_netstat_scr
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(mbox_netstat_scr, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []
@@ -7752,7 +7767,8 @@ class m_stat(Screen):
 class m_share(Screen):
 
     def __init__(self, session):
-        self.skin = mbox_share_scr
+        from .warder_dashboard import cam_skin
+        self.skin = cam_skin(mbox_share_scr, globals())
         self.session = session
         Screen.__init__(self, session)
         self.list = []

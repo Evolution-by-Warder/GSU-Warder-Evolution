@@ -1,7 +1,7 @@
 """Canonical navigation ownership; legacy IDs remain stable."""
 CENTRES = (
     ("system", "System centre", ("system-overview", "system-live", "system-processes", "system-log", "0")),
-    ("reception", "Reception centre", ("signal-live", "1", "tuner-details", "tuner-native")),
+    ("reception", "Reception centre", ("signal-quick", "signal-live", "1", "tuner-details", "transponder-services", "tuner-native")),
     ("storage", "Memory and storage", ("storage-overview", "storage-categories", "9")),
     ("network", "Network centre", ("network-overview", "network-test")),
     ("cam", "CAM / ECM centre", ("2", "3", "4", "6", "7", "8")),
@@ -24,6 +24,8 @@ DIAGNOSTICS = {
     "network-test": ("Connection test", "HTTPS · RTT"),
     "service-health": ("Installation check", "Crash logs"),
     "forum-report": ("Forum report", "JSON"),
+    "signal-quick": ("Quick signal", "SNR · dB · LOCK"),
+    "transponder-services": ("Transponder services", "TV / Radio → /tmp"),
     "service-ipk": ("IPK · /tmp", "Package manager"),
     "projects": ("Stable releases", "Warder Evolution"),
 }

@@ -27,7 +27,11 @@ def archive(entries):
                 output.addfile(info);directories.add(str(parent))
             info=tarfile.TarInfo('./'+name);info.size=len(data);info.mode=mode;info.mtime=0
             output.addfile(info,io.BytesIO(data))
-    return gzip.compress(raw.getvalue(),mtime=0)
+    # GzipFile emits the portable OS byte on all supported Python versions.
+    compressed = io.BytesIO()
+    with gzip.GzipFile(filename='', mode='wb', fileobj=compressed, compresslevel=9, mtime=0) as stream:
+        stream.write(raw.getvalue())
+    return compressed.getvalue()
 
 
 def build(destination, bridge=False):

@@ -4,7 +4,7 @@ import re
 import shutil
 import subprocess
 from urllib.error import URLError
-from .plugin_update import _open, parse_release
+from .plugin_update import _open, parse_release, FEED_URL, version_key
 
 ORG = 'Evolution-by-Warder/'
 RAW = 'https://raw.githubusercontent.com/' + ORG
@@ -74,6 +74,31 @@ def installed(package, runner=subprocess.run):
     return None
 
 
+def status_label(name, current, available):
+    if not current or not available:
+        return 'Unavailable'
+    clean = re.sub(r'^(?:\d+:)', '', current)
+    if name == 'GSU':
+        installed_key, remote = version_key(clean), version_key(available)
+    else:
+        match = re.fullmatch(r'(\d+(?:\.\d+){2,3})(?:-(?:r)?\d+)?', clean)
+        if not match:
+            return 'Unavailable'
+        installed_key = tuple(map(int,match[1].split('.')))
+        remote = tuple(map(int,available.split('.')))
+    return 'Update' if installed_key < remote else 'Ready'
+
+
+def read_feed(url, opener):
+    with opener(url, timeout=3) as response:
+        if response.geturl() != url:
+            raise ValueError('unexpected redirect')
+        raw = response.read(65537)
+    if len(raw)>65536:
+        raise ValueError('manifest size')
+    return raw
+
+
 def report(tr, language, cancelled, opener=_open):
     lines = []
     for project in PROJECTS:
@@ -83,15 +108,21 @@ def report(tr, language, cancelled, opener=_open):
         current = installed(project[4])
         try:
             url = RAW+repo+'/main/'+path
-            with opener(url, timeout=3) as response:
-                if response.geturl() != url:
-                    raise ValueError('unexpected redirect')
-                item = release(project, response.read(65537), language)
+            item = release(project, read_feed(url,opener), language)
+            if name == 'GSU' and item is None and not cancelled.is_set():
+                bridge = parse_release(read_feed(FEED_URL,opener), '0.0-r0')
+                if bridge and bridge.version == '13.41-r6':
+                    item = bridge.version, bridge.notes_i18n.get(language) or bridge.notes
             available = item[0] if item else tr('None')
         except (ValueError, TypeError, KeyError, AttributeError, OSError, URLError):
             item, available = None, tr('Unavailable')
         lines.extend((name, '%s   %s     ·     %s   %s' % (tr('Installed version'), current or '—',
                                                           tr('Stable version'), available)))
+        if item and current:
+            try:
+                lines.append(tr(status_label(name,current,item[0])))
+            except ValueError:
+                lines.append(tr('Unavailable'))
         if item and item[1]:
             lines.append(item[1])
         lines.append('')

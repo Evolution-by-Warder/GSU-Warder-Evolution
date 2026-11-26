@@ -86,14 +86,15 @@ class Report(Screen):
         self.cancelled = Event()
         self.pending = False
         self.preview = None
+        self.services = []
         self.cpu_order = False
         self.history = []
         self['file_info'] = ScrollLabel('')
-        for name, key in [('heading',title), ('red','Back'), ('green',''), ('yellow','Refresh'),
-                          ('blue','Save' if kind == 'forum-report' else 'CPU / RAM' if kind == 'system-processes' else '')]:
+        for name, key in [('heading',title), ('red','Back'), ('green','TV' if kind == 'transponder-services' else ''), ('yellow','Refresh'),
+                          ('blue','Radio' if kind == 'transponder-services' else 'Save' if kind == 'forum-report' else 'CPU / RAM' if kind == 'system-processes' else '')]:
             self[name] = Label(self.tr(key))
         self['actions'] = ActionMap(['ColorActions','SetupActions','DirectionActions'],
-            {'red':self.close,'cancel':self.close,'yellow':self.start,'blue':self.action,
+            {'red':self.close,'cancel':self.close,'yellow':self.start,'blue':self.action,'green':lambda:self.export_services('tv'),
              'up':self['file_info'].pageUp, 'down':self['file_info'].pageDown,
              'left':self['file_info'].pageUp,'right':self['file_info'].pageDown}, -2)
         self.onLayoutFinish.append(self.start)
@@ -108,7 +109,16 @@ class Report(Screen):
         self.pending = True
         self.preview = None
         self['file_info'].setText(self.tr('Loading…'))
-        if self.kind == 'tuner-details':
+        if self.kind == 'transponder-services':
+            from enigma import eServiceCenter, eServiceReference
+            from .warder_services import services
+            try:
+                self.services = services(self.session.nav, eServiceCenter.getInstance(), eServiceReference)
+                self.done('\n'.join(name or ident for _, ident, name in self.services) or self.tr('Unavailable'))
+            except (RuntimeError, TypeError, ValueError, AttributeError):
+                self.services = []
+                self.failed(None)
+        elif self.kind == 'tuner-details':
             from .warder_tuners import details
             try:
                 self.done(details(self.session, self.api, self.tr))
@@ -119,20 +129,6 @@ class Report(Screen):
 
     def collect(self):
         kind, tr = self.kind, self.tr
-        if kind == 'system-overview':
-            from .warder_system_data import overview
-            report = overview()
-            h = report['health']
-            rows = [tr('Resource score')+'    '+('—' if h['score'] is None else '%d/100' % h['score']),
-                    tr('Measured checks')+'    %d/%d' % h['coverage'], '']
-            for item in report['checks']:
-                state = {'ok':'OK','warning':'Warning','critical':'Critical','unknown':'Unavailable'}[item['state']]
-                value = item['available_percent']
-                rows.append('%s    %s    %s' % (item['name'], tr(state), '—' if value is None else '%.1f %% %s' % (value,tr('free'))))
-            rows.append(report['memory']['ram_basis'] or '—')
-            if h['state'] in ('critical','warning'):
-                rows.extend(('', tr('Review memory and storage')))
-            return '\n'.join(rows)
         if kind in ('system-processes','system-log'):
             from .warder_system_data import detail_text, cpu_processes
             if kind == 'system-processes' and self.cpu_order:
@@ -178,10 +174,23 @@ class Report(Screen):
         if not self.cancelled.is_set():
             self['file_info'].setText(self.tr('Unavailable'))
 
+    def export_services(self, kind):
+        if self.kind != 'transponder-services' or not self.services:
+            return
+        from .warder_services import export
+        from Screens.MessageBox import MessageBox
+        try:
+            result = export(self.services,kind)
+        except OSError:
+            result = None
+        self.session.open(MessageBox,result or self.tr('Unavailable'),type=MessageBox.TYPE_INFO)
+
     def action(self):
         if self.pending or self.cancelled.is_set():
             return
-        if self.kind == 'system-processes':
+        if self.kind == 'transponder-services':
+            self.export_services('radio')
+        elif self.kind == 'system-processes':
             self.cpu_order = not self.cpu_order
             self.start()
         elif self.kind == 'forum-report' and self.preview is not None:
@@ -197,7 +206,13 @@ class Report(Screen):
 def open_diagnostic(session, api, kind):
     if kind not in DIAGNOSTICS:
         return
-    if kind in ('system-live', 'signal-live'):
+    if kind == 'signal-quick':
+        from .warder_quick import QuickSignal
+        session.open(QuickSignal, api)
+    elif kind == 'system-overview':
+        from .warder_overview import Overview
+        session.open(Overview, api)
+    elif kind in ('system-live', 'signal-live'):
         from .warder_chart import LiveChart
         session.open(LiveChart, api, kind == 'signal-live')
     elif kind == 'tuner-native':

@@ -22,7 +22,7 @@ class WarderMainTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):cls.plugin=load(ROOT)
 
-    def test_scaled_opaque_layout_fits_eleven_rows_and_contains_all_dynamic_widgets(self):
+    def test_scaled_opaque_layout_fits_seven_centres_and_contains_all_dynamic_widgets(self):
         required={'list','info','selection','day','date','clock','seconds','version_title','version','red','green','yellow','blue','inline_ecm_mask','inline_ecm_title','inline_ecm_labels','inline_ecm_values','inline_ecm_picon','inline_ecm_channel','inline_ecm_channel_name'}
         for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
             root=ET.fromstring(ui.main_skin(width,height))
@@ -38,7 +38,7 @@ class WarderMainTests(unittest.TestCase):
                 self.assertLessEqual(x+w,width)
                 self.assertLessEqual(y+h,height)
             rows_height=int(widgets['list'].get('size').split(',')[1])
-            self.assertGreaterEqual(rows_height,11*round(58*height/1080))
+            self.assertEqual(rows_height,7*round(100*height/1080))
             for a,b in (('day','version_title'),('date','version')):
                 self.assertEqual(widgets[a].get('position').split(',')[1],widgets[b].get('position').split(',')[1])
             for name in ('list','info','selection'):
@@ -48,7 +48,7 @@ class WarderMainTests(unittest.TestCase):
     def test_main_and_settings_lists_end_on_complete_rows_after_pixel_rounding(self):
         settings=importlib.import_module('Plugins.Extensions.GlassSysUtil.warder_settings')
         for width,height in ((1280,720),(1366,768),(1920,1080),(2560,1440),(3840,2160),(1920,1200)):
-            for xml,name,step,budget in ((ui.main_skin(width,height),'list',round(58*height/1080),759),
+            for xml,name,step,budget in ((ui.main_skin(width,height),'list',round(100*height/1080),759),
                                          (settings.skin(width,height),'config',round(48*height/1080),650)):
                 node=ET.fromstring(xml).find("widget[@name='%s']"%name)
                 h=int(node.get('size').split(',')[1])
@@ -127,7 +127,7 @@ class WarderMainTests(unittest.TestCase):
         with patch.object(module,'countServers',return_value=(True,True)),patch.object(screen,'checkCam',return_value=False),patch.object(screen,'cccamRunning',return_value=False),patch.object(screen,'mboxRunning',return_value=False),patch.object(module,'oscamRunning',return_value=True):
             screen.updatemenulist()
         self.assertEqual([row[0] for row in screen.list],['centre:system','centre:reception','centre:storage','centre:network','centre:cam','centre:service','centre:warder'])
-        self.assertEqual([e[0] for e in screen.menuListAll],['0','1','2','3','4','6','7','8','9','17','16','network-overview','system-overview','system-processes','system-log','system-live','signal-live','tuner-details','tuner-native','storage-overview','storage-categories','network-test','service-health','forum-report','service-ipk','projects'])
+        self.assertEqual([e[0] for e in screen.menuListAll],['0','1','2','3','4','6','7','8','9','17','16','network-overview','system-overview','system-processes','system-log','system-live','signal-live','tuner-details','tuner-native','storage-overview','storage-categories','network-test','service-health','forum-report','signal-quick','transponder-services','service-ipk','projects'])
         screen['list'].getCurrent=lambda:['centre:cam']
         screen.selectedmenuitem()
         args=session.openWithCallback.call_args.args

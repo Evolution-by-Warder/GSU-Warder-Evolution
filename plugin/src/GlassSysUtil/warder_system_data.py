@@ -87,3 +87,22 @@ def cpu_processes(tr, cancel, p=None):
     return 'CPU (%)    PID    RSS (KiB)\n\n'+'\n'.join(
         '%5.1f    %d    %s    %s' % (cpu, pid, rss if rss is not None else '—', name)
         for cpu, pid, name, rss in sorted(measured, key=lambda r: (-r[0], r[1]))) if measured else tr('Unavailable')
+
+
+def dashboard(cancel, p=None):
+    from .warder_live import Sampler
+    from .warder_storage import mounts, disks
+    p = p or Probe()
+    report = overview(p)
+    sampler = Sampler(p)
+    sampler.sample()
+    if cancel.wait(0.25):
+        return None
+    live = sampler.sample()
+    local = disks(p, mounts(p))
+    selected = [usage for path, _, _, _, usage in local if path != '/' and usage]
+    flash = report['checks'][1]['available_percent']
+    # List separate mount capacities. Bind mounts can otherwise double-count the same device.
+    return {'health':report['health'], 'basis':report['memory']['ram_basis'],
+            'values':(live['cpu'], live['ram'], live['swap'], flash,
+                      max((d.free for d in selected), default=None), live['temp'])}

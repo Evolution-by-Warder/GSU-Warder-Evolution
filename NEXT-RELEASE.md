@@ -1,3 +1,11 @@
+# 26. 11. 2026 · overenie migrácie a auditu
+
+Implementačný commit 0f76366b94dbb97e002318064823bc489640296b prešiel štyrmi workflowmi. Nasledujúci commit 4088a82731a3fb5734faf0ca32847e912ddf1973 zaviedol verejnú verziu 0.41.5 a interné balíkové číslo 1:0.41.5. Tri relevantné workflowy uspeli (45776767657, 45776767676, 45776767689). Job 139762183252 overil tri izolované aktualizácie r93/r4/r5 → r6 → 1:0.41.5 so skutočnými historickými IPK a zachovaným nastavením. CI meranie tohto medzistupňa: 3851822 komprimovaných bajtov, 6428850 bajtov regulárnych súborov; SHA-256 fa86333b6051139f8c9315558b6ad4018111d19723fc81c075397ed63084885f. Vývojový balík sa nevydával.
+
+Presná kontrola odhalila rozdiel medzi OS bajtom gzip hlavičky Pythonu 3.12 a 3.14. Ďalšia dávka normalizuje gzip, dopĺňa šesťkarietový prehľad, plávajúci signál s voliteľným zvukom, detailné CAM panely, HDMI dáta, bezpečný export služieb TP, ochranu timeshiftu, doplnkové testy a meranie samplera. Funkčné zdroje, hranice a pôvod porovnania sú v docs/GSU-0.41.5-REFERENCE-AUDIT.md. Odkaz LinuxSat a rozsah verejného auditu výslovne doplnil vlastník. Ďalší krok: verifikovať presný HEAD, lokálny a CI hash, hardvérové obmedzenia, konečný publikátor a web až po stabilnom vydaní.
+
+---
+
 # 26. 11. 2026 · GSU 0.41.5, PR #16
 
 Vlastník schválil implementáciu, kontrolované zlúčenie a stabilné vydanie po overení v rozsahu zadania. Integrácia produkčného main e064e426d1c7388200b9ed4727aacbf5e5705bc8 do pracovnej vetvy je cbe4de0cb836d3589b8d7188574b1761e259bad1. Zachované oba nezávislé bloky registra. Na integračnom commite a0f0adfef5637b2e728b234d11c83d07ddf368fc uspeli štyri workflowy vrátane reprodukovateľnosti 45774748963, OpenATV 45774749143, OpenPLi 45774748935 a balíkovej kontroly 45774749115.

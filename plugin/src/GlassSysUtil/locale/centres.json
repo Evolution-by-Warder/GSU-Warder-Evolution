@@ -54,7 +54,16 @@
     "Plugins": "Plugins",
     "Cache": "Cache",
     "Logs": "Logs",
-    "read-only": "read-only"
+    "read-only": "read-only",
+    "Manual scan": "Manual scan",
+    "Protected scan": "Protected scan",
+    "Check plugin dependencies": "Check plugin dependencies",
+    "Check file permissions": "Check file permissions",
+    "Check installed files": "Check installed files",
+    "Check image compatibility": "Check image compatibility",
+    "Scripts": "Scripts",
+    "Quick signal": "Quick signal",
+    "Transponder services": "Transponder services"
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -111,7 +120,16 @@
     "Plugins": "Pluginy",
     "Cache": "Vyrovnávacia pamäť",
     "Logs": "Záznamy",
-    "read-only": "iba na čítanie"
+    "read-only": "iba na čítanie",
+    "Manual scan": "Manuálne ladenie",
+    "Protected scan": "Kontrola nahrávania alebo ochrana zoznamu staníc zabránila spusteniu ladenia.",
+    "Check plugin dependencies": "Skontrolujte závislosti pluginu",
+    "Check file permissions": "Skontrolujte prístupové práva súborov",
+    "Check installed files": "Skontrolujte nainštalované súbory",
+    "Check image compatibility": "Skontrolujte kompatibilitu s image",
+    "Scripts": "Skripty",
+    "Quick signal": "Rýchle meranie signálu",
+    "Transponder services": "Stanice na transpondéri"
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -168,7 +186,16 @@
     "Plugins": "Pluginy",
     "Cache": "Mezipaměť",
     "Logs": "Záznamy",
-    "read-only": "jen pro čtení"
+    "read-only": "jen pro čtení",
+    "Manual scan": "Ruční ladění",
+    "Protected scan": "Ladění zastavila ochrana nahrávání nebo seznamu stanic.",
+    "Check plugin dependencies": "Zkontrolujte závislosti pluginu",
+    "Check file permissions": "Zkontrolujte oprávnění souborů",
+    "Check installed files": "Zkontrolujte nainstalované soubory",
+    "Check image compatibility": "Zkontrolujte kompatibilitu s image",
+    "Scripts": "Skripty",
+    "Quick signal": "Rychlé měření signálu",
+    "Transponder services": "Stanice na transpondéru"
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -225,7 +252,16 @@
     "Plugins": "Erweiterungen",
     "Cache": "Zwischenspeicher",
     "Logs": "Protokolle",
-    "read-only": "schreibgeschützt"
+    "read-only": "schreibgeschützt",
+    "Manual scan": "Manueller Suchlauf",
+    "Protected scan": "Der Aufnahme- oder Senderlistenschutz verhindert den Suchlauf.",
+    "Check plugin dependencies": "Plugin-Abhängigkeiten prüfen",
+    "Check file permissions": "Dateiberechtigungen prüfen",
+    "Check installed files": "Installierte Dateien prüfen",
+    "Check image compatibility": "Image-Kompatibilität prüfen",
+    "Scripts": "Skripte",
+    "Quick signal": "Schnelle Signalmessung",
+    "Transponder services": "Dienste auf dem Transponder"
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -282,7 +318,16 @@
     "Plugins": "Wtyczki",
     "Cache": "Pamięć podręczna",
     "Logs": "Dzienniki",
-    "read-only": "tylko do odczytu"
+    "read-only": "tylko do odczytu",
+    "Manual scan": "Skanowanie ręczne",
+    "Protected scan": "Ochrona nagrań lub listy kanałów zablokowała skanowanie.",
+    "Check plugin dependencies": "Sprawdź zależności wtyczki",
+    "Check file permissions": "Sprawdź uprawnienia plików",
+    "Check installed files": "Sprawdź zainstalowane pliki",
+    "Check image compatibility": "Sprawdź zgodność z obrazem",
+    "Scripts": "Skrypty",
+    "Quick signal": "Szybki pomiar sygnału",
+    "Transponder services": "Kanały na transponderze"
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -339,7 +384,16 @@
     "Plugins": "Bővítmények",
     "Cache": "Gyorsítótár",
     "Logs": "Naplók",
-    "read-only": "írásvédett"
+    "read-only": "írásvédett",
+    "Manual scan": "Kézi keresés",
+    "Protected scan": "A felvétel vagy a csatornalista védelme megállította a keresést.",
+    "Check plugin dependencies": "Ellenőrizze a bővítmény függőségeit",
+    "Check file permissions": "Ellenőrizze a fájljogosultságokat",
+    "Check installed files": "Ellenőrizze a telepített fájlokat",
+    "Check image compatibility": "Ellenőrizze a rendszerkompatibilitást",
+    "Scripts": "Parancsfájlok",
+    "Quick signal": "Gyors jelmérés",
+    "Transponder services": "Transzponder csatornái"
   },
   "ru": {
     "System centre": "Системный центр",
@@ -396,7 +450,16 @@
     "Plugins": "Плагины",
     "Cache": "Кеш",
     "Logs": "Журналы",
-    "read-only": "только для чтения"
+    "read-only": "только для чтения",
+    "Manual scan": "Ручной поиск",
+    "Protected scan": "Поиск остановлен для защиты записи или списка каналов.",
+    "Check plugin dependencies": "Проверьте зависимости плагина",
+    "Check file permissions": "Проверьте права доступа к файлам",
+    "Check installed files": "Проверьте установленные файлы",
+    "Check image compatibility": "Проверьте совместимость с образом",
+    "Scripts": "Сценарии",
+    "Quick signal": "Быстрое измерение сигнала",
+    "Transponder services": "Каналы транспондера"
   },
   "fr": {
     "System centre": "Centre système",
@@ -453,7 +516,16 @@
     "Plugins": "Extensions",
     "Cache": "Cache",
     "Logs": "Journaux",
-    "read-only": "lecture seule"
+    "read-only": "lecture seule",
+    "Manual scan": "Recherche manuelle",
+    "Protected scan": "La protection des enregistrements ou de la liste des chaînes a bloqué la recherche.",
+    "Check plugin dependencies": "Vérifiez les dépendances de l’extension",
+    "Check file permissions": "Vérifiez les droits des fichiers",
+    "Check installed files": "Vérifiez les fichiers installés",
+    "Check image compatibility": "Vérifiez la compatibilité avec l’image",
+    "Scripts": "Scripts",
+    "Quick signal": "Mesure rapide du signal",
+    "Transponder services": "Services du transpondeur"
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -510,7 +582,16 @@
     "Plugins": "Plugin",
     "Cache": "Cache",
     "Logs": "Registri",
-    "read-only": "sola lettura"
+    "read-only": "sola lettura",
+    "Manual scan": "Scansione manuale",
+    "Protected scan": "La protezione delle registrazioni o dei canali ha bloccato la scansione.",
+    "Check plugin dependencies": "Verificare le dipendenze del plugin",
+    "Check file permissions": "Verificare i permessi dei file",
+    "Check installed files": "Verificare i file installati",
+    "Check image compatibility": "Verificare la compatibilità con l’immagine",
+    "Scripts": "Script",
+    "Quick signal": "Misura rapida del segnale",
+    "Transponder services": "Servizi sul transponder"
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -567,7 +648,16 @@
     "Plugins": "Complementos",
     "Cache": "Caché",
     "Logs": "Registros",
-    "read-only": "solo lectura"
+    "read-only": "solo lectura",
+    "Manual scan": "Búsqueda manual",
+    "Protected scan": "La protección de grabaciones o de la lista de canales ha detenido la búsqueda.",
+    "Check plugin dependencies": "Compruebe las dependencias del complemento",
+    "Check file permissions": "Compruebe los permisos de los archivos",
+    "Check installed files": "Compruebe los archivos instalados",
+    "Check image compatibility": "Compruebe la compatibilidad con la imagen",
+    "Scripts": "Scripts",
+    "Quick signal": "Medición rápida de señal",
+    "Transponder services": "Servicios del transpondedor"
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -624,7 +714,16 @@
     "Plugins": "Shtojcat",
     "Cache": "Kujtesa e përkohshme",
     "Logs": "Regjistrat",
-    "read-only": "vetëm për lexim"
+    "read-only": "vetëm për lexim",
+    "Manual scan": "Kërkim manual",
+    "Protected scan": "Mbrojtja e regjistrimit ose e listës së kanaleve ndaloi kërkimin.",
+    "Check plugin dependencies": "Kontrolloni varësitë e shtojcës",
+    "Check file permissions": "Kontrolloni lejet e skedarëve",
+    "Check installed files": "Kontrolloni skedarët e instaluar",
+    "Check image compatibility": "Kontrolloni përputhshmërinë me sistemin",
+    "Scripts": "Skripte",
+    "Quick signal": "Matje e shpejtë e sinjalit",
+    "Transponder services": "Kanalet e transponderit"
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -681,7 +780,16 @@
     "Plugins": "Πρόσθετα",
     "Cache": "Προσωρινή μνήμη",
     "Logs": "Αρχεία καταγραφής",
-    "read-only": "μόνο για ανάγνωση"
+    "read-only": "μόνο για ανάγνωση",
+    "Manual scan": "Χειροκίνητη σάρωση",
+    "Protected scan": "Η προστασία εγγραφών ή λίστας καναλιών εμπόδισε τη σάρωση.",
+    "Check plugin dependencies": "Ελέγξτε τις εξαρτήσεις του πρόσθετου",
+    "Check file permissions": "Ελέγξτε τα δικαιώματα αρχείων",
+    "Check installed files": "Ελέγξτε τα εγκατεστημένα αρχεία",
+    "Check image compatibility": "Ελέγξτε τη συμβατότητα με την εικόνα",
+    "Scripts": "Σενάρια",
+    "Quick signal": "Γρήγορη μέτρηση σήματος",
+    "Transponder services": "Υπηρεσίες αναμεταδότη"
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -738,7 +846,16 @@
     "Plugins": "Lisad",
     "Cache": "Vahemälu",
     "Logs": "Logid",
-    "read-only": "kirjutuskaitstud"
+    "read-only": "kirjutuskaitstud",
+    "Manual scan": "Käsitsi otsing",
+    "Protected scan": "Salvestise või kanaliloendi kaitse peatas otsingu.",
+    "Check plugin dependencies": "Kontrollige lisa sõltuvusi",
+    "Check file permissions": "Kontrollige failide õigusi",
+    "Check installed files": "Kontrollige paigaldatud faile",
+    "Check image compatibility": "Kontrollige sobivust süsteemitõmmisega",
+    "Scripts": "Skriptid",
+    "Quick signal": "Signaali kiirmõõtmine",
+    "Transponder services": "Transpondri kanalid"
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -795,7 +912,16 @@
     "Plugins": "افزونه‌ها",
     "Cache": "حافظهٔ نهان",
     "Logs": "گزارش‌ها",
-    "read-only": "فقط خواندنی"
+    "read-only": "فقط خواندنی",
+    "Manual scan": "جست‌وجوی دستی",
+    "Protected scan": "برای محافظت از ضبط یا فهرست کانال‌ها، جست‌وجو متوقف شد.",
+    "Check plugin dependencies": "وابستگی‌های افزونه را بررسی کنید",
+    "Check file permissions": "مجوز فایل‌ها را بررسی کنید",
+    "Check installed files": "فایل‌های نصب‌شده را بررسی کنید",
+    "Check image compatibility": "سازگاری با ایمیج را بررسی کنید",
+    "Scripts": "اسکریپت‌ها",
+    "Quick signal": "اندازه‌گیری سریع سیگنال",
+    "Transponder services": "سرویس‌های ترانسپوندر"
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -852,7 +978,16 @@
     "Plugins": "Papildiniai",
     "Cache": "Podėlis",
     "Logs": "Žurnalai",
-    "read-only": "tik skaityti"
+    "read-only": "tik skaityti",
+    "Manual scan": "Rankinė paieška",
+    "Protected scan": "Įrašų arba kanalų sąrašo apsauga sustabdė paiešką.",
+    "Check plugin dependencies": "Patikrinkite papildinio priklausomybes",
+    "Check file permissions": "Patikrinkite failų teises",
+    "Check installed files": "Patikrinkite įdiegtus failus",
+    "Check image compatibility": "Patikrinkite suderinamumą su sistemos atvaizdu",
+    "Scripts": "Scenarijai",
+    "Quick signal": "Greitas signalo matavimas",
+    "Transponder services": "Atsakiklio kanalai"
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -909,7 +1044,16 @@
     "Plugins": "Plug-ins",
     "Cache": "Cache",
     "Logs": "Logboeken",
-    "read-only": "alleen-lezen"
+    "read-only": "alleen-lezen",
+    "Manual scan": "Handmatig zoeken",
+    "Protected scan": "Beveiliging van opnamen of zenderlijsten heeft de zoekactie gestopt.",
+    "Check plugin dependencies": "Controleer de afhankelijkheden van de plug-in",
+    "Check file permissions": "Controleer de bestandsrechten",
+    "Check installed files": "Controleer de geïnstalleerde bestanden",
+    "Check image compatibility": "Controleer de compatibiliteit met het image",
+    "Scripts": "Scripts",
+    "Quick signal": "Snelle signaalmeting",
+    "Transponder services": "Zenders op de transponder"
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -966,7 +1110,16 @@
     "Plugins": "Extensões",
     "Cache": "Cache",
     "Logs": "Registos",
-    "read-only": "só de leitura"
+    "read-only": "só de leitura",
+    "Manual scan": "Pesquisa manual",
+    "Protected scan": "A proteção de gravações ou da lista de canais bloqueou a pesquisa.",
+    "Check plugin dependencies": "Verifique as dependências da extensão",
+    "Check file permissions": "Verifique as permissões dos ficheiros",
+    "Check installed files": "Verifique os ficheiros instalados",
+    "Check image compatibility": "Verifique a compatibilidade com a imagem",
+    "Scripts": "Scripts",
+    "Quick signal": "Medição rápida do sinal",
+    "Transponder services": "Serviços do transponder"
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -1023,7 +1176,16 @@
     "Plugins": "Extensii",
     "Cache": "Memorie cache",
     "Logs": "Jurnale",
-    "read-only": "doar citire"
+    "read-only": "doar citire",
+    "Manual scan": "Scanare manuală",
+    "Protected scan": "Protecția înregistrărilor sau a listei de canale a oprit scanarea.",
+    "Check plugin dependencies": "Verificați dependențele extensiei",
+    "Check file permissions": "Verificați permisiunile fișierelor",
+    "Check installed files": "Verificați fișierele instalate",
+    "Check image compatibility": "Verificați compatibilitatea cu imaginea",
+    "Scripts": "Scripturi",
+    "Quick signal": "Măsurare rapidă a semnalului",
+    "Transponder services": "Servicii pe transponder"
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -1080,7 +1242,16 @@
     "Plugins": "Eklentiler",
     "Cache": "Önbellek",
     "Logs": "Günlükler",
-    "read-only": "salt okunur"
+    "read-only": "salt okunur",
+    "Manual scan": "Elle tarama",
+    "Protected scan": "Kayıt veya kanal listesi koruması taramayı durdurdu.",
+    "Check plugin dependencies": "Eklenti bağımlılıklarını denetleyin",
+    "Check file permissions": "Dosya izinlerini denetleyin",
+    "Check installed files": "Yüklü dosyaları denetleyin",
+    "Check image compatibility": "İmaj uyumluluğunu denetleyin",
+    "Scripts": "Betikler",
+    "Quick signal": "Hızlı sinyal ölçümü",
+    "Transponder services": "Transponder hizmetleri"
   },
   "uk": {
     "System centre": "Системний центр",
@@ -1137,7 +1308,16 @@
     "Plugins": "Плагіни",
     "Cache": "Кеш",
     "Logs": "Журнали",
-    "read-only": "лише читання"
+    "read-only": "лише читання",
+    "Manual scan": "Ручний пошук",
+    "Protected scan": "Захист записів або списку каналів зупинив пошук.",
+    "Check plugin dependencies": "Перевірте залежності плагіна",
+    "Check file permissions": "Перевірте дозволи файлів",
+    "Check installed files": "Перевірте встановлені файли",
+    "Check image compatibility": "Перевірте сумісність з образом",
+    "Scripts": "Сценарії",
+    "Quick signal": "Швидке вимірювання сигналу",
+    "Transponder services": "Канали транспондера"
   },
   "zh": {
     "System centre": "系统中心",
@@ -1194,6 +1374,15 @@
     "Plugins": "插件",
     "Cache": "缓存",
     "Logs": "日志",
-    "read-only": "只读"
+    "read-only": "只读",
+    "Manual scan": "手动扫描",
+    "Protected scan": "为保护录制或频道列表，扫描已停止。",
+    "Check plugin dependencies": "检查插件依赖项",
+    "Check file permissions": "检查文件权限",
+    "Check installed files": "检查已安装文件",
+    "Check image compatibility": "检查镜像兼容性",
+    "Scripts": "脚本",
+    "Quick signal": "快速信号测量",
+    "Transponder services": "转发器频道"
   }
 }

@@ -60,11 +60,22 @@ def details(session, api, tr):
                     if name == 'sGamma':
                         value = {0:'SDR', 1:'HDR', 2:'HDR10', 3:'HLG'}.get(value, value)
                     rows.append('%s   %s' % (label, value))
+    from .warder_tools import Probe
+    p = Probe()
+    for label, path in [('HDMI', '/proc/stb/video/videomode'), ('HDMI · OUT', '/proc/stb/hdmi/output'),
+                        ('HDMI · HDR', '/proc/stb/video/hdmi_hdrtype'), ('HDMI · PCM', '/proc/stb/audio/multichannel_pcm')]:
+        value = p.text(path, 96)
+        if value and value.isprintable():
+            rows.append(label+'   '+value)
     return '\n'.join(rows).strip() or tr('Unavailable')
 
 
 def recording_safe(nav, now=time):
     try:
+        service = nav.getCurrentService()
+        timeshift = service and service.timeshift()
+        if timeshift and timeshift.isTimeshiftActive():
+            return False
         if nav.getRecordings():
             return False
         count = getattr(nav, 'getAnyRecordingsCount', None)
@@ -76,7 +87,7 @@ def recording_safe(nav, now=time):
         return False
 
 
-def native_tools():
+def native_tools(tr):
     from Components.PluginComponent import plugins
     # Only expose image-registered entry points that the installed tuner supports.
     allowed = {'satfinder', 'positioner_setup', 'blindscan'}
@@ -84,6 +95,13 @@ def native_tools():
     for item in plugins.getPluginsForMenu('scan'):
         if len(item) >= 3 and item[2] in allowed and callable(item[1]):
             options.append((item[0], item[1]))
+    try:
+        from Screens.ScanSetup import ScanSetup
+        from enigma import eComponentScan
+        if hasattr(ScanSetup,'startScan') and hasattr(eComponentScan,'scanRemoveServices'):
+            options.append((tr('Manual scan'), manual_scan))
+    except ImportError:
+        pass
     return options
 
 
@@ -95,7 +113,7 @@ def choose_native(session, tr):
     if not recording_safe(session.nav):
         return info('Tuner in use')
     try:
-        options = native_tools()
+        options = native_tools(tr)
     except (ImportError, AttributeError, RuntimeError):
         options = []
     if not options:
@@ -111,3 +129,20 @@ def choose_native(session, tr):
             item[1](session)
         session.openWithCallback(confirmed, MessageBox, tr('Open tuner setup? Live TV may stop.'), type=MessageBox.TYPE_YESNO, default=False)
     session.openWithCallback(selected, ChoiceBox, title=tr('Tuner setup'), list=options)
+
+
+def manual_scan(session):
+    from Screens.ScanSetup import ScanSetup
+    from Screens.MessageBox import MessageBox
+    from enigma import eComponentScan
+    from .plugin import _
+
+    class AdditiveScan(ScanSetup):
+        def startScan(self, tlist, flags, feid, *args, **kwargs):
+            if not recording_safe(self.session.nav) or flags & eComponentScan.scanRemoveServices:
+                self.session.open(MessageBox, _('Protected scan'), type=MessageBox.TYPE_INFO)
+                return
+            return super().startScan(tlist, flags, feid, *args, **kwargs)
+
+    if recording_safe(session.nav):
+        session.open(AdditiveScan)

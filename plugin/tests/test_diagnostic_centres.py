@@ -111,6 +111,7 @@ class DiagnosticTests(unittest.TestCase):
     def test_tuner_actions_fail_closed_and_recheck_after_confirmation(self):
         tuner = module('warder_tuners')
         nav = MagicMock()
+        nav.getCurrentService.return_value = None
         nav.getRecordings.return_value = []
         nav.getAnyRecordingsCount.return_value = 0
         nav.RecordTimer.getNextRecordingTime.return_value = 1200
@@ -206,3 +207,93 @@ class DiagnosticTests(unittest.TestCase):
             self.assertNotIn('linked',ipk.review(str,d))
             path.write_bytes(b'!<arch>\n'+b'x'*60)
             with self.assertRaises(ValueError):ipk.inspect(path)
+
+    def test_summary_cards_and_classic_cam_widgets_preserve_native_bindings(self):
+        dashboard=module('warder_dashboard')
+        overview=module('warder_overview')
+        for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
+            skin=ET.fromstring(dashboard.skin(w,h,'overview'))
+            self.assertEqual(len([e for e in skin if (e.get('name') or '').startswith('value')]),6)
+            for name,value in api.items():
+                if name.startswith(('cccam_','mbox_')) and isinstance(value,str) and value.lstrip().startswith('<screen'):
+                    original=ET.fromstring(value)
+                    current=ET.fromstring(dashboard.cam_panel(value,w,h,str))
+                    self.assertEqual(sorted(n.get('name') for n in original.findall('widget')),
+                                     sorted(n.get('name') for n in current.findall('widget')))
+                    for node in current:
+                        x,y=map(int,node.get('position').split(','));width,height=map(int,node.get('size').split(','))
+                        self.assertGreaterEqual(min(x,y),0)
+                        self.assertLessEqual(x+width,w+1)
+                        self.assertLessEqual(y+height,h+1)
+        screen=overview.Overview(MagicMock(),api)
+        self.assertFalse(screen.alerts().value)
+        screen.done({'values':[2,44,None,70,None,48], 'basis':'MemAvailable', 'health':{'state':'ok','score':100,'coverage':(2,2)}})
+        self.assertEqual(screen['value2'].getText(),'—')
+        self.assertEqual(screen['value5'].getText(),'48.0 °C')
+        screen.cancelled.set()
+        screen.done(None)
+        screen.session.open.assert_not_called()
+
+    def test_bouquet_export_filters_non_dvb_and_never_overwrites(self):
+        services=module('warder_services')
+        ident='1:0:19:A:1:2:30000:0:0:0:'
+        with TemporaryDirectory() as directory:
+            rows=[('tv',ident,'First\n#SERVICE injected'),('tv','http://user:secret@invalid','IPTV')]
+            first=Path(services.export(rows,'tv',directory))
+            second=Path(services.export(rows,'tv',directory))
+            self.assertNotEqual(first,second)
+            self.assertEqual(first.read_bytes(),second.read_bytes())
+            self.assertEqual(first.read_text().count('\n#SERVICE '),1)
+            self.assertNotIn('secret',first.read_text())
+            self.assertIsNone(services.export(rows,'radio',directory))
+        ref=MagicMock()
+        ref.toString.return_value=ident
+        ref.getUnsignedData.side_effect=lambda ix:{4:0x30000,2:1,3:2}[ix]
+        end=MagicMock()
+        end.valid.return_value=False
+        center=MagicMock()
+        center.list.return_value.getNext.side_effect=[ref,ref,end]
+        center.info.return_value.getName.return_value='First'
+        nav=MagicMock()
+        nav.getCurrentlyPlayingServiceReference.return_value=ref
+        self.assertEqual(services.services(nav,center,str),[('tv',ident,'First')])
+
+    def test_quick_meter_is_read_only_and_audio_is_off_by_default(self):
+        quick=module('warder_quick')
+        session=MagicMock()
+        session.nav.getCurrentlyPlayingServiceReference.return_value=None
+        session.nav.getCurrentService.return_value=None
+        with patch.object(quick.shutil,'which',return_value=None):
+            screen=quick.QuickSignal(session,api)
+            screen.timer=MagicMock()
+            screen.tick()
+            screen.toggle()
+            self.assertFalse(screen.sound)
+            self.assertIn('—',screen['level'].getText())
+            screen.cleanup()
+            screen.tick()
+            screen.timer.start.assert_called_once_with(1000,True)
+            screen.timer.stop.assert_called_once()
+            session.nav.stopService.assert_not_called()
+
+    def test_empty_modern_project_feed_can_show_official_bridge(self):
+        projects=module('warder_projects')
+        class Response:
+            def __init__(self,url,blob):self.url,self.blob=url,blob
+            def __enter__(self):return self
+            def __exit__(self,*unused):pass
+            def read(self,size):return self.blob[:size]
+            def geturl(self):return self.url
+        def opener(url,timeout):
+            name='stable.json' if url==projects.FEED_URL else 'stable-modern.json'
+            return Response(url,(ROOT.parents[1]/'update'/name).read_bytes())
+        with patch.object(projects,'PROJECTS',projects.PROJECTS[-1:]), patch.object(projects,'installed',return_value='13.41-r5'):
+            report=projects.report(str,'en',Event(),opener)
+            self.assertIn('13.41-r6',report)
+            self.assertIn('Update',report)
+        self.assertEqual(projects.status_label('Warder Radio','0.2.2-1','0.2.2'),'Ready')
+
+    def test_paused_recording_guard_never_opens_native_setup(self):
+        nav=MagicMock()
+        nav.getCurrentService.return_value.timeshift.return_value.isTimeshiftActive.return_value=True
+        self.assertFalse(module('warder_tuners').recording_safe(nav))

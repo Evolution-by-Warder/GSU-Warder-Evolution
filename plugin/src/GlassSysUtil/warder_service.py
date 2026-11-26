@@ -49,5 +49,10 @@ def health(tr, p=None):
         result = tr('Warning')
     packages = [cmd for cmd in ('opkg', 'apt', 'dpkg-query') if shutil.which(cmd)]
     exceptions = crash_summary(p)
+    messages = {'ModuleNotFoundError':'Check plugin dependencies', 'ImportError':'Check plugin dependencies',
+                'MemoryError':'Review memory and storage', 'PermissionError':'Check file permissions',
+                'FileNotFoundError':'Check installed files', 'AttributeError':'Check image compatibility',
+                'TypeError':'Check image compatibility'}
+    suggestions = [tr(messages[name]) for name in dict.fromkeys(exceptions) if name in messages]
     return '\n'.join(('GSU   '+result, tr('Package manager')+'   '+(', '.join(packages) or '—'),
-                      tr('Crash logs')+'   '+(', '.join(exceptions) or '—')))
+                      tr('Crash logs')+'   '+(', '.join(exceptions) or '—'), *dict.fromkeys(suggestions)))
