@@ -82,3 +82,48 @@ class ReceiverRenderingTests(unittest.TestCase):
                      'health':{'state':'ok','score':100,'coverage':(2,2)}})
         self.assertNotIn('MemAvailable',screen['label1'].getText())
         self.assertEqual(screen['value1'].getText(),'44 %')
+
+    def test_worker_routes_call_the_correct_provider(self):
+        cases=(
+            ('system-processes','warder_system_data','detail_text','processes'),
+            ('system-log','warder_system_data','detail_text','log'),
+            ('storage-overview','warder_storage','report',None),
+            ('storage-categories','warder_storage','report',None),
+            ('network-test','warder_network','diagnostics',None),
+            ('service-health','warder_service','health',None),
+            ('service-ipk','warder_ipk','review',None),
+        )
+        for kind,module,method,argument in cases:
+            with self.subTest(kind=kind):
+                report=self.ui.Report(MagicMock(),self.api,kind,'Overview')
+                with patch.object(mod(module),method,return_value='provider data') as provider:
+                    report.done(report.collect())
+                    provider.assert_called_once()
+                    if argument is not None:
+                        self.assertEqual(provider.call_args.args[0],argument)
+                    if kind.startswith('storage-'):
+                        self.assertEqual(provider.call_args.args[-1],kind=='storage-categories')
+                    self.assertIn('provider data',report['file_info'].getText())
+        report=self.ui.Report(MagicMock(),self.api,'network-overview','Overview')
+        with patch.object(mod('warder_network'),'collect',return_value={'fixture':1}) as collect, patch.object(mod('warder_network'),'summary',return_value='network data') as summary:
+            report.done(report.collect())
+            collect.assert_called_once()
+            self.assertEqual(summary.call_args.args[0],{'fixture':1})
+            self.assertIn('network data',report['file_info'].getText())
+        report=self.ui.Report(MagicMock(),self.api,'forum-report','Overview')
+        with patch.object(mod('warder_service'),'forum_snapshot',return_value={'schema':2}) as snapshot:
+            report.done(report.collect())
+            snapshot.assert_called_once()
+            self.assertIn('"schema": 2',report.preview)
+
+    def test_native_routes_collect_on_gui_thread(self):
+        report=self.ui.Report(MagicMock(),self.api,'tuner-details','Overview')
+        with patch.object(mod('warder_tuners'),'details',return_value='Tuner fixture') as provider:
+            report.start()
+            provider.assert_called_once()
+            self.assertEqual(report['file_info'].getText(),'Tuner fixture')
+        report=self.ui.Report(MagicMock(),self.api,'transponder-services','Overview')
+        with patch.object(mod('warder_services'),'services',return_value=[('tv','ref','Channel fixture')]) as provider:
+            report.start()
+            provider.assert_called_once()
+            self.assertEqual(report['file_info'].getText(),'Channel fixture')
