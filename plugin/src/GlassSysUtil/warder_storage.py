@@ -225,6 +225,9 @@ def report(tr, detail=False, probe=None):
             rows.append('')
         if options:
             rows.extend(('', tr('Picon storage')+'   '+max(options)[1]))
+        rows.extend(('',tr('Saved storage paths')))
+        for label,path in configured_storage_paths(p):
+            rows.append('    '+tr(label)+'   '+(path or '—'))
     return '\n'.join(rows) or tr('Unavailable')
 
 
@@ -275,3 +278,27 @@ def disk_activity(tr,cancelled,probe=None,clock=time.monotonic):
                          'W   %.1f KiB/s   ·   %.1f IOPS'%(delta[3]/2/elapsed,delta[2]/elapsed)))
         rows.append('')
     return '\n'.join(rows).strip() or tr('Unavailable')
+
+
+def configured_storage_paths(p):
+    """Saved native path settings only; never resolve, stat or open the paths."""
+    keys=('config.misc.epgcache_filename','config.misc.epgcachepath',
+          'config.timeshift.path','config.usage.timeshift_path',
+          'config.usage.default_path','config.usage.timer_path','config.usage.instantrec_path')
+    values={}
+    for line in p.text('/etc/enigma2/settings',1024*1024).splitlines():
+        key,sep,value=line.partition('=')
+        if not sep or key not in keys:continue
+        if value in ('<default>','<current>','<timer>'):
+            values[key]=value
+        elif (value.startswith('/') and len(value)<=512 and value.isprintable()
+              and not value.startswith('//') and '://' not in value
+              and os.path.normpath(value)==value.rstrip('/')):
+            values[key]=value
+    return (
+        ('EPG',values.get(keys[0]) or values.get(keys[1])),
+        ('Timeshift',values.get(keys[2]) or values.get(keys[3])),
+        ('Recordings',values.get(keys[4])),
+        ('Timer recordings',values.get(keys[5])),
+        ('Instant recordings',values.get(keys[6])),
+    )

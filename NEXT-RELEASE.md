@@ -1,3 +1,9 @@
+# 26.11.2026 — Saved storage paths and explicit ecosystem overview
+
+Previous exact HEAD `66392c8a4b52736677d40e16afbb2bc370434486`: OpenATV/OpenPLi SUCCESS; package/architecture still running at inspection. Existing storage overview now lists only explicitly persisted Enigma2 EPG, timeshift and recording-path keys; native OpenATV 8.0 / OpenPLi 9.2 UsageConfig keys were reviewed, with missing values unknown and modern timeshift key preferred over legacy. No opening, stat, resolving or creation of configured paths, including remote locations. Existing ProjectMenu keeps five product rows; green Overview opens a compact all-product version report using the canonical manifest reader, no new feeds or updater. Blue Details and OK keep their prior behavior. All added labels in 21 catalogues; tests cover allowlisted settings, explicit summary action, five feeds, no duplicate route, cancellation. Latest CI and physical validation required. No production mutation.
+
+---
+
 # 26.11.2026 — Existing channel backup inventory and completion audit
 
 Previous exact HEAD `4811cdd9828fec9491b15d37df254b8aa7843168`: OpenATV/OpenPLi/reproducibility SUCCESS, architecture running at inspection. Added green Channel backups action in the existing full tuner-details report. Lists up to 12 recent private GSU-created backup directories from bounded local /tmp and mounted local HDD inventory, with date and structurally valid SHA256.json entry count. Does not rehash files, read channel contents, restore, delete or create backups. Existing pre-scan verified-copy implementation unchanged. Two labels in 21 languages, regression covers manifest-only display, local/private/symlink exclusions and cancellation. Updated original function inventory with completed vs pending areas. Exact-head CI and physical receiver check remain mandatory. No production mutation.

@@ -99,7 +99,7 @@ def read_feed(url, opener):
     return raw
 
 
-def report(tr, language, cancelled, opener=_open, projects=None):
+def report(tr, language, cancelled, opener=_open, projects=None, compact=False):
     from .warder_package_status import database, dependency_state
     records, manager = database()
     lines = []
@@ -126,11 +126,11 @@ def report(tr, language, cancelled, opener=_open, projects=None):
                 lines.append(tr(status_label(name,current,item[0])))
             except ValueError:
                 lines.append(tr('Unavailable'))
-        if record:
+        if record and not compact:
             lines.append('')
             lines.append(tr('Package dependencies')+'   '+tr(dependency_state(project[4],records,manager)))
             lines.append(tr('Architecture')+'   '+record.get('Architecture','—'))
-        if item and item[1]:
+        if item and item[1] and not compact:
             lines.extend(('',item[1]))
         lines.append('')
     return '\n'.join(lines)

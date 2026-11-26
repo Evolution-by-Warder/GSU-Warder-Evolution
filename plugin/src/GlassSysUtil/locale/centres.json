@@ -109,7 +109,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.",
     "Compare": "Compare",
     "Channel backups": "Channel backups",
-    "Files": "Files"
+    "Files": "Files",
+    "Saved storage paths": "Saved storage paths",
+    "Timeshift": "Timeshift",
+    "Timer recordings": "Timer recordings",
+    "Instant recordings": "Instant recordings",
+    "EPG": "EPG"
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -221,7 +226,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Táto kontrola iba číta údaje. Prístup na internet, integrita disku a dekódovanie CAM sa netestujú.",
     "Compare": "Porovnať",
     "Channel backups": "Zálohy staníc",
-    "Files": "Súbory"
+    "Files": "Súbory",
+    "Saved storage paths": "Uložené cesty úložiska",
+    "Timeshift": "Timeshift",
+    "Timer recordings": "Časované nahrávky",
+    "Instant recordings": "Okamžité nahrávky",
+    "EPG": "EPG"
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -333,7 +343,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Tato kontrola pouze čte data. Přístup k internetu, integrita disku a dekódování CAM se netestují.",
     "Compare": "Porovnat",
     "Channel backups": "Zálohy stanic",
-    "Files": "Soubory"
+    "Files": "Soubory",
+    "Saved storage paths": "Uložené cesty úložiště",
+    "Timeshift": "Timeshift",
+    "Timer recordings": "Časované nahrávky",
+    "Instant recordings": "Okamžité nahrávky",
+    "EPG": "EPG"
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -445,7 +460,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Diese Prüfung ist schreibgeschützt. Internetzugang, Datenträgerintegrität und CAM-Dekodierung werden nicht geprüft.",
     "Compare": "Vergleichen",
     "Channel backups": "Kanalsicherungen",
-    "Files": "Dateien"
+    "Files": "Dateien",
+    "Saved storage paths": "Gespeicherte Speicherpfade",
+    "Timeshift": "Timeshift",
+    "Timer recordings": "Timeraufnahmen",
+    "Instant recordings": "Sofortaufnahmen",
+    "EPG": "EPG"
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -557,7 +577,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Ta kontrola jest tylko do odczytu. Dostęp do internetu, integralność dysku i dekodowanie CAM nie są testowane.",
     "Compare": "Porównaj",
     "Channel backups": "Kopie zapasowe kanałów",
-    "Files": "Pliki"
+    "Files": "Pliki",
+    "Saved storage paths": "Zapisane ścieżki pamięci",
+    "Timeshift": "Timeshift",
+    "Timer recordings": "Nagrania zaplanowane",
+    "Instant recordings": "Nagrania natychmiastowe",
+    "EPG": "EPG"
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -669,7 +694,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Ez csak olvasási ellenőrzés. Az internetelérés, a lemez épsége és a CAM dekódolása nincs tesztelve.",
     "Compare": "Összehasonlítás",
     "Channel backups": "Csatornamentések",
-    "Files": "Fájlok"
+    "Files": "Fájlok",
+    "Saved storage paths": "Mentett tárolási útvonalak",
+    "Timeshift": "Időeltolás",
+    "Timer recordings": "Időzített felvételek",
+    "Instant recordings": "Azonnali felvételek",
+    "EPG": "EPG"
   },
   "ru": {
     "System centre": "Системный центр",
@@ -781,7 +811,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Проверка выполняется только для чтения. Доступ в интернет, целостность диска и декодирование CAM не проверяются.",
     "Compare": "Сравнить",
     "Channel backups": "Резервные копии каналов",
-    "Files": "Файлы"
+    "Files": "Файлы",
+    "Saved storage paths": "Сохранённые пути хранения",
+    "Timeshift": "Таймшифт",
+    "Timer recordings": "Записи по таймеру",
+    "Instant recordings": "Мгновенные записи",
+    "EPG": "EPG"
   },
   "fr": {
     "System centre": "Centre système",
@@ -893,7 +928,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Ce contrôle est en lecture seule. L’accès à Internet, l’intégrité du disque et le décodage CAM ne sont pas testés.",
     "Compare": "Comparer",
     "Channel backups": "Sauvegardes des chaînes",
-    "Files": "Fichiers"
+    "Files": "Fichiers",
+    "Saved storage paths": "Chemins de stockage enregistrés",
+    "Timeshift": "Timeshift",
+    "Timer recordings": "Enregistrements programmés",
+    "Instant recordings": "Enregistrements immédiats",
+    "EPG": "EPG"
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -1005,7 +1045,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Questo controllo è in sola lettura. Accesso a Internet, integrità del disco e decodifica CAM non vengono verificati.",
     "Compare": "Confronta",
     "Channel backups": "Backup dei canali",
-    "Files": "File"
+    "Files": "File",
+    "Saved storage paths": "Percorsi di archiviazione salvati",
+    "Timeshift": "Timeshift",
+    "Timer recordings": "Registrazioni programmate",
+    "Instant recordings": "Registrazioni immediate",
+    "EPG": "EPG"
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -1117,7 +1162,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Esta comprobación es de solo lectura. No se prueban el acceso a Internet, la integridad del disco ni la decodificación CAM.",
     "Compare": "Comparar",
     "Channel backups": "Copias de canales",
-    "Files": "Archivos"
+    "Files": "Archivos",
+    "Saved storage paths": "Rutas de almacenamiento guardadas",
+    "Timeshift": "Timeshift",
+    "Timer recordings": "Grabaciones programadas",
+    "Instant recordings": "Grabaciones instantáneas",
+    "EPG": "EPG"
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -1229,7 +1279,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Ky kontroll është vetëm për lexim. Qasja në internet, integriteti i diskut dhe dekodimi CAM nuk testohen.",
     "Compare": "Krahaso",
     "Channel backups": "Kopjet rezervë të kanaleve",
-    "Files": "Skedarët"
+    "Files": "Skedarët",
+    "Saved storage paths": "Shtigjet e ruajtura të magazinimit",
+    "Timeshift": "Timeshift",
+    "Timer recordings": "Regjistrimet me kohëmatës",
+    "Instant recordings": "Regjistrimet e menjëhershme",
+    "EPG": "EPG"
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -1341,7 +1396,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Ο έλεγχος είναι μόνο για ανάγνωση. Δεν ελέγχονται η πρόσβαση στο διαδίκτυο, η ακεραιότητα του δίσκου και η αποκωδικοποίηση CAM.",
     "Compare": "Σύγκριση",
     "Channel backups": "Αντίγραφα καναλιών",
-    "Files": "Αρχεία"
+    "Files": "Αρχεία",
+    "Saved storage paths": "Αποθηκευμένες διαδρομές αποθήκευσης",
+    "Timeshift": "Χρονική μετατόπιση",
+    "Timer recordings": "Προγραμματισμένες εγγραφές",
+    "Instant recordings": "Άμεσες εγγραφές",
+    "EPG": "EPG"
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -1453,7 +1513,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "See kontroll on kirjutuskaitstud. Internetiühendust, ketta terviklust ja CAM-dekodeerimist ei testita.",
     "Compare": "Võrdle",
     "Channel backups": "Kanalite varukoopiad",
-    "Files": "Failid"
+    "Files": "Failid",
+    "Saved storage paths": "Salvestatud salvestusteed",
+    "Timeshift": "Ajanihutus",
+    "Timer recordings": "Taimerisalvestised",
+    "Instant recordings": "Kiirsalvestised",
+    "EPG": "EPG"
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -1565,7 +1630,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "این بررسی فقط خواندنی است. دسترسی به اینترنت، یکپارچگی دیسک و رمزگشایی CAM آزمایش نمی‌شوند.",
     "Compare": "مقایسه",
     "Channel backups": "پشتیبان کانال‌ها",
-    "Files": "فایل‌ها"
+    "Files": "فایل‌ها",
+    "Saved storage paths": "مسیرهای ذخیره‌شده حافظه",
+    "Timeshift": "تایم‌شیفت",
+    "Timer recordings": "ضبط‌های زمان‌بندی‌شده",
+    "Instant recordings": "ضبط‌های فوری",
+    "EPG": "EPG"
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -1677,7 +1747,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Ši patikra skirta tik skaityti. Interneto prieiga, disko vientisumas ir CAM dekodavimas netikrinami.",
     "Compare": "Palyginti",
     "Channel backups": "Kanalų atsarginės kopijos",
-    "Files": "Failai"
+    "Files": "Failai",
+    "Saved storage paths": "Išsaugoti saugyklos keliai",
+    "Timeshift": "Laiko poslinkis",
+    "Timer recordings": "Suplanuoti įrašai",
+    "Instant recordings": "Momentiniai įrašai",
+    "EPG": "EPG"
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -1789,7 +1864,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Deze controle is alleen-lezen. Internettoegang, schijfintegriteit en CAM-decodering worden niet getest.",
     "Compare": "Vergelijken",
     "Channel backups": "Kanaalback-ups",
-    "Files": "Bestanden"
+    "Files": "Bestanden",
+    "Saved storage paths": "Opgeslagen opslagpaden",
+    "Timeshift": "Timeshift",
+    "Timer recordings": "Timeropnamen",
+    "Instant recordings": "Directe opnamen",
+    "EPG": "EPG"
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -1901,7 +1981,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Esta verificação é apenas de leitura. O acesso à Internet, a integridade do disco e a descodificação CAM não são testados.",
     "Compare": "Comparar",
     "Channel backups": "Cópias de canais",
-    "Files": "Ficheiros"
+    "Files": "Ficheiros",
+    "Saved storage paths": "Caminhos de armazenamento guardados",
+    "Timeshift": "Timeshift",
+    "Timer recordings": "Gravações programadas",
+    "Instant recordings": "Gravações instantâneas",
+    "EPG": "EPG"
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -2013,7 +2098,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Această verificare este doar pentru citire. Accesul la internet, integritatea discului și decodarea CAM nu sunt testate.",
     "Compare": "Compară",
     "Channel backups": "Copii de siguranță ale canalelor",
-    "Files": "Fișiere"
+    "Files": "Fișiere",
+    "Saved storage paths": "Căi de stocare salvate",
+    "Timeshift": "Timeshift",
+    "Timer recordings": "Înregistrări programate",
+    "Instant recordings": "Înregistrări instantanee",
+    "EPG": "EPG"
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -2125,7 +2215,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Bu kontrol salt okunurdur. İnternet erişimi, disk bütünlüğü ve CAM kod çözme işlemi test edilmez.",
     "Compare": "Karşılaştır",
     "Channel backups": "Kanal yedekleri",
-    "Files": "Dosyalar"
+    "Files": "Dosyalar",
+    "Saved storage paths": "Kayıtlı depolama yolları",
+    "Timeshift": "Zaman kaydırma",
+    "Timer recordings": "Zamanlanmış kayıtlar",
+    "Instant recordings": "Anlık kayıtlar",
+    "EPG": "EPG"
   },
   "uk": {
     "System centre": "Системний центр",
@@ -2237,7 +2332,12 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Перевірка лише для читання. Доступ до інтернету, цілісність диска та декодування CAM не перевіряються.",
     "Compare": "Порівняти",
     "Channel backups": "Резервні копії каналів",
-    "Files": "Файли"
+    "Files": "Файли",
+    "Saved storage paths": "Збережені шляхи сховища",
+    "Timeshift": "Таймшифт",
+    "Timer recordings": "Записи за таймером",
+    "Instant recordings": "Миттєві записи",
+    "EPG": "EPG"
   },
   "zh": {
     "System centre": "系统中心",
@@ -2349,6 +2449,11 @@
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "此检查为只读操作。不测试互联网访问、磁盘完整性或 CAM 解码。",
     "Compare": "比较",
     "Channel backups": "频道备份",
-    "Files": "文件"
+    "Files": "文件",
+    "Saved storage paths": "已保存的存储路径",
+    "Timeshift": "时移",
+    "Timer recordings": "定时录制",
+    "Instant recordings": "即时录制",
+    "EPG": "EPG"
   }
 }

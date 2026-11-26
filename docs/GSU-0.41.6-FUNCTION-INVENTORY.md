@@ -48,3 +48,10 @@ Audit pôvodných referencií zostáva zdrojom inšpirácie, nie dôkazom, že c
 - Lokalizácia: spoločné kľúče a placeholdery v 21 katalógoch, statické testy; čitateľnosť na fyzických prijímačoch ešte overiť.
 
 Ostré vydanie blokuje neukončené CI presného HEAD a požadovaný fyzický retest. Nevyhlasovať zostávajúce voliteľné rozšírenia za hotové ani meniť produkciu bez splnenia brány.
+
+
+### Ďalšie doplnenia po kontrole `66392c8a4b52736677d40e16afbb2bc370434486`
+
+- Prehľad pamäte a úložiska zobrazuje uložené natívne cesty EPG/timeshift/nahrávania (nie neoverené predvolené hodnoty ani stav vzdialených úložísk).
+- Centrum Warder má explicitný spoločný prehľad všetkých piatich produktov cez existujúci čítač manifestov. Samostatné podrobnosti zostávajú.
+- Rebríček súborov, atribúcia OpenWebif, ďalšie inline úpravy a fyzická validácia zostávajú neuzavreté.

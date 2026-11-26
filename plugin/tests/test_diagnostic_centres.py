@@ -177,6 +177,51 @@ class DiagnosticTests(unittest.TestCase):
         updater.assert_called_once_with(view,api)
         self.assertEqual(updater.return_value.request.call_count,2)
 
+    def test_project_overview_uses_one_canonical_report_without_installation(self):
+        ui=module('warder_centre_ui')
+        projects=module('warder_projects')
+        session=MagicMock()
+        menu=ui.ProjectMenu(session,api)
+        menu.render()
+        self.assertEqual(menu['green'].getText(),menu.tr('Overview'))
+        menu['actions'].actions['green']()
+        session.open.assert_called_once_with(ui.ProjectOverview,api)
+        view=ui.ProjectOverview(session,api)
+        with patch.object(projects,'report',return_value='All five') as report:
+            self.assertEqual(view.collect(),'All five')
+            report.assert_called_once()
+            self.assertTrue(report.call_args.kwargs['compact'])
+            self.assertNotIn('projects',report.call_args.kwargs)
+        with patch.object(module('warder_package_status'),'database',return_value=({},None)),patch.object(projects,'installed',return_value='0.1.2'),patch.object(projects,'read_feed',return_value=b'fixture') as reader,patch.object(projects,'release',return_value=('0.1.3','Long notes')):
+            summary=projects.report(str,'en',Event(),compact=True)
+            self.assertEqual(reader.call_count,5)
+            for project in projects.PROJECTS:self.assertIn(project[0],summary)
+            self.assertNotIn('Long notes',summary)
+        cancel=Event();cancel.set()
+        self.assertEqual(projects.report(str,'en',cancel,compact=True),'')
+
+    def test_saved_storage_paths_are_read_only_allowlisted_and_do_not_follow_mounts(self):
+        storage=module('warder_storage')
+        with TemporaryDirectory() as folder:
+            p=storage.Probe(folder)
+            settings=p.path('/etc/enigma2/settings')
+            settings.parent.mkdir(parents=True)
+            settings.write_text('config.misc.epgcache_filename=/media/hdd/epg.dat\n'
+                'config.timeshift.path=/media/net/timeshift/\n'
+                'config.usage.timeshift_path=/old\n'
+                'config.usage.default_path=/media/hdd/movie/\n'
+                'config.usage.timer_path=<default>\n'
+                'config.usage.instantrec_path=http://user:secret@example.test\n'
+                'config.plugins.private.password=secret\n')
+            with patch.object(p,'usage',side_effect=AssertionError('must not stat configured path')):
+                values=dict(storage.configured_storage_paths(p))
+            self.assertEqual(values['EPG'],'/media/hdd/epg.dat')
+            self.assertEqual(values['Timeshift'],'/media/net/timeshift/')
+            self.assertEqual(values['Recordings'],'/media/hdd/movie/')
+            self.assertEqual(values['Timer recordings'],'<default>')
+            self.assertIsNone(values['Instant recordings'])
+            self.assertNotIn('secret',str(values))
+
     def test_every_new_layout_fits_and_binds(self):
         layouts = module('warder_dashboard')
         for w, h in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):

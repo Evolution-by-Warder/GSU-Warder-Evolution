@@ -891,6 +891,13 @@ class ProjectMenu(CentreMenu):
         from .warder_projects import PROJECTS
         self.projects = {p[0]:p for p in PROJECTS}
         super().__init__(session,api,(),{},None)
+        self['green'].setText(self.tr('Overview'))
+        self['actions'].actions['green']=self.overview
+
+    def overview(self):
+        if self._result_closed or self._result_hidden:return
+        self.cancel_result()
+        self.session.open(ProjectOverview,self.api)
 
     def entries(self):
         return [(name,name,self.tr('Installed version')+' · '+self.tr('Stable version'),True)
@@ -924,6 +931,18 @@ class ProjectMenu(CentreMenu):
         if key in self.projects:
             self.cancel_result()
             self.session.open(ProjectReport,self.api,self.projects[key])
+
+
+class ProjectOverview(Report):
+    """Explicit five-product version check through the canonical feed reader."""
+    def __init__(self,session,api):
+        super().__init__(session,api,'project-overview','Warder Evolution centre')
+
+    def collect(self):
+        from .warder_projects import report
+        config=self.api['config']
+        locale=language(config.osd.language.value) if config.plugins.GlassSysUtil.par62.value else 'en'
+        return report(self.tr,locale,self.cancelled,compact=True)
 
 
 class ProjectReport(Report):
