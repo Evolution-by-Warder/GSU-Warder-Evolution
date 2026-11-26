@@ -39,6 +39,74 @@ def summary(report,tr):
         rows.append(item['name']+' — '+tr({'up':'Running','down':'Unavailable'}.get(item['state'],'Not exposed'))+
                     (' · %s Mb/s'%speed if speed is not None else ''))
     rows += ['',tr('Default gateway')+': '+(', '.join(report['gateways']) or tr('Not exposed')),
-             tr('DNS configuration')+': '+(', '.join(report['dns']) or tr('Not exposed')),'',
-             tr('This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.')]
+             tr('DNS configuration')+': '+(', '.join(report['dns']) or tr('Not exposed'))]
     return '\n'.join(rows)
+
+
+def local_addresses(name, probe):
+    import socket
+    import struct
+    import fcntl
+    result = []
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
+            raw = fcntl.ioctl(sock, 0x8915, struct.pack('256s', name.encode('ascii')[:15]))
+            result.append(socket.inet_ntoa(raw[20:24]))
+    except (OSError, ValueError):
+        pass
+    for line in probe.text('/proc/net/if_inet6', 8192).splitlines():
+        fields = line.split()
+        if len(fields) == 6 and fields[-1] == name:
+            try:
+                result.append(str(ip_address(bytes.fromhex(fields[0]))))
+            except ValueError:
+                pass
+    return result
+
+
+def ping(address, runner=None):
+    import subprocess
+    runner = runner or subprocess.run
+    try:
+        value = str(ip_address(address))
+        res = runner(['ping', '-n', '-c', '3', '-W', '1', value], stdout=subprocess.PIPE,
+                     stderr=subprocess.DEVNULL, timeout=5, text=True, env={'PATH':'/usr/sbin:/usr/bin:/sbin:/bin','LC_ALL':'C'})
+    except (ValueError, OSError, subprocess.TimeoutExpired):
+        return None
+    loss = re.search(r'([\d.]+)%\s+packet loss', res.stdout)
+    delay = re.search(r'(?:round-trip|rtt)[^=]*=\s*[\d.]+/([\d.]+)/', res.stdout)
+    return (float(loss[1]), float(delay[1]) if delay else None) if loss else None
+
+
+def diagnostics(tr, cancelled, probe=None, opener=None):
+    from .plugin_update import MODERN_FEED_URL, _open, parse_release
+    import time
+    p = probe or Probe()
+    data = collect(p)
+    lines = []
+    for row in data['interfaces']:
+        addresses = local_addresses(row['name'], p)
+        lines.append(row['name']+'   '+(', '.join(addresses) or '—'))
+    gateway = next(iter(data['gateways']), None)
+    response = ping(gateway) if gateway and not cancelled.is_set() else None
+    lines.append(tr('Default gateway')+'   '+(gateway or '—'))
+    if response:
+        lines.append('%s   %.0f %%    ·    RTT   %s' % (tr('Packet loss'), response[0], '—' if response[1] is None else '%.1f ms'%response[1]))
+    if cancelled.is_set():
+        return ''
+    start = time.monotonic()
+    try:
+        with (opener or _open)(MODERN_FEED_URL, timeout=4) as remote:
+            if remote.geturl() != MODERN_FEED_URL:
+                raise ValueError('redirect')
+            payload = remote.read(65537)
+            if len(payload) > 65536:
+                raise ValueError('oversize')
+            parse_release(payload, '13.41-r6', 'stable-modern')
+        lines.append('GSU HTTPS   OK   %.0f ms' % ((time.monotonic()-start)*1000))
+    except (OSError, ValueError):
+        lines.append('GSU HTTPS   '+tr('Unavailable'))
+    table = p.text('/proc/mounts', 65536).splitlines()
+    count = sum(1 for line in table if len(line.split()) > 2 and line.split()[2] in ('nfs','nfs4','cifs','smbfs','fuse.sshfs'))
+    lines.append(tr('Network mounts')+'   '+str(count))
+    return '\n'.join(lines)

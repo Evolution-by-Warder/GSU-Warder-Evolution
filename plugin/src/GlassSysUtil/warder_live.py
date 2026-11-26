@@ -13,6 +13,7 @@ class Sampler:
         self.clock=clock
         self.history=History(seconds=60,capacity=61,clock=clock)
         self.previous=None
+        self.sensors=None
     def reset(self):
         self.previous=None
     def sample(self):
@@ -25,6 +26,10 @@ class Sampler:
         values={'cpu':None,'ram':used(memory['ram_total'],memory['ram_available']),
                 'swap':used(memory['swap_total'],memory['swap_free']),
                 'rx':None,'tx':None}
+        if self.sensors is None:
+            self.sensors = p.sensor_paths() if hasattr(p, 'sensor_paths') else ()
+        temperatures = p.temperatures(self.sensors) if self.sensors else ()
+        values['temp'] = max((s['celsius'] for s in temperatures), default=None)
         if self.previous is not None:
             stamp,old_cpu,old_net=self.previous
             values['cpu']=cpu_percent(old_cpu,cpu)

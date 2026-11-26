@@ -1,3 +1,13 @@
+# 26. 11. 2026 · GSU 0.41.5, PR #16
+
+Vlastník schválil implementáciu, kontrolované zlúčenie a stabilné vydanie po overení v rozsahu zadania. Integrácia produkčného main e064e426d1c7388200b9ed4727aacbf5e5705bc8 do pracovnej vetvy je cbe4de0cb836d3589b8d7188574b1761e259bad1. Zachované oba nezávislé bloky registra. Na integračnom commite a0f0adfef5637b2e728b234d11c83d07ddf368fc uspeli štyri workflowy vrátane reprodukovateľnosti 45774748963, OpenATV 45774749143, OpenPLi 45774748935 a balíkovej kontroly 45774749115.
+
+R6: tag v13.41-r6 ukazuje na 45a9fad7be6e20a6eae6055c0cb59551be45b9f9. Porovnanie SHA verejného assetu s nezávisle stiahnutým CI IPK potvrdilo 3813348 bajtov a a8e79609147666b27f18460b3340e099bb013664478a787746bcf56bb28052e2. Produkčný workflow 45773458863 overil verejné bajty a sprievodný súčet. Nový stable-modern.json je zatiaľ prázdny. Produkčná verzia zostáva r6.
+
+Funkčný prírastok: natívne grafy so 60-sekundovou históriou, SNR/AGC/dB/BER/LOCK, export CSV, merania CPU/RAM/swap/senzorov/RX/TX, CPU a RSS procesov, natívne ladenie chránené kontrolou nahrávania, príjem a parametre streamu, SMART bez prebúdzania diskov, kategórie obsadenia, meranie brány/HTTPS, stav piatich oficiálnych feedov, kontrola inštalácie, náhľad anonymného exportu a kontrola lokálnych IPK. Vlastné rozloženia pre štyri rozlíšenia. Nové obrazovky sú dostupné z menu. Posledná miestna sada pred doplnením špecifického testu IPK mala 448 úspešných testov. Hardvér nebol meraný. Pokračovanie: overiť nový HEAD, skompletizovať číslovanie balíka, migráciu v OPKG, fyzické schopnosti prijímačov a otvorené položky auditu pred vydaním. Web sa synchronizuje po publikácii.
+
+---
+
 # 2026-11-26 — stable r6 publication
 
 PR #15, immutable source `45a9fad7be6e20a6eae6055c0cb59551be45b9f9`, workflow 45773458863, public IPK SHA-256 `a8e79609147666b27f18460b3340e099bb013664478a787746bcf56bb28052e2`, 3813348 bytes. Both native matrices and packaged install gate passed. Feed activation via atomic fast-forward below; website verification remains pending.

@@ -1530,8 +1530,9 @@ class SysUtilMngMain(Screen):
             ('9', _('Swap Management'), _('Create,remove and show single/multi swap on mapped devices on your hw')),
             ('17', _warder_tools_ui.text(globals(), 'Tools'), _warder_tools_ui.text(globals(), 'Create one archive with system information and GSU logs.')),
             ('16', _plugin_update_text(globals(), 'Update'), _plugin_update_text(globals(), 'Check for a new version of Glass System Utility Warder Evolution'))]
-        self.menuListAll.append(('network-overview', _('Network overview'), _('Network link')))
-        self.menuListAll.extend((('system-overview', _('System health check'), _('Available memory')), ('system-processes', _('Process Info'), _('Process Info')), ('system-log', _('Log view'), _('Log view'))))
+        from .warder_centres import DIAGNOSTICS
+        self.menuListAll.extend((ident, _(title), _(hint))
+                                for ident, (title, hint) in DIAGNOSTICS.items())
         self.status = {}
         self['list'] = ListboxSys2(self.list)
         self['list'].onSelectionChanged.append(self.reactivate)
@@ -1598,15 +1599,9 @@ class SysUtilMngMain(Screen):
                 _warder_right.show(self, globals(), 'tools')
             elif selectedItem == '16':
                 self.updatechckact()
-            elif selectedItem == 'system-overview':
-                from .warder_centre_ui import SystemOverview
-                self.session.open(SystemOverview, globals())
-            elif selectedItem in ('system-processes', 'system-log'):
-                from .warder_centre_ui import SystemDetail
-                self.session.open(SystemDetail, globals(), 'processes' if selectedItem == 'system-processes' else 'log')
-            elif selectedItem == 'network-overview':
-                from .warder_centre_ui import NetworkOverview
-                self.session.open(NetworkOverview, globals())
+            else:
+                from .warder_centre_ui import open_diagnostic
+                open_diagnostic(self.session, globals(), selectedItem)
         return
 
     def updatemenulist(self):
@@ -1621,9 +1616,7 @@ class SysUtilMngMain(Screen):
             self.status[x[0]] = True
             if (not MNG_DEV and x[0] == '11') or (x[0] == '7' and (not ENA_PS)) or (x[0] == '4' and (not tmpMx)) or (x[0] == '2' and (not tmpCC) and self.enaNonLocal) or (x[0] == '3' and (not tmpOS) and self.enaNonLocalOscam) or (x[0] == '6' and (not fileExists('/tmp/ecm.info'))) or (x[0] == '7' and fileExists(PYTHONPATH + 'Plugins/Extensions/GlassBluePanel/plugin.pyo') and (not tmp)):
                 self.status[x[0]] = False
-            desktop = getDesktop(0).size()
-            self.list.append(_warder_main.menu_row(globals(), x[0], x[1], self.status[x[0]], desktop.width(), desktop.height()))
-
+        desktop = getDesktop(0).size()
         from .warder_centres import legacy_routes
         self.centre_entries = []
         for key, label, entries in legacy_routes(self.menuListAll):

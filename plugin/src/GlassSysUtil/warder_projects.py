@@ -1,0 +1,98 @@
+"""Read-only catalogue of the five official project feeds. No installation API."""
+import json
+import re
+import shutil
+import subprocess
+from urllib.error import URLError
+from .plugin_update import _open, parse_release
+
+ORG = 'Evolution-by-Warder/'
+RAW = 'https://raw.githubusercontent.com/' + ORG
+RELEASES = 'https://github.com/' + ORG
+# Display name, repository, canonical feed path, product identity, installed package, IPK prefix, tag prefix
+PROJECTS = (
+    ('FullHDGlass', 'FullHDGlass-Warder-Evolution', 'update-production.json', None,
+     'enigma2-plugin-skins-fullhdglass-warder-evolution', 'enigma2-plugin-skins-fullhdglass', ''),
+    ('PiconHub', 'PiconHub-Warder-Evolution', 'plugin/update/stable.json', 'PiconHub Warder Evolution',
+     'enigma2-plugin-extensions-piconhub-warder-evolution', 'enigma2-plugin-extensions-piconhub', 'v'),
+    ('Warder Radio', 'Radio-Warder-Evolution', 'update/v2/stable.json', 'Warder Radio',
+     'enigma2-plugin-extensions-radio-warder-evolution', 'enigma2-plugin-extensions-radio-warder-evolution', 'warder-radio-v'),
+    ('YouTube', 'YouTube-Warder-Evolution', 'update/stable.json', 'YouTube Warder Evolution',
+     'enigma2-plugin-extensions-youtube-warder-evolution', 'enigma2-plugin-extensions-youtube-warder-evolution', 'youtube-warder-v'),
+    ('GSU', 'GSU-Warder-Evolution', 'plugin/update/stable-modern.json', 'Glass System Utility Warder Evolution',
+     'enigma2-plugin-extensions-gsu-warder-evolution', 'enigma2-plugin-extensions-gsu', 'v'),
+)
+
+
+def release(project, raw, language):
+    name, repo, path, identity, package, prefix, tag_prefix = project
+    if len(raw) > 65536:
+        raise ValueError('manifest size')
+    doc = json.loads(raw)
+    if name == 'GSU':
+        item = parse_release(raw, '13.41-r6', 'stable-modern')
+        return (item.version, item.notes_i18n.get(language) or item.notes) if item else None
+    if identity:
+        if doc.get('schema') != 1 or doc.get('channel') != 'stable' or doc.get('product') != identity:
+            raise ValueError('feed identity')
+        item = doc['release']
+        if item is None:
+            return None
+    else:
+        item = doc
+    version = item['version']
+    if not re.fullmatch(r'\d+(?:\.\d+){2,3}', version) or not re.fullmatch(r'[0-9a-f]{64}', item['sha256']):
+        raise ValueError('release identity')
+    filename = prefix+'_'+version+'_all.ipk'
+    if identity:
+        tag = tag_prefix+version
+        expected = RELEASES+repo+'/releases/download/'+tag+'/'+filename
+        if item['url'] != expected or item['tag'] != tag or type(item['bytes']) != int or not 0 < item['bytes'] <= 128*1024*1024:
+            raise ValueError('unexpected package')
+        notes = item.get('notes_i18n', {}).get(language) or item.get('notes', '')
+    else:
+        if item['package_url'] != RAW+repo+'/main/packages/'+filename:
+            raise ValueError('unexpected skin package')
+        notes = item.get('changelog_i18n', {}).get(language) or item.get('changelog', '')
+    if not isinstance(notes, str) or len(notes) > 8192:
+        raise ValueError('invalid notes')
+    return version, notes
+
+
+def installed(package, runner=subprocess.run):
+    command = ['opkg', 'status', package] if shutil.which('opkg') else ['dpkg-query', '-s', package]
+    try:
+        result = runner(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=3, text=True)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    for paragraph in result.stdout.split('\n\n'):
+        fields = dict(line.split(': ', 1) for line in paragraph.splitlines() if ': ' in line and not line.startswith(' '))
+        if fields.get('Package') == package and fields.get('Status') == 'install ok installed':
+            value = fields.get('Version', '')
+            if re.fullmatch(r'[0-9][0-9a-z.+:~-]{0,63}', value):
+                return value
+    return None
+
+
+def report(tr, language, cancelled, opener=_open):
+    lines = []
+    for project in PROJECTS:
+        if cancelled.is_set():
+            break
+        name, repo, path = project[:3]
+        current = installed(project[4])
+        try:
+            url = RAW+repo+'/main/'+path
+            with opener(url, timeout=3) as response:
+                if response.geturl() != url:
+                    raise ValueError('unexpected redirect')
+                item = release(project, response.read(65537), language)
+            available = item[0] if item else tr('None')
+        except (ValueError, TypeError, KeyError, AttributeError, OSError, URLError):
+            item, available = None, tr('Unavailable')
+        lines.extend((name, '%s   %s     ·     %s   %s' % (tr('Installed version'), current or '—',
+                                                          tr('Stable version'), available)))
+        if item and item[1]:
+            lines.append(item[1])
+        lines.append('')
+    return '\n'.join(lines)

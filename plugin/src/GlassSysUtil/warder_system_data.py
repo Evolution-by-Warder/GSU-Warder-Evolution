@@ -53,3 +53,37 @@ def detail_text(kind, tr):
         try:return system_log() or tr('Unavailable')
         except (OSError,subprocess.TimeoutExpired):return tr('Unavailable')
     raise ValueError('unknown system detail')
+
+
+def process_ticks(p, pid):
+    value = p.text('/proc/%d/stat' % pid, 4096)
+    # comm is enclosed in parentheses and can itself contain a closing parenthesis.
+    _, sep, tail = value.rpartition(')')
+    fields = tail.split()
+    try:
+        if sep and len(fields) >= 20:
+            return int(fields[19]), int(fields[11])+int(fields[12])
+    except ValueError:
+        pass
+    return None
+
+
+def cpu_processes(tr, cancel, p=None):
+    import os
+    from time import monotonic
+    p = p or Probe()
+    rows = processes(p)
+    before = {pid: process_ticks(p, pid) for pid, _, _, _ in rows}
+    started = monotonic()
+    if cancel.wait(0.5):
+        return ''
+    hz = os.sysconf('SC_CLK_TCK')
+    delta = (monotonic()-started)*hz
+    measured = []
+    for pid, name, state, rss in rows:
+        old, new = before[pid], process_ticks(p, pid)
+        if old and new and old[0] == new[0] and new[1] >= old[1] and delta > 0:
+            measured.append((100*(new[1]-old[1])/delta, pid, name, rss))
+    return 'CPU (%)    PID    RSS (KiB)\n\n'+'\n'.join(
+        '%5.1f    %d    %s    %s' % (cpu, pid, rss if rss is not None else '—', name)
+        for cpu, pid, name, rss in sorted(measured, key=lambda r: (-r[0], r[1]))) if measured else tr('Unavailable')

@@ -51,6 +51,29 @@ class Probe:
     def text(self,path,limit=16384):return read(self.path(path),limit)
     def entries(self,path,limit=256):return names(self.path(path),limit)
 
+    def sensor_paths(self):
+        sensors=[]
+        for zone in self.entries('/sys/class/thermal'):
+            if zone.startswith('thermal_zone'):sensors.append(('/sys/class/thermal/'+zone+'/temp','/sys/class/thermal/'+zone+'/type'))
+        for monitor in self.entries('/sys/class/hwmon'):
+            base='/sys/class/hwmon/'+monitor
+            for name in self.entries(base):
+                if name.startswith('temp') and name.endswith('_input'):sensors.append((base+'/'+name,base+'/'+name[:-6]+'_label'))
+        sensors.extend([('/proc/stb/sensors/temp0/value',''),('/proc/stb/fp/temp_sensor','')])
+        return sensors[:128]
+
+    def temperatures(self, paths):
+        temperatures=[];seen=set()
+        for path,label in paths:
+            try:
+                value=float(self.text(path,64))
+                if abs(value)>=1000:value/=1000
+                real=str(self.path(path).resolve())
+                if not -20<=value<=150 or real in seen:continue
+                seen.add(real);temperatures.append({'label':self.text(label,128) if label else path,'celsius':value})
+            except (ValueError,OSError,RuntimeError):continue
+        return temperatures
+
     def collect(self):
         memory={}
         for line in self.text('/proc/meminfo').splitlines():
@@ -88,23 +111,7 @@ class Probe:
                     gateway=socket.inet_ntoa(struct.pack('<I',int(fields[2],16)));break
             except (ValueError,struct.error):continue
         dns=[fields[1] for line in self.text('/etc/resolv.conf').splitlines() if len(fields:=line.split())>=2 and fields[0]=='nameserver']
-        sensors=[]
-        for zone in self.entries('/sys/class/thermal'):
-            if zone.startswith('thermal_zone'):sensors.append(('/sys/class/thermal/'+zone+'/temp','/sys/class/thermal/'+zone+'/type'))
-        for monitor in self.entries('/sys/class/hwmon'):
-            base='/sys/class/hwmon/'+monitor
-            for name in self.entries(base):
-                if name.startswith('temp') and name.endswith('_input'):sensors.append((base+'/'+name,base+'/'+name[:-6]+'_label'))
-        sensors.extend([('/proc/stb/sensors/temp0/value',''),('/proc/stb/fp/temp_sensor','')])
-        temperatures=[];seen=set()
-        for path,label in sensors[:128]:
-            try:
-                value=float(self.text(path,64))
-                if abs(value)>=1000:value/=1000
-                real=str(self.path(path).resolve())
-                if not -20<=value<=150 or real in seen:continue
-                seen.add(real);temperatures.append({'label':self.text(label,128) if label else path,'celsius':value})
-            except (ValueError,OSError,RuntimeError):continue
+        temperatures=self.temperatures(self.sensor_paths())
         settings={}
         for line in self.text('/etc/enigma2/settings',1024*1024).splitlines():
             key,separator,value=line.partition('=')
