@@ -79,8 +79,10 @@ class DiagnosticTests(unittest.TestCase):
             result.__enter__.return_value.geturl.return_value=url
             result.__enter__.return_value.read.return_value=b'<'
             return result
-        with patch.object(network,'collect',return_value=net),patch.object(network,'ping',return_value=(0,1.0)):
-            self.assertIn('Internet reachable',network.diagnostics(str,Event(),probe,web))
+        with patch.object(network,'collect',return_value=net),patch.object(network,'ping',return_value=(0,1.0)),patch.object(network,'resolver_test',return_value=(True,12)):
+            result=network.diagnostics(str,Event(),probe,web)
+            self.assertIn('Internet reachable',result)
+            self.assertIn('DNS / NSS · warder-evolution.eu   OK   12 ms',result)
             self.assertIn('Gateway reachable; external checks failed',network.diagnostics(str,Event(),probe,MagicMock(side_effect=OSError)))
         cancel=Event();cancel.set();opener=MagicMock()
         self.assertEqual(network.diagnostics(str,cancel,probe,opener),'')
@@ -724,6 +726,18 @@ class DiagnosticTests(unittest.TestCase):
             self.assertIn('GSU verified',result)
             self.assertIn('Internet access, disk integrity and CAM decoding are not tested',result)
             health.assert_called_once_with(str,p)
+
+    def test_resolver_test_is_bounded_and_not_a_shell_command(self):
+        import subprocess
+        net=module('warder_network')
+        runner=MagicMock(return_value=SimpleNamespace(returncode=0))
+        self.assertTrue(net.resolver_test(runner)[0])
+        self.assertEqual(runner.call_args.kwargs['timeout'],4)
+        self.assertIn('warder-evolution.eu',runner.call_args.args[0][-1])
+        runner.return_value.returncode=1
+        self.assertFalse(net.resolver_test(runner)[0])
+        runner.side_effect=subprocess.TimeoutExpired('resolver',4)
+        self.assertIsNone(net.resolver_test(runner))
 
     def test_ping_loss_is_distinct_from_unsupported_ping(self):
         net=module('warder_network')

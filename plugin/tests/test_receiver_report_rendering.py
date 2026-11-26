@@ -55,7 +55,7 @@ class ReceiverRenderingTests(unittest.TestCase):
                 self.ui.open_diagnostic(session,self.api,kind)
                 session.open.assert_called_once_with(self.ui.Report,self.api,kind,routes[kind][0])
                 report=self.ui.Report(session,self.api,kind,routes[kind][0])
-                self.assertEqual(report['green'].getText(),report.tr('TV') if kind=='transponder-services' else '')
+                self.assertEqual(report['green'].getText(),report.tr('TV') if kind=='transponder-services' else report.tr('Details') if kind=='system-processes' else '')
                 report.done('Receiver content')
                 self.assertIn('Receiver content',report['file_info'].getText())
                 for value in ('',None,'   '):
@@ -156,6 +156,25 @@ class ReceiverRenderingTests(unittest.TestCase):
         self.assertEqual(report['category_state5'].getText(),report.tr('Partial result'))
         self.assertIn('2.0 MiB',report['report_status'].getText())
         self.assertIn(report.tr('Partial result'),report['report_status'].getText())
+
+    def test_process_details_use_only_selected_pid_and_ignore_late_result(self):
+        ui=self.ui
+        session=MagicMock()
+        report=ui.Report(session,self.api,'system-processes','Process Info')
+        report.done([(42,'enigma2','S',1536,12.5),(7,'kernel','R',None,None)])
+        report['process_list'].moveToIndex(1)
+        with patch.object(ui,'deferToThread') as worker:
+            report.green_action()
+            worker.assert_called_once_with(mod('warder_system_data').process_memory,7,'kernel',report.tr)
+            callback=worker.return_value.addCallbacks.call_args.args[0]
+            callback('Pss   1.25 MiB')
+            session.open.assert_called_once_with(mod('warder_dialog').InformationDialog,self.api,
+                'Pss   1.25 MiB',report.tr('Details'))
+            session.open.reset_mock()
+            report.green_action()
+            report.cancelled.set()
+            worker.return_value.addCallbacks.call_args.args[0]('late')
+            session.open.assert_not_called()
 
     def test_information_dialog_is_scoped_scrollable_and_has_no_confirmation(self):
         dialog=mod('warder_dialog')

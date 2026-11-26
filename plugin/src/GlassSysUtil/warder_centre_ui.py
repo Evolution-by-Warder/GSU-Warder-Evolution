@@ -513,6 +513,7 @@ class Report(Screen):
         self.services = []
         self.slot_number = None
         self.cpu_order = False
+        self.process_names = {}
         self.history = []
         self['file_info'] = ScrollLabel('')
         if kind=='system-processes':
@@ -535,11 +536,11 @@ class Report(Screen):
                 self['network_title%d'%i]=Label('')
                 self['network_body%d'%i]=ScrollLabel('')
             self.show_network(False)
-        for name, key in [('heading',title), ('red','Back'), ('green','TV' if kind == 'transponder-services' else ''), ('yellow','Refresh'),
+        for name, key in [('heading',title), ('red','Back'), ('green','TV' if kind == 'transponder-services' else 'Details' if kind == 'system-processes' else ''), ('yellow','Refresh'),
                           ('blue','Tuner interfaces' if kind == 'tuner-details' else 'Radio' if kind == 'transponder-services' else 'Save' if kind == 'forum-report' else 'CPU / RAM' if kind == 'system-processes' else '')]:
             self[name] = Label(self.tr(key))
         self['actions'] = ActionMap(['ColorActions','SetupActions','DirectionActions'],
-            {'red':self.close,'cancel':self.close,'yellow':self.start,'blue':self.action,'green':lambda:self.export_services('tv'),
+            {'red':self.close,'cancel':self.close,'yellow':self.start,'blue':self.action,'green':self.green_action,
              'up':lambda:self.scroll(-1), 'down':lambda:self.scroll(1),
              'left':lambda:self.scroll(-1,True),'right':lambda:self.scroll(1,True)}, -2)
         self.onLayoutFinish.append(self.start)
@@ -628,6 +629,7 @@ class Report(Screen):
     def display_process_table(self,rows):
         api=self.api
         sx,sy=self.width/1920,self.height/1080
+        self.process_names={row[0]:row[1] for row in rows}
         content=process_rows(api,rows,dashboard.PROCESS_COLUMNS,sx,sy,48)
         self['process_list'].l.setList(content)
         self['process_list'].moveToIndex(0)
@@ -725,6 +727,25 @@ class Report(Screen):
         except OSError:
             result = None
         show_info(self.session,self.api,result or self.tr('Unavailable'),self.tr('Unavailable') if not result else self.tr('Save'))
+
+    def green_action(self):
+        if self.kind=='transponder-services':
+            return self.export_services('tv')
+        if self.kind!='system-processes' or self.pending or self.cancelled.is_set() or not self.table_visible:return
+        selected=self['process_list'].getCurrent()
+        if not selected or selected[0] not in self.process_names:return
+        pid=selected[0]
+        from .warder_system_data import process_memory
+        from .warder_dialog import show_info
+        self.pending=True
+        def done(value):
+            self.pending=False
+            if not self.cancelled.is_set():
+                show_info(self.session,self.api,value,self.tr('Details'))
+        def failed(failure):
+            done(self.tr('Unavailable'))
+        try:deferToThread(process_memory,pid,self.process_names[pid],self.tr).addCallbacks(done,failed)
+        except (RuntimeError,TypeError,OSError):failed(None)
 
     def action(self):
         if self.pending or self.cancelled.is_set():

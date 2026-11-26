@@ -235,3 +235,22 @@ def smart_diagnostics(tr,cancel,p=None):
     if cancel.is_set():return ''
     rows.extend(('',health(tr,p),'',tr('This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.')))
     return '' if cancel.is_set() else '\n'.join(rows)
+
+
+def process_memory(pid,expected_name,tr,p=None):
+    """Read only the selected process's proportional memory accounting."""
+    if type(pid) is not int or pid<=0:return tr('Unavailable')
+    p=p or Probe()
+    base='/proc/%d/'%pid
+    before=process_ticks(p,pid)
+    name=p.text(base+'comm',128).replace('\n',' ').replace('\r',' ')
+    if not before or name!=expected_name:return tr('Unavailable')
+    from .warder_telemetry import memory_fields
+    fields=memory_fields(p.text(base+'smaps_rollup',16384))
+    after=process_ticks(p,pid)
+    if not after or before[0]!=after[0]:return tr('Unavailable')
+    rows=['PID %d   ·   %s'%(pid,name),'']
+    for key in ('Rss','Pss','Pss_Anon','Pss_File','Pss_Shmem','Private_Clean','Private_Dirty','Shared_Clean','Shared_Dirty','Swap','SwapPss'):
+        value=fields.get(key)
+        rows.append('%s   %s'%(key,'—' if value is None else '%.2f MiB'%(value/1048576)))
+    return '\n'.join(rows)

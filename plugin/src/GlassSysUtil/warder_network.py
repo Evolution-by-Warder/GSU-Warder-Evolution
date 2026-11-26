@@ -86,6 +86,20 @@ def ping(address, runner=None):
     return (float(loss[1]), float(delay[1]) if delay else None) if loss else None
 
 
+def resolver_test(runner=None):
+    """Bounded system name-resolution test; not a direct DNS server probe."""
+    import subprocess,sys,time
+    runner=runner or subprocess.run
+    if not sys.executable:return None
+    start=time.monotonic()
+    try:
+        result=runner([sys.executable,'-I','-c',
+                       "import socket; socket.getaddrinfo('warder-evolution.eu',443,type=socket.SOCK_STREAM)"],
+                      stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=4,check=False)
+    except (OSError,subprocess.TimeoutExpired):return None
+    return result.returncode==0,round((time.monotonic()-start)*1000)
+
+
 def diagnostics(tr, cancelled, probe=None, opener=None):
     from .plugin_update import MODERN_FEED_URL, _open, parse_release
     import time
@@ -102,6 +116,10 @@ def diagnostics(tr, cancelled, probe=None, opener=None):
         lines.append('%s   %.0f %%    ·    RTT   %s' % (tr('Packet loss'), response[0], '—' if response[1] is None else '%.1f ms'%response[1]))
     if cancelled.is_set():
         return ''
+    resolved=resolver_test()
+    lines.append('DNS / NSS · warder-evolution.eu   '+(
+        '—' if resolved is None else ('OK   %d ms'%resolved[1] if resolved[0] else tr('Unavailable'))))
+    if cancelled.is_set():return ''
     start = time.monotonic()
     feed_online = False
     try:
