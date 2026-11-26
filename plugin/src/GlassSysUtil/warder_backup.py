@@ -275,7 +275,7 @@ def save(directory,products,probe=None,password=None):
     if len(data)>(crypto.MAX_ENVELOPE if private else LIMIT):raise ValueError('Backup too large')
     # Pin the opened directory: a detached USB must never redirect a write
     # or cleanup into the receiver's fallback mount directory.
-    name='warder-backup-'+datetime.now().strftime('%Y%m%d-%H%M%S-')+'-'+secrets.token_hex(6)+'.json'
+    name='warder-backup-'+datetime.now().strftime('%Y%m%d-%H%M%S')+'-'+secrets.token_hex(6)+'.json'
     temporary='.'+name+'.writing'
     dirfd=os.open(directory,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW)
     created=False

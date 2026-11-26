@@ -310,3 +310,13 @@ class BackupTests(unittest.TestCase):
                 with self.assertRaises((OSError,ValueError)):
                     b.save(p.path('/media/usb/warder-backups'),{'GSU':{'GlassSysUtil.par0':True}},p)
                 self.assertEqual(list(p.path('/media/usb/warder-backups').iterdir()),[])
+
+    def test_generated_backup_filename_matches_inventory_pattern(self):
+        with TemporaryDirectory() as folder:
+            p=b.Probe(folder)
+            p.path('/etc/enigma2').mkdir(parents=True)
+            with patch.object(b,'mounts',return_value=[('/dev/root','/','ext4',False)]):
+                path=b.save(p.path(b.ROOT),{'GSU':{'GlassSysUtil.par0':True}},p)
+                self.assertRegex(path.name,b.NAME)
+                self.assertNotIn('--',path.name)
+                self.assertEqual(b.inventory(path.parent,p),[path])
