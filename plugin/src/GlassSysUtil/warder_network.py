@@ -239,6 +239,40 @@ def listening_ports(p):
     return result
 
 
+def openwebif_ports(modules=None):
+    """Observe native OpenWebif listener handles; never import or start it.
+
+    OpenWebif runs inside Enigma2, so a process name or port 80 alone
+    cannot establish ownership. Read the existing Twisted listener list
+    without calling reactor methods, reading settings or sending requests.
+    Unsupported implementations and incomplete observations stay unknown.
+    """
+    import sys
+    modules=sys.modules if modules is None else modules
+    server=modules.get('Plugins.Extensions.OpenWebif.httpserver')
+    listeners=getattr(server,'listener',None)
+    if not isinstance(listeners,(list,tuple)):
+        return None
+    snapshot=tuple(listeners)
+    ports=set()
+    uncertain=False
+    for handle in snapshot:
+        connected=getattr(handle,'connected',None)
+        if connected not in (True,False):
+            uncertain=True
+            continue
+        if not connected:
+            continue
+        port=getattr(handle,'port',None)
+        if type(port) is int and 0<port<=65535:
+            ports.add(port)
+        else:
+            uncertain=True
+    if uncertain:
+        return None
+    return sorted(ports)
+
+
 def detail_report(kind,tr,cancelled,probe=None):
     p=probe or Probe()
     if cancelled.is_set():return ''
@@ -274,6 +308,10 @@ def detail_report(kind,tr,cancelled,probe=None):
         from .warder_system_data import observed_services,PROTOCOLS
         rows.extend(name+'   '+(tr('Running') if state is True else tr('Not detected') if state is False else '—')
                     for name,state in zip(PROTOCOLS+('SSH',),observed_services(p,extended=True)))
+        owned=openwebif_ports()
+        rows.append('OpenWebif   '+('—' if owned is None else tr('Detected') if owned else tr('Not detected')))
+        if owned:
+            rows.append('    TCP   '+', '.join(map(str,owned)))
         rows.extend(('',tr('Local ports')))
         for protocol,ports in listening_ports(p).items():
             rows.append(protocol.upper()+'   '+('—' if ports is None else ', '.join(map(str,ports)) or '0'))

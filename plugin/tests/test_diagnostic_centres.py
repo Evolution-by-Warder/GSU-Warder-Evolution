@@ -67,6 +67,32 @@ class DiagnosticTests(unittest.TestCase):
         nav.stopService.assert_not_called()
         nav.playService.assert_not_called()
 
+    def test_openwebif_ports_use_native_handles_not_generic_socket_numbers(self):
+        import sys
+        network=module('warder_network')
+        name='Plugins.Extensions.OpenWebif.httpserver'
+        self.assertIsNone(network.openwebif_ports({}))
+        self.assertIsNone(network.openwebif_ports({name:SimpleNamespace(listener=None)}))
+        self.assertEqual(network.openwebif_ports({name:SimpleNamespace(listener=[])}),[])
+        listeners=[SimpleNamespace(connected=True,port=8080),
+                   SimpleNamespace(connected=1,port=443),
+                   SimpleNamespace(connected=True,port=8080),
+                   SimpleNamespace(connected=False,port=80)]
+        native=SimpleNamespace(listener=listeners)
+        self.assertEqual(network.openwebif_ports({name:native}),[443,8080])
+        self.assertIsNone(network.openwebif_ports({name:SimpleNamespace(listener=[object()])}))
+        p=MagicMock()
+        p.entries.return_value=[]
+        p.text.return_value=''
+        with patch.dict(sys.modules,{name:native}),patch.object(network,'listening_ports',return_value={'tcp':[80]}):
+            result=network.detail_report('network-services',str,Event(),p)
+        self.assertIn('OpenWebif   Detected\n    TCP   443, 8080',result)
+        self.assertIn('Local ports\nTCP   80',result)
+        with patch.dict(sys.modules,{name:None}),patch.object(network,'listening_ports',return_value={'tcp':[80]}):
+            result=network.detail_report('network-services',str,Event(),p)
+        self.assertIn('OpenWebif   —',result)
+        self.assertIn('Local ports\nTCP   80',result)
+
     def test_network_probes_distinguish_feed_failure_from_external_failure(self):
         network=module('warder_network')
         probe=MagicMock()

@@ -55,3 +55,8 @@ Ostré vydanie blokuje neukončené CI presného HEAD a požadovaný fyzický re
 - Prehľad pamäte a úložiska zobrazuje uložené natívne cesty EPG/timeshift/nahrávania (nie neoverené predvolené hodnoty ani stav vzdialených úložísk).
 - Centrum Warder má explicitný spoločný prehľad všetkých piatich produktov cez existujúci čítač manifestov. Samostatné podrobnosti zostávajú.
 - Rebríček súborov, atribúcia OpenWebif, ďalšie inline úpravy a fyzická validácia zostávajú neuzavreté.
+
+### Atribúcia OpenWebif
+
+- Existujúci prehľad sieťových služieb rozlišuje listenery OpenWebif podľa už načítaného natívneho modulu `Plugins.Extensions.OpenWebif.httpserver` a jeho aktívnych Twisted handle objektov. Všeobecný zoznam lokálnych portov zostáva nezávislý. Neimportuje ani nespúšťa server, nečíta autentifikačné nastavenia a neodosiela sieťové požiadavky. Nepodporované implementácie sú neznáme; nejde o potvrdenie dostupnosti z LAN ani autentifikácie.
+- Referencia: [OpenWebif httpserver.py](https://github.com/E2OpenPlugins/e2openplugin-OpenWebif/blob/master/plugin/httpserver.py). Pridaná regresia pre vlastné porty, duplicitné a neaktívne handle objekty, neznámy stav a nesúvisiaci port 80. CI nového HEAD a fyzická validácia zostávajú otvorené.
