@@ -1,3 +1,7 @@
+# 26.11.2026 — Portable preferences and PiconHub profiles
+
+Expanded audited FullHDGlass appearance choices, GSU OSD preferences, PiconHub style/safe update method and satellite/provider/DTT/DAB selector fields. Validate against target installed catalog, exclude retired IPTV and replace-all deletion mode; device paths remain local. Exact predecessor source artifact 15124972304 independently verified: 10/10 backup tests pass including actual crypto. Corrected Spanish footer width failure and shortened long FR/DE labels. Current CI/physical receiver restore pending; separate draft only.
+
 # 26.11.2026 — Backup caption widths and crypto verification
 
 Predecessor 0b7a544 passed three workflow families and ARM/MIPS emulation; OpenBH reference-font check failed on Russian title length. Shorten RU/UK labels; extend existing width assertions to actual backup footer labels. Independently executed exact predecessor archive's seven backup tests with cryptography 46.0.4: all passed, including encrypted restore. Current GUI revision requires new CI and receiver validation. No production change.

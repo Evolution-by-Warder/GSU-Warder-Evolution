@@ -181,3 +181,43 @@ class BackupTests(unittest.TestCase):
                 self.assertEqual(b.file_kind(path,p),'standard')
                 with self.assertRaisesRegex(ValueError,'changed after preview'):
                     b.restore(config,None,path,probe=p,expected_digest='0'*64)
+
+
+    def test_picon_profiles_use_target_catalog_and_exclude_delete_mode(self):
+        with TemporaryDirectory() as folder:
+            p=b.Probe(folder)
+            catalog=p.path(b.PICON_MENU)
+            catalog.parent.mkdir(parents=True)
+            catalog.write_text(json.dumps({'selectors':[{'selector':'192E'},{'selector':'DTT_ITALIA'},{'selector':'CANALPLUS_SK'}]}))
+            profile=SimpleNamespace(warder_selectors=Item('192E DTT_ITALIA DAB CANALPLUS_SK'),
+                sats=Item('19.2e'),resolution=Item('220x132',['220x132']),
+                background=Item('white',['transparent','white','black']),
+                method=Item('all',['all','all_inc','sync_tv']),warder_process=Item(True))
+            config=SimpleNamespace(plugins=SimpleNamespace(chocholousekpicons=[profile]))
+            data=b.snapshot(config,('PiconHub',),p)['PiconHub']
+            prefix='chocholousekpicons.0.'
+            self.assertEqual(data[prefix+'warder_selectors'],'192E DTT_ITALIA DAB CANALPLUS_SK')
+            self.assertEqual(data[prefix+'sats'],'19.2e')
+            self.assertEqual(data[prefix+'background'],'white')
+            self.assertNotIn(prefix+'method',data)
+            self.assertNotIn(prefix+'warder_process',data)
+            payload={'schema':1,'created':'2026-11-26','projects':{'PiconHub':{prefix+'warder_selectors':'192E UNKNOWN'}}}
+            changes,radio,skipped,_=b.plan(config,payload,probe=p)
+            self.assertEqual(changes,[])
+            self.assertEqual(skipped,{'PiconHub':1})
+            self.assertFalse(b.selectors_valid('192E IPTV-TEST'))
+            payload['projects']['PiconHub']={prefix+'method':'all'}
+            with self.assertRaises(ValueError):b.validate_payload(payload)
+
+    def test_skin_visual_settings_and_gsu_osd_preferences(self):
+        skin=SimpleNamespace(par45=Item('#006cbcf0'),par145=Item('0',['0','1']),
+            par214=Item('AutoColors',['AutoColors','#ffffff']),descriptionScrollSpeed=Item('36',['10','36']),
+            par80=Item('private-host'),par125=Item('/media/hdd',['/media/hdd']))
+        gsu=SimpleNamespace(par4=Item(500,limits=[(1,2000)]),par60=Item(True),diagnosticAlerts=Item(False),
+                            par10=Item('private-password'))
+        config=SimpleNamespace(plugins=SimpleNamespace(setupGlass17=skin,GlassSysUtil=gsu))
+        result=b.snapshot(config,('FullHDGlass','GSU'))
+        self.assertEqual(set(result['FullHDGlass']),{'setupGlass17.par45','setupGlass17.par145',
+                        'setupGlass17.par214','setupGlass17.descriptionScrollSpeed'})
+        self.assertEqual(set(result['GSU']),{'GlassSysUtil.par4','GlassSysUtil.par60','GlassSysUtil.diagnosticAlerts'})
+        self.assertNotIn('private',str(result))

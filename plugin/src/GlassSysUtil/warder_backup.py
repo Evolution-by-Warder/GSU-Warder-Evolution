@@ -19,14 +19,26 @@ RADIO='/etc/enigma2/warder-radio/state.json'
 ROOT='/etc/enigma2/warder-backups'
 # Explicit portable preferences only. No generic prefix export, credentials,
 # scripts, device paths, update state, automatic deletion settings or tokens.
-SKIN_KEYS=(1,2,6,7,8,14,16,17,18,19,20,24,25,26,28,29,30,31,32,33,41,42,44,46,47,48,49,54,55,56,60,63,66,67,68,69,72,73,74)
+# Visual preferences audited in FullHDGlass setupGlass17/plugin.py.
+# Exclude device paths, network addresses, credentials and action toggles.
+SKIN_KEYS=(1,2,6,7,8,14,16,17,18,19,20,24,25,26,28,29,30,31,32,33,41,42,
+           44,45,46,47,48,49,53,54,55,56,60,63,66,67,68,69,72,73,74,76,77,
+           79,81,82,83,84,86,87,92,93,94,95,96,97,102,103,105,106,107,108,
+           109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,
+           126,127,128,129,130,131,132,133,134,135,136,137,138,139,142,
+           145,146,147,148,153,154,155,156,157,161,162,163,164,165,166,167,
+           168,183,187,188,190,196,197,202,203,209,213,214,215)
+PICON_MENU='/usr/lib/enigma2/python/Plugins/Extensions/WarderPiconHub/data/skin-menu.json'
+PICON_METHODS=('sync_tv','sync_tv_radio','all_inc')
+PICON_STYLES=('transparent','white','black','no_satellites_was_selected')
 NATIVE={
     'FullHDGlass':tuple('setupGlass17.par%d'%i for i in SKIN_KEYS)+
-        ('setupGlass17.radioSaverDelay','warderEvolutionPrimeTime.enabled','warderSkinMainMenu.enabled'),
+        ('setupGlass17.radioSaverDelay','setupGlass17.descriptionScrollSpeed',
+         'warderEvolutionPrimeTime.enabled','warderSkinMainMenu.enabled'),
     'PiconHub':('warder_piconhub_show_main_menu','chocholousekpicons_id')+
-        tuple('chocholousekpicons.%d.%s'%(i,key) for i in range(5) for key in ('resolution','sats')),
+        tuple('chocholousekpicons.%d.%s'%(i,key) for i in range(5) for key in ('resolution','sats','warder_selectors','background','method')),
     'YouTube':('warderyoutube.max_quality','warderyoutube.player_mode','warderyoutube.show_main_menu'),
-    'GSU':tuple('GlassSysUtil.par%d'%i for i in (0,5,51,52,53,54,55,56,61,62,78,80,81)),
+    'GSU':tuple('GlassSysUtil.par%d'%i for i in (0,4,5,51,52,53,54,55,56,60,61,62,78,80,81))+('GlassSysUtil.diagnosticAlerts',),
 }
 RADIO_KEYS=('show_main_menu','screensaver_delay','group','online_country',
             'radio_subscriptions','radio_home_category','radio_subscription_category')
@@ -165,11 +177,38 @@ def element(config,key):
     except (AttributeError,KeyError,IndexError,TypeError):return None
 
 
-def native_valid(key,obj,value,private=False):
+def picon_catalog(probe=None):
+    """Use the installed target's catalog, never import or start PiconHub."""
+    p=probe or Probe()
+    try:
+        document=json.loads(read_bytes(p.path(PICON_MENU),256*1024))
+        rows=document['selectors']
+        if not isinstance(rows,list) or len(rows)>512:return None
+        values={row['selector'] for row in rows}
+        if not all(isinstance(v,str) and re.fullmatch(r'[A-Z0-9_-]{1,32}',v) for v in values):return None
+        return values|{'DAB'}
+    except (OSError,ValueError,KeyError,TypeError,RecursionError):return None
+
+
+def selectors_valid(value):
+    if not plain(value,512):return False
+    parts=value.split()
+    return len(parts)==len(set(parts)) and all(re.fullmatch(r'[A-Z0-9_-]{1,32}',v) and not v.startswith('IPTV-') for v in parts)
+
+
+def native_valid(key,obj,value,private=False,probe=None):
     if obj is None or type(value) is not type(obj.value):return False
     if key in PRIVATE_NATIVE.get('YouTube',()):return private and plain(value,512) and (not value or re.fullmatch(r'[A-Za-z0-9_-]{10,256}',value) is not None)
+    if key=='setupGlass17.par45':
+        return isinstance(value,str) and re.fullmatch(r'#[0-9a-fA-F]{6}(?:[0-9a-fA-F]{2})?',value) is not None
     if key.endswith('.sats'):
-        return plain(value,512) and all(re.fullmatch(r'\d{1,3}(?:\.\d)?[EW]',v) for v in value.split())
+        return plain(value,512) and all(re.fullmatch(r'\d{1,3}(?:\.\d)?[EWew]',v) for v in value.split())
+    if key.endswith('.warder_selectors'):
+        if not selectors_valid(value):return False
+        catalog=picon_catalog(probe)
+        return not value.strip() or (catalog is not None and set(value.split())<=catalog)
+    if key.startswith('chocholousekpicons.') and key.endswith('.method') and value not in PICON_METHODS:return False
+    if key.startswith('chocholousekpicons.') and key.endswith('.background') and value not in PICON_STYLES:return False
     choices=getattr(obj,'choices',None)
     if choices is not None:
         try:return any(type(v) in (str,int) and str(v)==str(value) for v in choices)
@@ -195,7 +234,7 @@ def snapshot(config,selected=PRODUCTS,probe=None,private=False):
         else:
             for key in native_keys(product,private):
                 obj=element(config,key)
-                if obj is not None and native_valid(key,obj,obj.value,private):values[key]=obj.value
+                if obj is not None and native_valid(key,obj,obj.value,private,p):values[key]=obj.value
         if values:result[product]=values
     return result
 
@@ -239,6 +278,12 @@ def validate_payload(payload,private=False):
                 if not radio_valid(key,value,private):raise ValueError('Invalid radio setting')
             elif key in PRIVATE_NATIVE.get(product,()):
                 if not private or not plain(value,512) or (value and not re.fullmatch(r'[A-Za-z0-9_-]{10,256}',value)):raise ValueError('Invalid private setting')
+            elif key.endswith('.warder_selectors'):
+                if not selectors_valid(value):raise ValueError('Invalid picon selectors')
+            elif key.startswith('chocholousekpicons.') and key.endswith('.method'):
+                if value not in PICON_METHODS:raise ValueError('Unsafe picon update method')
+            elif key.startswith('chocholousekpicons.') and key.endswith('.background'):
+                if value not in PICON_STYLES:raise ValueError('Invalid picon style')
             elif not (type(value) in (bool,int) or plain(value,512)):raise ValueError('Invalid setting')
     return payload
 
@@ -308,7 +353,7 @@ def plan(config,payload,selected=PRODUCTS,probe=None,private=False):
                 elif state[1].get(key)!=value:radio[key]=value
             else:
                 obj=element(config,key)
-                if not native_valid(key,obj,value,private):skipped[product]+=1
+                if not native_valid(key,obj,value,private,p):skipped[product]+=1
                 elif obj.value!=value:changes.append((product,key,obj,value))
     return changes,radio,skipped,state
 
