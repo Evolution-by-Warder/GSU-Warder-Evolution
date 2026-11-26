@@ -1,6 +1,6 @@
 """Canonical navigation ownership; legacy IDs remain stable."""
 CENTRES = (
-    ("system", "System centre", ("0",)),
+    ("system", "System centre", ("system-overview", "system-processes", "system-log", "0")),
     ("reception", "Reception centre", ("1",)),
     ("storage", "Memory and storage", ("9",)),
     ("network", "Network centre", ("network-overview",)),
