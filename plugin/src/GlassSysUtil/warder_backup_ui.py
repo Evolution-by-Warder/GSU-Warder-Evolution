@@ -25,8 +25,11 @@ def summary_lines(tr,summary,completed=False):
     lines=['%s: %d'%(label,count) for label,count in zip(labels,totals)]
     lines.append('')
     for name,counts in summary.items():
-        lines.append(name)
-        lines.append('    '+'  ·  '.join('%s: %d'%(label,count) for label,count in zip(labels,counts) if count) if any(counts) else '    0')
+        parts=['%s: %d'%(label,count) for label,count in zip(labels,counts) if count]
+        if len(parts)<=1:lines.append(name+'  ·  '+(parts[0] if parts else '0'))
+        else:
+            lines.append(name)
+            lines.extend('    '+part for part in parts)
     return lines
 
 
@@ -120,7 +123,7 @@ class BackupMenu(Screen):
         self.preview_digest=None
         self.locked=None
         self.password=None
-        self['green'].setText(tr('Restore backup' if self.browsing else 'Create backup'))
+        self['green'].setText('' if self.browsing else tr('Create backup'))
         self['result_title'].setText(tr('Restore backup' if self.browsing else 'Create backup'))
         self['result_status'].setText('')
         rows=[tr('Storage location'),str(self.directory() or '—'),'']
@@ -132,7 +135,7 @@ class BackupMenu(Screen):
                     if backup.file_kind(row[0])=='private':
                         self.locked=row[0]
                         rows.extend((tr('Private backup'),tr('Enter backup password') if backup.crypto.available() else tr('Private backup encryption unavailable')))
-                        self['green'].setText(tr('Unlock backup') if backup.crypto.available() else '')
+                        self['green'].setText(tr('Restore backup') if backup.crypto.available() else '')
                     else:
                         payload=backup.load(row[0])
                         self.set_preview(row[0],payload)
@@ -150,7 +153,6 @@ class BackupMenu(Screen):
 
     def select(self):
         if self.busy or self.closed:return
-        if self.browsing and self.locked is not None:self.unlock();return
         row=self['list'].getCurrent()
         if not row or self.browsing:return
         index=backup.PRODUCTS.index(row[0])
@@ -181,7 +183,7 @@ class BackupMenu(Screen):
         self.preview=path
         self.preview_digest=backup.fingerprint(payload)
         self.locked=None
-        self.password=password
+        self.password=None
         self['descriptions'].setText('\n'.join(rows))
         self['green'].setText(tr('Restore backup'))
 
@@ -203,22 +205,16 @@ class BackupMenu(Screen):
         self.session.openWithCallback(callback,BackupPassword,self.api,self.tr(title))
 
     def unlock(self):
+        """Green is the explicit restore action, not a separate unlock step."""
         if self.busy or self.closed or self.locked is None:return
         if not backup.crypto.available():
             self['result_status'].setText(self.tr('Private backup encryption unavailable'))
             return
         path=self.locked
+        selected=tuple(self.selected)
         def entered(password):
-            if self.closed or not password or self.locked!=path:return
-            def done(payload):
-                if self.locked==path:
-                    try:
-                        self.set_preview(path,payload,password)
-                        self['result_status'].setText('AES-256-GCM · OK')
-                    except (OSError,ValueError,TypeError,RuntimeError,AttributeError,RecursionError):
-                        self['result_status'].setText(self.tr('Invalid backup'))
-            self.task(lambda:backup.load(path,password=password),done,
-                      lambda:self['result_status'].setText(self.tr('Incorrect password or damaged backup')))
+            if self.closed or self.busy or not password or self.locked!=path:return
+            self.start_restore(path,selected,password)
         self.ask_password('Enter backup password',entered)
 
     def create_mode(self):
@@ -266,54 +262,66 @@ class BackupMenu(Screen):
             return
         if self.locked is not None:self.unlock();return
         if self.preview is None:return
-        from Screens.MessageBox import MessageBox
-        path=self.preview
-        selected=tuple(self.selected)
-        password=self.password
-        digest=self.preview_digest
-        def confirmed(answer):
-            if self.closed:return
-            if not answer:
-                self.describe()
+        self.start_restore(self.preview,tuple(self.selected),digest=self.preview_digest)
+
+    def finish_restore(self):
+        """Retain the completed report, not a new locked archive preview."""
+        self.preview=None
+        self.preview_digest=None
+        self.locked=None
+        self.password=None
+        self['green'].setText('')
+        self['result_title'].setText(self.tr('Restore result'))
+
+    def start_restore(self,path,selected,password=None,digest=None):
+        """An explicit green press (and password if needed) is sufficient."""
+        if self.closed or self.busy:return
+        self.password=None
+        self['green'].setText('')
+        def failed(message='Unavailable'):
+            self.describe()
+            self['result_status'].setText(self.tr(message))
+        def loaded(payload):
+            try:
+                prepared=backup.prepare_restore(self.api['config'],payload,selected,
+                    private=password is not None,expected_digest=digest)
+            except (OSError,ValueError,TypeError,RuntimeError,AttributeError,RecursionError):
+                failed()
                 return
-            if self.preview!=path or self.preview_digest!=digest:return
-            self.password=None
-            def failed():
-                self.describe()
-                self['result_status'].setText(self.tr('Unavailable'))
-            def loaded(payload):
+            previous=prepared['previous']
+            def recovered_copy(rollback):
                 try:
-                    prepared=backup.prepare_restore(self.api['config'],payload,selected,
-                        private=password is not None,expected_digest=digest)
+                    from Components.config import configfile
+                    count,skipped,rollback,summary=backup.apply_prepared(self.api['config'],configfile,prepared,
+                        rollback,details=True)
+                    self.finish_restore()
+                    unchanged=sum(row[1] for row in summary.values())
+                    incompatible=sum(row[2] for row in summary.values())
+                    if count:
+                        status=self.tr('Restored')+': '+str(count)
+                    elif incompatible:
+                        status=self.tr('Incompatible')+': '+str(incompatible)
+                    elif unchanged:
+                        status=self.tr('Unchanged')+': '+str(unchanged)
+                    else:
+                        status=self.tr('Not selected')
+                    self['result_status'].setText(status)
+                    rows=summary_lines(self.tr,summary,completed=True)
+                    if rollback:rows.extend(('',self.tr('Restart GUI after restoring settings.'),
+                                             self.tr('Backup before restore'),str(rollback)))
+                    self['descriptions'].setText('\n'.join(rows))
+                except backup.RestoreFailure as failure:
+                    self.finish_restore()
+                    self['result_status'].setText(self.tr('Restore failed'))
+                    self['descriptions'].setText(self.tr('Previous settings restored' if failure.recovered else 'Recovery backup required')+
+                        '\n\n'+self.tr('Backup before restore')+'\n'+str(failure.rollback))
                 except (OSError,ValueError,TypeError,RuntimeError,AttributeError,RecursionError):
                     failed()
-                    return
-                previous=prepared['previous']
-                def recovered_copy(rollback):
-                    try:
-                        from Components.config import configfile
-                        count,skipped,rollback,summary=backup.apply_prepared(self.api['config'],configfile,prepared,
-                            rollback,details=True)
-                        self.describe()
-                        self['result_title'].setText(self.tr('Restore result'))
-                        self['result_status'].setText('OK · %d'%count)
-                        rows=summary_lines(self.tr,summary,completed=True)
-                        if rollback:rows.extend(('',self.tr('Restart GUI after restoring settings.'),
-                                                 self.tr('Backup before restore'),str(rollback)))
-                        self['descriptions'].setText('\n'.join(rows))
-                    except backup.RestoreFailure as failure:
-                        self.describe()
-                        self['result_title'].setText(self.tr('Restore result'))
-                        self['result_status'].setText(self.tr('Restore failed'))
-                        self['descriptions'].setText(self.tr('Previous settings restored' if failure.recovered else 'Recovery backup required')+
-                            '\n\n'+self.tr('Backup before restore')+'\n'+str(failure.rollback))
-                    except (OSError,ValueError,TypeError,RuntimeError,AttributeError,RecursionError):
-                        failed()
-                # Only plain snapshot data crosses the worker boundary.
-                self.task(lambda:backup.save_recovery(previous,password=password),recovered_copy,failed)
-            self.task(lambda:backup.load(path,password=password),loaded,failed)
-        self.session.openWithCallback(confirmed,MessageBox,self.tr('Restore selected compatible settings only.')+'\n\n'+self.tr('Backup before restore')+'\n'+self.tr('Restart GUI after restoring settings.'),
-                                      type=MessageBox.TYPE_YESNO,default=False)
+            # Recovery creation stays in the worker; native config writes stay
+            # on the UI thread. The password is never retained by the menu.
+            self.task(lambda:backup.save_recovery(previous,password=password),recovered_copy,failed)
+        self.task(lambda:backup.load(path,password=password),loaded,
+                  lambda:failed('Incorrect password or damaged backup' if password is not None else 'Invalid backup'))
 
     def back(self):
         if self.busy:return

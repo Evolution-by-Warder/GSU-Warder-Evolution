@@ -1,3 +1,7 @@
+# 26.11.2026 — Simplify restore after physical receiver feedback
+
+Owner screenshot 64d54a9 confirms 181 unchanged, zero incompatible, zero changed. Green Restore directly initiates standard restore or requests one password for private archive; no second green or native confirmation dialog. Preserve verified internal recovery and staged checks, no restore on navigation/OK. Keep final result, meaningful no-op status, compact project lines and disable repeat action until reselection. New UI regression tests and exact-head CI pending. Changed-setting restore and persistence after restart remain unverified. No production mutation.
+
 # 26.11.2026 — Owner-approved six-character backup password minimum
 
 Physical keyboard accepted on 7aad8c7. Reduce minimum from 12 to 6 consistently in editor, encryption and all 21 catalogs; retain maximum 128, existing encryption/KDF and double entry. Add boundary and actual encrypted roundtrip tests. Longer passwords recommended; separate draft, new CI pending.

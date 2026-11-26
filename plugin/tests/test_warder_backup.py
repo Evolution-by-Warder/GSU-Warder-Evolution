@@ -453,3 +453,64 @@ class BackupTests(unittest.TestCase):
         envelope=b.crypto.seal(raw,'Ab12!x')
         self.assertEqual(b.crypto.unseal(envelope,'Ab12!x'),raw)
         with self.assertRaises(ValueError):b.crypto.seal(raw,'Ab12!')
+
+
+    def test_green_restores_standard_archive_without_confirmation_dialog(self):
+        from Plugins.Extensions.GlassSysUtil.warder_backup_ui import BackupMenu
+        api=vars(load(ROOT))
+        session=MagicMock()
+        menu=BackupMenu(session,api)
+        menu.browsing=True
+        path=Path('/media/usb/warder-backups/warder-backup-20261126-162659-abcdefgh.json')
+        menu.preview=path
+        menu.preview_digest='a'*64
+        payload={'projects':{'GSU':{'GlassSysUtil.par0':True}}}
+        summary={'GSU':(0,1,0,0)}
+        def immediate(work,done,failed):
+            done(work())
+        with patch.object(menu,'task',side_effect=immediate),patch.object(b,'load',return_value=payload) as load_backup,patch.object(b,'prepare_restore',return_value={'previous':{}}) as prepare,patch.object(b,'save_recovery',return_value=None),patch.object(b,'apply_prepared',return_value=(0,{},None,summary)) as apply:
+            menu.execute()
+            load_backup.assert_called_once_with(path,password=None)
+            self.assertEqual(prepare.call_args.kwargs['expected_digest'],'a'*64)
+            apply.assert_called_once()
+            session.openWithCallback.assert_not_called()
+            self.assertEqual(menu['result_status'].getText(),menu.tr('Unchanged')+': 1')
+            self.assertIn('GSU  ·  '+menu.tr('Unchanged')+': 1',menu['descriptions'].getText())
+            self.assertEqual(menu['green'].getText(),'')
+            menu.execute()
+            apply.assert_called_once()
+
+    def test_green_private_restore_prompts_once_and_applies_without_second_green(self):
+        from Plugins.Extensions.GlassSysUtil.warder_backup_ui import BackupMenu
+        api=vars(load(ROOT))
+        session=MagicMock()
+        menu=BackupMenu(session,api)
+        menu.browsing=True
+        path=Path('/media/usb/warder-backups/warder-backup-20261126-162659-abcdefgh.json')
+        menu.locked=path
+        payload={'projects':{'GSU':{'GlassSysUtil.par0':True}}}
+        summary={'GSU':(1,0,0,0)}
+        rollback=Path('/etc/enigma2/warder-backups/recovery.json')
+        def immediate(work,done,failed):
+            done(work())
+        with patch.object(menu,'task',side_effect=immediate),patch.object(b.crypto,'available',return_value=True),patch.object(b,'load',return_value=payload) as load_backup,patch.object(b,'prepare_restore',return_value={'previous':{'GSU':{'GlassSysUtil.par0':False}}}) as prepare,patch.object(b,'save_recovery',return_value=rollback) as recovery,patch.object(b,'apply_prepared',return_value=(1,{},rollback,summary)) as apply:
+            menu.select()
+            session.openWithCallback.assert_not_called()
+            menu.execute()
+            session.openWithCallback.assert_called_once()
+            callback=session.openWithCallback.call_args.args[0]
+            callback(None)
+            load_backup.assert_not_called()
+            callback('Ab12!x')
+            load_backup.assert_called_once_with(path,password='Ab12!x')
+            self.assertTrue(prepare.call_args.kwargs['private'])
+            recovery.assert_called_once_with({'GSU':{'GlassSysUtil.par0':False}},password='Ab12!x')
+            apply.assert_called_once()
+            session.openWithCallback.assert_called_once()
+            self.assertIsNone(menu.password)
+            self.assertIsNone(menu.locked)
+            self.assertIsNone(menu.preview)
+            self.assertEqual(menu['green'].getText(),'')
+            self.assertIn(str(rollback),menu['descriptions'].getText())
+            menu.execute()
+            apply.assert_called_once()
