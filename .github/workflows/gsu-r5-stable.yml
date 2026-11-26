@@ -1,7 +1,7 @@
-name: GSU 13.41-r5 verified stable release
+name: GSU 13.41-r6 verified stable release
 on:
   pull_request:
-    paths: [plugin/**, .github/workflows/gsu-r5-stable.yml, compatibility/publish-gsu-r5.py]
+    paths: [plugin/**, .github/workflows/gsu-r5-stable.yml, compatibility/publish-gsu-r6.py, compatibility/verify-packaged-install.py]
   push:
     branches: [main]
     paths: [plugin/src/GlassSysUtil/version, .github/workflows/gsu-r5-stable.yml]
@@ -9,7 +9,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: gsu-r5-stable-${{ github.ref }}
+  group: gsu-r6-stable-${{ github.ref }}
   cancel-in-progress: false
 jobs:
   openpli:
@@ -30,22 +30,22 @@ jobs:
       - name: Build and verify exact stable IPK
         run: |
           set -euo pipefail
-          test "$(cat plugin/src/GlassSysUtil/version)" = 13.41-r5
-          test "$(cat plugin/update/release-request)" = 13.41-r5
+          test "$(cat plugin/src/GlassSysUtil/version)" = 13.41-r6
+          test "$(cat plugin/update/release-request)" = 13.41-r6
           python -m unittest discover -s plugin/tests -q
           python plugin/tools/build_ipk.py --output plugin/dist
-          cp plugin/dist/enigma2-plugin-extensions-gsu_13.41-r5_all.ipk /tmp/first-gsu.ipk
+          cp plugin/dist/enigma2-plugin-extensions-gsu_13.41-r6_all.ipk /tmp/first-gsu.ipk
           python plugin/tools/build_ipk.py --output plugin/dist
-          cmp /tmp/first-gsu.ipk plugin/dist/enigma2-plugin-extensions-gsu_13.41-r5_all.ipk
-          python compatibility/verify-packaged-install.py plugin/dist/enigma2-plugin-extensions-gsu_13.41-r5_all.ipk --product gsu --version 13.41-r5 --report reports/gsu-13.41-r5/install.json
-          python compatibility/publish-gsu-r5.py --check-only
+          cmp /tmp/first-gsu.ipk plugin/dist/enigma2-plugin-extensions-gsu_13.41-r6_all.ipk
+          python compatibility/verify-packaged-install.py plugin/dist/enigma2-plugin-extensions-gsu_13.41-r6_all.ipk --product gsu --version 13.41-r6 --report reports/gsu-13.41-r6/install.json
+          python compatibility/publish-gsu-r6.py --check-only
       - uses: actions/upload-artifact@v4
         with:
-          name: gsu-r5-verified
+          name: gsu-r6-verified
           path: |
             plugin/dist/*.ipk
             plugin/dist/*.sha256
-            reports/gsu-13.41-r5/install.json
+            reports/gsu-13.41-r6/install.json
   publish:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: package
@@ -62,13 +62,13 @@ jobs:
           python-version: '3.14'
       - uses: actions/download-artifact@v4
         with:
-          name: gsu-r5-verified
+          name: gsu-r6-verified
           path: .
       - name: Publish immutable IPK and verify both production feeds
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python compatibility/publish-gsu-r5.py
+        run: python compatibility/publish-gsu-r6.py
       - uses: actions/upload-artifact@v4
         with:
-          name: gsu-r5-production
-          path: reports/gsu-13.41-r5/*.json
+          name: gsu-r6-production
+          path: reports/gsu-13.41-r6/*.json
