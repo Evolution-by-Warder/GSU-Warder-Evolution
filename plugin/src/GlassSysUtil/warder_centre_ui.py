@@ -82,7 +82,8 @@ def open_centre(screen, api, key):
 class Report(Screen):
     def __init__(self, session, api, kind, title):
         self.width,self.height=dashboard.dimensions(api)
-        self.skin = dashboard.skin(self.width,self.height,'process' if kind=='system-processes' else 'detail')
+        mode={'system-processes':'process','storage-categories':'categories'}.get(kind,'detail')
+        self.skin=dashboard.skin(self.width,self.height,mode)
         Screen.__init__(self, session)
         self.api, self.kind = api, kind
         dashboard.install_header(self,api)
@@ -102,6 +103,12 @@ class Report(Screen):
             for i,title in enumerate(('PID','Process Info','S','RAM (MiB)','CPU (%)')):
                 self['column%d'%i]=Label(self.tr(title) if i==1 else title)
             self.show_process_table(False)
+        if kind=='storage-categories':
+            for i in range(6):
+                for field in ('name','size','state'):
+                    self['category_%s%d'%(field,i)]=Label('')
+                self['category_meter%d'%i]=api['ProgressBar']()
+            self.show_categories(False)
         for name, key in [('heading',title), ('red','Back'), ('green','TV' if kind == 'transponder-services' else ''), ('yellow','Refresh'),
                           ('blue','Tuner interfaces' if kind == 'tuner-details' else 'Radio' if kind == 'transponder-services' else 'Save' if kind == 'forum-report' else 'CPU / RAM' if kind == 'system-processes' else '')]:
             self[name] = Label(self.tr(key))
@@ -121,6 +128,29 @@ class Report(Screen):
         for key in ('process_list',)+tuple('column%d'%i for i in range(5)):
             (self[key].show if visible else self[key].hide)()
         (self['file_info'].hide if visible else self['file_info'].show)()
+
+    def show_categories(self,visible):
+        if self.kind!='storage-categories':return
+        for i in range(6):
+            for field in ('name','size','state','meter'):
+                widget=self['category_%s%d'%(field,i)]
+                (widget.show if visible else widget.hide)()
+        (self['file_info'].hide if visible else self['file_info'].show)()
+
+    def display_categories(self,rows):
+        total=sum(size for _,size,_ in rows)
+        complete=all(done for _,_,done in rows)
+        self.show_categories(True)
+        for i,(name,size,done) in enumerate(rows):
+            self['category_name%d'%i].setText(self.tr(name))
+            self['category_size%d'%i].setText('%.1f MiB'%(size/1048576))
+            share=100*size/total if total else 0
+            self['category_meter%d'%i].setValue(round(share))
+            self['category_state%d'%i].setText(('%d %%'%round(share)) if done and complete else self.tr('Partial result'))
+        from time import strftime
+        self['report_status'].setText('%s   ·   %s: %.1f MiB%s' %
+            (strftime('%H:%M:%S'),self.tr('Share of measured categories'),total/1048576,
+             '' if complete else ' · '+self.tr('Partial result')))
 
     def scroll(self,direction,page=False):
         if getattr(self,'table_visible',False):
@@ -156,6 +186,7 @@ class Report(Screen):
         self.pending = True
         self.preview = None
         self.show_process_table(False)
+        self.show_categories(False)
         self['report_status'].setText(self.tr('Loading…'))
         self['file_info'].setText(self.tr('Loading…'))
         if self.kind == 'transponder-services':
@@ -184,9 +215,12 @@ class Report(Screen):
         if kind=='system-log':
             from .warder_system_data import detail_text
             return detail_text('log',tr)
-        if kind.startswith('storage-'):
+        if kind=='storage-categories':
+            from .warder_storage import category_snapshot
+            return category_snapshot()
+        if kind=='storage-overview':
             from .warder_storage import report
-            return report(tr, kind == 'storage-categories')
+            return report(tr,False)
         if kind.startswith('network-'):
             from .warder_network import collect, summary, diagnostics
             return summary(collect(include_addresses=True), tr) if kind == 'network-overview' else diagnostics(tr, self.cancelled)
@@ -209,7 +243,11 @@ class Report(Screen):
         if self.kind=='system-processes' and isinstance(result,list) and result:
             self.display_process_table(result)
             return
+        if self.kind=='storage-categories' and isinstance(result,list) and len(result)==6:
+            self.display_categories(result)
+            return
         self.show_process_table(False)
+        self.show_categories(False)
         # Never display an empty screen on a missing/empty result. Only a real
         # report may become an export preview.
         if not isinstance(result, str) or not result.strip():
@@ -231,6 +269,7 @@ class Report(Screen):
         self.pending = False
         if not self.cancelled.is_set():
             self.show_process_table(False)
+            self.show_categories(False)
             self['report_status'].setText(self.tr('Unavailable'))
             self['file_info'].setText(self.tr('Unavailable'))
 
