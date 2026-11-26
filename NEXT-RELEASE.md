@@ -1,3 +1,9 @@
+# 2026-11-26 — GSU PR #14 stable candidate preparation
+
+Source r5 version and explicit release request staged; 21 localized release notes and historical entries retained. New one-shot publisher: read-only PR package gates, native CI, deterministic IPK, actual r4 updater validator, public IPK and sidecar comparison, both stable feeds advanced atomically with no force, frozen r93 bridges unchanged. No release/feed advance has occurred. Exact HEAD requires all relevant CI before manual merge. Website sync after actual publication.
+
+---
+
 # 2026-11-26 — GSU PR #14 runtime-module checkpoint
 
 Exact HEAD 65540c1562b37c8e6b1a2ccc8c1610c912376335 passed all 10 checks including independent AST inventory. Added seven additional CAM package, OSCam start, About and diagnostic bundle UI messages in all 21 languages; 174 common + 257 supplemental keys (431 total). Added placeholder equality regression for supplementary entries. English diagnostic archive summary remains machine-readable; no runtime behavior change. Stable r4 remains unchanged until publishing gates.
