@@ -20,6 +20,44 @@ def module(name):
 
 
 class DiagnosticTests(unittest.TestCase):
+    def test_remote_tuner_selection_is_passive_and_hides_unrelated_current_service(self):
+        tuner=module('warder_tuners')
+        from Components.NimManager import nimmanager
+        class Slot:
+            slot=1
+            def getSlotName(self):return 'Tuner B'
+            def getFriendlyFullDescription(self):return 'DVB-T2 receiver'
+            def getTunerTypesEnabled(self):return ['DVB-T','DVB-T2']
+        nav=MagicMock()
+        nav.getCurrentService.return_value.frontendInfo.return_value.getAll.return_value={'tuner_number':0,'frequency':123456}
+        nav.getRecordings.return_value=[]
+        with patch.object(nimmanager,'nim_slots',[Slot()],create=True):
+            self.assertEqual(tuner.slots(),[('Tuner B',1)])
+            value=tuner.details(SimpleNamespace(nav=nav),api,str,1)
+        self.assertIn('DVB-T / DVB-T2',value)
+        self.assertNotIn('123456',value)
+        nav.stopService.assert_not_called()
+        nav.playService.assert_not_called()
+
+    def test_network_probes_distinguish_feed_failure_from_external_failure(self):
+        network=module('warder_network')
+        probe=MagicMock()
+        probe.text.return_value=''
+        net={'interfaces':[],'gateways':['192.0.2.1'],'dns':[]}
+        def web(url,timeout):
+            if url!='https://warder-evolution.eu/':
+                raise OSError()
+            result=MagicMock()
+            result.__enter__.return_value.geturl.return_value=url
+            result.__enter__.return_value.read.return_value=b'<'
+            return result
+        with patch.object(network,'collect',return_value=net),patch.object(network,'ping',return_value=(0,1.0)):
+            self.assertIn('Internet reachable',network.diagnostics(str,Event(),probe,web))
+            self.assertIn('Gateway reachable; external checks failed',network.diagnostics(str,Event(),probe,MagicMock(side_effect=OSError)))
+        cancel=Event();cancel.set();opener=MagicMock()
+        self.assertEqual(network.diagnostics(str,cancel,probe,opener),'')
+        opener.assert_not_called()
+
     def test_backup_recreates_native_files_privately_and_ignores_settings(self):
         from hashlib import sha256
         backup = module('warder_scan_backup')
@@ -196,7 +234,11 @@ class DiagnosticTests(unittest.TestCase):
                           {'name':'private','available_percent':0}], 'gateway':'secret','logs':'secret'}
         with patch.object(service,'overview',return_value=data):
             preview=json.dumps(service.forum_snapshot())
-        self.assertEqual(json.loads(preview),{'schema':1,'available_percent':{'RAM':51.8,'Flash':None}})
+        cleaned=json.loads(preview)
+        self.assertEqual(set(cleaned),{'schema','gsu','python','architecture','available_percent','temperature_c','crash_classes'})
+        self.assertEqual(cleaned['schema'],2)
+        self.assertEqual(cleaned['available_percent'],{'RAM':51.8,'Flash':None})
+        self.assertNotIn('secret',preview)
         with TemporaryDirectory() as d:
             out=Path(service.save_preview(preview,d))
             self.assertEqual(out.read_text(),preview+'\n')

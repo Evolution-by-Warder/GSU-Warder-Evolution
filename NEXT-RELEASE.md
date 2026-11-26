@@ -1,3 +1,9 @@
+# 26. 11. 2026 · výsledky kandidáta a rozhrania prijímača
+
+Na e08b766f399eceb865febd6ad3ff217bce6ba3cd prešli matice OpenATV (45781593896), OpenPLi (45781593863), kontrola balíka s migráciami a publikátorom (45781593912), inštalátor (45781594076) aj natívne rozhrania OpenBH. Kompilátor troch emulovaných cieľov nevedel pri konfigurácii CPython na hostiteľovi spustiť cieľový getaddrinfo. Overenie sa presúva do hotového cieľového interpretera pod QEMU pre IPv4 aj IPv6. Na vývojovej vetve sa zatiaľ nevydal žiadny IPK.
+
+Posledné doplnenia zahŕňajú pasívny výber tunera bez preladenia, oddelenie výsledku testu internetu od zlyhania aktualizačného servera, rozpoznanie výpadkov zámku, anonymný výstup s povolenými diagnostickými hodnotami a meranie rozmerov 3 024 preložených ovládacích prvkov. Kontrola odhalila príliš dlhý ruský popis živých meraní. Nasleduje kontrola presného HEAD a publikácia po úspechu.
+
 # 26. 11. 2026 · príprava publikácie 0.41.5
 
 PR #16, commit 66e2962371ad71ed042fa0f7ee5aa49e79f98ff9. OpenATV 45780291483, OpenPLi 45780291593, reprodukcia a migrácia 45780291413 aj inštalátor 45780291582 uspeli. Lokálne 458 testov. Pri prvom zostavení emulátorových testov (45780291482) chýbali hlavičky cieľovej libc. Doplnené sú explicitné závislosti pre každú ABI a kontrola natívnych rozhraní OpenBH. Emuláciu evidujeme oddelene od meraní na fyzickom prijímači.

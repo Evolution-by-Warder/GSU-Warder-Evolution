@@ -95,6 +95,7 @@ def diagnostics(tr, cancelled, probe=None, opener=None):
     if cancelled.is_set():
         return ''
     start = time.monotonic()
+    feed_online = False
     try:
         with (opener or _open)(MODERN_FEED_URL, timeout=4) as remote:
             if remote.geturl() != MODERN_FEED_URL:
@@ -103,9 +104,27 @@ def diagnostics(tr, cancelled, probe=None, opener=None):
             if len(payload) > 65536:
                 raise ValueError('oversize')
             parse_release(payload, '13.41-r6', 'stable-modern')
+        feed_online = True
         lines.append('GSU HTTPS   OK   %.0f ms' % ((time.monotonic()-start)*1000))
     except (OSError, ValueError):
         lines.append('GSU HTTPS   '+tr('Unavailable'))
+    if cancelled.is_set():
+        return ''
+    official_site = 'https://warder-evolution.eu/'
+    try:
+        with (opener or _open)(official_site,timeout=4) as web:
+            site_online = web.geturl()==official_site and bool(web.read(1))
+    except (OSError,ValueError):
+        site_online = False
+    lines.append('warder-evolution.eu   '+('OK' if site_online else tr('Unavailable')))
+    if feed_online or site_online:
+        lines.append(tr('Internet reachable'))
+    elif gateway and response and response[0] < 100:
+        lines.append(tr('Gateway reachable; external checks failed'))
+    elif data['interfaces'] and all(i['state']=='down' for i in data['interfaces']):
+        lines.append(tr('No active link detected'))
+    else:
+        lines.append(tr('Not exposed'))
     table = p.text('/proc/mounts', 65536).splitlines()
     count = sum(1 for line in table if len(line.split()) > 2 and line.split()[2] in ('nfs','nfs4','cifs','smbfs','fuse.sshfs'))
     lines.append(tr('Network mounts')+'   '+str(count))

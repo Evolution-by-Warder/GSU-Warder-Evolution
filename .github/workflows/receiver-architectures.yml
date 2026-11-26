@@ -59,8 +59,9 @@ jobs:
           zlib="$RUNNER_TEMP/zlib"
           (cd upstream/zlib && CFLAGS="-O2 -fPIC" ./configure --static --prefix="$zlib" && make -j4 && make install)
           cd upstream/cpython
-          CPPFLAGS="-I$zlib/include" LDFLAGS="-L$zlib/lib" ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no ./configure --build="$(gcc -dumpmachine)" --host="$ABI" --with-build-python="$(command -v python)"
+          CPPFLAGS="-I$zlib/include" LDFLAGS="-L$zlib/lib" ac_cv_buggy_getaddrinfo=no ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no ./configure --build="$(gcc -dumpmachine)" --host="$ABI" --with-build-python="$(command -v python)"
           make -j4 >"$RUNNER_TEMP/build.log" 2>&1 || { tail -100 "$RUNNER_TEMP/build.log"; exit 1; }
+          "qemu-$EMULATOR" -L "/usr/$ABI" ./python -c 'import socket; assert all(socket.getaddrinfo(ip,0,f,socket.SOCK_STREAM,0,socket.AI_NUMERICHOST) for f,ip in ((socket.AF_INET,"127.0.0.1"),(socket.AF_INET6,"::1")))'
           "qemu-$EMULATOR" -L "/usr/$ABI" ./python "$GITHUB_WORKSPACE/compatibility/benchmark-diagnostics.py"
   openbh:
     name: Native OpenBH diagnostic interfaces
@@ -81,3 +82,8 @@ jobs:
         with:
           python-version: '3.14'
       - run: python compatibility/check-diagnostic-interfaces.py upstream/openbh
+      - name: Measure translated controls in all four TV layouts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends python3-pil fonts-dejavu-core fonts-noto-cjk
+          /usr/bin/python3 compatibility/check-diagnostic-text.py

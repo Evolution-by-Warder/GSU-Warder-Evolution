@@ -11,11 +11,21 @@ def read_frontend(service):
         return {}
 
 
-def details(session, api, tr):
+def slots():
+    from Components.NimManager import nimmanager
+    return [(slot.getSlotName(), slot.slot) for slot in getattr(nimmanager,'nim_slots',())
+            if type(getattr(slot,'slot',None)) is int]
+
+
+def details(session, api, tr, slot_number=None):
     from Components.NimManager import nimmanager
     nav = session.nav
     service = nav.getCurrentService()
     data = read_frontend(service)
+    current_slot = data.get('tuner_number')
+    show_current = slot_number is None or slot_number==current_slot
+    if not show_current:
+        data = {}
     try:
         human = api['ConvertToHumanReadable'](dict(data)) if data else {}
     except (KeyError, TypeError, ValueError, AttributeError):
@@ -37,7 +47,7 @@ def details(session, api, tr):
     rows.extend(('', tr('Recordings')+'   '+('—' if count is None else str(count))))
     for slot in getattr(nimmanager, 'nim_slots', []):
         number = getattr(slot, 'slot', None)
-        if type(number) is not int:
+        if type(number) is not int or (slot_number is not None and slot_number!=number):
             continue
         state = []
         if number == data.get('tuner_number'):
@@ -47,8 +57,21 @@ def details(session, api, tr):
         fbc = getattr(slot, 'isFBC', None) or getattr(slot, 'isFBCTuner', None)
         if callable(fbc) and fbc():
             state.append('FBC')
+        for method,label in (('isFBCRoot','FBC root'),('isFBCLink','FBC link')):
+            flag=getattr(slot,method,None)
+            if callable(flag) and flag():
+                state.append(label)
         rows.append('%s    %s' % (slot.getSlotName(), ' · '.join(state) or '—'))
-    if service:
+        if slot_number is not None:
+            description=getattr(slot,'getFriendlyFullDescription',None)
+            if callable(description):
+                rows.append(str(description()))
+            types=getattr(slot,'getTunerTypesEnabled',None)
+            if callable(types):
+                values=types()
+                if isinstance(values,(list,tuple,set)):
+                    rows.append(' / '.join(str(v) for v in values))
+    if service and show_current:
         info = service.info()
         enum = api['iServiceInformation']
         for name, label in [('sVideoPID','Video PID'), ('sAudioPID','Audio PID'), ('sPCRPID','PCR PID'),
@@ -60,7 +83,13 @@ def details(session, api, tr):
                     if name == 'sGamma':
                         value = {0:'SDR', 1:'HDR', 2:'HDR10', 3:'HLG'}.get(value, value)
                     rows.append('%s   %s' % (label, value))
+        tracks = getattr(service,'audioTracks',lambda:None)()
+        if tracks and 0 <= tracks.getCurrentTrack() < tracks.getNumberOfTracks():
+            audio = tracks.getTrackInfo(tracks.getCurrentTrack())
+            rows.append('Audio   '+str(audio.getDescription())+'   '+str(audio.getLanguage()))
     from .warder_tools import Probe
+    if not show_current:
+        return '\n'.join(rows).strip() or tr('Unavailable')
     p = Probe()
     for label, path in [('HDMI', '/proc/stb/video/videomode'), ('HDMI · OUT', '/proc/stb/hdmi/output'),
                         ('HDMI · HDR', '/proc/stb/video/hdmi_hdrtype'), ('HDMI · PCM', '/proc/stb/audio/multichannel_pcm')]:

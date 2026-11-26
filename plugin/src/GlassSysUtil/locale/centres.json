@@ -71,7 +71,12 @@
     "Picons": "Picons",
     "Swap": "Swap",
     "Recording or channel-list protection stopped the scan.": "Recording or channel-list protection stopped the scan.",
-    "Verified channel backup": "Verified channel backup"
+    "Verified channel backup": "Verified channel backup",
+    "Overview": "Overview",
+    "Internet reachable": "Internet reachable",
+    "Gateway reachable; external checks failed": "Gateway reachable; external checks failed",
+    "Unstable reception": "Unstable reception",
+    "No signal lock": "No signal lock"
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -145,7 +150,12 @@
     "Picons": "Picony",
     "Swap": "Odkladacia pamäť",
     "Recording or channel-list protection stopped the scan.": "Kontrola nahrávania alebo ochrana zoznamu staníc zabránila spusteniu ladenia.",
-    "Verified channel backup": "Overená záloha staníc"
+    "Verified channel backup": "Overená záloha staníc",
+    "Overview": "Prehľad",
+    "Internet reachable": "Internet je dostupný",
+    "Gateway reachable; external checks failed": "Brána odpovedá, externé kontroly zlyhali",
+    "Unstable reception": "Nestabilný príjem",
+    "No signal lock": "Signál bez zámku"
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -219,7 +229,12 @@
     "Picons": "Pikony",
     "Swap": "Odkládací paměť",
     "Recording or channel-list protection stopped the scan.": "Ladění zastavila ochrana nahrávání nebo seznamu stanic.",
-    "Verified channel backup": "Ověřená záloha stanic"
+    "Verified channel backup": "Ověřená záloha stanic",
+    "Overview": "Přehled",
+    "Internet reachable": "Internet je dostupný",
+    "Gateway reachable; external checks failed": "Brána odpovídá, vnější kontroly selhaly",
+    "Unstable reception": "Nestabilní příjem",
+    "No signal lock": "Signál bez zámku"
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -293,7 +308,12 @@
     "Picons": "Senderlogos",
     "Swap": "Auslagerungsspeicher",
     "Recording or channel-list protection stopped the scan.": "Der Aufnahme- oder Senderlistenschutz verhindert den Suchlauf.",
-    "Verified channel backup": "Geprüfte Senderlistensicherung"
+    "Verified channel backup": "Geprüfte Senderlistensicherung",
+    "Overview": "Übersicht",
+    "Internet reachable": "Internet erreichbar",
+    "Gateway reachable; external checks failed": "Gateway erreichbar, externe Prüfungen fehlgeschlagen",
+    "Unstable reception": "Instabiler Empfang",
+    "No signal lock": "Kein Signallock"
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -367,7 +387,12 @@
     "Picons": "Pikony",
     "Swap": "Pamięć wymiany",
     "Recording or channel-list protection stopped the scan.": "Ochrona nagrań lub listy kanałów zablokowała skanowanie.",
-    "Verified channel backup": "Zweryfikowana kopia kanałów"
+    "Verified channel backup": "Zweryfikowana kopia kanałów",
+    "Overview": "Przegląd",
+    "Internet reachable": "Internet jest dostępny",
+    "Gateway reachable; external checks failed": "Brama odpowiada, testy zewnętrzne nie powiodły się",
+    "Unstable reception": "Niestabilny odbiór",
+    "No signal lock": "Brak synchronizacji sygnału"
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -441,7 +466,12 @@
     "Picons": "Csatornalogók",
     "Swap": "Lapozóterület",
     "Recording or channel-list protection stopped the scan.": "A felvétel vagy a csatornalista védelme megállította a keresést.",
-    "Verified channel backup": "Ellenőrzött csatornamentés"
+    "Verified channel backup": "Ellenőrzött csatornamentés",
+    "Overview": "Áttekintés",
+    "Internet reachable": "Az internet elérhető",
+    "Gateway reachable; external checks failed": "Az átjáró elérhető, a külső tesztek sikertelenek",
+    "Unstable reception": "Ingadozó vétel",
+    "No signal lock": "Nincs jelzár"
   },
   "ru": {
     "System centre": "Системный центр",
@@ -465,7 +495,7 @@
     "Not exposed": "Нет данных",
     "Default gateway": "Основной шлюз",
     "DNS configuration": "Настройки DNS",
-    "Live monitoring": "Измерения в реальном времени",
+    "Live monitoring": "Текущие измерения",
     "Signal history": "История сигнала",
     "Tuner interfaces": "Тюнеры",
     "Tuner setup": "Настройка тюнера",
@@ -515,7 +545,12 @@
     "Picons": "Пиконы",
     "Swap": "Подкачка",
     "Recording or channel-list protection stopped the scan.": "Поиск остановлен для защиты записи или списка каналов.",
-    "Verified channel backup": "Проверенная копия каналов"
+    "Verified channel backup": "Проверенная копия каналов",
+    "Overview": "Обзор",
+    "Internet reachable": "Интернет доступен",
+    "Gateway reachable; external checks failed": "Шлюз доступен, внешние проверки не пройдены",
+    "Unstable reception": "Нестабильный приём",
+    "No signal lock": "Нет захвата сигнала"
   },
   "fr": {
     "System centre": "Centre système",
@@ -589,7 +624,12 @@
     "Picons": "Logos des chaînes",
     "Swap": "Mémoire d’échange",
     "Recording or channel-list protection stopped the scan.": "La protection des enregistrements ou de la liste des chaînes a bloqué la recherche.",
-    "Verified channel backup": "Sauvegarde des chaînes vérifiée"
+    "Verified channel backup": "Sauvegarde des chaînes vérifiée",
+    "Overview": "Vue d’ensemble",
+    "Internet reachable": "Internet accessible",
+    "Gateway reachable; external checks failed": "Passerelle accessible, échec des tests externes",
+    "Unstable reception": "Réception instable",
+    "No signal lock": "Signal non verrouillé"
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -663,7 +703,12 @@
     "Picons": "Loghi dei canali",
     "Swap": "Memoria di scambio",
     "Recording or channel-list protection stopped the scan.": "La protezione delle registrazioni o dei canali ha bloccato la scansione.",
-    "Verified channel backup": "Backup dei canali verificato"
+    "Verified channel backup": "Backup dei canali verificato",
+    "Overview": "Panoramica",
+    "Internet reachable": "Internet raggiungibile",
+    "Gateway reachable; external checks failed": "Gateway raggiungibile, test esterni falliti",
+    "Unstable reception": "Ricezione instabile",
+    "No signal lock": "Segnale non agganciato"
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -737,7 +782,12 @@
     "Picons": "Logotipos de canales",
     "Swap": "Memoria de intercambio",
     "Recording or channel-list protection stopped the scan.": "La protección de grabaciones o de la lista de canales ha detenido la búsqueda.",
-    "Verified channel backup": "Copia de canales verificada"
+    "Verified channel backup": "Copia de canales verificada",
+    "Overview": "Resumen",
+    "Internet reachable": "Internet disponible",
+    "Gateway reachable; external checks failed": "La puerta de enlace responde, fallaron las pruebas externas",
+    "Unstable reception": "Recepción inestable",
+    "No signal lock": "Sin enganche de señal"
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -811,7 +861,12 @@
     "Picons": "Logot e kanaleve",
     "Swap": "Memoria e shkëmbimit",
     "Recording or channel-list protection stopped the scan.": "Mbrojtja e regjistrimit ose e listës së kanaleve ndaloi kërkimin.",
-    "Verified channel backup": "Kopje e verifikuar e kanaleve"
+    "Verified channel backup": "Kopje e verifikuar e kanaleve",
+    "Overview": "Përmbledhje",
+    "Internet reachable": "Interneti është i arritshëm",
+    "Gateway reachable; external checks failed": "Porta përgjigjet, kontrollet e jashtme dështuan",
+    "Unstable reception": "Marrje e paqëndrueshme",
+    "No signal lock": "Sinjali nuk është sinkronizuar"
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -885,7 +940,12 @@
     "Picons": "Λογότυπα καναλιών",
     "Swap": "Μνήμη εναλλαγής",
     "Recording or channel-list protection stopped the scan.": "Η προστασία εγγραφών ή λίστας καναλιών εμπόδισε τη σάρωση.",
-    "Verified channel backup": "Επαληθευμένο αντίγραφο καναλιών"
+    "Verified channel backup": "Επαληθευμένο αντίγραφο καναλιών",
+    "Overview": "Επισκόπηση",
+    "Internet reachable": "Το διαδίκτυο είναι προσβάσιμο",
+    "Gateway reachable; external checks failed": "Η πύλη ανταποκρίνεται, οι εξωτερικοί έλεγχοι απέτυχαν",
+    "Unstable reception": "Ασταθής λήψη",
+    "No signal lock": "Χωρίς κλείδωμα σήματος"
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -959,7 +1019,12 @@
     "Picons": "Kanalilogod",
     "Swap": "Saaleala",
     "Recording or channel-list protection stopped the scan.": "Salvestise või kanaliloendi kaitse peatas otsingu.",
-    "Verified channel backup": "Kontrollitud kanalite varukoopia"
+    "Verified channel backup": "Kontrollitud kanalite varukoopia",
+    "Overview": "Ülevaade",
+    "Internet reachable": "Internet on kättesaadav",
+    "Gateway reachable; external checks failed": "Lüüs vastab, välised kontrollid ebaõnnestusid",
+    "Unstable reception": "Ebastabiilne vastuvõtt",
+    "No signal lock": "Signaal pole lukustunud"
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -1033,7 +1098,12 @@
     "Picons": "نشان‌های کانال",
     "Swap": "حافظهٔ مبادله",
     "Recording or channel-list protection stopped the scan.": "برای محافظت از ضبط یا فهرست کانال‌ها، جست‌وجو متوقف شد.",
-    "Verified channel backup": "نسخهٔ پشتیبان تأییدشدهٔ کانال‌ها"
+    "Verified channel backup": "نسخهٔ پشتیبان تأییدشدهٔ کانال‌ها",
+    "Overview": "نمای کلی",
+    "Internet reachable": "اینترنت در دسترس است",
+    "Gateway reachable; external checks failed": "دروازه پاسخ می‌دهد، بررسی‌های بیرونی ناموفق بود",
+    "Unstable reception": "دریافت ناپایدار",
+    "No signal lock": "سیگنال قفل نشده است"
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -1107,7 +1177,12 @@
     "Picons": "Kanalų logotipai",
     "Swap": "Sukeitimo atmintis",
     "Recording or channel-list protection stopped the scan.": "Įrašų arba kanalų sąrašo apsauga sustabdė paiešką.",
-    "Verified channel backup": "Patikrinta kanalų atsarginė kopija"
+    "Verified channel backup": "Patikrinta kanalų atsarginė kopija",
+    "Overview": "Apžvalga",
+    "Internet reachable": "Internetas pasiekiamas",
+    "Gateway reachable; external checks failed": "Tinklų sietuvas atsako, išorinės patikros nepavyko",
+    "Unstable reception": "Nestabilus priėmimas",
+    "No signal lock": "Signalas neužfiksuotas"
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -1181,7 +1256,12 @@
     "Picons": "Zenderlogo’s",
     "Swap": "Wisselgeheugen",
     "Recording or channel-list protection stopped the scan.": "Beveiliging van opnamen of zenderlijsten heeft de zoekactie gestopt.",
-    "Verified channel backup": "Geverifieerde zenderback-up"
+    "Verified channel backup": "Geverifieerde zenderback-up",
+    "Overview": "Overzicht",
+    "Internet reachable": "Internet bereikbaar",
+    "Gateway reachable; external checks failed": "Gateway bereikbaar, externe controles mislukt",
+    "Unstable reception": "Onstabiele ontvangst",
+    "No signal lock": "Geen signaalvergrendeling"
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -1255,7 +1335,12 @@
     "Picons": "Logótipos dos canais",
     "Swap": "Memória de troca",
     "Recording or channel-list protection stopped the scan.": "A proteção de gravações ou da lista de canais bloqueou a pesquisa.",
-    "Verified channel backup": "Cópia dos canais verificada"
+    "Verified channel backup": "Cópia dos canais verificada",
+    "Overview": "Visão geral",
+    "Internet reachable": "Internet acessível",
+    "Gateway reachable; external checks failed": "O gateway responde, os testes externos falharam",
+    "Unstable reception": "Receção instável",
+    "No signal lock": "Sem sincronização de sinal"
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -1329,7 +1414,12 @@
     "Picons": "Sigle de canale",
     "Swap": "Memorie de schimb",
     "Recording or channel-list protection stopped the scan.": "Protecția înregistrărilor sau a listei de canale a oprit scanarea.",
-    "Verified channel backup": "Copie verificată a canalelor"
+    "Verified channel backup": "Copie verificată a canalelor",
+    "Overview": "Prezentare generală",
+    "Internet reachable": "Internet accesibil",
+    "Gateway reachable; external checks failed": "Gateway-ul răspunde, verificările externe au eșuat",
+    "Unstable reception": "Recepție instabilă",
+    "No signal lock": "Fără sincronizare de semnal"
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -1403,7 +1493,12 @@
     "Picons": "Kanal logoları",
     "Swap": "Takas alanı",
     "Recording or channel-list protection stopped the scan.": "Kayıt veya kanal listesi koruması taramayı durdurdu.",
-    "Verified channel backup": "Doğrulanmış kanal yedeği"
+    "Verified channel backup": "Doğrulanmış kanal yedeği",
+    "Overview": "Genel bakış",
+    "Internet reachable": "İnternete erişilebiliyor",
+    "Gateway reachable; external checks failed": "Ağ geçidi yanıt verdi, dış denetimler başarısız",
+    "Unstable reception": "Kararsız sinyal alımı",
+    "No signal lock": "Sinyal kilidi yok"
   },
   "uk": {
     "System centre": "Системний центр",
@@ -1477,7 +1572,12 @@
     "Picons": "Пікони",
     "Swap": "Пам’ять підкачування",
     "Recording or channel-list protection stopped the scan.": "Захист записів або списку каналів зупинив пошук.",
-    "Verified channel backup": "Перевірена копія каналів"
+    "Verified channel backup": "Перевірена копія каналів",
+    "Overview": "Огляд",
+    "Internet reachable": "Інтернет доступний",
+    "Gateway reachable; external checks failed": "Шлюз відповідає, зовнішні перевірки не вдалися",
+    "Unstable reception": "Нестабільний прийом",
+    "No signal lock": "Немає захоплення сигналу"
   },
   "zh": {
     "System centre": "系统中心",
@@ -1551,6 +1651,11 @@
     "Picons": "频道图标",
     "Swap": "交换空间",
     "Recording or channel-list protection stopped the scan.": "为保护录制或频道列表，扫描已停止。",
-    "Verified channel backup": "已校验的频道备份"
+    "Verified channel backup": "已校验的频道备份",
+    "Overview": "概览",
+    "Internet reachable": "互联网可达",
+    "Gateway reachable; external checks failed": "网关可达，外部检测失败",
+    "Unstable reception": "接收不稳定",
+    "No signal lock": "信号未锁定"
   }
 }

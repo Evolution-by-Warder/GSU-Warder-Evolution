@@ -87,11 +87,12 @@ class Report(Screen):
         self.pending = False
         self.preview = None
         self.services = []
+        self.slot_number = None
         self.cpu_order = False
         self.history = []
         self['file_info'] = ScrollLabel('')
         for name, key in [('heading',title), ('red','Back'), ('green','TV' if kind == 'transponder-services' else ''), ('yellow','Refresh'),
-                          ('blue','Radio' if kind == 'transponder-services' else 'Save' if kind == 'forum-report' else 'CPU / RAM' if kind == 'system-processes' else '')]:
+                          ('blue','Tuner interfaces' if kind == 'tuner-details' else 'Radio' if kind == 'transponder-services' else 'Save' if kind == 'forum-report' else 'CPU / RAM' if kind == 'system-processes' else '')]:
             self[name] = Label(self.tr(key))
         self['actions'] = ActionMap(['ColorActions','SetupActions','DirectionActions'],
             {'red':self.close,'cancel':self.close,'yellow':self.start,'blue':self.action,'green':lambda:self.export_services('tv'),
@@ -121,7 +122,7 @@ class Report(Screen):
         elif self.kind == 'tuner-details':
             from .warder_tuners import details
             try:
-                self.done(details(self.session, self.api, self.tr))
+                self.done(details(self.session, self.api, self.tr, self.slot_number))
             except (AttributeError, RuntimeError, TypeError, OSError, ImportError):
                 self.failed(None)
         else:
@@ -186,6 +187,15 @@ class Report(Screen):
             return
         if self.kind == 'transponder-services':
             self.export_services('radio')
+        elif self.kind == 'tuner-details':
+            from .warder_tuners import slots
+            from Screens.ChoiceBox import ChoiceBox
+            def selected(item):
+                if item and not self.cancelled.is_set():
+                    self.slot_number = item[1]
+                    self.start()
+            self.session.openWithCallback(selected,ChoiceBox,title=self.tr('Tuner interfaces'),
+                                          list=[(self.tr('Overview'),None)]+slots())
         elif self.kind == 'system-processes':
             self.cpu_order = not self.cpu_order
             self.start()

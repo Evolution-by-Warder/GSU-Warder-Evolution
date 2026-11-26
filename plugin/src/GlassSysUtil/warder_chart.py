@@ -112,7 +112,12 @@ class LiveChart(Screen):
         stats = '%s  %s     %s  %s     %s  %s' % (self.tr('Minimum'), display(low, key),
                    self.tr('Maximum'), display(high, key), self.tr('Average'), display(mean, key))
         if self.signal:
-            stats += '\n%s  %d' % (self.tr('Lock losses'), lock_losses(samples))
+            losses=lock_losses(samples)
+            stats += '\n%s  %d' % (self.tr('Lock losses'),losses)
+            if losses:
+                stats += '   ·   '+self.tr('Unstable reception')
+            elif samples and samples[-1][1].get('lock')==0:
+                stats += '   ·   '+self.tr('No signal lock')
         self['details'].setText(stats)
         self['yellow'].setText('%s · %d s' % (self.tr('Interval'), self.interval))
         draw(self['history'], samples, key, round(1730*self.width/1920), round(330*self.height/1080),

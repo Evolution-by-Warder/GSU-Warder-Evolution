@@ -7,12 +7,27 @@ from . import install_health
 from .warder_system_data import overview
 from .warder_tools import Probe, read
 
-# Export only schema-defined numeric resource values. No strings from the receiver.
+# Each exported receiver value is a bounded number or an enumerated label.
 def forum_snapshot(probe=None):
-    result = overview(probe or Probe())
-    return {'schema': 1, 'available_percent': {
-        item['name']: round(item['available_percent'], 1) if item['available_percent'] is not None else None
-        for item in result['checks'] if item['name'] in ('RAM', 'Flash')}}
+    import platform
+    import sys
+    from pathlib import Path
+    p = probe or Probe()
+    result = overview(p)
+    memory = result.get('memory',{})
+    arch = platform.machine().lower()
+    arch = arch if arch in ('aarch64','armv7l','armv6l','mips','mipsel','mips64','mips64el','x86_64') else None
+    version = read(Path(__file__).with_name('version'),64)
+    values = {item['name']:round(item['available_percent'],1) if item['available_percent'] is not None else None
+              for item in result['checks'] if item['name'] in ('RAM','Flash')}
+    total, free = memory.get('swap_total'),memory.get('swap_free')
+    if total and free is not None and 0<=free<=total:
+        values['Swap'] = round(100*free/total,1)
+    temperatures = p.temperatures(p.sensor_paths())
+    return {'schema':2,'gsu':version if re.fullmatch(r'[0-9]+(?:\.[0-9]+){2}',version) else None,
+            'python':list(sys.version_info[:2]),'architecture':arch,'available_percent':values,
+            'temperature_c':max((s['celsius'] for s in temperatures),default=None),
+            'crash_classes':crash_summary(p)}
 
 
 def save_preview(preview, directory='/tmp'):
