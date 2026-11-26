@@ -1,3 +1,7 @@
+# 26.11.2026 — Warder project version dashboard
+
+Exact predecessor `c349f9e930a47a0511688743b5eddde5dcf65cea` passed all four workflow families (OpenATV, OpenPLi, architectures and reproducible IPK). Existing project reader supports two inline columns for versions/status and release notes, and five-row structured overview table. Existing per-project reports and canonical updater actions retained; no new update mechanism or extra feed reads. Added two localized captions to all 21 catalogues and regressions for rendering, unknowns, error cleanup and viewport bounds. Fresh exact-head CI and receiver retest required. No production change.
+
 # 26.11.2026 — Inline service and Smart Diagnostics panels
 
 Smart Diagnostics now presents existing resource checks, coverage, local network and sensor data alongside installation checks and diagnostic limitations. Installation check shows package/integrity results next to crash observations and existing recommendations. Shared collectors and two-column UI, no new score, active probe, export or repair. Existing detailed report format preserved; existing translations reused. Added provider and inline lifecycle regression coverage. Exact-head CI and physical retest pending; no production changes.

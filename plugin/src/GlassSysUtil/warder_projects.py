@@ -99,10 +99,11 @@ def read_feed(url, opener):
     return raw
 
 
-def report(tr, language, cancelled, opener=_open, projects=None, compact=False):
+def report(tr, language, cancelled, opener=_open, projects=None, compact=False, presentation=None):
     from .warder_package_status import database, dependency_state
     records, manager = database()
     lines = []
+    table = []
     for project in PROJECTS if projects is None else projects:
         if cancelled.is_set():
             break
@@ -119,20 +120,30 @@ def report(tr, language, cancelled, opener=_open, projects=None, compact=False):
             available = item[0] if item else tr('None')
         except (ValueError, TypeError, KeyError, AttributeError, OSError, URLError):
             item, available = None, tr('Unavailable')
-        lines.extend((name, '', '%s    %s' % (tr('Installed version'),current or '—'),
-                      '%s    %s' % (tr('Stable version'),available)))
+        if cancelled.is_set():return ''
+        status=tr('Unavailable')
         if item and current:
-            try:
-                lines.append(tr(status_label(name,current,item[0])))
-            except ValueError:
-                lines.append(tr('Unavailable'))
+            try:status=tr(status_label(name,current,item[0]))
+            except ValueError:pass
+        table.append((name,current or '—',available,status))
+        if presentation=='table':continue
+        first=['%s    %s' % (tr('Installed version'),current or '—'),
+               '%s    %s' % (tr('Stable version'),available)]
+        if item and current:first.append(status)
+        lines.extend((name, '', *first))
         if record and not compact:
             lines.append('')
             lines.append(tr('Package dependencies')+'   '+tr(dependency_state(project[4],records,manager)))
             lines.append(tr('Architecture')+'   '+record.get('Architecture','—'))
+        if presentation=='panels':
+            if cancelled.is_set():return ''
+            if not (item and current):lines.extend(('',tr('Status')+'   '+status))
+            return ('\n'.join(lines[2:]),item[1] if item and item[1] else '—')
         if item and item[1] and not compact:
             lines.extend(('',item[1]))
         lines.append('')
+    if cancelled.is_set():return ''
+    if presentation=='table':return table
     return '\n'.join(lines)
 
 

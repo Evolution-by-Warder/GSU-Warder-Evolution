@@ -162,6 +162,15 @@ def skin(width, height, mode):
                         transparent='0',zPosition='5')
                 label('category_size%d'%i,1140,y+5,290,70,29,'#00ffffff',halign='right',valign='center',noWrap='1')
                 label('category_state%d'%i,1450,y+5,320,70,24,'#00bcd2df',valign='center',noWrap='1')
+        if mode=='project-overview':
+            columns=((24,460),(510,410),(946,410),(1380,280))
+            for col,(offset,span) in enumerate(columns):
+                label('project_column%d'%col,116+offset,372,span,54,28,style.CYAN,noWrap='1',valign='center')
+            for row in range(5):
+                y=438+row*88
+                element('eLabel',116,y,1680,78,backgroundColor='#00203548' if row%2==0 else '#00172539',zPosition='-1')
+                for col,(offset,span) in enumerate(columns):
+                    label('project_%d_%d'%(row,col),116+offset,y+6,span,66,30 if col==0 else 28,'#00ffffff',noWrap='1',valign='center')
         if mode=='process':
             # Fixed columns in the same coordinate space as the row renderer.
             element('eLabel',116,369,1680,49,backgroundColor='#00243b50',zPosition='-1')

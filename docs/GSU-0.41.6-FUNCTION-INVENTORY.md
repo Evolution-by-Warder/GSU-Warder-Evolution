@@ -76,3 +76,7 @@ Ostré vydanie blokuje neukončené CI presného HEAD a požadovaný fyzický re
 ### Servisné centrum — pravý panel
 
 - Smart Diagnostics zobrazuje naľavo zdroje, pokrytie meraní, lokálnu sieť a teplotu, napravo kontrolu inštalácie, odporúčania z výnimiek a hranice diagnostiky. Kontrola inštalácie má samostatné stĺpce pre GSU/závislosti a crashlogy/odporúčania. Zdieľané dvojstĺpcové widgety a pôvodné zbery bez novej kontroly, skóre alebo exportu. Pôvodné podrobné textové reporty zachované. Využité preklady 21 katalógov. Pridané regresie obsahu, pokrytia, zrušenia, prepnutia a prázdneho výsledku; aktuálne CI a fyzický retest zostávajú otvorené.
+
+### Centrum Warder Evolution — grafický prehľad
+
+- Automatický pravý panel produktu má verzie, stav a dostupné metadáta oddelené od poznámok k vydaniu. Spoločný prehľad piatich produktov má natívnu tabuľku názov/nainštalovaná/stabilná/stav. Neznáme údaje sa nevydávajú za aktuálne. Zdieľaný čítač manifestov, jeden zber na požiadavku, pôvodné detailné reporty a aktualizátory zachované. Dva nové jazykové kľúče vo všetkých 21 katalógoch. Regresie pre formáty, zber, neznáme hodnoty, chybu a rozlíšenia. Fyzické overenie a CI nového HEAD otvorené.

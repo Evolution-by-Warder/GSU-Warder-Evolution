@@ -117,7 +117,9 @@
     "EPG": "EPG",
     "Largest files": "Largest files",
     "Selected local folders only": "Selected local folders only",
-    "Press OK to scan selected local folders. No files are changed.": "Press OK to scan selected local folders. No files are changed."
+    "Press OK to scan selected local folders. No files are changed.": "Press OK to scan selected local folders. No files are changed.",
+    "Release notes": "Release notes",
+    "Status": "Status"
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -237,7 +239,9 @@
     "EPG": "EPG",
     "Largest files": "Najväčšie súbory",
     "Selected local folders only": "Len vybrané lokálne priečinky",
-    "Press OK to scan selected local folders. No files are changed.": "Stlačením OK prehľadáte vybrané lokálne priečinky. Žiadne súbory sa nemenia."
+    "Press OK to scan selected local folders. No files are changed.": "Stlačením OK prehľadáte vybrané lokálne priečinky. Žiadne súbory sa nemenia.",
+    "Release notes": "Poznámky k vydaniu",
+    "Status": "Stav"
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -357,7 +361,9 @@
     "EPG": "EPG",
     "Largest files": "Největší soubory",
     "Selected local folders only": "Pouze vybrané místní složky",
-    "Press OK to scan selected local folders. No files are changed.": "Stisknutím OK prohledáte vybrané místní složky. Žádné soubory se nemění."
+    "Press OK to scan selected local folders. No files are changed.": "Stisknutím OK prohledáte vybrané místní složky. Žádné soubory se nemění.",
+    "Release notes": "Poznámky k vydání",
+    "Status": "Stav"
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -477,7 +483,9 @@
     "EPG": "EPG",
     "Largest files": "Größte Dateien",
     "Selected local folders only": "Nur ausgewählte lokale Ordner",
-    "Press OK to scan selected local folders. No files are changed.": "OK drücken, um ausgewählte lokale Ordner zu durchsuchen. Es werden keine Dateien geändert."
+    "Press OK to scan selected local folders. No files are changed.": "OK drücken, um ausgewählte lokale Ordner zu durchsuchen. Es werden keine Dateien geändert.",
+    "Release notes": "Versionshinweise",
+    "Status": "Status"
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -597,7 +605,9 @@
     "EPG": "EPG",
     "Largest files": "Największe pliki",
     "Selected local folders only": "Tylko wybrane foldery lokalne",
-    "Press OK to scan selected local folders. No files are changed.": "Naciśnij OK, aby przeszukać wybrane foldery lokalne. Żadne pliki nie są zmieniane."
+    "Press OK to scan selected local folders. No files are changed.": "Naciśnij OK, aby przeszukać wybrane foldery lokalne. Żadne pliki nie są zmieniane.",
+    "Release notes": "Informacje o wydaniu",
+    "Status": "Stan"
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -717,7 +727,9 @@
     "EPG": "EPG",
     "Largest files": "Legnagyobb fájlok",
     "Selected local folders only": "Csak kijelölt helyi mappák",
-    "Press OK to scan selected local folders. No files are changed.": "Az OK gombbal kereshet a kijelölt helyi mappákban. A fájlok nem módosulnak."
+    "Press OK to scan selected local folders. No files are changed.": "Az OK gombbal kereshet a kijelölt helyi mappákban. A fájlok nem módosulnak.",
+    "Release notes": "Kiadási megjegyzések",
+    "Status": "Állapot"
   },
   "ru": {
     "System centre": "Системный центр",
@@ -837,7 +849,9 @@
     "EPG": "EPG",
     "Largest files": "Крупнейшие файлы",
     "Selected local folders only": "Только выбранные локальные папки",
-    "Press OK to scan selected local folders. No files are changed.": "Нажмите OK для поиска в выбранных локальных папках. Файлы не изменяются."
+    "Press OK to scan selected local folders. No files are changed.": "Нажмите OK для поиска в выбранных локальных папках. Файлы не изменяются.",
+    "Release notes": "Примечания к выпуску",
+    "Status": "Состояние"
   },
   "fr": {
     "System centre": "Centre système",
@@ -957,7 +971,9 @@
     "EPG": "EPG",
     "Largest files": "Fichiers les plus volumineux",
     "Selected local folders only": "Dossiers locaux sélectionnés uniquement",
-    "Press OK to scan selected local folders. No files are changed.": "Appuyez sur OK pour analyser les dossiers locaux sélectionnés. Aucun fichier n’est modifié."
+    "Press OK to scan selected local folders. No files are changed.": "Appuyez sur OK pour analyser les dossiers locaux sélectionnés. Aucun fichier n’est modifié.",
+    "Release notes": "Notes de version",
+    "Status": "État"
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -1077,7 +1093,9 @@
     "EPG": "EPG",
     "Largest files": "File più grandi",
     "Selected local folders only": "Solo cartelle locali selezionate",
-    "Press OK to scan selected local folders. No files are changed.": "Premere OK per esaminare le cartelle locali selezionate. Nessun file viene modificato."
+    "Press OK to scan selected local folders. No files are changed.": "Premere OK per esaminare le cartelle locali selezionate. Nessun file viene modificato.",
+    "Release notes": "Note di rilascio",
+    "Status": "Stato"
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -1197,7 +1215,9 @@
     "EPG": "EPG",
     "Largest files": "Archivos más grandes",
     "Selected local folders only": "Solo carpetas locales seleccionadas",
-    "Press OK to scan selected local folders. No files are changed.": "Pulse OK para examinar las carpetas locales seleccionadas. No se modifica ningún archivo."
+    "Press OK to scan selected local folders. No files are changed.": "Pulse OK para examinar las carpetas locales seleccionadas. No se modifica ningún archivo.",
+    "Release notes": "Notas de la versión",
+    "Status": "Estado"
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -1317,7 +1337,9 @@
     "EPG": "EPG",
     "Largest files": "Skedarët më të mëdhenj",
     "Selected local folders only": "Vetëm dosjet lokale të zgjedhura",
-    "Press OK to scan selected local folders. No files are changed.": "Shtypni OK për të kontrolluar dosjet lokale të zgjedhura. Asnjë skedar nuk ndryshohet."
+    "Press OK to scan selected local folders. No files are changed.": "Shtypni OK për të kontrolluar dosjet lokale të zgjedhura. Asnjë skedar nuk ndryshohet.",
+    "Release notes": "Shënime të versionit",
+    "Status": "Gjendja"
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -1437,7 +1459,9 @@
     "EPG": "EPG",
     "Largest files": "Μεγαλύτερα αρχεία",
     "Selected local folders only": "Μόνο επιλεγμένοι τοπικοί φάκελοι",
-    "Press OK to scan selected local folders. No files are changed.": "Πατήστε OK για σάρωση των επιλεγμένων τοπικών φακέλων. Δεν αλλάζει κανένα αρχείο."
+    "Press OK to scan selected local folders. No files are changed.": "Πατήστε OK για σάρωση των επιλεγμένων τοπικών φακέλων. Δεν αλλάζει κανένα αρχείο.",
+    "Release notes": "Σημειώσεις έκδοσης",
+    "Status": "Κατάσταση"
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -1557,7 +1581,9 @@
     "EPG": "EPG",
     "Largest files": "Suurimad failid",
     "Selected local folders only": "Ainult valitud kohalikud kaustad",
-    "Press OK to scan selected local folders. No files are changed.": "Valitud kohalike kaustade skannimiseks vajutage OK. Faile ei muudeta."
+    "Press OK to scan selected local folders. No files are changed.": "Valitud kohalike kaustade skannimiseks vajutage OK. Faile ei muudeta.",
+    "Release notes": "Väljalaskemärkmed",
+    "Status": "Olek"
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -1677,7 +1703,9 @@
     "EPG": "EPG",
     "Largest files": "بزرگ‌ترین فایل‌ها",
     "Selected local folders only": "فقط پوشه‌های محلی منتخب",
-    "Press OK to scan selected local folders. No files are changed.": "برای بررسی پوشه‌های محلی منتخب، OK را فشار دهید. هیچ فایلی تغییر نمی‌کند."
+    "Press OK to scan selected local folders. No files are changed.": "برای بررسی پوشه‌های محلی منتخب، OK را فشار دهید. هیچ فایلی تغییر نمی‌کند.",
+    "Release notes": "یادداشت‌های انتشار",
+    "Status": "وضعیت"
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -1797,7 +1825,9 @@
     "EPG": "EPG",
     "Largest files": "Didžiausi failai",
     "Selected local folders only": "Tik pasirinkti vietiniai aplankai",
-    "Press OK to scan selected local folders. No files are changed.": "Paspauskite OK, kad patikrintumėte pasirinktus vietinius aplankus. Failai nekeičiami."
+    "Press OK to scan selected local folders. No files are changed.": "Paspauskite OK, kad patikrintumėte pasirinktus vietinius aplankus. Failai nekeičiami.",
+    "Release notes": "Laidos pastabos",
+    "Status": "Būsena"
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -1917,7 +1947,9 @@
     "EPG": "EPG",
     "Largest files": "Grootste bestanden",
     "Selected local folders only": "Alleen geselecteerde lokale mappen",
-    "Press OK to scan selected local folders. No files are changed.": "Druk op OK om geselecteerde lokale mappen te doorzoeken. Er worden geen bestanden gewijzigd."
+    "Press OK to scan selected local folders. No files are changed.": "Druk op OK om geselecteerde lokale mappen te doorzoeken. Er worden geen bestanden gewijzigd.",
+    "Release notes": "Versie-informatie",
+    "Status": "Status"
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -2037,7 +2069,9 @@
     "EPG": "EPG",
     "Largest files": "Maiores ficheiros",
     "Selected local folders only": "Apenas pastas locais selecionadas",
-    "Press OK to scan selected local folders. No files are changed.": "Prima OK para analisar as pastas locais selecionadas. Nenhum ficheiro é alterado."
+    "Press OK to scan selected local folders. No files are changed.": "Prima OK para analisar as pastas locais selecionadas. Nenhum ficheiro é alterado.",
+    "Release notes": "Notas da versão",
+    "Status": "Estado"
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -2157,7 +2191,9 @@
     "EPG": "EPG",
     "Largest files": "Cele mai mari fișiere",
     "Selected local folders only": "Numai dosarele locale selectate",
-    "Press OK to scan selected local folders. No files are changed.": "Apăsați OK pentru a scana dosarele locale selectate. Niciun fișier nu este modificat."
+    "Press OK to scan selected local folders. No files are changed.": "Apăsați OK pentru a scana dosarele locale selectate. Niciun fișier nu este modificat.",
+    "Release notes": "Note de lansare",
+    "Status": "Stare"
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -2277,7 +2313,9 @@
     "EPG": "EPG",
     "Largest files": "En büyük dosyalar",
     "Selected local folders only": "Yalnızca seçili yerel klasörler",
-    "Press OK to scan selected local folders. No files are changed.": "Seçili yerel klasörleri taramak için OK tuşuna basın. Hiçbir dosya değiştirilmez."
+    "Press OK to scan selected local folders. No files are changed.": "Seçili yerel klasörleri taramak için OK tuşuna basın. Hiçbir dosya değiştirilmez.",
+    "Release notes": "Sürüm notları",
+    "Status": "Durum"
   },
   "uk": {
     "System centre": "Системний центр",
@@ -2397,7 +2435,9 @@
     "EPG": "EPG",
     "Largest files": "Найбільші файли",
     "Selected local folders only": "Лише вибрані локальні папки",
-    "Press OK to scan selected local folders. No files are changed.": "Натисніть OK для сканування вибраних локальних папок. Файли не змінюються."
+    "Press OK to scan selected local folders. No files are changed.": "Натисніть OK для сканування вибраних локальних папок. Файли не змінюються.",
+    "Release notes": "Примітки до випуску",
+    "Status": "Стан"
   },
   "zh": {
     "System centre": "系统中心",
@@ -2517,6 +2557,8 @@
     "EPG": "EPG",
     "Largest files": "最大文件",
     "Selected local folders only": "仅限选定的本地文件夹",
-    "Press OK to scan selected local folders. No files are changed.": "按 OK 扫描选定的本地文件夹。不会修改任何文件。"
+    "Press OK to scan selected local folders. No files are changed.": "按 OK 扫描选定的本地文件夹。不会修改任何文件。",
+    "Release notes": "发行说明",
+    "Status": "状态"
   }
 }

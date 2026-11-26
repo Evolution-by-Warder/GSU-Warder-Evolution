@@ -654,6 +654,41 @@ class ReceiverRenderingTests(unittest.TestCase):
             self.assertTrue(menu['descriptions'].visible)
             self.assertEqual(menu['inline_process_list'].l.list,[])
 
+    def test_project_overview_table_and_inline_notes_keep_unknowns(self):
+        ui=self.ui
+        projects=mod('warder_projects')
+        session=MagicMock()
+        menu=ui.ProjectMenu(session,self.api)
+        menu.render()
+        with patch.object(ui,'deferToThread') as worker,patch.object(projects,'report',return_value=('Versions','Notes')) as provider:
+            menu.select()
+            value=worker.call_args.args[0]()
+            self.assertEqual(provider.call_args.kwargs['presentation'],'panels')
+            worker.return_value.addCallbacks.call_args.args[0](value)
+            self.assertTrue(menu.inline_network_visible)
+            self.assertEqual(menu['inline_network_body0'].getText(),'Versions')
+            self.assertEqual(menu['inline_network_body1'].getText(),'Notes')
+        view=ui.ProjectOverview(session,self.api)
+        rows=[(project[0],'—','0.1.2','Unavailable') for project in projects.PROJECTS]
+        view.done(rows)
+        self.assertFalse(view['file_info'].visible)
+        self.assertTrue(view['project_4_0'].visible)
+        self.assertEqual(view['project_4_0'].getText(),'GSU')
+        self.assertEqual(view['project_4_1'].getText(),'—')
+        self.assertEqual(view['project_4_3'].getText(),'Unavailable')
+        view.failed(None)
+        self.assertTrue(view['file_info'].visible)
+        self.assertFalse(view['project_4_0'].visible)
+        self.assertEqual(view['project_4_0'].getText(),'')
+        for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
+            root=ET.fromstring(mod('warder_dashboard').skin(w,h,'project-overview'))
+            for widget in root.findall('widget'):
+                if not widget.get('name','').startswith('project_'):continue
+                x,y=map(int,widget.get('position').split(','))
+                ww,hh=map(int,widget.get('size').split(','))
+                self.assertLessEqual(x+ww,w)
+                self.assertLessEqual(y+hh,h)
+
     def test_inline_service_panels_reuse_existing_providers(self):
         ui=self.ui
         from threading import Event

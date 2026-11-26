@@ -96,7 +96,7 @@ def preview_text(kind,value,tr):
                          '' if complete else ' · '+tr('Partial result')) for name,size,complete in value)
     if kind in ('network-overview','tuner-details','service-smart','service-health') and isinstance(value,tuple) and len(value)==2 and all(isinstance(v,str) for v in value):
         return '\n\n'.join(value)
-    if kind=='transponder-services' and isinstance(value,tuple) and len(value)==2 and all(isinstance(v,tuple) and len(v)==2 and all(isinstance(x,str) for x in v) for v in value):
+    if kind in ('transponder-services','FullHDGlass','PiconHub','Warder Radio','YouTube','GSU') and isinstance(value,tuple) and len(value)==2 and all(isinstance(v,tuple) and len(v)==2 and all(isinstance(x,str) for x in v) for v in value):
         return '\n\n'.join(title+'\n'+body for title,body in value)
     if kind=='forum-report' and isinstance(value,str) and value:
         from .warder_service import format_preview
@@ -497,7 +497,7 @@ class CentreMenu(Screen):
                     }.get(key)
                     titles=tuple(map(tr,captions)) if captions else None
                     self.show_inline_network(value,titles)
-                elif not failed and key=='transponder-services' and isinstance(value,tuple) and text.strip():
+                elif not failed and (key=='transponder-services' or key in getattr(self,'projects',{})) and isinstance(value,tuple) and text.strip():
                     titles,bodies=zip(*value)
                     self.show_inline_network(bodies,titles)
                 elif model:self.show_cards(model)
@@ -596,7 +596,7 @@ def open_centre(screen, api, key):
 class Report(Screen):
     def __init__(self, session, api, kind, title):
         self.width,self.height=dashboard.dimensions(api)
-        mode={'system-processes':'process','storage-categories':'categories','network-overview':'network'}.get(kind,'detail')
+        mode={'system-processes':'process','storage-categories':'categories','network-overview':'network','project-overview':'project-overview'}.get(kind,'detail')
         self.skin=dashboard.skin(self.width,self.height,mode)
         Screen.__init__(self, session)
         self.api, self.kind = api, kind
@@ -973,7 +973,10 @@ class ProjectMenu(CentreMenu):
         from .warder_projects import report
         config=self.api['config']
         locale=language(config.osd.language.value) if config.plugins.GlassSysUtil.par62.value else 'en'
-        return report(tr,locale,token,projects=(self.projects[key],))
+        result=report(tr,locale,token,projects=(self.projects[key],),presentation='panels')
+        if isinstance(result,tuple) and len(result)==2:
+            return ((tr('Stable releases'),result[0]),(tr('Release notes'),result[1]))
+        return result
 
     def select(self):
         row=self['list'].getCurrent()
@@ -993,12 +996,50 @@ class ProjectOverview(Report):
     """Explicit five-product version check through the canonical feed reader."""
     def __init__(self,session,api):
         super().__init__(session,api,'project-overview','Warder Evolution centre')
+        for col,key in enumerate(('Warder Evolution','Installed version','Stable version','Status')):
+            self['project_column%d'%col]=Label(self.tr(key))
+        for row in range(5):
+            for col in range(4):self['project_%d_%d'%(row,col)]=Label('')
+        self.show_projects(False)
+
+    def show_projects(self,visible):
+        for col in range(4):
+            widget=self['project_column%d'%col]
+            (widget.show if visible else widget.hide)()
+        for row in range(5):
+            for col in range(4):
+                widget=self['project_%d_%d'%(row,col)]
+                if not visible:widget.setText('')
+                (widget.show if visible else widget.hide)()
+        (self['file_info'].hide if visible else self['file_info'].show)()
+
+    def start(self):
+        if not self.pending and not self.cancelled.is_set():self.show_projects(False)
+        super().start()
+
+    def done(self,result):
+        if self.cancelled.is_set():return
+        if isinstance(result,list) and len(result)==5 and all(
+                isinstance(row,tuple) and len(row)==4 and all(isinstance(v,str) for v in row) for row in result):
+            self.pending=False
+            for i,row in enumerate(result):
+                for col,value in enumerate(row):self['project_%d_%d'%(i,col)].setText(value)
+            self.show_projects(True)
+            from time import strftime
+            self['report_status'].setText(strftime('%H:%M:%S'))
+            return
+        self.show_projects(False)
+        super().done(result)
+
+    def failed(self,failure):
+        if not self.cancelled.is_set():self.show_projects(False)
+        super().failed(failure)
 
     def collect(self):
         from .warder_projects import report
         config=self.api['config']
         locale=language(config.osd.language.value) if config.plugins.GlassSysUtil.par62.value else 'en'
-        return report(self.tr,locale,self.cancelled,compact=True)
+        return report(self.tr,locale,self.cancelled,compact=True,presentation='table')
 
 
 class ProjectReport(Report):
