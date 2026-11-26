@@ -129,7 +129,7 @@ def native_tools(tr):
     options = []
     for item in plugins.getPluginsForMenu('scan'):
         if len(item) >= 3 and item[2] in allowed and callable(item[1]):
-            options.append((item[0], item[1]))
+            options.append((item[0], styled_satfinder(item[1]) if item[2]=='satfinder' else item[1]))
     try:
         from Screens.ScanSetup import ScanSetup
         from enigma import eComponentScan
@@ -140,8 +140,37 @@ def native_tools(tr):
     return options
 
 
+def styled_satfinder(action):
+    """Preserve the registered image entry point, substituting only its screen class."""
+    from types import FunctionType
+    if not isinstance(action,FunctionType):return action
+    original=action.__globals__.get('Satfinder')
+    if not isinstance(original,type) or action.__name__!='SatfinderMain':return action
+    from .plugin import _
+    from Screens.MessageBox import MessageBox
+
+    class WarderSatfinder(original):
+        def __init__(self,session):
+            super().__init__(session)
+            from . import plugin
+            from .warder_tuner_ui import install
+            if not install(self,vars(plugin),True):
+                self.skinName=['Satfinder']
+
+        def startScan(self,*args,**kwargs):
+            if not recording_safe(self.session.nav):
+                self.session.open(MessageBox,_('Recording or channel-list protection stopped the scan.'),type=MessageBox.TYPE_INFO)
+                return
+            return super().startScan(*args,**kwargs)
+
+    namespace=dict(action.__globals__,Satfinder=WarderSatfinder)
+    wrapped=FunctionType(action.__code__,namespace,action.__name__,action.__defaults__,action.__closure__)
+    wrapped.__kwdefaults__=action.__kwdefaults__
+    return wrapped
+
+
 def open_native(session,tr,action):
-    """One consent covers a private verified backup and native tool launch."""
+    """Explicit menu selection opens the tool after a private verified backup."""
     from Screens.MessageBox import MessageBox
     def info(msg):
         session.open(MessageBox,tr(msg),type=MessageBox.TYPE_INFO)
@@ -153,43 +182,30 @@ def open_native(session,tr,action):
     owner._gsu_native_pending=True
     def clear():
         owner._gsu_native_pending=False
-    def confirmed(answer):
-        if answer is not True or session.current_dialog is not owner:
-            clear()
+    from twisted.internet.threads import deferToThread
+    from Tools.Directories import resolveFilename,SCOPE_CONFIG
+    from .warder_scan_backup import create
+    def launch(folder):
+        clear()
+        if session.current_dialog is not owner:
             return
         if not recording_safe(session.nav):
-            clear()
             return info('Tuner in use')
-        from twisted.internet.threads import deferToThread
-        from Tools.Directories import resolveFilename,SCOPE_CONFIG
-        from .warder_scan_backup import create
-        def launch(folder):
-            clear()
-            if session.current_dialog is not owner:
-                return
-            if not recording_safe(session.nav):
-                return info('Tuner in use')
-            owner._gsu_last_channel_backup=folder
-            describe=getattr(owner,'describe',None)
-            if callable(describe):describe()
-            try:
-                action(session)
-            except (AttributeError,RuntimeError,TypeError,ImportError,OSError,ValueError):
-                info('Unavailable')
-        def failed(_failure):
-            clear()
-            if session.current_dialog is owner:
-                info('Recording or channel-list protection stopped the scan.')
+        owner._gsu_last_channel_backup=folder
+        describe=getattr(owner,'describe',None)
+        if callable(describe):describe()
         try:
-            deferToThread(create,resolveFilename(SCOPE_CONFIG)).addCallbacks(launch,failed)
-        except (OSError,RuntimeError,TypeError,AttributeError):
-            failed(None)
-    message=tr('Open tuner setup? Live TV may stop.')+'\n\n'+tr('A channel backup will be created before opening the tool.')
-    try:
-        session.openWithCallback(confirmed,MessageBox,message,type=MessageBox.TYPE_YESNO,default=False)
-    except Exception:
+            action(session)
+        except (AttributeError,RuntimeError,TypeError,ImportError,OSError,ValueError):
+            info('Unavailable')
+    def failed(_failure):
         clear()
-        raise
+        if session.current_dialog is owner:
+            info('Recording or channel-list protection stopped the scan.')
+    try:
+        deferToThread(create,resolveFilename(SCOPE_CONFIG)).addCallbacks(launch,failed)
+    except (OSError,RuntimeError,TypeError,AttributeError):
+        failed(None)
 
 
 def choose_native(session, tr):
@@ -226,6 +242,9 @@ def manual_scan(session):
             names=names if isinstance(names,(list,tuple)) else [names]
             self.skinName=['ScanSetup']+[name for name in names
                 if isinstance(name,str) and name not in ('ScanSetup','AdditiveScan')]
+            from . import plugin
+            from .warder_tuner_ui import install
+            install(self,vars(plugin),False)
 
         def startScan(self, tlist, flags, feid, *args, **kwargs):
             if not recording_safe(self.session.nav) or flags & eComponentScan.scanRemoveServices:

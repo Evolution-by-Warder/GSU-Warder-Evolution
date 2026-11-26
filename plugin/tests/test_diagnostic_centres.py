@@ -240,7 +240,7 @@ class DiagnosticTests(unittest.TestCase):
             self.assertIn('standby',runner.call_args.args[0])
             self.assertIsNone(storage.smart('/dev/unknown',runner))
 
-    def test_tuner_actions_fail_closed_and_recheck_after_confirmation(self):
+    def test_tuner_actions_fail_closed_before_backup(self):
         tuner=module('warder_tuners')
         nav=MagicMock()
         nav.getCurrentService.return_value=None
@@ -251,21 +251,17 @@ class DiagnosticTests(unittest.TestCase):
         nav.RecordTimer.getNextRecordingTime.return_value=-1
         self.assertTrue(tuner.recording_safe(nav))
         self.assertFalse(tuner.recording_safe(object()))
+        nav.getRecordings.return_value=[object()]
         session=MagicMock(nav=nav,current_dialog=SimpleNamespace())
         action=MagicMock()
         from Screens.MessageBox import MessageBox
-        with patch.object(MessageBox,'TYPE_YESNO',0,create=True),patch.object(MessageBox,'TYPE_INFO',1,create=True),patch.object(tuner,'native_tools',return_value=[('satfinder',action)]):
-            tuner.choose_native(session,str)
-            confirm=session.openWithCallback.call_args.args[0]
-            confirm(False)
+        with patch.object(MessageBox,'TYPE_INFO',1,create=True):
+            tuner.open_native(session,str,action)
             action.assert_not_called()
-            tuner.choose_native(session,str)
-            confirm=session.openWithCallback.call_args.args[0]
-            nav.getRecordings.return_value=[object()]
-            confirm(True)
-            action.assert_not_called()
+            session.openWithCallback.assert_not_called()
+            session.open.assert_called_once()
 
-    def test_one_consent_launches_only_after_verified_backup_and_rechecks(self):
+    def test_direct_selection_launches_only_after_verified_backup_and_rechecks(self):
         tuner=module('warder_tuners')
         nav=MagicMock()
         owner=SimpleNamespace()
@@ -274,37 +270,48 @@ class DiagnosticTests(unittest.TestCase):
         from Screens.MessageBox import MessageBox
         from Tools import Directories
         from twisted.internet import threads
-        with patch.object(MessageBox,'TYPE_YESNO',0,create=True),patch.object(MessageBox,'TYPE_INFO',1,create=True),patch.object(Directories,'SCOPE_CONFIG',0,create=True),patch.object(threads,'deferToThread') as worker,patch.object(tuner,'recording_safe',return_value=True) as safe:
+        with patch.object(MessageBox,'TYPE_INFO',1,create=True),patch.object(Directories,'SCOPE_CONFIG',0,create=True),patch.object(threads,'deferToThread') as worker,patch.object(tuner,'recording_safe',return_value=True) as safe:
             tuner.open_native(session,str,action)
             tuner.open_native(session,str,action)
-            self.assertEqual(session.openWithCallback.call_count,1)
-            self.assertFalse(session.openWithCallback.call_args.kwargs['default'])
-            session.openWithCallback.call_args.args[0](True)
+            worker.assert_called_once()
+            session.openWithCallback.assert_not_called()
             action.assert_not_called()
             launch,failed=worker.return_value.addCallbacks.call_args.args
             launch('/tmp/verified-backup')
             action.assert_called_once_with(session)
             self.assertEqual(owner._gsu_last_channel_backup,'/tmp/verified-backup')
-            self.assertEqual(session.openWithCallback.call_count,1)
             action.reset_mock()
             tuner.open_native(session,str,action)
-            session.openWithCallback.call_args.args[0](True)
             launch,failed=worker.return_value.addCallbacks.call_args.args
             safe.return_value=False
             launch('/tmp/verified-backup')
             action.assert_not_called()
             safe.return_value=True
             tuner.open_native(session,str,action)
-            session.openWithCallback.call_args.args[0](True)
             launch,failed=worker.return_value.addCallbacks.call_args.args
             failed(None)
             action.assert_not_called()
             tuner.open_native(session,str,action)
-            session.openWithCallback.call_args.args[0](True)
             launch,failed=worker.return_value.addCallbacks.call_args.args
             session.current_dialog=object()
             launch('/tmp/verified-backup')
             action.assert_not_called()
+
+    def test_native_tuner_layout_and_unknown_driver_values(self):
+        ui=module('warder_tuner_ui')
+        for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
+            for finder in (True,False):
+                root=ET.fromstring(ui.skin(width,height,finder,{'config','introduction','key_red','key_green'}))
+                names={n.get('name') for n in root}
+                self.assertIn('config',names)
+                self.assertEqual('warder_metric0' in names,finder)
+                for n in root:
+                    x,y=map(int,n.get('position').split(','));w,h=map(int,n.get('size').split(','))
+                    self.assertLessEqual(x+w,width);self.assertLessEqual(y+h,height)
+                self.assertEqual(len(root.findall("widget[@source='key_green']")),1)
+        self.assertEqual(ui.readings({}),(None,None,None,None,None))
+        self.assertEqual(ui.readings({'tuner_signal_quality':32768,'tuner_signal_power':65535,
+            'tuner_signal_quality_db':1070,'tuner_bit_error_rate':0,'tuner_locked':1}),(50,100,1070,0,1))
 
     def test_reception_centre_exposes_registered_native_tools_directly(self):
         ui=module('warder_centre_ui')
