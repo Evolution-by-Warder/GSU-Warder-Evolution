@@ -1,3 +1,7 @@
+# 26.11.2026 — Correct menu inventory regression for largest-files route
+
+Exact predecessor `4681cf048b5a742d1255461c6f1c5a551e2fdaa0` OpenATV/OpenPLi regression jobs failed on one legacy expected menu list (535 tests, one failure; log job 139934109037). Native interfaces and reproducible IPK passed. Extend the exact expected list by the intentionally added storage-largest route without removing any previous identity or action assertions. Inline network panels are included in the current branch; fresh CI and physical retest required. No release or feed mutation.
+
 # 26.11.2026 — Inline network overview panels
 
 Reused the existing two-part network overview in the right-hand centre panel, with native headings and separate ScrollLabels, synchronized left/right paging and lifecycle cleanup. No duplicate collection or active probe. Existing full report retained. Added native-widget regression for selection, data binding, paging, refresh and stale completion; existing viewport test covers the new widgets. Largest-files route now uses existing search artwork. Fresh exact-head CI and receiver retest required; no production mutation.
