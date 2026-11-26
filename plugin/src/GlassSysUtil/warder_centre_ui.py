@@ -149,7 +149,7 @@ class Report(Screen):
             self['category_state%d'%i].setText(('%d %%'%round(share)) if done and complete else self.tr('Partial result'))
         from time import strftime
         self['report_status'].setText('%s   ·   %s: %.1f MiB%s' %
-            (strftime('%H:%M:%S'),self.tr('Share of measured categories'),total/1048576,
+            (strftime('%H:%M:%S'),self.tr('Measured categories total'),total/1048576,
              '' if complete else ' · '+self.tr('Partial result')))
 
     def scroll(self,direction,page=False):
