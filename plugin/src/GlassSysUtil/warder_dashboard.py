@@ -3,6 +3,9 @@ from xml.etree import ElementTree as ET
 from . import warder_main as style
 
 
+PROCESS_COLUMNS=((16,155),(188,690),(895,125),(1045,225),(1290,340))
+
+
 def dimensions(api):
     size = api['getDesktop'](0).size()
     return size.width(), size.height()
@@ -80,6 +83,15 @@ def skin(width, height, mode):
         label('report_status',116,299,1680,48,25,'#00bcd2df',noWrap='1')
         element('eLabel',116,353,1680,2,backgroundColor='#00314b65',zPosition='-1')
         label('file_info', 116, 372, 1680, 540, 29, '#00ffffff', scrollbarMode='showOnDemand',valign='top')
+        if mode=='process':
+            # Fixed columns in the same coordinate space as the row renderer.
+            element('eLabel',116,369,1680,49,backgroundColor='#00243b50',zPosition='-1')
+            for i,(offset,span) in enumerate(PROCESS_COLUMNS):
+                label('column%d'%i,116+offset,372,span,42,25,style.CYAN,noWrap='1',valign='center')
+            element('widget',116,425,1680,484,name='process_list',
+                    scrollbarMode='showOnDemand',backgroundColor=style.PANEL,
+                    foregroundColor='#00ffffff',foregroundColorSelected='#00ffffff',
+                    backgroundColorSelected=style.SELECTION,transparent='0',zPosition='3')
     colors = ('#00ff526a', '#0039ff59', '#00ffdb52', '#0045b9ff')
     for i, (name, color) in enumerate(zip(('red', 'green', 'yellow', 'blue'), colors)):
         label(name, 55 + 455*i, 990, 443, 81, 28, color, halign='center', valign='center', noWrap='1')
