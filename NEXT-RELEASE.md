@@ -1,3 +1,7 @@
+# 26.11.2026 — Inline service and Smart Diagnostics panels
+
+Smart Diagnostics now presents existing resource checks, coverage, local network and sensor data alongside installation checks and diagnostic limitations. Installation check shows package/integrity results next to crash observations and existing recommendations. Shared collectors and two-column UI, no new score, active probe, export or repair. Existing detailed report format preserved; existing translations reused. Added provider and inline lifecycle regression coverage. Exact-head CI and physical retest pending; no production changes.
+
 # 26.11.2026 — Inline reception overview
 
 Predecessor `06ad25bfda41e36b5c5ad0521cebecf7287a8cb8`: OpenATV/OpenPLi and reproducible IPK SUCCESS, architecture in progress at inspection. Reuse existing native reception collectors and right-hand two-column widgets to display transponder parameters beside tuner occupancy/channel information and TV/radio service lists with counts. Full detail, backup inventory, tuner selection and export remain unchanged. No extra tuning or database enumeration. Added route and non-current-tuner regressions. Exact-head CI and hardware rendering remain required. No production mutation.

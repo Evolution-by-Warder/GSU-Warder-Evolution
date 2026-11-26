@@ -895,6 +895,30 @@ class DiagnosticTests(unittest.TestCase):
             self.assertIn('GSU verified',result)
             self.assertIn('Internet access, disk integrity and CAM decoding are not tested',result)
             health.assert_called_once_with(str,p)
+            health.reset_mock()
+            panels=system.smart_diagnostics(str,Event(),p,panels=True)
+            self.assertEqual(len(panels),2)
+            self.assertIn('Measured checks   0/1',panels[0])
+            self.assertNotIn('GSU verified',panels[0])
+            self.assertIn('GSU verified',panels[1])
+            self.assertIn('Internet access, disk integrity and CAM decoding are not tested',panels[1])
+            health.assert_called_once_with(str,p)
+            cancel=Event();cancel.set()
+            health.reset_mock()
+            self.assertEqual(system.smart_diagnostics(str,cancel,p,panels=True),'')
+            health.assert_not_called()
+
+    def test_installation_panels_preserve_existing_report_and_suggestions(self):
+        service=module('warder_service')
+        p=MagicMock()
+        with patch.object(service.install_health,'verify_files',return_value='fixture'),patch.object(service.shutil,'which',return_value=None),patch.object(module('warder_package_status'),'database',return_value=({},None)),patch.object(service,'crash_summary',return_value=['MemoryError','MemoryError']) as crashes:
+            left,right=service.health(str,p,panels=True)
+            crashes.assert_called_once_with(p)
+            self.assertIn('GSU   Ready',left)
+            self.assertIn('Package dependencies',left)
+            self.assertIn('MemoryError',right)
+            self.assertEqual(right.count('Review memory and storage'),1)
+            self.assertEqual(service.health(str,p),left+'\n\n'+right)
 
     def test_resolver_test_is_bounded_and_not_a_shell_command(self):
         import subprocess

@@ -104,7 +104,7 @@ def crash_report(tr,cancelled,probe=None):
     return '\n'.join(rows).strip() or tr('Unavailable')
 
 
-def health(tr, p=None):
+def health(tr, p=None, panels=False):
     p = p or Probe()
     try:
         result = install_health.verify_files()
@@ -117,8 +117,11 @@ def health(tr, p=None):
     dependencies = dependency_state(install_health.PACKAGE,records,manager)
     exceptions = crash_summary(p)
     suggestions = [tr(CRASH_SUGGESTIONS[name]) for name in dict.fromkeys(exceptions) if name in CRASH_SUGGESTIONS]
-    return '\n\n'.join(('GSU   '+integrity, tr('Package manager')+'\n    '+(', '.join(packages) or '—'),
-                      tr('Package dependencies')+'\n    '+tr(dependencies), tr('Crash logs')+'\n    '+(', '.join(exceptions) or '—'), *dict.fromkeys(suggestions)))
+    checks=('GSU   '+integrity, tr('Package manager')+'\n    '+(', '.join(packages) or '—'),
+            tr('Package dependencies')+'\n    '+tr(dependencies))
+    crashes=(tr('Crash logs')+'\n    '+(', '.join(exceptions) or '—'), *dict.fromkeys(suggestions))
+    if panels:return ('\n\n'.join(checks),'\n\n'.join(crashes))
+    return '\n\n'.join(checks+crashes)
 
 
 def format_preview(raw,tr):

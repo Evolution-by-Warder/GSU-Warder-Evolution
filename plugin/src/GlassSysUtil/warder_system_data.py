@@ -196,7 +196,7 @@ def cpu_details(tr,cancel,p=None):
     return '\n'.join(rows).strip()
 
 
-def smart_diagnostics(tr,cancel,p=None):
+def smart_diagnostics(tr,cancel,p=None,panels=False):
     """Reuse resource checks, local network observations and installation health."""
     from .warder_network import collect
     from .warder_service import health
@@ -233,8 +233,12 @@ def smart_diagnostics(tr,cancel,p=None):
     temperatures=p.temperatures(p.sensor_paths())
     rows.append(tr('Temperature')+'   '+('%.1f °C'%max(s['celsius'] for s in temperatures) if temperatures else '—'))
     if cancel.is_set():return ''
-    rows.extend(('',health(tr,p),'',tr('This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.')))
-    return '' if cancel.is_set() else '\n'.join(rows)
+    installation=health(tr,p)
+    scope=tr('This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.')
+    if cancel.is_set():return ''
+    if panels:return ('\n'.join(rows),installation+'\n\n'+scope)
+    rows.extend(('',installation,'',scope))
+    return '\n'.join(rows)
 
 
 def process_memory(pid,expected_name,tr,p=None):

@@ -72,3 +72,7 @@ Ostré vydanie blokuje neukončené CI presného HEAD a požadovaný fyzický re
 ### Centrum príjmu — pravý panel
 
 - Znovupoužitá dvojstĺpcová plocha pravého panela pre transpondér a tunery/obsadenosť/informácie o kanáli. Natívny zber je spoločný s pôvodným detailom, iba voliteľný formát výsledku. Zoznam služieb transpondéra má TV a Radio vedľa seba s počtami; rovnaká klasifikácia a pôvodný export zostávajú. Bez ladenia, ďalšieho samplera alebo zmeny kanála. Pôvodné podrobnosti, výber tunera a zálohy zachované. Regresie pokrývajú automatický náhľad, prázdny výsledok, nevhodný tuner a absenciu prechodu do ďalšieho okna. CI a fyzické zobrazenie ešte otvorené.
+
+### Servisné centrum — pravý panel
+
+- Smart Diagnostics zobrazuje naľavo zdroje, pokrytie meraní, lokálnu sieť a teplotu, napravo kontrolu inštalácie, odporúčania z výnimiek a hranice diagnostiky. Kontrola inštalácie má samostatné stĺpce pre GSU/závislosti a crashlogy/odporúčania. Zdieľané dvojstĺpcové widgety a pôvodné zbery bez novej kontroly, skóre alebo exportu. Pôvodné podrobné textové reporty zachované. Využité preklady 21 katalógov. Pridané regresie obsahu, pokrytia, zrušenia, prepnutia a prázdneho výsledku; aktuálne CI a fyzický retest zostávajú otvorené.

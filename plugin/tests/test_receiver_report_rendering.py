@@ -654,6 +654,41 @@ class ReceiverRenderingTests(unittest.TestCase):
             self.assertTrue(menu['descriptions'].visible)
             self.assertEqual(menu['inline_process_list'].l.list,[])
 
+    def test_inline_service_panels_reuse_existing_providers(self):
+        ui=self.ui
+        from threading import Event
+        entries=[('service-smart','Smart Diagnostics','Health'),
+                 ('service-health','Installation check','Files')]
+        session=MagicMock()
+        menu=ui.CentreMenu(session,self.api,entries,{k:True for k,_,_ in entries},'service')
+        menu.render()
+        with patch.object(ui,'deferToThread') as worker:
+            menu.auto_result()
+            with patch.object(mod('warder_system_data'),'smart_diagnostics',return_value=('RAM unknown','GSU status')) as provider:
+                value=worker.call_args.args[0]()
+                self.assertTrue(provider.call_args.kwargs['panels'])
+                provider.assert_called_once()
+            worker.return_value.addCallbacks.call_args.args[0](value)
+            self.assertTrue(menu.inline_network_visible)
+            self.assertEqual(menu['inline_network_body0'].getText(),'RAM unknown')
+            self.assertEqual(menu['inline_network_body1'].getText(),'GSU status')
+            menu['list'].moveToIndex(1)
+            menu.describe()
+            self.assertFalse(menu.inline_network_visible)
+            menu.auto_result()
+            with patch.object(mod('warder_service'),'health',return_value=('Files','Crash recommendation')) as provider:
+                value=worker.call_args.args[0]()
+                self.assertTrue(provider.call_args.kwargs['panels'])
+                provider.assert_called_once()
+            worker.return_value.addCallbacks.call_args.args[0](value)
+            self.assertTrue(menu.inline_network_visible)
+            self.assertEqual(menu['inline_network_body1'].getText(),'Crash recommendation')
+            menu.refresh_result()
+            worker.return_value.addCallbacks.call_args.args[0]('')
+            self.assertFalse(menu.inline_network_visible)
+            self.assertEqual(menu['descriptions'].getText(),mod('i18n').for_api(self.api,'Unavailable'))
+        session.open.assert_not_called()
+
     def test_inline_reception_reuses_two_native_result_columns(self):
         ui=self.ui
         entries=[('tuner-details','Tuner interfaces','Transponder'),
