@@ -129,6 +129,17 @@ def historic_feeds():
     require(command('git','rev-parse','v13.41-r6^{commit}')=='45a9fad7be6e20a6eae6055c0cb59551be45b9f9','bridge tag changed')
 
 
+def render_readme(old, previous_version, item):
+    start=old.index('## Stabilné vydanie '+previous_version)
+    end=old.index('\nPlugin pre Enigma2',start)
+    old=old[:start]+'## Stabilné vydanie '+VERSION+'\n\n'+item['notes_i18n']['sk']+' [Poznámky](docs/CURRENT-RELEASE.md) · [IPK]('+URL+').\n'+old[end:]
+    old=old.replace('**Stabilné vydanie: '+previous_version+'.','**Stabilné vydanie: '+VERSION+'.').replace('`enigma2-plugin-extensions-gsu_'+previous_version+'_all.ipk`','`'+FILENAME+'`')
+    old=old.replace('Rozhranie a prejdené funkcie schválil používateľ na GigaBlue Quad 4K Pro s OpenATV 8.', 'Fyzická skúška na GigaBlue Quad 4K Pro sa týkala predchádzajúcej generácie.')
+    old=old.replace('431 udržiavaných spoločných a doplnkových textov','texty diagnostických centier')
+    old=old.replace('r93 → reštart GUI → 13.41-r6 → reštart GUI → '+previous_version,'r93 → reštart GUI → 13.41-r6 → reštart GUI → '+VERSION)
+    return old
+
+
 def publish(directory,feed,install):
     require(os.environ.get('GITHUB_REF')=='refs/heads/main' and os.environ.get('GITHUB_REPOSITORY')==REPO,'production context')
     revision=os.environ['GITHUB_SHA']
@@ -160,6 +171,8 @@ def publish(directory,feed,install):
             old_raw=old_package.read_bytes()
             require(len(old_raw)==prior['bytes'] and hashlib.sha256(old_raw).hexdigest()==prior['sha256'],'previous IPK identity')
             verify_public(prior['url'],old_raw)
+        # Validate documentation edits before creating any release/tag.
+        new_readme=render_readme((ROOT/'README.md').read_text(),prior['version'],feed['release'])
         stable_assets(directory,revision)
     item=feed['release']
     evidence=dict(source_commit=revision,workflow_run=int(os.environ['GITHUB_RUN_ID']),release=TAG,
@@ -180,17 +193,7 @@ def publish(directory,feed,install):
         notes='# GSU '+VERSION+'\n\n'+item['notes_i18n']['sk']+'\n\n[IPK]('+URL+') · [Vydanie]('+item['release_url']+')\n\nSHA-256 '+item['sha256']+'\n'
         (ROOT/'docs/CURRENT-RELEASE.md').write_text(notes)
         (ROOT/('docs/RELEASE-'+VERSION+'.md')).write_text(notes)
-        readme=ROOT/'README.md'
-        old=readme.read_text()
-        previous_version=previous['release']['version']
-        start=old.index('## Stabilné vydanie '+previous_version)
-        end=old.index('\nPlugin pre Enigma2',start)
-        old=old[:start]+'## Stabilné vydanie '+VERSION+'\n\n'+item['notes_i18n']['sk']+' [Poznámky](docs/CURRENT-RELEASE.md) · [IPK]('+URL+').\n'+old[end:]
-        old=old.replace('**Stabilné vydanie: '+previous_version+'.','**Stabilné vydanie: '+VERSION+'.').replace('`enigma2-plugin-extensions-gsu_'+previous_version+'_all.ipk`','`'+FILENAME+'`')
-        old=old.replace('Rozhranie a prejdené funkcie schválil používateľ na GigaBlue Quad 4K Pro s OpenATV 8.', 'Fyzická skúška na GigaBlue Quad 4K Pro sa týkala predchádzajúcej generácie.')
-        old=old.replace('431 udržiavaných spoločných a doplnkových textov','texty diagnostických centier')
-        old=old.replace('r93 → reštart GUI → 13.41-r6 → reštart GUI → '+previous_version,'r93 → reštart GUI → 13.41-r6 → reštart GUI → '+VERSION)
-        readme.write_text(old)
+        (ROOT/'README.md').write_text(new_readme)
         log=ROOT/'NEXT-RELEASE.md'
         log.write_text('# Produkčná aktivácia '+TAG+'\n\nZdroj '+revision+', workflow '+str(evidence['workflow_run'])+
                        ', overených '+str(item['bytes'])+' bajtov, SHA-256 '+item['sha256']+
