@@ -62,6 +62,10 @@ class DiagnosticTests(unittest.TestCase):
         with patch.object(nimmanager,'nim_slots',[Slot()],create=True):
             self.assertEqual(tuner.slots(),[('Tuner B',1)])
             value=tuner.details(SimpleNamespace(nav=nav),api,str,1)
+            panels=tuner.details(SimpleNamespace(nav=nav),api,str,1,panels=True)
+            self.assertEqual(panels[0],'Unavailable')
+            self.assertIn('Tuner B',panels[1])
+            self.assertNotIn('123456',str(panels))
         self.assertIn('DVB-T / DVB-T2',value)
         self.assertNotIn('123456',value)
         nav.stopService.assert_not_called()

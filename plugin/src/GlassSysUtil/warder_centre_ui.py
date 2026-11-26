@@ -94,8 +94,10 @@ def preview_text(kind,value,tr):
         from .warder_storage import category_size
         return '\n'.join('%s    %s%s'%(tr(name),category_size(size,complete),
                          '' if complete else ' · '+tr('Partial result')) for name,size,complete in value)
-    if kind=='network-overview' and isinstance(value,tuple):
+    if kind in ('network-overview','tuner-details') and isinstance(value,tuple) and len(value)==2 and all(isinstance(v,str) for v in value):
         return '\n\n'.join(value)
+    if kind=='transponder-services' and isinstance(value,tuple) and len(value)==2 and all(isinstance(v,tuple) and len(v)==2 and all(isinstance(x,str) for x in v) for v in value):
+        return '\n\n'.join(title+'\n'+body for title,body in value)
     if kind=='forum-report' and isinstance(value,str) and value:
         from .warder_service import format_preview
         return format_preview(value,tr)
@@ -296,12 +298,13 @@ class CentreMenu(Screen):
                 widget.hide()
                 widget.setText('')
 
-    def show_inline_network(self,panels):
+    def show_inline_network(self,panels,titles=None):
         self.hide_cards()
         self['descriptions'].hide()
         self.inline_network_visible=True
         tr=lambda key:for_api(self.api,key)
-        for i,(title,body) in enumerate(zip((tr('Network link'),tr('Default gateway')+' · DNS'),panels)):
+        if titles is None:titles=(tr('Network link'),tr('Default gateway')+' · DNS')
+        for i,(title,body) in enumerate(zip(titles,panels)):
             self['inline_network_title%d'%i].setText(title)
             self['inline_network_body%d'%i].setText(body or tr('Unavailable'))
             self['inline_network_title%d'%i].show()
@@ -479,9 +482,13 @@ class CentreMenu(Screen):
                 self['result_status'].setText(strftime('%H:%M:%S') if model or text.strip() else tr('Unavailable'))
                 if not failed and key=='system-processes' and isinstance(value,list) and value and text.strip():
                     self.show_process_table(value)
-                elif (not failed and key=='network-overview' and isinstance(value,tuple)
+                elif (not failed and key in ('network-overview','tuner-details') and isinstance(value,tuple)
                       and len(value)==2 and all(isinstance(v,str) for v in value) and text.strip()):
-                    self.show_inline_network(value)
+                    titles=(tr('Transponder'),tr('Tuner interfaces')) if key=='tuner-details' else None
+                    self.show_inline_network(value,titles)
+                elif not failed and key=='transponder-services' and isinstance(value,tuple) and text.strip():
+                    titles,bodies=zip(*value)
+                    self.show_inline_network(bodies,titles)
                 elif model:self.show_cards(model)
                 else:
                     self.hide_cards()
@@ -496,11 +503,11 @@ class CentreMenu(Screen):
             try:
                 if key=='tuner-details':
                     from .warder_tuners import details
-                    value=details(self.session,self.api,tr)
+                    value=details(self.session,self.api,tr,panels=True)
                 else:
                     from enigma import eServiceCenter,eServiceReference
-                    from .warder_services import services,display
-                    value=display(services(self.session.nav,eServiceCenter.getInstance(),eServiceReference),tr)
+                    from .warder_services import services,overview_panels
+                    value=overview_panels(services(self.session.nav,eServiceCenter.getInstance(),eServiceReference),tr)
                 finish(value)
             except (AttributeError,RuntimeError,TypeError,OSError,ImportError,ValueError):
                 finish(None,True)

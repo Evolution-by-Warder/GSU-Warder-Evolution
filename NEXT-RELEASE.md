@@ -1,3 +1,7 @@
+# 26.11.2026 — Inline reception overview
+
+Predecessor `06ad25bfda41e36b5c5ad0521cebecf7287a8cb8`: OpenATV/OpenPLi and reproducible IPK SUCCESS, architecture in progress at inspection. Reuse existing native reception collectors and right-hand two-column widgets to display transponder parameters beside tuner occupancy/channel information and TV/radio service lists with counts. Full detail, backup inventory, tuner selection and export remain unchanged. No extra tuning or database enumeration. Added route and non-current-tuner regressions. Exact-head CI and hardware rendering remain required. No production mutation.
+
 # 26.11.2026 — Correct menu inventory regression for largest-files route
 
 Exact predecessor `4681cf048b5a742d1255461c6f1c5a551e2fdaa0` OpenATV/OpenPLi regression jobs failed on one legacy expected menu list (535 tests, one failure; log job 139934109037). Native interfaces and reproducible IPK passed. Extend the exact expected list by the intentionally added storage-largest route without removing any previous identity or action assertions. Inline network panels are included in the current branch; fresh CI and physical retest required. No release or feed mutation.

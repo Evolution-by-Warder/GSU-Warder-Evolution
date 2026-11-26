@@ -68,3 +68,7 @@ Ostré vydanie blokuje neukončené CI presného HEAD a požadovaný fyzický re
 ### Pravý panel — sieťový prehľad
 
 - Existujúci automatický sieťový prehľad zobrazuje dve paralelné natívne oblasti priamo v pravom paneli: rozhrania/IP a brána/DNS/mounty. Znovupoužíva pôvodný výsledok `overview_panels`, bez ďalšieho zberu; ľavé/pravé tlačidlá stránkujú obe oblasti, výber v ľavom menu zostáva. Pri zmene položky, obnove či chybe sa panely skryjú a staré údaje vyčistia. Pridaná regresia väzby údajov a životného cyklu; existujúca kontrola hraníc inline widgetov pokrýva HD/FHD/WQHD/UHD. Najväčšie súbory používajú existujúcu ikonu vyhľadávania. Fyzická čitateľnosť ešte nepotvrdená.
+
+### Centrum príjmu — pravý panel
+
+- Znovupoužitá dvojstĺpcová plocha pravého panela pre transpondér a tunery/obsadenosť/informácie o kanáli. Natívny zber je spoločný s pôvodným detailom, iba voliteľný formát výsledku. Zoznam služieb transpondéra má TV a Radio vedľa seba s počtami; rovnaká klasifikácia a pôvodný export zostávajú. Bez ladenia, ďalšieho samplera alebo zmeny kanála. Pôvodné podrobnosti, výber tunera a zálohy zachované. Regresie pokrývajú automatický náhľad, prázdny výsledok, nevhodný tuner a absenciu prechodu do ďalšieho okna. CI a fyzické zobrazenie ešte otvorené.

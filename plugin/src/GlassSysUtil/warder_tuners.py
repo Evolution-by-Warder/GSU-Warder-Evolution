@@ -17,7 +17,7 @@ def slots():
             if type(getattr(slot,'slot',None)) is int]
 
 
-def details(session, api, tr, slot_number=None):
+def details(session, api, tr, slot_number=None, panels=False):
     from Components.NimManager import nimmanager
     nav = session.nav
     service = nav.getCurrentService()
@@ -48,7 +48,9 @@ def details(session, api, tr, slot_number=None):
         occupied = {read_frontend(r).get('tuner_number') for r in recordings}
     except (AttributeError, RuntimeError, TypeError):
         occupied, count = set(), None
-    if rows:rows.append('')
+    transponder=rows[1:] if data else []
+    if panels:rows=[]
+    elif rows:rows.append('')
     rows.extend((tr('Tuner interfaces'), '    '+tr('Recordings')+'   '+('—' if count is None else str(count))))
     for slot in getattr(nimmanager, 'nim_slots', []):
         number = getattr(slot, 'slot', None)
@@ -95,6 +97,7 @@ def details(session, api, tr, slot_number=None):
             rows.append('    '+tr('Audio:')+'   '+str(audio.getDescription())+'   '+str(audio.getLanguage()))
     from .warder_tools import Probe
     if not show_current:
+        if panels:return ('\n'.join(transponder).strip() or tr('Unavailable'),'\n'.join(rows[1:]).strip() or tr('Unavailable'))
         return '\n'.join(rows).strip() or tr('Unavailable')
     p = Probe()
     for label, path in [('HDMI', '/proc/stb/video/videomode'), ('HDMI · OUT', '/proc/stb/hdmi/output'),
@@ -102,6 +105,7 @@ def details(session, api, tr, slot_number=None):
         value = p.text(path, 96)
         if value and value.isprintable():
             rows.append(label+'   '+value)
+    if panels:return ('\n'.join(transponder).strip() or tr('Unavailable'),'\n'.join(rows[1:]).strip() or tr('Unavailable'))
     return '\n'.join(rows).strip() or tr('Unavailable')
 
 

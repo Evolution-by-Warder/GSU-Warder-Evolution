@@ -60,7 +60,7 @@ def skin(width, height, mode):
         element('eLabel',834,406,960,2,backgroundColor='#00314b65',zPosition='-1')
         label('descriptions',834,425,960,486,28,'#00e2edf5',
               scrollbarMode='showOnDemand',valign='top')
-        # The right panel also supports the same two independent network bodies
+        # The right panel also supports two independent diagnostic bodies
         # as the full report. Keep their scroll widget parents unobstructed.
         for i in range(2):
             x=834+i*488

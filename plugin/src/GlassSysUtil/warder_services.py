@@ -56,12 +56,22 @@ def export(rows, kind, directory='/tmp'):
             raise
 
 
+def service_groups(rows):
+    """Reuse the original service classification for both presentations."""
+    return tuple([name or ident for media,ident,name in rows if media==kind] for kind in ('tv','radio'))
+
+
 def display(rows, tr):
     """Group database services by type; the export keeps original references."""
     sections=[]
-    for kind, label in (('tv','TV'),('radio','Radio')):
-        group=[name or ident for media,ident,name in rows if media==kind]
+    for label,group in zip(('TV','Radio'),service_groups(rows)):
         sections.append('%s  ·  %d'%(tr(label),len(group)))
         sections.extend('    %s'%name for name in group)
         sections.append('')
     return '\n'.join(sections).rstrip() if rows else tr('Unavailable')
+
+
+def overview_panels(rows,tr):
+    if not rows:return None
+    return tuple((tr(label)+'  ·  '+str(len(group)),'\n'.join(group) or '—')
+                 for label,group in zip(('TV','Radio'),service_groups(rows)))

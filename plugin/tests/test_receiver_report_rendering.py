@@ -654,6 +654,36 @@ class ReceiverRenderingTests(unittest.TestCase):
             self.assertTrue(menu['descriptions'].visible)
             self.assertEqual(menu['inline_process_list'].l.list,[])
 
+    def test_inline_reception_reuses_two_native_result_columns(self):
+        ui=self.ui
+        entries=[('tuner-details','Tuner interfaces','Transponder'),
+                 ('transponder-services','Transponder services','TV / Radio')]
+        session=MagicMock()
+        menu=ui.CentreMenu(session,self.api,entries,{k:True for k,_,_ in entries},'reception')
+        menu.render()
+        with patch.object(mod('warder_tuners'),'details',return_value=('Frequency 12345','Tuner A')) as details:
+            menu.auto_result()
+            details.assert_called_once()
+            self.assertTrue(details.call_args.kwargs['panels'])
+        self.assertTrue(menu.inline_network_visible)
+        self.assertEqual(menu['inline_network_body0'].getText(),'Frequency 12345')
+        self.assertEqual(menu['inline_network_body1'].getText(),'Tuner A')
+        menu['list'].moveToIndex(1)
+        menu.describe()
+        self.assertFalse(menu.inline_network_visible)
+        with patch.object(mod('warder_services'),'services',return_value=[('tv','ref','TV station'),('radio','ref2','Radio station')]):
+            menu.auto_result()
+        self.assertTrue(menu.inline_network_visible)
+        self.assertIn('1',menu['inline_network_title0'].getText())
+        self.assertIn('1',menu['inline_network_title1'].getText())
+        self.assertEqual(menu['inline_network_body0'].getText(),'TV station')
+        self.assertEqual(menu['inline_network_body1'].getText(),'Radio station')
+        session.open.assert_not_called()
+        with patch.object(mod('warder_services'),'services',return_value=[]):
+            menu.refresh_result()
+        self.assertFalse(menu.inline_network_visible)
+        self.assertEqual(menu['descriptions'].getText(),menu.tr('Unavailable') if hasattr(menu,'tr') else mod('i18n').for_api(self.api,'Unavailable'))
+
     def test_inline_network_panels_keep_selection_and_hide_old_data(self):
         ui=self.ui
         entries=[('network-overview','Network overview','Network'),
