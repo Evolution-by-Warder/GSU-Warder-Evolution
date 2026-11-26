@@ -62,13 +62,16 @@ class BackupPassword(Screen):
     def render(self):
         sx,sy=self.width/1920,self.height/1080
         rows=[]
-        flags=getattr(enigma,'RT_HALIGN_CENTER',0)|getattr(enigma,'RT_VALIGN_CENTER',0)
+        flags=0
+        for name in ('RT_HALIGN_CENTER','RT_VALIGN_CENTER'):
+            value=getattr(enigma,name,0)
+            if isinstance(value,int):flags|=value
         for i,line in enumerate(KEYS):
             row=[i]
             for pos,char in enumerate(line):
                 active=(i==self.row and pos==self.column)
                 color=0xffffff
-                background=0x296b9d if active else 0x101f30
+                background=int(dashboard.style.SELECTION[1:],16) if active else int(dashboard.style.PANEL[1:],16)
                 row.append(self.api['MultiContentEntryText'](
                     pos=(round((12+pos*63)*sx),round(8*sy)),size=(round(59*sx),round(58*sy)),
                     font=0,flags=flags,text=char,color=color,color_sel=color,

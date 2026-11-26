@@ -362,6 +362,7 @@ class BackupTests(unittest.TestCase):
 
     def test_password_keyboard_has_exactly_one_cell_cursor(self):
         from Plugins.Extensions.GlassSysUtil.warder_backup_password import BackupPassword,KEYS
+        from Plugins.Extensions.GlassSysUtil import warder_main as view_style
         from xml.etree import ElementTree as ET
         api=vars(load(ROOT))
         view=BackupPassword(MagicMock(),api,'Password')
@@ -372,7 +373,7 @@ class BackupTests(unittest.TestCase):
         def check(row,column):
             rows=view['list'].l.list
             active=[(i,j) for i,line in enumerate(rows) for j,cell in enumerate(line[1:])
-                    if cell['backcolor']==0x296b9d]
+                    if cell['backcolor']==int(view_style.SELECTION[1:],16)]
             self.assertEqual(active,[(row,column)])
             self.assertEqual([''.join(cell['text'] for cell in line[1:]) for line in rows],list(KEYS))
             self.assertEqual(view['list'].getCurrentIndex(),0)
@@ -383,7 +384,7 @@ class BackupTests(unittest.TestCase):
         check(1,1)
         view.add()
         self.assertEqual(view.secret,'b')
-        self.assertNotIn('b'+'b',view['descriptions'].getText())
+        self.assertIn('•',view['descriptions'].getText())
         view.vertical(-2)
         check(7,1)
         view.horizontal(-2)

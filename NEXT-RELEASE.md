@@ -1,3 +1,7 @@
+# 26.11.2026 — Keyboard color consistency and API compatibility
+
+Checked OpenATV and OpenPLi MenuList both delegate selectionEnabled to native setSelectionEnable. Use existing Warder palette for active/inactive cells; only accept integer native alignment flags (also supports test doubles). New exact-head CI and receiver test required.
+
 # 26.11.2026 — Receiver feedback: single-cell backup password cursor
 
 Owner screenshots show entire keyboard column marked. Disable native row highlighting, use explicit row/column coordinates and color only the current cell; keep characters and geometry fixed. Test four-way movement, wrapping and insertion. Separate backup draft PR #20; new CI and physical retest required.
