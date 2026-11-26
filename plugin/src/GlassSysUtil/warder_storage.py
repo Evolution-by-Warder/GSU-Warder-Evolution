@@ -48,7 +48,7 @@ def usage_categories(p, table, budget=20000, seconds=3, clock=time.monotonic):
     deadline = clock()+seconds
     boundaries = {target for _, target, _, _ in table if target != '/'}
     local = [target for device, target, kind, _ in table
-             if device.startswith('/dev/') and target.startswith('/media/') and kind not in REMOTE]
+             if device.startswith('/dev/') and (target.startswith('/media/') or target.startswith('/mnt/')) and kind not in REMOTE]
     roots = {label: list(paths) for label, paths in CATEGORIES}
     for target in local:
         for label, suffix in [('Picons', 'picon'), ('EPG', 'epg.dat'), ('Logs', 'logs')]:
@@ -147,7 +147,7 @@ def report(tr, detail=False, probe=None):
             if usage and usage.total>0:
                 rows.append('    %s %.1f GiB    ·    %s %.1f GiB    ·    %s %.0f %%' % (tr('Total:'),usage.total/1073741824,tr('Free:'),usage.free/1073741824,tr('Used(%):'),100*(usage.total-usage.free)/usage.total))
             else:rows.append('    '+tr('Unavailable'))
-            if path.startswith('/media/') and not ro and usage and usage.free > 0:
+            if (path.startswith('/media/') or path.startswith('/mnt/')) and not ro and usage and usage.free > 0:
                 options.append((usage.free, path))
             if dev not in smart_cache and len(smart_cache) < 4:
                 smart_cache[dev] = smart(dev)
