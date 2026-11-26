@@ -52,7 +52,30 @@ def prerequisite(path, control):
             out.write(raw + b'\n'*(len(raw)%2))
 
 
-def main(opkg, archive, current):
+def allocated_bytes(root, listed):
+    """Measure filesystem allocation of actual installed files, once per inode."""
+    import stat
+    seen = set()
+    blocks = 0
+    for line in listed.splitlines():
+        if not line.startswith('/'):
+            continue
+        path = Path(line)
+        if not path.is_relative_to(root):
+            path = root / line.lstrip('/')
+        if not path.exists():
+            continue
+        info = path.lstat()
+        identity=(info.st_dev,info.st_ino)
+        if stat.S_ISREG(info.st_mode) and identity not in seen:
+            seen.add(identity)
+            blocks += info.st_blocks
+    assert seen and blocks
+    return blocks*512
+
+
+def main(opkg, archive, current, report=None):
+    routes = {}
     paths = {}
     for version, digest in PINS.items():
         prefix = LEGACY if version.endswith('r93') else 'enigma2-plugin-extensions-gsu'
@@ -101,8 +124,12 @@ def main(opkg, archive, current):
             assert LEGACY+' - ' not in run('list-installed')
             assert (runtime/'version').read_text().strip()=='0.41.5'
             assert settings.read_bytes()==b'config.plugins.GlassSysUtil.par62=True\n'
-            print(version,'-> 13.41-r6 -> 1:0.41.5 verified')
+            allocation=allocated_bytes(root,run('files',PACKAGE))
+            routes[version]=allocation
+            print(version,'-> 13.41-r6 -> 1:0.41.5 verified; allocated package file bytes:',allocation)
+    if report:
+        report.write_text(json.dumps({'allocated_installed_package_file_bytes':routes},indent=2)+'\n')
 
 
 if __name__ == '__main__':
-    main(Path(sys.argv[1]).resolve(),Path(sys.argv[2]).resolve(),Path(sys.argv[3]).resolve())
+    main(Path(sys.argv[1]).resolve(),Path(sys.argv[2]).resolve(),Path(sys.argv[3]).resolve(),Path(sys.argv[4]) if len(sys.argv)>4 else None)

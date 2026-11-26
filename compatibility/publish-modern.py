@@ -48,6 +48,8 @@ def check(directory):
             'independent installation report')
     require((ROOT/'plugin/src/GlassSysUtil/version').read_text().strip()==VERSION,'public version')
     require((ROOT/'plugin/update/release-request').read_text().strip()==VERSION,'release request')
+    routes=json.loads((directory/'migration.json').read_text()).get('allocated_installed_package_file_bytes',{})
+    require(set(routes)=={'13.40-r93','13.41-r4','13.41-r5'} and all(type(v) is int and v>0 for v in routes.values()),'installed OPKG allocation evidence')
     notes = json.loads((ROOT/'plugin/update/RELEASE-NOTES.i18n.json').read_text())
     require(notes['version']==VERSION and set(notes['notes'])==LANGS and all(notes['notes'].values()),'release translations')
     item = dict(version=VERSION,tag=TAG,url=URL,sha256=digest,bytes=len(raw),notes=notes['notes']['en'],
@@ -143,7 +145,7 @@ def publish(directory,feed,install):
     evidence=dict(source_commit=revision,workflow_run=int(os.environ['GITHUB_RUN_ID']),release=TAG,
                   public_bytes=item['bytes'],public_sha256=item['sha256'],public_sidecar_verified=True,
                   installed_regular_file_bytes=int((directory/'installed-bytes').read_text()),packaged_install=install,
-                  physical_receiver_tested=False)
+                  migration=json.loads((directory/'migration.json').read_text()),physical_receiver_tested=False)
     if previous!=feed:
         record.update(previous_release=record['release'],release=item,source_commit=revision,package_source_commit=revision,
                       status='production-update-active',validation=evidence,approved_on='2026-11-26',

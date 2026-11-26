@@ -1,6 +1,7 @@
 """Exercise immutable release and preactivation guards without contacting a host."""
 import importlib.util
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -13,6 +14,19 @@ spec.loader.exec_module(publisher)
 
 
 class ModernPublicationTests(unittest.TestCase):
+    def test_opkg_allocation_counts_package_files_only_once(self):
+        import runpy
+        allocation=runpy.run_path(str(ROOT/'compatibility/verify-modern-migration.py'))['allocated_bytes']
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder)
+            (root/'usr').mkdir()
+            payload=root/'usr/file'
+            payload.write_bytes(b'x'*4001)
+            os.link(payload,root/'usr/link')
+            (root/'etc').mkdir()
+            listing='Package example installed in root has the following files:\n/usr/file\n'+str(root/'usr/link')+'\n/etc\n'
+            self.assertEqual(allocation(root,listing),payload.stat().st_blocks*512)
+
     def test_existing_tag_cannot_be_retargeted(self):
         with patch.object(publisher,'command',side_effect=['',publisher.TAG,'different']) as run:
             with self.assertRaisesRegex(ValueError,'immutable tag'):

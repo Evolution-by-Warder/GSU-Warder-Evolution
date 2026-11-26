@@ -63,7 +63,7 @@ jobs:
           for version in 13.40-r93 13.41-r4 13.41-r5 13.41-r6; do
             gh release download "v$version" --repo "$GITHUB_REPOSITORY" --pattern '*.ipk' --dir /tmp/gsu-history
           done
-          python compatibility/verify-modern-migration.py upstream/opkg/src/opkg-cl /tmp/gsu-history /tmp/gsu-first/*.ipk
+          python compatibility/verify-modern-migration.py upstream/opkg/src/opkg-cl /tmp/gsu-history /tmp/gsu-first/*.ipk /tmp/gsu-first/migration.json
       - name: Check the publication manifest against the migrated bytes
         run: |
           set -euo pipefail

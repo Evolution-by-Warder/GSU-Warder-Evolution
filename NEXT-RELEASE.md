@@ -1,3 +1,9 @@
+# 26. 11. 2026 · konečná kontrola balíka a alokácie
+
+Na 9809b5f5083081d68668cd20f9f269b2ac57bf93 mali dve CI zostavy a lokálne bajty zhodný SHA-256 115bc57d4c842049d72864a0e2deaf0eceb35f0bb7d53f515cc5533e9abc48fc. Job 45784968376 overil tri cesty migrácie, veľkosť 3 873 060 bajtov a 6 500 779 bajtov súborov po rozbalení. Na natívnom CI AArch64 trvalo jedno odčítanie v priemere 0,423 ms (12 vzoriek po sekunde), CPU 5,908 ms spolu, špička procesu 14 312 KiB. OpenATV 45784968596, OpenPLi 45784968381, inštalátor 45784968501 a OpenBH uspeli. V emulácii už cieľové interpretery bežali. V izolovanej zostave chýbal modul unicodedata pre IDNA pri getaddrinfo, ktorý sa doplnil do cieľového interpretera. Plugin používa štandardné moduly image.
+
+CI teraz eviduje aj skutočnú alokáciu súborov po inštalácii OPKG pre každú migračnú cestu. Započítava diskové bloky súborov z výstupu opkg files, každý inode raz. Matice oboch image aj kontrola inštalátora majú explicitný checkout presného PR HEAD. Lokálne 467 regresných testov. Produkcia a web sú podmienené úspešným overením.
+
 # 26. 11. 2026 · kandidát pred vydaním
 
 Predchádzajúci HEAD 5e5b062a70a03dec43cfa0f05ee62f52a4a0dd4c prešiel OpenATV 45784124685, OpenPLi 45784124525, inštalátorom 45784124554 a reprodukciou/migráciou 45784124546. Log linkera z behu 45784124598 ukázal presnú príčinu zlyhania krížovej zostavy. Premenná LIBC s názvom architektúry kolidovala s rovnomennou premennou CPython. Workflow už používa samostatný názov pre výber správneho balíka Debian.

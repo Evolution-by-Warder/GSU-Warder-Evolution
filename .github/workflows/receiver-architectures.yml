@@ -63,7 +63,7 @@ jobs:
           CPPFLAGS="-I$zlib/include" LIBS="-lz -lm" LDFLAGS="-L$zlib/lib" ac_cv_buggy_getaddrinfo=no ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no ./configure --build="$(gcc -dumpmachine)" --host="$ABI" --with-build-python="$(command -v python)"
           # Embed the native modules exercised by the sampler, without building unrelated desktop extensions.
           echo '*static*' > Modules/Setup.local
-          awk '/^(_bisect|_json|_random|_struct|array|math|binascii|zlib|_sha512|fcntl|_posixsubprocess|resource|select|_socket|grp|_datetime|_csv) / {print}' Modules/Setup.stdlib >> Modules/Setup.local
+          awk '/^(_bisect|_json|_random|_struct|array|math|binascii|zlib|_sha512|fcntl|_posixsubprocess|resource|select|_socket|grp|_datetime|_csv|unicodedata) / {print}' Modules/Setup.stdlib >> Modules/Setup.local
           make -j4 python >"$RUNNER_TEMP/build.log" 2>&1 || { grep -Ei 'error|failed|not found|cannot|undefined reference' "$RUNNER_TEMP/build.log" | tail -60; tail -15 "$RUNNER_TEMP/build.log"; exit 1; }
           export PYTHONPATH="$PWD/Lib"
           "qemu-$EMULATOR" -L "/usr/$ABI" ./python -c 'import socket; assert all(socket.getaddrinfo(ip,0,f,socket.SOCK_STREAM,0,socket.AI_NUMERICHOST) for f,ip in ((socket.AF_INET,"127.0.0.1"),(socket.AF_INET6,"::1")))'
