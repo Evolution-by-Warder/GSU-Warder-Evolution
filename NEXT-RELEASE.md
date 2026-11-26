@@ -1,3 +1,7 @@
+## 26.11.2026 — Verified 174-key localization checkpoint
+
+HEAD `a49ac47317af593d8a279f95933600059e4a95ac`: all 10 checks SUCCESS (Python 3.9/3.14 regression and layouts, OpenATV master/8.0-next/8.0, OpenPLi develop/release-9.2, hooks). All 21 catalogues contain the expanded 174 common keys. No remaining CI failure at this SHA. Legacy runtime label audit, activation of r5 version and localized release notes, and canonical stable publisher remain open. Existing v13.41-r4 and updater feeds unchanged. Do not merge incomplete draft #14.
+
 ## 26.11.2026 — Additional runtime messages
 
 HEAD `816379658822e9a32a7d730c97065d31f58a83f9` completed all 10 CI checks successfully after schedule localization. Added 22 more shared messages in all 21 languages for CAM feeds, native startup, OSCam clients/readers and swap UI (174 common keys in total). Existing translations preserved. Fresh CI required. Legacy plugin.py audit remains open; no stable publication or feed change.
