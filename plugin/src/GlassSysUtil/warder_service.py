@@ -75,3 +75,23 @@ def health(tr, p=None):
     suggestions = [tr(messages[name]) for name in dict.fromkeys(exceptions) if name in messages]
     return '\n\n'.join(('GSU   '+integrity, tr('Package manager')+'\n    '+(', '.join(packages) or '—'),
                       tr('Package dependencies')+'\n    '+tr(dependencies), tr('Crash logs')+'\n    '+(', '.join(exceptions) or '—'), *dict.fromkeys(suggestions)))
+
+
+def format_preview(raw,tr):
+    """Readable local preview of every field in the exact saved allowlisted JSON."""
+    value=json.loads(raw)
+    keys={'schema','gsu','python','architecture','available_percent','temperature_c','crash_classes'}
+    if not isinstance(value,dict) or set(value)!=keys:
+        return raw  # Never hide unknown fields from the person reviewing the export.
+    def shown(v):
+        return '—' if v is None else str(v)
+    rows=['GSU    '+shown(value['gsu']),
+          'Python    '+'.'.join(map(str,value['python'])),
+          tr('Architecture')+'    '+shown(value['architecture']),
+          'schema    '+shown(value['schema']),'',
+          tr('Available memory')+' / Flash']
+    for name,percent in value['available_percent'].items():
+        rows.append('    %s    %s'%(tr(name),'—' if percent is None else '%.1f %%'%percent))
+    rows.extend(('',tr('Temperature')+'    '+('—' if value['temperature_c'] is None else '%.1f °C'%value['temperature_c']),
+                 '',tr('Crash logs'), '    '+(', '.join(value['crash_classes']) or '—')))
+    return '\n'.join(rows)
