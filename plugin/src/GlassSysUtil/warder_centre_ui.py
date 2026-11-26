@@ -21,6 +21,7 @@ class CentreMenu(Screen):
         self.enabled = dict(enabled)
         self.group = next((g for g in self.groups if g[0] == initial), None)
         self.direct = initial is not None
+        self.native_actions = {}
         self['list'] = api['ListboxSys2']([])
         self['list'].l.setFont(0, api['gFont']('Regular', round(34*self.height/1080)))
         self['list'].l.setItemHeight(round(74*self.height/1080))
@@ -34,9 +35,23 @@ class CentreMenu(Screen):
     def entries(self):
         if self.group is None:
             return [(key,for_api(self.api,label),'',bool(items)) for key,label,items in self.groups if items]
-        return [(key,label,description,self.enabled.get(key,False)) for key,label,description in self.group[2]]
+        rows=[]
+        for key,label,description in self.group[2]:
+            if key=='tuner-native' and self.native_actions:
+                rows.extend((ident,name,for_api(self.api,'A channel backup will be created before opening the tool.'),self.enabled.get(key,False))
+                            for ident,(name,action) in self.native_actions.items())
+            else:
+                rows.append((key,label,description,self.enabled.get(key,False)))
+        return rows
 
     def render(self):
+        self.native_actions={}
+        if self.group and self.group[0]=='reception' and self.enabled.get('tuner-native',False):
+            from .warder_tuners import native_tools
+            try:
+                self.native_actions={'native:%d'%i:item for i,item in enumerate(native_tools(lambda key:for_api(self.api,key)))}
+            except (ImportError,AttributeError,RuntimeError,TypeError):
+                pass
         title = for_api(self.api, self.group[1] if self.group else 'GSU Warder Evolution')
         self.setTitle(title)
         self['heading'].setText(title)
@@ -51,7 +66,11 @@ class CentreMenu(Screen):
     def describe(self):
         row = self['list'].getCurrent()
         entry = next((e for e in self.entries() if row and e[0] == row[0]), None)
-        self['descriptions'].setText(entry[2] if entry else '')
+        description=entry[2] if entry else ''
+        backup=getattr(self,'_gsu_last_channel_backup',None)
+        if row and row[0] in self.native_actions and isinstance(backup,str):
+            description+='\n\n'+for_api(self.api,'Verified channel backup')+'\n'+backup
+        self['descriptions'].setText(description)
 
     def select(self):
         row = self['list'].getCurrent()
@@ -60,6 +79,9 @@ class CentreMenu(Screen):
         if self.group is None:
             self.group = next((g for g in self.groups if g[0] == row[0]), None)
             self.render()
+        elif row[0] in self.native_actions and self.enabled.get('tuner-native',False):
+            from .warder_tuners import open_native
+            open_native(self.session,lambda key:for_api(self.api,key),self.native_actions[row[0]][1])
         elif self.enabled.get(row[0], False):
             if row[0] in DIAGNOSTICS:
                 open_diagnostic(self.session, self.api, row[0])
