@@ -41,3 +41,7 @@ Predecessor d2836867: OpenATV, OpenPLi and package reproducibility successful; a
 ## Physical keyboard correction
 
 Owner's receiver screenshots of candidate 485ec37 show the native row selection and bracket marker repeated in all eight rows of the selected column. Replaced that behavior with a single explicit row/column cursor, centered unchanged characters, cell-only background highlight and disabled native row selection; directional movement wraps and OK inserts the exact active cell. All 80 keys remain within the existing left panel; no password text exposed. Added regression for exactly one highlighted cell and correct insertion. Fresh CI and receiver retest required. No production change.
+
+## Owner feedback: full-width keyboard and reveal toggle
+
+Reviewed the YouTube secret editor and adopted its familiar QWERTY ordering in GSU's branded full-width panel, without depending on an installed YouTube plugin or exposing a native unmasked input. Two symbol/case pages cover all printable ASCII, with a single active cell and a dedicated Aa key. Blue explicitly toggles show/hide; passwords start masked on every new editor, re-mask on screen hide, and clear on close/submit. Three input lines display up to 128 characters, with no truncation. Added two localized captions in all 21 languages and tests of cursor, case, symbols, masking/reveal, lifecycle and resolution geometry. New exact-head CI and receiver confirmation required. No production mutation.

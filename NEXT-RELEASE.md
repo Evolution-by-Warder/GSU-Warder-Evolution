@@ -1,3 +1,7 @@
+# 26.11.2026 — Owner feedback: full-width QWERTY and password visibility
+
+Classic YouTube-style keyboard, single active cell, fixed geometry, Aa case/symbol switch, blue Show/Hide password (masked by default, re-mask on hide, clear on close), 21 languages. Full printable ASCII and up to 128 characters displayed across three lines. Tests updated; exact-head CI and physical validation pending. Separate draft PR #20; no production changes.
+
 # 26.11.2026 — Keyboard color consistency and API compatibility
 
 Checked OpenATV and OpenPLi MenuList both delegate selectionEnabled to native setSelectionEnable. Use existing Warder palette for active/inactive cells; only accept integer native alignment flags (also supports test doubles). New exact-head CI and receiver test required.

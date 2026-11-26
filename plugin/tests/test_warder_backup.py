@@ -150,7 +150,7 @@ class BackupTests(unittest.TestCase):
         view.render()
         secret='Password1234'
         for char in secret:view.append(char)
-        self.assertNotIn(secret,view['descriptions'].getText())
+        self.assertNotIn(secret,''.join(view['password%d'%i].getText() for i in range(3)))
         self.assertEqual(view.secret,secret)
         view.accept()
         self.assertEqual(view.result,(secret,))
@@ -361,33 +361,69 @@ class BackupTests(unittest.TestCase):
 
 
     def test_password_keyboard_has_exactly_one_cell_cursor(self):
-        from Plugins.Extensions.GlassSysUtil.warder_backup_password import BackupPassword,KEYS
+        from Plugins.Extensions.GlassSysUtil.warder_backup_password import BackupPassword,KEYS,SHIFT_KEYS,password_skin,ROW_HEIGHT
         from Plugins.Extensions.GlassSysUtil import warder_main as view_style
         from xml.etree import ElementTree as ET
         api=vars(load(ROOT))
         view=BackupPassword(MagicMock(),api,'Password')
         view.prepare_keyboard()
-        root=ET.fromstring(view.skin)
-        keyboard=root.find("widget[@name='list']")
-        self.assertEqual(keyboard.get('backgroundColor'),keyboard.get('backgroundColorSelected'))
-        def check(row,column):
+        def check(row,column,keys):
             rows=view['list'].l.list
             active=[(i,j) for i,line in enumerate(rows) for j,cell in enumerate(line[1:])
                     if cell['backcolor']==int(view_style.SELECTION[1:],16)]
             self.assertEqual(active,[(row,column)])
-            self.assertEqual([''.join(cell['text'] for cell in line[1:]) for line in rows],list(KEYS))
+            self.assertEqual([tuple(' ' if cell['text']=='␣' else cell['text'] for cell in line[1:]) for line in rows],list(keys))
             self.assertEqual(view['list'].getCurrentIndex(),0)
-        check(0,0)
-        view.vertical(1)
-        check(1,0)
+        self.assertEqual(''.join(KEYS[1]),'qwertyuiop')
+        self.assertTrue(all(len(row)==10 for row in KEYS+SHIFT_KEYS))
+        self.assertEqual({c for row in KEYS+SHIFT_KEYS for c in row if c!='Aa'},{chr(i) for i in range(32,127)})
+        check(1,0,KEYS)
         view.horizontal(1)
-        check(1,1)
+        check(1,1,KEYS)
         view.add()
-        self.assertEqual(view.secret,'b')
-        self.assertIn('•',view['descriptions'].getText())
+        self.assertEqual(view.secret,'w')
+        view.toggle_shift()
+        check(1,1,SHIFT_KEYS)
+        view.add()
+        self.assertEqual(view.secret,'wW')
         view.vertical(-2)
-        check(7,1)
+        check(5,1,SHIFT_KEYS)
         view.horizontal(-2)
-        check(7,9)
+        check(5,9,SHIFT_KEYS)
         view.add()
-        self.assertEqual(view.secret,'b,')
+        self.assertEqual(view.secret,'wW ')
+        view.horizontal(-1)
+        view.add()
+        check(5,8,KEYS)
+        self.assertEqual(view.secret,'wW ')
+        for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
+            root=ET.fromstring(password_skin(w,h))
+            keyboard=root.find("widget[@name='list']")
+            self.assertEqual(keyboard.get('backgroundColor'),keyboard.get('backgroundColorSelected'))
+            self.assertEqual(keyboard.get('scrollbarMode'),'showNever')
+            x,y=map(int,keyboard.get('position').split(','))
+            kw,kh=map(int,keyboard.get('size').split(','))
+            self.assertLessEqual(x+kw,w)
+            self.assertLessEqual(y+kh,h)
+            self.assertGreaterEqual(kh,6*round(ROW_HEIGHT*h/1080))
+
+    def test_password_visibility_is_explicit_and_resets_on_hide_and_close(self):
+        from Plugins.Extensions.GlassSysUtil.warder_backup_password import BackupPassword
+        api=vars(load(ROOT))
+        view=BackupPassword(MagicMock(),api,'Password')
+        def displayed():
+            return ''.join(view['password%d'%i].getText() for i in range(3))
+        secret='TestPassword123!'+('W'*112)
+        for char in secret:view.append(char)
+        self.assertEqual(displayed(),'•'*len(secret))
+        view.toggle_visibility()
+        self.assertEqual(displayed(),secret)
+        self.assertEqual(view['blue'].getText(),view.tr('Hide password'))
+        view.hide_password()
+        self.assertEqual(displayed(),'•'*len(secret))
+        view.toggle_visibility()
+        view.cancel()
+        self.assertEqual(view.secret,'')
+        self.assertFalse(view.revealed)
+        self.assertNotIn(secret,displayed())
+        self.assertEqual(view.result,(None,))

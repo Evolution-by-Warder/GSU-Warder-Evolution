@@ -151,7 +151,9 @@
     "Backup before restore": "Backup before restore",
     "Restore failed": "Restore failed",
     "Previous settings restored": "Previous settings restored",
-    "Recovery backup required": "Recovery backup required"
+    "Recovery backup required": "Recovery backup required",
+    "Show password": "Show password",
+    "Hide password": "Hide password"
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -305,7 +307,9 @@
     "Backup before restore": "Záloha pred obnovou",
     "Restore failed": "Obnova zlyhala",
     "Previous settings restored": "Pôvodné nastavenia boli obnovené",
-    "Recovery backup required": "Použite bezpečnostnú zálohu na obnovu"
+    "Recovery backup required": "Použite bezpečnostnú zálohu na obnovu",
+    "Show password": "Zobraziť heslo",
+    "Hide password": "Skryť heslo"
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -459,7 +463,9 @@
     "Backup before restore": "Záloha před obnovou",
     "Restore failed": "Obnova selhala",
     "Previous settings restored": "Původní nastavení bylo obnoveno",
-    "Recovery backup required": "Použijte bezpečnostní zálohu k obnově"
+    "Recovery backup required": "Použijte bezpečnostní zálohu k obnově",
+    "Show password": "Zobrazit heslo",
+    "Hide password": "Skrýt heslo"
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -613,7 +619,9 @@
     "Backup before restore": "Sicherung vor Wiederherstellung",
     "Restore failed": "Wiederherstellung fehlgeschlagen",
     "Previous settings restored": "Vorherige Einstellungen wiederhergestellt",
-    "Recovery backup required": "Sicherung zur Wiederherstellung erforderlich"
+    "Recovery backup required": "Sicherung zur Wiederherstellung erforderlich",
+    "Show password": "Passwort anzeigen",
+    "Hide password": "Passwort verbergen"
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -767,7 +775,9 @@
     "Backup before restore": "Kopia przed przywróceniem",
     "Restore failed": "Przywracanie nie powiodło się",
     "Previous settings restored": "Przywrócono poprzednie ustawienia",
-    "Recovery backup required": "Wymagana kopia do odzyskania"
+    "Recovery backup required": "Wymagana kopia do odzyskania",
+    "Show password": "Pokaż hasło",
+    "Hide password": "Ukryj hasło"
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -921,7 +931,9 @@
     "Backup before restore": "Mentés visszaállítás előtt",
     "Restore failed": "A visszaállítás sikertelen",
     "Previous settings restored": "A korábbi beállítások visszaálltak",
-    "Recovery backup required": "Helyreállítási mentés szükséges"
+    "Recovery backup required": "Helyreállítási mentés szükséges",
+    "Show password": "Jelszó megjelenítése",
+    "Hide password": "Jelszó elrejtése"
   },
   "ru": {
     "System centre": "Системный центр",
@@ -1075,7 +1087,9 @@
     "Backup before restore": "Копия перед восстановлением",
     "Restore failed": "Ошибка восстановления",
     "Previous settings restored": "Прежние настройки восстановлены",
-    "Recovery backup required": "Необходима резервная копия для восстановления"
+    "Recovery backup required": "Необходима резервная копия для восстановления",
+    "Show password": "Показать пароль",
+    "Hide password": "Скрыть пароль"
   },
   "fr": {
     "System centre": "Centre système",
@@ -1229,7 +1243,9 @@
     "Backup before restore": "Sauvegarde avant restauration",
     "Restore failed": "Échec de la restauration",
     "Previous settings restored": "Réglages précédents restaurés",
-    "Recovery backup required": "Sauvegarde de récupération nécessaire"
+    "Recovery backup required": "Sauvegarde de récupération nécessaire",
+    "Show password": "Afficher le mot de passe",
+    "Hide password": "Masquer le mot de passe"
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -1383,7 +1399,9 @@
     "Backup before restore": "Backup prima del ripristino",
     "Restore failed": "Ripristino non riuscito",
     "Previous settings restored": "Impostazioni precedenti ripristinate",
-    "Recovery backup required": "Necessario il backup di recupero"
+    "Recovery backup required": "Necessario il backup di recupero",
+    "Show password": "Mostra password",
+    "Hide password": "Nascondi password"
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -1537,7 +1555,9 @@
     "Backup before restore": "Copia antes de restaurar",
     "Restore failed": "Error de restauración",
     "Previous settings restored": "Ajustes anteriores restaurados",
-    "Recovery backup required": "Se requiere la copia de recuperación"
+    "Recovery backup required": "Se requiere la copia de recuperación",
+    "Show password": "Mostrar contraseña",
+    "Hide password": "Ocultar contraseña"
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -1691,7 +1711,9 @@
     "Backup before restore": "Kopje para rikthimit",
     "Restore failed": "Rikthimi dështoi",
     "Previous settings restored": "Cilësimet e mëparshme u rikthyen",
-    "Recovery backup required": "Nevojitet kopja e rikuperimit"
+    "Recovery backup required": "Nevojitet kopja e rikuperimit",
+    "Show password": "Shfaq fjalëkalimin",
+    "Hide password": "Fshih fjalëkalimin"
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -1845,7 +1867,9 @@
     "Backup before restore": "Αντίγραφο πριν την επαναφορά",
     "Restore failed": "Αποτυχία επαναφοράς",
     "Previous settings restored": "Επαναφέρθηκαν οι προηγούμενες ρυθμίσεις",
-    "Recovery backup required": "Απαιτείται αντίγραφο ανάκτησης"
+    "Recovery backup required": "Απαιτείται αντίγραφο ανάκτησης",
+    "Show password": "Εμφάνιση κωδικού",
+    "Hide password": "Απόκρυψη κωδικού"
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -1999,7 +2023,9 @@
     "Backup before restore": "Varukoopia enne taastamist",
     "Restore failed": "Taastamine ebaõnnestus",
     "Previous settings restored": "Eelmised sätted taastatud",
-    "Recovery backup required": "Vajalik taastevarukoopia"
+    "Recovery backup required": "Vajalik taastevarukoopia",
+    "Show password": "Näita parooli",
+    "Hide password": "Peida parool"
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -2153,7 +2179,9 @@
     "Backup before restore": "پشتیبان پیش از بازیابی",
     "Restore failed": "بازیابی ناموفق بود",
     "Previous settings restored": "تنظیمات قبلی بازیابی شدند",
-    "Recovery backup required": "نسخه پشتیبان بازیابی لازم است"
+    "Recovery backup required": "نسخه پشتیبان بازیابی لازم است",
+    "Show password": "نمایش رمز عبور",
+    "Hide password": "پنهان کردن رمز عبور"
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -2307,7 +2335,9 @@
     "Backup before restore": "Kopija prieš atkūrimą",
     "Restore failed": "Atkūrimas nepavyko",
     "Previous settings restored": "Ankstesnės nuostatos atkurtos",
-    "Recovery backup required": "Reikalinga atkūrimo kopija"
+    "Recovery backup required": "Reikalinga atkūrimo kopija",
+    "Show password": "Rodyti slaptažodį",
+    "Hide password": "Slėpti slaptažodį"
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -2461,7 +2491,9 @@
     "Backup before restore": "Back-up vóór herstel",
     "Restore failed": "Herstel mislukt",
     "Previous settings restored": "Vorige instellingen hersteld",
-    "Recovery backup required": "Herstelback-up vereist"
+    "Recovery backup required": "Herstelback-up vereist",
+    "Show password": "Wachtwoord tonen",
+    "Hide password": "Wachtwoord verbergen"
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -2615,7 +2647,9 @@
     "Backup before restore": "Cópia antes do restauro",
     "Restore failed": "Falha no restauro",
     "Previous settings restored": "Definições anteriores restauradas",
-    "Recovery backup required": "É necessária a cópia de recuperação"
+    "Recovery backup required": "É necessária a cópia de recuperação",
+    "Show password": "Mostrar palavra-passe",
+    "Hide password": "Ocultar palavra-passe"
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -2769,7 +2803,9 @@
     "Backup before restore": "Copie înainte de restaurare",
     "Restore failed": "Restaurarea a eșuat",
     "Previous settings restored": "Setările anterioare au fost restaurate",
-    "Recovery backup required": "Este necesară copia de recuperare"
+    "Recovery backup required": "Este necesară copia de recuperare",
+    "Show password": "Arată parola",
+    "Hide password": "Ascunde parola"
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -2923,7 +2959,9 @@
     "Backup before restore": "Geri yükleme öncesi yedek",
     "Restore failed": "Geri yükleme başarısız",
     "Previous settings restored": "Önceki ayarlar geri yüklendi",
-    "Recovery backup required": "Kurtarma yedeği gerekli"
+    "Recovery backup required": "Kurtarma yedeği gerekli",
+    "Show password": "Parolayı göster",
+    "Hide password": "Parolayı gizle"
   },
   "uk": {
     "System centre": "Системний центр",
@@ -3077,7 +3115,9 @@
     "Backup before restore": "Копія перед відновленням",
     "Restore failed": "Помилка відновлення",
     "Previous settings restored": "Попередні налаштування відновлено",
-    "Recovery backup required": "Потрібна резервна копія для відновлення"
+    "Recovery backup required": "Потрібна резервна копія для відновлення",
+    "Show password": "Показати пароль",
+    "Hide password": "Приховати пароль"
   },
   "zh": {
     "System centre": "系统中心",
@@ -3231,6 +3271,8 @@
     "Backup before restore": "恢复前备份",
     "Restore failed": "恢复失败",
     "Previous settings restored": "已恢复原设置",
-    "Recovery backup required": "需要使用恢复备份"
+    "Recovery backup required": "需要使用恢复备份",
+    "Show password": "显示密码",
+    "Hide password": "隐藏密码"
   }
 }
