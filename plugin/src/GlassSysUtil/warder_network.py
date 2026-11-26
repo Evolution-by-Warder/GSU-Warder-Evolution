@@ -137,3 +137,21 @@ def diagnostics(tr, cancelled, probe=None, opener=None):
     count = sum(1 for line in table if len(line.split()) > 2 and line.split()[2] in ('nfs','nfs4','cifs','smbfs','fuse.sshfs'))
     lines.append(tr('Network mounts')+'   '+str(count))
     return '\n'.join(lines)
+
+
+def overview_panels(report,tr):
+    """Split real measured network data into interface and connection panels."""
+    left=[]
+    for item in report['interfaces']:
+        state=tr({'up':'Running','down':'Unavailable'}.get(item['state'],'Not exposed'))
+        left.append(item['name']+'  ·  '+state)
+        speed=item['speed']
+        if speed is not None:
+            left.append('    %s Mb/s'%speed)
+        left.extend('    '+address for address in item.get('addresses',()))
+        left.append('')
+    right=[tr('Default gateway'),*('    '+v for v in report['gateways'] or ['—']),
+           '',tr('DNS configuration'),*('    '+v for v in report['dns'] or ['—'])]
+    if 'network_mounts' in report:
+        right.extend(('',tr('Network mounts'),'    '+str(report['network_mounts'])))
+    return ('\n'.join(left).strip() or tr('Unavailable'),'\n'.join(right))
