@@ -17,7 +17,8 @@ VERSION = '13.41-r6'
 PREVIOUS = '13.41-r5'
 PREVIOUS_SHA = '17de1b2624dd90b77d2c8c05ceba997e683c2d66d888212dda21e31233ef7085'
 COMPAT = 'original-python314'
-COMPAT_HEAD = None
+RECOVERY_SOURCE = '45a9fad7be6e20a6eae6055c0cb59551be45b9f9'
+RECOVERY_SHA256 = 'a8e79609147666b27f18460b3340e099bb013664478a787746bcf56bb28052e2'
 FEED = 'plugin/update/stable.json'
 FROZEN = ('plugin/update/candidate.json', 'restoration/update/candidate.json')
 PACKAGE = ROOT / 'plugin/dist/enigma2-plugin-extensions-gsu_13.41-r6_all.ipk'
@@ -86,6 +87,11 @@ def publish():
     revision = os.environ['GITHUB_SHA']
     git('fetch', 'origin', 'main', COMPAT, '--tags')
     assert git('rev-parse','HEAD') == revision == git('rev-parse','origin/main')
+    # Recovery of the already published immutable release only.
+    assert git('rev-parse','refs/tags/'+TAG+'^{commit}') == RECOVERY_SOURCE
+    assert item['sha256'] == RECOVERY_SHA256
+    assert subprocess.run(['git','merge-base','--is-ancestor',RECOVERY_SOURCE,revision],cwd=ROOT).returncode == 0
+    assert not git('diff','--name-only',RECOVERY_SOURCE,revision,'--','plugin/src','plugin/tools/build_ipk.py','plugin/resources.tar.gz','plugin/resources.json','plugin/control','plugin/converters','plugin/defaults','plugin/update/RELEASE-NOTES.md','plugin/update/RELEASE-NOTES.i18n.json')
     compat_head = git('rev-parse','origin/'+COMPAT)
     for ref in ('origin/main','origin/'+COMPAT):
         previous = json.loads(git('show', ref+':'+FEED))['release']
@@ -96,19 +102,16 @@ def publish():
               for ref in ('origin/main','origin/'+COMPAT)}
     existing = subprocess.run(['gh','release','view',TAG,'--repo',REPO,'--json','isDraft,isPrerelease'],cwd=ROOT,capture_output=True,text=True)
     if existing.returncode != 0:
-        assert not git('ls-remote','--tags','origin','refs/tags/'+TAG), 'Existing tag cannot be reused'
-        run('gh','release','create',TAG,str(PACKAGE),str(PACKAGE)+'.sha256',
-            '--repo',REPO,'--target',revision,'--title','GSU Warder Evolution '+VERSION,
-            '--notes-file',str(ROOT/'plugin/update/RELEASE-NOTES.md'),'--latest=false')
+        raise RuntimeError('Existing r6 release unavailable; recovery must not create or overwrite it')
     else:
         status = json.loads(existing.stdout)
         assert not status['isDraft'] and not status['isPrerelease'], 'Existing release not normal stable'
     git('fetch','origin','--tags')
-    assert git('rev-parse','refs/tags/'+TAG+'^{commit}') == revision
+    assert git('rev-parse','refs/tags/'+TAG+'^{commit}') == RECOVERY_SOURCE
     assert public(URL,len(raw)) == raw, 'Public IPK differs from tested bytes'
     sidecar = public(URL+'.sha256',512)
     assert sidecar == PACKAGE.with_suffix('.ipk.sha256').read_bytes(), 'Public SHA sidecar mismatch'
-    validation = dict(version=VERSION,package_source_commit=revision,workflow_run=int(os.environ['GITHUB_RUN_ID']),
+    validation = dict(version=VERSION,package_source_commit=RECOVERY_SOURCE,workflow_run=int(os.environ['GITHUB_RUN_ID']),
                       public_ipk_sha256_verified=True,public_ipk_sidecar_verified=True,
                       bytes=len(raw),sha256=item['sha256'],matrices_passed=True,
                       OpenPLi_refs=['release-9.2','develop'],OpenATV_refs=['8.0','8.0-next','master'],
@@ -116,7 +119,7 @@ def publish():
                       physical_receiver_all_features_verified=False)
     record = read_json(ROOT/'PRODUCTION.json')
     record['previous_release'] = record['release']
-    record.update(release=item,source_branch='main',source_commit=revision,package_source_commit=revision,
+    record.update(release=item,source_branch='main',source_commit=RECOVERY_SOURCE,package_source_commit=RECOVERY_SOURCE,
                   approved_on='2026-11-26',approval='Owner-approved independent GSU numbering migration',
                   validation=validation,status='production-update-active',
                   version_policy='Stable r6 compatibility bridge; frozen r93 identity bridges unchanged. New 0.41.x feed is separate.',
@@ -141,16 +144,16 @@ def publish():
     start=text.index('## Spoločné ostré vydanie')
     end=text.index('\nPlugin pre Enigma2',start)
     text=text[:start]+'## Spoločné ostré vydanie — 26. november 2026\n\n**GSU '+VERSION+'** pre OpenPLi a OpenATV. [Poznámky k vydaniu](docs/CURRENT-RELEASE.md). [Stiahnuť IPK]('+URL+').\n'+text[end:]
-    text=text.replace('**Stabilné vydanie: 13.40-r94.', '**Stabilné vydanie: '+VERSION+'.')
-    text=text.replace('enigma2-plugin-extensions-gsu_13.40-r94_all.ipk',PACKAGE.name)
-    text=text.replace('r93 → reštart GUI → r94','r93 → reštart GUI → '+VERSION)
-    text=text.replace('po reštarte GUI nasleduje r94','po reštarte GUI nasleduje '+VERSION)
-    a=text.index('Rozhranie sleduje jazyk prijímača:')
+    text=text.replace('**Stabilné vydanie: 13.41-r5.', '**Stabilné vydanie: '+VERSION+'.')
+    text=text.replace('enigma2-plugin-extensions-gsu_13.41-r5_all.ipk',PACKAGE.name)
+    text=text.replace('r93 → reštart GUI → 13.41-r5','r93 → reštart GUI → '+VERSION)
+    text=text.replace('po reštarte GUI nasleduje 13.41-r5','po reštarte GUI nasleduje '+VERSION)
+    a=text.index('Rozhranie sleduje jazyk prijímača')
     b=text.index('\n\n',a)
     text=text[:a]+'Rozhranie sleduje jazyk prijímača a podporuje 21 jazykov. Dni, mesiace, aktualizácie a 431 udržiavaných spoločných a doplnkových textov; pôvodné preklady a anglický fallback sú zachované. [Rozsah lokalizácie](plugin/LOCALIZATION.md).'+text[b:]
     readme.write_text(text,encoding='utf-8')
     log=ROOT/'NEXT-RELEASE.md'
-    log.write_text('# 2026-11-26 — stable r6 publication\n\nPR #15, source `'+revision+'`, workflow '+str(validation['workflow_run'])+', public IPK SHA-256 `'+item['sha256']+'`, '+str(len(raw))+' bytes. Both native matrices and packaged install gate passed. Feed activation via atomic fast-forward below; website verification remains pending.\n\n---\n\n'+log.read_text(),encoding='utf-8')
+    log.write_text('# 2026-11-26 — stable r6 publication\n\nPR #15, immutable source `'+RECOVERY_SOURCE+'`, workflow '+str(validation['workflow_run'])+', public IPK SHA-256 `'+item['sha256']+'`, '+str(len(raw))+' bytes. Both native matrices and packaged install gate passed. Feed activation via atomic fast-forward below; website verification remains pending.\n\n---\n\n'+log.read_text(),encoding='utf-8')
     localization=ROOT/'plugin/LOCALIZATION.md'
     localization.write_text(localization.read_text().replace(' (pracovný kandidát r5; stabilná r4 bez zmeny)',''),encoding='utf-8')
     paths=[FEED,modern_path,'PRODUCTION.json',REPORT+'/public-verification.json','docs/CURRENT-RELEASE.md','docs/RELEASE-'+VERSION+'.md','README.md','NEXT-RELEASE.md','plugin/LOCALIZATION.md']
