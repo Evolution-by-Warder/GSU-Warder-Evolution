@@ -260,3 +260,50 @@ class ReceiverRenderingTests(unittest.TestCase):
         self.assertIn('CPU',value)
         self.assertIn('teplotu',value)
         self.assertIn('flash',value)
+
+
+    def test_centre_inline_result_keeps_navigation_and_ignores_stale_worker(self):
+        ui=self.ui
+        session=MagicMock()
+        menu=ui.CentreMenu(session,self.api,[('system-overview','System health check','memory'),
+                   ('system-log','Log view','log')],{'system-overview':True,'system-log':True},'system')
+        menu.render()
+        with patch.object(ui,'deferToThread') as worker:
+            menu.select()
+            self.assertEqual(worker.call_count,1)
+            self.assertEqual(menu['result_status'].getText(),mod('i18n').for_api(menu.api,'Loading…'))
+            old=worker.return_value.addCallbacks.call_args.args[0]
+            menu['list'].moveToIndex(1)
+            menu.describe()
+            menu.select()
+            self.assertEqual(worker.call_count,1)
+            old({'values':(99,10,0,20,None,50),'health':{'score':100,'coverage':(2,2)}})
+            self.assertEqual(worker.call_count,2)
+            done=worker.return_value.addCallbacks.call_args.args[0]
+            done('Kernel log content')
+            self.assertEqual(menu['descriptions'].getText(),'Kernel log content')
+            session.open.assert_not_called()
+            menu.refresh_result()
+            late=worker.return_value.addCallbacks.call_args.args[0]
+            menu.close_results()
+            late('stale')
+            self.assertNotEqual(menu['descriptions'].getText(),'stale')
+        menu.full_result()
+        session.open.assert_called_once_with(ui.Report,self.api,'system-log','Log view')
+
+    def test_menu_panels_are_disjoint_and_backings_cannot_cover_result(self):
+        for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
+            root=ET.fromstring(mod('warder_dashboard').skin(w,h,'menu'))
+            left=root.find("widget[@name='list']")
+            right=root.find("widget[@name='descriptions']")
+            x,y=map(int,left.get('position').split(','))
+            lw,lh=map(int,left.get('size').split(','))
+            rx,ry=map(int,right.get('position').split(','))
+            rw,rh=map(int,right.get('size').split(','))
+            self.assertLess(x+lw,rx)
+            for n in root:
+                if n.tag not in ('eLabel','ePixmap'):continue
+                nx,ny=map(int,n.get('position').split(','))
+                nw,nh=map(int,n.get('size').split(','))
+                if nx<rx+rw and nx+nw>rx and ny<ry+rh and ny+nh>ry:
+                    self.assertLess(int(n.get('zPosition','0')),0,n.attrib)
