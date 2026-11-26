@@ -1,3 +1,9 @@
+# 2026-11-26 — GSU PR #14 eighth legacy checkpoint
+
+Added 38 real CAM, OSD, network mount and settings messages in 21 languages. 174 common + 218 supplementary keys (392 total); 43 remaining direct literal candidates include technical names and paths. Exact HEAD 90fdd87bf5c5c34a233084e9ec88a014fde0e049 passed 10/10 CI. No runtime behavior or stable feed change. New HEAD needs CI.
+
+---
+
 # 2026-11-26 — GSU PR #14 seventh legacy checkpoint
 
 Added 43 actual OSCam/CAM errors, script results, update and other status/operation strings in all 21 languages. 174 common + 180 supplementary keys (354 total). 81 remaining direct literal candidates include protocol names and paths. Exact HEAD cd583b3baf5068fc6403736d7a61d33a72929b9c passed 10/10 CI. New HEAD requires CI. No runtime behavior, release or stable feed changes.

@@ -30,7 +30,7 @@ class LocalizationTests(unittest.TestCase):
     def test_legacy_destructive_operation_warnings_are_translated(self):
         extra=json.loads((ROOT/'locale/legacy-supplement.json').read_text(encoding='utf-8'))
         self.assertEqual(set(extra),set(i18n.LANGUAGES))
-        self.assertEqual(len(extra['en']),180)
+        self.assertEqual(len(extra['en']),218)
         for code,catalog in extra.items():
             self.assertEqual(set(catalog),set(extra['en']))
             for key,value in catalog.items():
