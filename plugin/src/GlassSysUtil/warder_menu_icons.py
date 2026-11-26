@@ -27,17 +27,20 @@ LEGACY_CAM_ICONS={
 }
 
 
-def legacy_cam_row(api,ident,title,enabled):
-    """Preserve legacy row identity, dimensions and independent availability light."""
+def legacy_cam_row(api,ident,title,enabled,icon_ident=None,show_status=True):
+    """Preserve row identity; the embedded workspace has its own native geometry."""
+    renderer=api.get('_warder_navigation_row')
+    if renderer is not None:return renderer(ident,title,enabled,icon_ident,show_status)
     fhd=api['fhd']
-    symbol=pixmap_entry(api,ident,(fhd(21),fhd(1)),(fhd(22),fhd(22)))
-    left=48 if symbol is not None else 25
+    symbol=pixmap_entry(api,icon_ident or ident,(fhd(21 if show_status else 0),fhd(1)),(fhd(22),fhd(22)))
+    left=(48 if show_status else 27) if symbol is not None else (25 if show_status else 0)
     row=[ident,api['MultiContentEntryText'](pos=(fhd(left),0),
         size=(fhd(560-left),fhd(22)),font=0,text=title,
         color=0xffffff if enabled else 0x666666)]
-    status=api['LoadPixmap'](api['BP_ICO'] % ('green' if enabled else 'red'))
-    row.append(api['MultiContentEntryPixmapAlphaTest'](pos=(0,fhd(3)),
-        size=(fhd(15),fhd(16)),png=status))
+    if show_status:
+        status=api['LoadPixmap'](api['BP_ICO'] % ('green' if enabled else 'red'))
+        row.append(api['MultiContentEntryPixmapAlphaTest'](pos=(0,fhd(3)),
+            size=(fhd(15),fhd(16)),png=status))
     if symbol is not None:row.append(symbol)
     return row
 

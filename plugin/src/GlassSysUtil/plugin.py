@@ -5978,12 +5978,9 @@ class oscam_Files(Screen):
     def updatemenulist(self):
         self.list = []
         for x in self.menuListAll:
-            item = [
-             x[0] + '*' + x[1]]
-            item.append(MultiContentEntryText(pos=(fhd(25), 0), size=(fhd(535), fhd(22)), font=0, text=x[1]))
-            pix = LoadPixmap(BP_ICO % 'green')
-            item.append(MultiContentEntryPixmapAlphaTest(pos=(0, fhd(3)), size=(fhd(15), fhd(16)), png=pix))
-            self.list.append(item)
+            from .warder_menu_icons import legacy_cam_row
+            icon = 'log' if x[0] in ('logfile','userfile','anticasc') else 'files'
+            self.list.append(legacy_cam_row(globals(),x[0] + '*' + x[1],x[1],True,icon,False))
 
         self['list'].l.setList(self.list)
         self.setTitle(_('Config Files'))

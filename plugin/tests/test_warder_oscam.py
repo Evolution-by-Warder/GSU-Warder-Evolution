@@ -222,4 +222,35 @@ class WorkspaceTests(unittest.TestCase):
         self.assertTrue(pane.model.list)
         self.assertTrue(all(row[0] for row in pane.model.list))
 
+    def test_embedded_navigation_rows_use_same_scaled_geometry_for_text_and_icons(self):
+        from Plugins.Extensions.GlassSysUtil import warder_menu_icons as icons
+        for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160),(1920,1200)):
+            self.host.width,self.host.height=width,height
+            self.host.sx,self.host.sy=width/1920,height/1080
+            for kind in ('intro','files'):
+                pane=self.host.panes[kind]
+                for enabled in (True,False):
+                    show_status=kind=='intro'
+                    with patch.dict(self.host.api,{'LoadPixmap':MagicMock(return_value=object())}):
+                        row=pane.navigation_row('summary' if show_status else 'oscam.conf*oscam.conf','Title',enabled,
+                            None if show_status else 'files',show_status)
+                    self.assertEqual(row[1]['text'],'Title')
+                    self.assertEqual(len(row),4 if show_status else 3)
+                    ix,iy=row[-1]['pos'];iw,ih=row[-1]['size'];tx,ty=row[1]['pos'];tw,th=row[1]['size']
+                    self.assertEqual(iw,ih)
+                    self.assertLessEqual(ix+iw,tx)
+                    self.assertLessEqual(iy+ih,round(42*self.host.sy))
+                    self.assertLessEqual(ty+th,round(42*self.host.sy))
+                    self.assertLessEqual(tx+tw,round((690 if show_status else 1010)*self.host.sx))
+                    if show_status:self.assertLessEqual(row[2]['pos'][0]+row[2]['size'][0],ix)
+        icons.cached.cache_clear()
+
+    def test_real_file_controller_retains_exact_file_ids_and_has_no_fake_green_status(self):
+        pane=self.host.panes['files']
+        pane.model.updatemenulist()
+        self.assertEqual([r[0] for r in pane.model.list],[a+'*'+b for a,b in pane.model.menuListAll])
+        self.assertTrue(all(len(r)==3 for r in pane.model.list))
+        self.assertEqual(pane.model.list[0][1]['text'],'oscam.version')
+        self.assertEqual(pane.model.list[0][2]['size'],(32,32))
+
 if __name__=='__main__':unittest.main()
