@@ -181,10 +181,14 @@ class CentreMenu(Screen):
         from .warder_menu_icons import pixmap_entry
         sx,sy=self.width/1920,self.height/1080
         for key,label,description,enabled in self.entries():
-            row=[key,self.api['MultiContentEntryText'](pos=(round(72*sx),round(12*sy)),
-                size=(round(552*sx),round(52*sy)),font=0,text=label,
+            project=key in getattr(self,'projects',{})
+            tx,tw= (148,476) if project else (72,552)
+            iw,ih=(120,58) if project else (48,48)
+            row=[key,self.api['MultiContentEntryText'](pos=(round(tx*sx),round(12*sy)),
+                size=(round(tw*sx),round(52*sy)),font=0,text=label,
                 color=0xffffff if enabled else 0x8291a5)]
-            icon=pixmap_entry(self.api,key,(round(12*sx),round(13*sy)),(round(48*sx),round(48*sy)))
+            icon=pixmap_entry(self.api,key,(round(12*sx),round((74-ih)*sy/2)),
+                              (round(iw*sx),round(ih*sy)),project=project)
             if icon is not None:row.append(icon)
             rows.append(row)
         self['list'].l.setList(rows)
