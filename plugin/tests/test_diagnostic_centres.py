@@ -335,7 +335,7 @@ class DiagnosticTests(unittest.TestCase):
                 for n in root:
                     x,y=map(int,n.get('position').split(','));w,h=map(int,n.get('size').split(','))
                     self.assertLessEqual(x+w,width);self.assertLessEqual(y+h,height)
-                self.assertEqual(len(root.findall("widget[@source='key_green']")),1)
+                self.assertEqual(len(root.findall("widget[@source='key_green']")),0 if finder else 1)
         self.assertEqual(ui.readings({}),(None,None,None,None,None))
         self.assertEqual(ui.readings({'tuner_signal_quality':32768,'tuner_signal_power':65535,
             'tuner_signal_quality_db':1070,'tuner_bit_error_rate':0,'tuner_locked':1}),(50,100,1070,0,1))
