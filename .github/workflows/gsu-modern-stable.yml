@@ -1,4 +1,4 @@
-name: Publish verified GSU 0.41.5
+name: Publish verified GSU modern stable
 on:
   push:
     branches: [main]
