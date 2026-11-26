@@ -8,16 +8,16 @@ from .warder_system import install as _install_header
 
 # Coordinates in the receiver's Full HD design space.
 SLOTS={
-    'ecmlabels':(85,355,175,365,22),'ecmValues':(270,355,395,365,22),
-    'bit_labels':(85,800,125,130,20),'bit_min':(220,800,85,100,20),
-    'bit_max':(310,800,85,100,20),'bit_avg':(400,800,85,100,20),
-    'bit_act':(490,800,100,100,20),'stream_btr':(220,883,440,30,20),
-    'tp_lab':(1205,355,255,510,21),'tp_values':(1470,355,360,510,21),
-    'tp_lab_sat':(1205,900,255,35,21),'tp_sat':(1470,900,360,35,21),
-    'tp_lab_ref':(85,935,155,30,19),'tp_ref':(245,935,1585,30,19),
-    'picchannel':(710,360,140,84,None),'picprov':(865,360,140,84,None),
-    'picsat':(1020,360,140,84,None),'piccode':(785,540,140,84,None),
-    'piccam':(960,540,140,84,None),
+    'ecmlabels':(96,362,165,352,22),'ecmValues':(269,362,425,352,22),
+    'bit_labels':(96,780,120,126,20),'bit_min':(222,780,110,100,20),
+    'bit_max':(339,780,110,100,20),'bit_avg':(456,780,110,100,20),
+    'bit_act':(573,780,110,100,20),'stream_btr':(222,862,464,32,20),
+    'tp_lab':(1150,362,246,536,20),'tp_values':(1404,362,414,536,20),
+    'tp_lab_sat':(1150,900,246,32,20),'tp_sat':(1404,900,414,32,20),
+    'tp_lab_ref':(96,940,150,30,19),'tp_ref':(254,940,1564,30,19),
+    'picchannel':(734,382,114,70,None),'picprov':(860,382,114,70,None),
+    'picsat':(986,382,114,70,None),'piccode':(790,488,114,70,None),
+    'piccam':(928,488,114,70,None),
     'red':(55,1006,1810,50,28),
 }
 
@@ -39,10 +39,19 @@ def channel_skin(original,width,height,translator=lambda value:value):
         return position(ET.SubElement(root,'eLabel',backgroundColor=color,zPosition=str(z)),x,y,w,h)
     fill(55,180,1810,800,main.CYAN,-2)
     fill(57,182,1806,796,main.PANEL,-1)
-    for x in (690,1185):fill(x,300,1,610,'#00364b61',0)
-    headings={'ECM Info':(85,300,580,42,29),'Bitrate':(85,750,580,42,29),
-              'Transporder':(1205,300,625,42,29),'Signal':(720,745,440,42,29)}
-    for original_node in ET.fromstring(original):
+    # Each panel uses the same restrained border and heading treatment.
+    for x,y,w,h in ((80,312,630,422),(80,746,630,180),(722,312,400,272),
+                    (722,596,400,330),(1136,312,698,622)):
+        fill(x,y,w,2,main.CYAN,1)
+        fill(x,y+h-2,w,2,main.CYAN,1)
+        fill(x,y,2,h,main.CYAN,1)
+        fill(x+w-2,y,2,h,main.CYAN,1)
+    headings={'ECM Info':(96,320,598,36,27),'Bitrate':(96,750,598,30,25),
+              'Transporder':(1150,320,668,36,27),'Signal':(738,608,368,38,27)}
+    original_root=ET.fromstring(original)
+    source_width,source_height=map(int,original_root.get('size').split(','))
+    source_sx=source_width/1920.0
+    for original_node in original_root:
         node=deepcopy(original_node);name=node.get('name');text=node.get('text')
         pixmap=node.get('pixmap','')
         if node.tag=='ePixmap' and Path(pixmap).name=='frame.png':continue
@@ -52,16 +61,20 @@ def channel_skin(original,width,height,translator=lambda value:value):
             node.set('foregroundColor',main.CYAN);node.set('halign','left')
         elif node.get('source')=='session.CurrentService':
             convert=node.find('convert')
-            if convert is not None and convert.text=='Name':position(node,85,192,1745,53,34)
-            else:position(node,710,260,460,45,24)
+            if convert is not None and convert.text=='Name':position(node,96,190,1722,62,35)
+            else:position(node,96,252,1722,42,24)
             node.set('halign','center');node.attrib.pop('shadowColor',None);node.attrib.pop('shadowOffset',None)
         elif node.get('source')=='session.FrontendStatus' or text in ('Snr:','Agc:','Ber:') or Path(pixmap).name=='barmm_back.png':
-            old_x=int(node.get('position').split(',')[0])/sx
+            # Classify by the source skin's size, not the destination size.
+            # This also works for the original 1920 skin on a WQHD desktop.
+            old_x=int(node.get('position').split(',')[0])/source_sx
             index=min(range(3),key=lambda i:abs(old_x-(790+112*i)))
-            x=735+145*index
-            if node.get('render')=='Progress' or Path(pixmap).name=='barmm_back.png':position(node,x,804,7,65)
-            elif node.get('render')=='Label':position(node,x+17,840,120,32,22)
-            else:position(node,x+17,804,120,32,22)
+            y=664+82*index
+            if node.get('render')=='Progress' or Path(pixmap).name=='barmm_back.png':
+                position(node,742,y+44,360,10)
+                if node.get('render')=='Progress':node.set('orientation','orLeftToRight')
+            elif node.get('render')=='Label':position(node,876,y,226,40,26);node.set('halign','right')
+            else:position(node,742,y,120,40,26);node.set('text',('SNR:','AGC:','BER:')[index])
         else:
             # Only the old footer line is deliberately superseded.
             continue
@@ -70,6 +83,12 @@ def channel_skin(original,width,height,translator=lambda value:value):
             node.set('transparent','1');node.set('zPosition','3')
             if node.get('foregroundColor') in (None,'#666666'):node.set('foregroundColor','#00d1e3f3')
         if (name and name.startswith('pic')) or node.tag=='ePixmap':node.set('alphatest','blend')
+        if name in ('ecmlabels','ecmValues','tp_lab','tp_values'):
+            node.set('valign','top')
+            # Both columns must use identical line height. Long values are
+            # shortened deliberately in the controller, never wrapped into the next row.
+            node.set('noWrap','1')
+        if name in ('tp_sat','tp_ref'):node.set('noWrap','1')
         if name=='red':node.set('foregroundColor','#00ff526a');node.set('halign','center');node.set('valign','center')
         root.append(node)
     fill(860,996,200,2,'#00ff526a',3)
@@ -97,3 +116,17 @@ def install(screen,api):
                 node.move(ePoint(round(x*sx),round(y*sy)))
                 node.resize(eSize(round(w*sx),round(h*sy)))
     screen.onLayoutFinish.append(MethodType(align_satellite,screen))
+
+
+def compact_ecm_cam(name,version):
+    """Keep the version, but omit a long source commit suffix in the narrow view."""
+    from .warder_ecm import compact_cam_version
+    return ' '.join(name.replace('\n',compact_cam_version(version)).split())
+
+
+def caid_rows(caids,max_per_line=6):
+    """Render all CAIDs over explicit rows; labels keep their original alignment."""
+    values=caids.split()
+    if values and all(len(v)==4 and all(c in '0123456789ABCDEFabcdef' for c in v) for v in values):
+        return '\n'.join('  '.join(values[i:i+max_per_line]) for i in range(0,len(values),max_per_line))
+    return caids

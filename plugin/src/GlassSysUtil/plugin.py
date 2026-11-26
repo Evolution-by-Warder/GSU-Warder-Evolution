@@ -1886,7 +1886,7 @@ class channelInfoCenter(Screen):
 
         try:
             (x, i) = self.getTunerInfo(service)
-            self['tp_values'].setText('%s%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s' % (i, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], iswide, ac, str(num), tmp))
+            self['tp_values'].setText('%s%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s' % (i, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], iswide, ac, str(num), _warder_channel.caid_rows(tmp)))
             self['tp_ref'].setText(ref)
             if addr != '':
                 self['tp_lab_sat'].setText('Address:')
@@ -2138,7 +2138,7 @@ class channelInfoCenter(Screen):
                 self['ecmlabels'].setText(self.e.replace(config.plugins.GlassSysUtil.par83.value, 'CHID:'))
             else:
                 self['ecmlabels'].setText(self.e)
-            self['ecmValues'].setText('\n'.join(' '.join(value.split()) for value in (typecam.replace('\n', oscVer), coding, caid, provider, provid, pid, using, adress, hops, share, ecmTime)))
+            self['ecmValues'].setText('\n'.join(' '.join(value.split()) for value in (_warder_channel.compact_ecm_cam(typecam, oscVer), coding, caid, provider, provid, pid, using, adress, hops, share, ecmTime)))
         if coding == '..............':
             coding = 'Unknown'
         self.showPicCode(coding + '-fs8', typecam[:-1] + '-fs8')
