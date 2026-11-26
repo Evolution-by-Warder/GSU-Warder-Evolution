@@ -286,6 +286,7 @@ class DiagnosticTests(unittest.TestCase):
             action.assert_not_called()
             session.openWithCallback.assert_not_called()
             session.open.assert_called_once()
+            self.assertIs(session.open.call_args.args[0],module('warder_dialog').InformationDialog)
 
     def test_direct_selection_launches_only_after_verified_backup_and_rechecks(self):
         tuner=module('warder_tuners')

@@ -599,13 +599,13 @@ class Report(Screen):
             self.export_services('radio')
         elif self.kind == 'tuner-details':
             from .warder_tuners import slots
-            from Screens.ChoiceBox import ChoiceBox
+            from .warder_dialog import choose
             def selected(item):
                 if item and not self.cancelled.is_set():
                     self.slot_number = item[1]
                     self.start()
-            self.session.openWithCallback(selected,ChoiceBox,title=self.tr('Tuner interfaces'),
-                                          list=[(self.tr('Overview'),None)]+slots())
+            choose(self.session,self.api,selected,self.tr('Tuner interfaces'),
+                   [(self.tr('Overview'),None)]+slots())
         elif self.kind == 'system-processes':
             self.cpu_order = not self.cpu_order
             self.start()

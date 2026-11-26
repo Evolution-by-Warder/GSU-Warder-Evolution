@@ -169,6 +169,29 @@ class ReceiverRenderingTests(unittest.TestCase):
         self.assertEqual(screen['actions'].actions['ok'],screen.close)
         self.assertEqual(screen['actions'].actions['cancel'],screen.close)
 
+    def test_choice_preserves_original_value_identity_and_cancel(self):
+        dialog=mod('warder_dialog')
+        session=MagicMock()
+        value=object()
+        options=(('Overview',None),('Tuner A',value))
+        callback=MagicMock()
+        dialog.choose(session,self.api,callback,'Tuners',options)
+        session.openWithCallback.assert_called_once_with(callback,dialog.ChoiceDialog,self.api,'Tuners',options)
+        screen=dialog.ChoiceDialog(session,self.api,'Tuners',options)
+        screen['choices'].moveToIndex(1)
+        screen.select()
+        self.assertIs(screen.result[0],options[1])
+        screen.cancel()
+        self.assertEqual(screen.result,(None,))
+        callback.assert_not_called()
+        for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160),(1920,1200)):
+            root=ET.fromstring(dialog.choice_skin(width,height))
+            self.assertIsNone(root.find("widget[@name='file_info']"))
+            node=root.find("widget[@name='choices']")
+            x,y=map(int,node.get('position').split(','));w,h=map(int,node.get('size').split(','))
+            self.assertLessEqual(x+w,width);self.assertLessEqual(y+h,height)
+            self.assertEqual(h%int(node.get('itemHeight')),0)
+
     def test_header_lifecycle_preserves_footer_and_version(self):
         report=self.ui.Report(MagicMock(),self.api,'network-overview','Network overview')
         header=report._diagnostic_header

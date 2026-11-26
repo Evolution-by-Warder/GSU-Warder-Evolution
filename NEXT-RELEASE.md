@@ -1,3 +1,9 @@
+# 26.11.2026 — Warder selection dialogs and tuner warnings
+
+Predecessor `9f78bbc0aea039dec29ecf5f04d37934a796fa6a`: OpenPLi SUCCESS; remaining workflow families still running at inspection. Added scoped native list-based selection dialog for tuner details and compatibility tuner tool selector, preserving exact choice tuple identity (including None values), cancellation and callback semantics. GSU-generated recording protection, failed backup and unavailable tuning notices use the shared Warder information dialog. No additional opening confirmation, no new tuning/scan behavior, no global image changes; native third-party screens and destructive-operation confirmations remain intact. New tests cover selection identity, cancel, four resolutions plus 1920x1200 and actual blocked-tuner routing. Fresh CI and receiver check required. No production changes.
+
+---
+
 # 26.11.2026 — Scoped diagnostic information dialogs and cancellation regression
 
 HEAD `054eb888f7ebddd26dd77084ad6b5f18247c29a9` passed package reproduction/migrations and architectures. OpenATV/OpenPLi regression matrices each failed one of 501 tests because the category provider assertion still expected no arguments; it now checks the actual cancellation token. Added a Warder full-screen scrollable information dialog for diagnostic export results, report saving and unavailable project entry points. Only these GSU-owned information routes use it; native confirmation callbacks, destructive actions and all image-wide screens are untouched. New test verifies real routing and close/scroll controls. Remaining native tuner warnings, selection dialogs, legacy operations and physical checks not claimed complete. No production changes.

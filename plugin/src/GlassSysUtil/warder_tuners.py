@@ -147,7 +147,6 @@ def styled_satfinder(action):
     original=action.__globals__.get('Satfinder')
     if not isinstance(original,type) or action.__name__!='SatfinderMain':return action
     from .plugin import _
-    from Screens.MessageBox import MessageBox
 
     class WarderSatfinder(original):
         def __init__(self,session):
@@ -159,7 +158,7 @@ def styled_satfinder(action):
 
         def startScan(self,*args,**kwargs):
             if not recording_safe(self.session.nav):
-                self.session.open(MessageBox,_('Recording or channel-list protection stopped the scan.'),type=MessageBox.TYPE_INFO)
+                tuner_info(self.session,_,'Recording or channel-list protection stopped the scan.')
                 return
             return super().startScan(*args,**kwargs)
 
@@ -169,11 +168,16 @@ def styled_satfinder(action):
     return wrapped
 
 
+def tuner_info(session,tr,message):
+    from . import plugin
+    from .warder_dialog import show_info
+    return show_info(session,vars(plugin),tr(message),tr('Tuner setup'))
+
+
 def open_native(session,tr,action):
     """Explicit menu selection opens the tool after a private verified backup."""
-    from Screens.MessageBox import MessageBox
     def info(msg):
-        session.open(MessageBox,tr(msg),type=MessageBox.TYPE_INFO)
+        return tuner_info(session,tr,msg)
     if not callable(action) or not recording_safe(session.nav):
         return info('Tuner in use')
     owner=session.current_dialog
@@ -210,10 +214,10 @@ def open_native(session,tr,action):
 
 def choose_native(session, tr):
     """Compatibility route; skip a redundant selector if only one tool exists."""
-    from Screens.ChoiceBox import ChoiceBox
-    from Screens.MessageBox import MessageBox
+    from . import plugin
+    from .warder_dialog import choose
     def info(msg):
-        session.open(MessageBox,tr(msg),type=MessageBox.TYPE_INFO)
+        return tuner_info(session,tr,msg)
     if not recording_safe(session.nav):
         return info('Tuner in use')
     try:
@@ -224,11 +228,10 @@ def choose_native(session, tr):
     if len(options)==1:return open_native(session,tr,options[0][1])
     def selected(item):
         if item in options:open_native(session,tr,item[1])
-    session.openWithCallback(selected,ChoiceBox,title=tr('Tuner setup'),list=options)
+    choose(session,vars(plugin),selected,tr('Tuner setup'),options)
 
 def manual_scan(session):
     from Screens.ScanSetup import ScanSetup
-    from Screens.MessageBox import MessageBox
     from enigma import eComponentScan
     from .plugin import _
 
@@ -248,7 +251,7 @@ def manual_scan(session):
 
         def startScan(self, tlist, flags, feid, *args, **kwargs):
             if not recording_safe(self.session.nav) or flags & eComponentScan.scanRemoveServices:
-                self.session.open(MessageBox, _('Recording or channel-list protection stopped the scan.'), type=MessageBox.TYPE_INFO)
+                tuner_info(self.session,_,'Recording or channel-list protection stopped the scan.')
                 return
             return super().startScan(tlist, flags, feid, *args, **kwargs)
 
