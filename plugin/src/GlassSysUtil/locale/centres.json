@@ -107,7 +107,9 @@
     "Not detected": "Not detected",
     "No active link detected": "No active link detected",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.",
-    "Compare": "Compare"
+    "Compare": "Compare",
+    "Channel backups": "Channel backups",
+    "Files": "Files"
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -217,7 +219,9 @@
     "Not detected": "Nezistené",
     "No active link detected": "Aktívne spojenie nezistené",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Táto kontrola iba číta údaje. Prístup na internet, integrita disku a dekódovanie CAM sa netestujú.",
-    "Compare": "Porovnať"
+    "Compare": "Porovnať",
+    "Channel backups": "Zálohy staníc",
+    "Files": "Súbory"
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -327,7 +331,9 @@
     "Not detected": "Nezjištěno",
     "No active link detected": "Aktivní spojení nezjištěno",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Tato kontrola pouze čte data. Přístup k internetu, integrita disku a dekódování CAM se netestují.",
-    "Compare": "Porovnat"
+    "Compare": "Porovnat",
+    "Channel backups": "Zálohy stanic",
+    "Files": "Soubory"
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -437,7 +443,9 @@
     "Not detected": "Nicht erkannt",
     "No active link detected": "Keine aktive Verbindung erkannt",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Diese Prüfung ist schreibgeschützt. Internetzugang, Datenträgerintegrität und CAM-Dekodierung werden nicht geprüft.",
-    "Compare": "Vergleichen"
+    "Compare": "Vergleichen",
+    "Channel backups": "Kanalsicherungen",
+    "Files": "Dateien"
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -547,7 +555,9 @@
     "Not detected": "Nie wykryto",
     "No active link detected": "Nie wykryto aktywnego połączenia",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Ta kontrola jest tylko do odczytu. Dostęp do internetu, integralność dysku i dekodowanie CAM nie są testowane.",
-    "Compare": "Porównaj"
+    "Compare": "Porównaj",
+    "Channel backups": "Kopie zapasowe kanałów",
+    "Files": "Pliki"
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -657,7 +667,9 @@
     "Not detected": "Nem észlelhető",
     "No active link detected": "Nincs észlelt aktív kapcsolat",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Ez csak olvasási ellenőrzés. Az internetelérés, a lemez épsége és a CAM dekódolása nincs tesztelve.",
-    "Compare": "Összehasonlítás"
+    "Compare": "Összehasonlítás",
+    "Channel backups": "Csatornamentések",
+    "Files": "Fájlok"
   },
   "ru": {
     "System centre": "Системный центр",
@@ -767,7 +779,9 @@
     "Not detected": "Не обнаружено",
     "No active link detected": "Активное соединение не обнаружено",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Проверка выполняется только для чтения. Доступ в интернет, целостность диска и декодирование CAM не проверяются.",
-    "Compare": "Сравнить"
+    "Compare": "Сравнить",
+    "Channel backups": "Резервные копии каналов",
+    "Files": "Файлы"
   },
   "fr": {
     "System centre": "Centre système",
@@ -877,7 +891,9 @@
     "Not detected": "Non détecté",
     "No active link detected": "Aucune liaison active détectée",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Ce contrôle est en lecture seule. L’accès à Internet, l’intégrité du disque et le décodage CAM ne sont pas testés.",
-    "Compare": "Comparer"
+    "Compare": "Comparer",
+    "Channel backups": "Sauvegardes des chaînes",
+    "Files": "Fichiers"
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -987,7 +1003,9 @@
     "Not detected": "Non rilevato",
     "No active link detected": "Nessun collegamento attivo rilevato",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Questo controllo è in sola lettura. Accesso a Internet, integrità del disco e decodifica CAM non vengono verificati.",
-    "Compare": "Confronta"
+    "Compare": "Confronta",
+    "Channel backups": "Backup dei canali",
+    "Files": "File"
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -1097,7 +1115,9 @@
     "Not detected": "No detectado",
     "No active link detected": "No se detectó un enlace activo",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Esta comprobación es de solo lectura. No se prueban el acceso a Internet, la integridad del disco ni la decodificación CAM.",
-    "Compare": "Comparar"
+    "Compare": "Comparar",
+    "Channel backups": "Copias de canales",
+    "Files": "Archivos"
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -1207,7 +1227,9 @@
     "Not detected": "Nuk u zbulua",
     "No active link detected": "Nuk u zbulua lidhje aktive",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Ky kontroll është vetëm për lexim. Qasja në internet, integriteti i diskut dhe dekodimi CAM nuk testohen.",
-    "Compare": "Krahaso"
+    "Compare": "Krahaso",
+    "Channel backups": "Kopjet rezervë të kanaleve",
+    "Files": "Skedarët"
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -1317,7 +1339,9 @@
     "Not detected": "Δεν εντοπίστηκε",
     "No active link detected": "Δεν εντοπίστηκε ενεργή σύνδεση",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Ο έλεγχος είναι μόνο για ανάγνωση. Δεν ελέγχονται η πρόσβαση στο διαδίκτυο, η ακεραιότητα του δίσκου και η αποκωδικοποίηση CAM.",
-    "Compare": "Σύγκριση"
+    "Compare": "Σύγκριση",
+    "Channel backups": "Αντίγραφα καναλιών",
+    "Files": "Αρχεία"
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -1427,7 +1451,9 @@
     "Not detected": "Ei tuvastatud",
     "No active link detected": "Aktiivset ühendust ei tuvastatud",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "See kontroll on kirjutuskaitstud. Internetiühendust, ketta terviklust ja CAM-dekodeerimist ei testita.",
-    "Compare": "Võrdle"
+    "Compare": "Võrdle",
+    "Channel backups": "Kanalite varukoopiad",
+    "Files": "Failid"
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -1537,7 +1563,9 @@
     "Not detected": "شناسایی نشد",
     "No active link detected": "اتصال فعالی شناسایی نشد",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "این بررسی فقط خواندنی است. دسترسی به اینترنت، یکپارچگی دیسک و رمزگشایی CAM آزمایش نمی‌شوند.",
-    "Compare": "مقایسه"
+    "Compare": "مقایسه",
+    "Channel backups": "پشتیبان کانال‌ها",
+    "Files": "فایل‌ها"
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -1647,7 +1675,9 @@
     "Not detected": "Neaptikta",
     "No active link detected": "Aktyvus ryšys neaptiktas",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Ši patikra skirta tik skaityti. Interneto prieiga, disko vientisumas ir CAM dekodavimas netikrinami.",
-    "Compare": "Palyginti"
+    "Compare": "Palyginti",
+    "Channel backups": "Kanalų atsarginės kopijos",
+    "Files": "Failai"
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -1757,7 +1787,9 @@
     "Not detected": "Niet gedetecteerd",
     "No active link detected": "Geen actieve verbinding gedetecteerd",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Deze controle is alleen-lezen. Internettoegang, schijfintegriteit en CAM-decodering worden niet getest.",
-    "Compare": "Vergelijken"
+    "Compare": "Vergelijken",
+    "Channel backups": "Kanaalback-ups",
+    "Files": "Bestanden"
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -1867,7 +1899,9 @@
     "Not detected": "Não detetado",
     "No active link detected": "Nenhuma ligação ativa detetada",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Esta verificação é apenas de leitura. O acesso à Internet, a integridade do disco e a descodificação CAM não são testados.",
-    "Compare": "Comparar"
+    "Compare": "Comparar",
+    "Channel backups": "Cópias de canais",
+    "Files": "Ficheiros"
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -1977,7 +2011,9 @@
     "Not detected": "Nedetectat",
     "No active link detected": "Nicio conexiune activă detectată",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Această verificare este doar pentru citire. Accesul la internet, integritatea discului și decodarea CAM nu sunt testate.",
-    "Compare": "Compară"
+    "Compare": "Compară",
+    "Channel backups": "Copii de siguranță ale canalelor",
+    "Files": "Fișiere"
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -2087,7 +2123,9 @@
     "Not detected": "Algılanmadı",
     "No active link detected": "Etkin bağlantı algılanmadı",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Bu kontrol salt okunurdur. İnternet erişimi, disk bütünlüğü ve CAM kod çözme işlemi test edilmez.",
-    "Compare": "Karşılaştır"
+    "Compare": "Karşılaştır",
+    "Channel backups": "Kanal yedekleri",
+    "Files": "Dosyalar"
   },
   "uk": {
     "System centre": "Системний центр",
@@ -2197,7 +2235,9 @@
     "Not detected": "Не виявлено",
     "No active link detected": "Активне з’єднання не виявлено",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "Перевірка лише для читання. Доступ до інтернету, цілісність диска та декодування CAM не перевіряються.",
-    "Compare": "Порівняти"
+    "Compare": "Порівняти",
+    "Channel backups": "Резервні копії каналів",
+    "Files": "Файли"
   },
   "zh": {
     "System centre": "系统中心",
@@ -2307,6 +2347,8 @@
     "Not detected": "未检测到",
     "No active link detected": "未检测到活动连接",
     "This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.": "此检查为只读操作。不测试互联网访问、磁盘完整性或 CAM 解码。",
-    "Compare": "比较"
+    "Compare": "比较",
+    "Channel backups": "频道备份",
+    "Files": "文件"
   }
 }

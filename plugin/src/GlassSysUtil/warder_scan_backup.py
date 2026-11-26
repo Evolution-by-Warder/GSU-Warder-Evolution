@@ -86,3 +86,51 @@ def create(source, parent=None):
         if root.exists():
             shutil.rmtree(root)
         raise
+
+
+def inventory(tr,cancelled,probe=None):
+    """Read only existing private backup manifests; no rehash, restore or deletion."""
+    from .warder_tools import Probe,read
+    from .warder_storage import mounts,REMOTE
+    from datetime import datetime
+    p=probe or Probe()
+    table=mounts(p)
+    remote=tuple(target.rstrip('/')+'/' for _,target,fs,_ in table if fs in REMOTE)
+    roots=['/tmp']
+    if any(device.startswith('/dev/') and target=='/media/hdd' and fs not in REMOTE
+           for device,target,fs,_ in table):
+        roots.append('/media/hdd')
+    candidates=[]
+    for location in roots:
+        if cancelled.is_set():return ''
+        if any((location.rstrip('/')+'/').startswith(target) for target in remote):continue
+        parent=p.path(location)
+        if any(node.is_symlink() for node in (parent,*parent.parents)):continue
+        for name in p.entries(location,512):
+            if cancelled.is_set():return ''
+            if not re.fullmatch(r'gsu-channel-backup-[A-Za-z0-9_-]{1,64}',name):continue
+            path=parent/name
+            try:
+                info=path.lstat()
+                if stat.S_ISDIR(info.st_mode) and not info.st_mode&0o077:
+                    candidates.append((info.st_mtime,location,name,path))
+            except OSError:continue
+    rows=[]
+    for stamp,location,name,path in sorted(candidates,key=lambda row:(-row[0],row[1],row[2]))[:12]:
+        if cancelled.is_set():return ''
+        # Do not follow a replaced directory or read channel lists (which may
+        # contain private IPTV credentials). This is manifest metadata only.
+        if path.is_symlink():continue
+        raw=read(path/'SHA256.json',131072,private_log=True)
+        try:
+            manifest=json.loads(raw)
+            valid=(isinstance(manifest,dict) and 1<=len(manifest)<=MAX_FILES
+                   and any(k in manifest for k in ('lamedb','lamedb5'))
+                   and all(CHANNEL_FILE.fullmatch(k) and isinstance(v,str) and
+                           re.fullmatch(r'[0-9a-f]{64}',v) for k,v in manifest.items()))
+        except (ValueError,TypeError,AttributeError):valid=False
+        try:date=datetime.fromtimestamp(stamp).strftime('%Y-%m-%d %H:%M:%S')
+        except (ValueError,OverflowError,OSError):date='—'
+        rows.extend((location+'/'+name,date,'SHA256.json   '+(str(len(manifest))+' · '+tr('Files') if valid else tr('Unavailable')),''))
+    if len(candidates)>12:rows.append(tr('Partial result'))
+    return '\n'.join(rows).strip() or tr('Unavailable')

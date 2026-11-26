@@ -88,6 +88,29 @@ class DiagnosticTests(unittest.TestCase):
         self.assertEqual(network.diagnostics(str,cancel,probe,opener),'')
         opener.assert_not_called()
 
+    def test_backup_inventory_reads_manifest_only_and_skips_untrusted_directories(self):
+        backup=module('warder_scan_backup')
+        with TemporaryDirectory() as folder:
+            root=Path(folder)
+            (root/'tmp').mkdir()
+            source=root/'source';source.mkdir()
+            (source/'lamedb').write_text('private-channel-data')
+            dest=Path(backup.create(source,root/'tmp'))
+            public=root/'tmp/gsu-channel-backup-public';public.mkdir(mode=0o755)
+            (public/'SHA256.json').write_text('{}')
+            (root/'tmp/gsu-channel-backup-link').symlink_to(dest,target_is_directory=True)
+            p=module('warder_tools').Probe(root)
+            before=(dest/'lamedb').read_bytes()
+            result=backup.inventory(str,Event(),p)
+            self.assertIn(dest.name,result)
+            self.assertIn('SHA256.json   1 · Files',result)
+            self.assertNotIn('private-channel-data',result)
+            self.assertNotIn('backup-public',result)
+            self.assertNotIn('backup-link',result)
+            self.assertEqual((dest/'lamedb').read_bytes(),before)
+            cancel=Event();cancel.set()
+            self.assertEqual(backup.inventory(str,cancel,p),'')
+
     def test_backup_recreates_native_files_privately_and_ignores_settings(self):
         from hashlib import sha256
         backup = module('warder_scan_backup')

@@ -55,7 +55,7 @@ class ReceiverRenderingTests(unittest.TestCase):
                 self.ui.open_diagnostic(session,self.api,kind)
                 session.open.assert_called_once_with(self.ui.Report,self.api,kind,routes[kind][0])
                 report=self.ui.Report(session,self.api,kind,routes[kind][0])
-                self.assertEqual(report['green'].getText(),report.tr('TV') if kind=='transponder-services' else report.tr('Details') if kind in ('system-processes','service-crashes') else '')
+                self.assertEqual(report['green'].getText(),report.tr('TV') if kind=='transponder-services' else report.tr('Details') if kind in ('system-processes','service-crashes') else report.tr('Channel backups') if kind=='tuner-details' else '')
                 report.done('Receiver content')
                 self.assertIn('Receiver content',report['file_info'].getText())
                 for value in ('',None,'   '):

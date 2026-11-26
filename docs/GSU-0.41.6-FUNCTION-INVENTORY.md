@@ -31,3 +31,20 @@ Pred každým rozšírením vyhľadať existujúci vlastník funkcie, zber dát,
 7. Overiť jazykové kľúče vo všetkých 21 katalógoch, CI a fyzický prijímač.
 
 Audit pôvodných referencií zostáva zdrojom inšpirácie, nie dôkazom, že cudzie pluginy boli spustené. Nepridávať cudzie binárky, nekontrolované feedy, automatické mazanie či zmeny autentifikácie. Rozsah funkcií sa overuje pred implementáciou po každom novom HEAD.
+
+
+## Stav implementácie po dávkach (kontrola HEAD `4811cdd9828fec9491b15d37df254b8aa7843168`)
+
+- Systém: CPU po jadrách, frekvencie, uptime, PSS vybraného procesu — zapracované.
+- Úložisko: podrobná RAM, pasívne I/O, rozšírený SMART — zapracované. Konfigurované EPG/timeshift cesty a rebríček súborov nie sú dokončené.
+- Sieť: rozhrania, MAC/duplex/Wi-Fi, kumulatívne počítadlá, mounty, služby/SSH/porty a explicitný DNS/NSS test — zapracované. OpenWebif atribúcia a samostatná história rozhraní nie sú implementované; súhrn RX/TX už existuje.
+- Príjem: uložené satelitné merania v rámci Enigma2 session, porovnanie do 12 záznamov, bez skenu — zapracované.
+- Kanál: nové rozloženie, natívne merania, viacriadkové CAID — zapracované; doplnenie kodeku nie je potvrdené.
+- ECM: história pozorovaných aktualizácií súboru, nie úplný log požiadaviek — zapracované.
+- Servis: inventár balíkov, lokálny prehliadač crashlogov, Smart Diagnostics — zapracované.
+- Navigácia: vlastníctvo rodičovského centra, pasívny náhľad a pozastavenie pri skrytí — zapracované; všetky legacy akcie ešte nie sú skutočne inline v pravom paneli. SWAP/OSD/ECM používajú zjednotené podriadené obrazovky.
+- Zálohy: táto dávka pridáva prehľad manifestov, nie opätovné overenie hashov ani obnovu. Žiadne automatické mazanie.
+- Warder centrum: existujúci report/verzie/poznámky/otvorenie produktu zachované; hromadný súhrn piatich projektov nie je nový implementovaný pohľad.
+- Lokalizácia: spoločné kľúče a placeholdery v 21 katalógoch, statické testy; čitateľnosť na fyzických prijímačoch ešte overiť.
+
+Ostré vydanie blokuje neukončené CI presného HEAD a požadovaný fyzický retest. Nevyhlasovať zostávajúce voliteľné rozšírenia za hotové ani meniť produkciu bez splnenia brány.

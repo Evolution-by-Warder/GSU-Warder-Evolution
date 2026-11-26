@@ -575,7 +575,7 @@ class Report(Screen):
                 self['network_title%d'%i]=Label('')
                 self['network_body%d'%i]=ScrollLabel('')
             self.show_network(False)
-        for name, key in [('heading',title), ('red','Back'), ('green','TV' if kind == 'transponder-services' else 'Details' if kind in ('system-processes','service-crashes') else ''), ('yellow','Refresh'),
+        for name, key in [('heading',title), ('red','Back'), ('green','TV' if kind == 'transponder-services' else 'Details' if kind in ('system-processes','service-crashes') else 'Channel backups' if kind=='tuner-details' else ''), ('yellow','Refresh'),
                           ('blue','Tuner interfaces' if kind == 'tuner-details' else 'Radio' if kind == 'transponder-services' else 'Save' if kind == 'forum-report' else 'CPU / RAM' if kind == 'system-processes' else '')]:
             self[name] = Label(self.tr(key))
         self['actions'] = ActionMap(['ColorActions','SetupActions','DirectionActions'],
@@ -772,6 +772,8 @@ class Report(Screen):
             return self.export_services('tv')
         if self.kind=='service-crashes':
             return self.choose_crash()
+        if self.kind=='tuner-details':
+            return self.show_backups()
         if self.kind!='system-processes' or self.pending or self.cancelled.is_set() or not self.table_visible:return
         selected=self['process_list'].getCurrent()
         if not selected or selected[0] not in self.process_names:return
@@ -786,6 +788,19 @@ class Report(Screen):
         def failed(failure):
             done(self.tr('Unavailable'))
         try:deferToThread(process_memory,pid,self.process_names[pid],self.tr).addCallbacks(done,failed)
+        except (RuntimeError,TypeError,OSError):failed(None)
+
+    def show_backups(self):
+        if self.pending or self.cancelled.is_set():return
+        from .warder_scan_backup import inventory
+        from .warder_dialog import show_info
+        self.pending=True
+        def done(value):
+            self.pending=False
+            if not self.cancelled.is_set():
+                show_info(self.session,self.api,value or self.tr('Unavailable'),self.tr('Channel backups'))
+        def failed(failure):done(self.tr('Unavailable'))
+        try:deferToThread(inventory,self.tr,self.cancelled).addCallbacks(done,failed)
         except (RuntimeError,TypeError,OSError):failed(None)
 
     def choose_crash(self):

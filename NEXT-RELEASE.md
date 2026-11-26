@@ -1,3 +1,9 @@
+# 26.11.2026 — Existing channel backup inventory and completion audit
+
+Previous exact HEAD `4811cdd9828fec9491b15d37df254b8aa7843168`: OpenATV/OpenPLi/reproducibility SUCCESS, architecture running at inspection. Added green Channel backups action in the existing full tuner-details report. Lists up to 12 recent private GSU-created backup directories from bounded local /tmp and mounted local HDD inventory, with date and structurally valid SHA256.json entry count. Does not rehash files, read channel contents, restore, delete or create backups. Existing pre-scan verified-copy implementation unchanged. Two labels in 21 languages, regression covers manifest-only display, local/private/symlink exclusions and cancellation. Updated original function inventory with completed vs pending areas. Exact-head CI and physical receiver check remain mandatory. No production mutation.
+
+---
+
 # 26.11.2026 — Centre preview lifecycle and single-worker cancellation
 
 Previous exact HEAD `426e9fe8974cae66aed77fd04b55f9714337798b`: OpenATV/OpenPLi/package SUCCESS; architecture running at initial inspection. Centre and ProjectMenu now cancel pending automatic result work when hidden, reject late callbacks, and schedule a single passive refresh on return. Native child selection remains preserved; manual connection tests/diagnostic archives are never automatically repeated. No new collectors or menu IDs. Added regression for hidden worker, stale result, resumed passive refresh and no replay after explicit action or close. Fresh exact-head CI and physical validation remain required; no production change.
