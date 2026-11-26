@@ -1,3 +1,9 @@
+# 2026-11-26 — GSU PR #14 runtime-module checkpoint
+
+Exact HEAD 65540c1562b37c8e6b1a2ccc8c1610c912376335 passed all 10 checks including independent AST inventory. Added seven additional CAM package, OSCam start, About and diagnostic bundle UI messages in all 21 languages; 174 common + 257 supplemental keys (431 total). Added placeholder equality regression for supplementary entries. English diagnostic archive summary remains machine-readable; no runtime behavior change. Stable r4 remains unchanged until publishing gates.
+
+---
+
 # 2026-11-26 — GSU PR #14 ninth legacy checkpoint
 
 Added final 32 direct legacy help/operation strings in all 21 languages. 174 common + 250 supplementary keys (424 total), all regex-inventoried literal `_()` calls in plugin.py covered except 11 explicitly retained protocol/path/device identifiers. Added an independent AST regression for coverage; if it reveals additional literals, translate them before merge. Exact HEAD c55c6387894b5d98cbf7fdd76f5305c81561c2c3 passed 10/10 CI. Remaining: inspect AST result and other runtime modules, activate r5 source/notes, prepare safe production publishing, verify CI and public artifact/feeds. No stable feed change.

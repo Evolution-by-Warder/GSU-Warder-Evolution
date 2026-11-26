@@ -249,7 +249,14 @@
     "not started, please check config files or atributes": "nespustené, skontrolujte konfiguračné súbory alebo atribúty",
     "or": "alebo",
     "using": "používa",
-    "was downloaded successfully into /tmp": "bolo úspešne stiahnuté do /tmp"
+    "was downloaded successfully into /tmp": "bolo úspešne stiahnuté do /tmp",
+    "This CAM has no installed package to update.": "Tento CAM nemá nainštalovaný balík na aktualizáciu.",
+    "Loading OSCam start configuration...": "Načítavam konfiguráciu štartu OSCam...",
+    "Unable to read OSCam start configuration.": "Konfiguráciu štartu OSCam nemožno načítať.",
+    "Plugin version, authors and changes in the installed release.": "Verzia pluginu, autori a zmeny v nainštalovanom vydaní.",
+    "Diagnostic bundle and plugin information.": "Diagnostický balík a informácie o plugine.",
+    "Create one archive with system information and GSU logs.": "Vytvoriť jeden archív s informáciami o systéme a protokolmi GSU.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "Diagnostický balík vytvorený:\n%s\n\nVeľkosť: %s KiB\n\nSúbor je dostupný v prijímači na uvedenej ceste."
   },
   "cs": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Položky tabulky oddílů nejsou v pořadí disku. Chcete je opravit? (Všechna data budou zničena)",
@@ -501,7 +508,14 @@
     "not started, please check config files or atributes": "nespuštěno, zkontrolujte konfigurační soubory nebo atributy",
     "or": "nebo",
     "using": "používá",
-    "was downloaded successfully into /tmp": "bylo úspěšně staženo do /tmp"
+    "was downloaded successfully into /tmp": "bylo úspěšně staženo do /tmp",
+    "This CAM has no installed package to update.": "Tento CAM nemá nainstalovaný balíček k aktualizaci.",
+    "Loading OSCam start configuration...": "Načítání konfigurace spuštění OSCam...",
+    "Unable to read OSCam start configuration.": "Nelze načíst konfiguraci spuštění OSCam.",
+    "Plugin version, authors and changes in the installed release.": "Verze pluginu, autoři a změny v nainstalovaném vydání.",
+    "Diagnostic bundle and plugin information.": "Diagnostický balíček a informace o pluginu.",
+    "Create one archive with system information and GSU logs.": "Vytvořit jeden archiv se systémovými informacemi a protokoly GSU.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "Diagnostický balíček vytvořen:\n%s\n\nVelikost: %s KiB\n\nSoubor je dostupný v přijímači na uvedené cestě."
   },
   "de": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Die Partitionstabelleneinträge entsprechen nicht der Reihenfolge auf dem Datenträger. Jetzt korrigieren? (Alle Daten werden gelöscht)",
@@ -753,7 +767,14 @@
     "not started, please check config files or atributes": "nicht gestartet, bitte Konfigurationsdateien oder Attribute prüfen",
     "or": "oder",
     "using": "verwendet",
-    "was downloaded successfully into /tmp": "wurde erfolgreich nach /tmp heruntergeladen"
+    "was downloaded successfully into /tmp": "wurde erfolgreich nach /tmp heruntergeladen",
+    "This CAM has no installed package to update.": "Für diesen CAM ist kein aktualisierbares Paket installiert.",
+    "Loading OSCam start configuration...": "OSCam-Startkonfiguration wird geladen...",
+    "Unable to read OSCam start configuration.": "OSCam-Startkonfiguration kann nicht gelesen werden.",
+    "Plugin version, authors and changes in the installed release.": "Plugin-Version, Autoren und Änderungen der installierten Ausgabe.",
+    "Diagnostic bundle and plugin information.": "Diagnosepaket und Plugin-Informationen.",
+    "Create one archive with system information and GSU logs.": "Ein Archiv mit Systeminformationen und GSU-Protokollen erstellen.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "Diagnosepaket erstellt:\n%s\n\nGröße: %s KiB\n\nDie Datei befindet sich auf dem Receiver unter dem obigen Pfad."
   },
   "pl": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Wpisy tablicy partycji nie są w kolejności dysku. Czy je naprawić? (Wszystkie dane zostaną zniszczone)",
@@ -1005,7 +1026,14 @@
     "not started, please check config files or atributes": "nie uruchomiono, sprawdź pliki konfiguracji lub atrybuty",
     "or": "lub",
     "using": "używa",
-    "was downloaded successfully into /tmp": "pobrano pomyślnie do /tmp"
+    "was downloaded successfully into /tmp": "pobrano pomyślnie do /tmp",
+    "This CAM has no installed package to update.": "Ten CAM nie ma zainstalowanego pakietu do aktualizacji.",
+    "Loading OSCam start configuration...": "Wczytywanie konfiguracji uruchamiania OSCam...",
+    "Unable to read OSCam start configuration.": "Nie można odczytać konfiguracji uruchamiania OSCam.",
+    "Plugin version, authors and changes in the installed release.": "Wersja wtyczki, autorzy i zmiany w zainstalowanym wydaniu.",
+    "Diagnostic bundle and plugin information.": "Pakiet diagnostyczny i informacje o wtyczce.",
+    "Create one archive with system information and GSU logs.": "Utwórz jedno archiwum z informacjami o systemie i dziennikami GSU.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "Utworzono pakiet diagnostyczny:\n%s\n\nRozmiar: %s KiB\n\nPlik jest dostępny w odbiorniku pod powyższą ścieżką."
   },
   "hu": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "A partíciós tábla bejegyzései nem a lemez sorrendjében vannak. Javítja őket? (Minden adat törlődik)",
@@ -1257,7 +1285,14 @@
     "not started, please check config files or atributes": "nem indult el, ellenőrizze a konfigurációs fájlokat vagy attribútumokat",
     "or": "vagy",
     "using": "használja",
-    "was downloaded successfully into /tmp": "sikeresen letöltve ide: /tmp"
+    "was downloaded successfully into /tmp": "sikeresen letöltve ide: /tmp",
+    "This CAM has no installed package to update.": "Ehhez a CAM-hoz nincs telepített frissíthető csomag.",
+    "Loading OSCam start configuration...": "OSCam indítási beállításainak betöltése...",
+    "Unable to read OSCam start configuration.": "Az OSCam indítási beállításai nem olvashatók.",
+    "Plugin version, authors and changes in the installed release.": "A bővítmény verziója, szerzői és a telepített kiadás változásai.",
+    "Diagnostic bundle and plugin information.": "Diagnosztikai csomag és bővítményinformációk.",
+    "Create one archive with system information and GSU logs.": "Egyetlen archívum létrehozása a rendszeradatokkal és a GSU naplóival.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "A diagnosztikai csomag elkészült:\n%s\n\nMéret: %s KiB\n\nA fájl a vevőkészüléken a fenti útvonalon érhető el."
   },
   "ru": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Записи таблицы разделов расположены не в порядке диска. Исправить? (Все данные будут уничтожены)",
@@ -1509,7 +1544,14 @@
     "not started, please check config files or atributes": "не запущено, проверьте файлы конфигурации или атрибуты",
     "or": "или",
     "using": "использует",
-    "was downloaded successfully into /tmp": "успешно загружено в /tmp"
+    "was downloaded successfully into /tmp": "успешно загружено в /tmp",
+    "This CAM has no installed package to update.": "Для этого CAM нет установленного пакета для обновления.",
+    "Loading OSCam start configuration...": "Загрузка конфигурации запуска OSCam...",
+    "Unable to read OSCam start configuration.": "Не удалось прочитать конфигурацию запуска OSCam.",
+    "Plugin version, authors and changes in the installed release.": "Версия плагина, авторы и изменения в установленном выпуске.",
+    "Diagnostic bundle and plugin information.": "Диагностический пакет и сведения о плагине.",
+    "Create one archive with system information and GSU logs.": "Создать один архив с системными сведениями и журналами GSU.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "Диагностический пакет создан:\n%s\n\nРазмер: %s КиБ\n\nФайл доступен на ресивере по указанному выше пути."
   },
   "fr": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Les entrées de la table de partitions ne suivent pas l’ordre du disque. Les corriger ? (Toutes les données seront détruites)",
@@ -1761,7 +1803,14 @@
     "not started, please check config files or atributes": "non démarré, vérifiez les fichiers de configuration ou attributs",
     "or": "ou",
     "using": "utilise",
-    "was downloaded successfully into /tmp": "a été téléchargé avec succès dans /tmp"
+    "was downloaded successfully into /tmp": "a été téléchargé avec succès dans /tmp",
+    "This CAM has no installed package to update.": "Aucun paquet installé à mettre à jour pour ce CAM.",
+    "Loading OSCam start configuration...": "Chargement de la configuration de démarrage OSCam...",
+    "Unable to read OSCam start configuration.": "Impossible de lire la configuration de démarrage OSCam.",
+    "Plugin version, authors and changes in the installed release.": "Version du plugin, auteurs et modifications de la version installée.",
+    "Diagnostic bundle and plugin information.": "Archive de diagnostic et informations sur le plugin.",
+    "Create one archive with system information and GSU logs.": "Créer une archive contenant les informations système et les journaux GSU.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "Archive de diagnostic créée :\n%s\n\nTaille : %s KiB\n\nLe fichier est disponible sur le récepteur au chemin ci-dessus."
   },
   "it": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Le voci della tabella delle partizioni non seguono l’ordine del disco. Correggerle? (Tutti i dati verranno distrutti)",
@@ -2013,7 +2062,14 @@
     "not started, please check config files or atributes": "non avviato, controllare file di configurazione o attributi",
     "or": "oppure",
     "using": "utilizza",
-    "was downloaded successfully into /tmp": "scaricato correttamente in /tmp"
+    "was downloaded successfully into /tmp": "scaricato correttamente in /tmp",
+    "This CAM has no installed package to update.": "Questo CAM non ha un pacchetto installato da aggiornare.",
+    "Loading OSCam start configuration...": "Caricamento della configurazione di avvio OSCam...",
+    "Unable to read OSCam start configuration.": "Impossibile leggere la configurazione di avvio OSCam.",
+    "Plugin version, authors and changes in the installed release.": "Versione del plugin, autori e modifiche della versione installata.",
+    "Diagnostic bundle and plugin information.": "Pacchetto diagnostico e informazioni sul plugin.",
+    "Create one archive with system information and GSU logs.": "Crea un archivio con informazioni di sistema e registri GSU.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "Pacchetto diagnostico creato:\n%s\n\nDimensione: %s KiB\n\nIl file è disponibile sul ricevitore al percorso indicato sopra."
   },
   "es": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Las entradas de la tabla de particiones no siguen el orden del disco. ¿Corregirlas? (Se destruirán todos los datos)",
@@ -2265,7 +2321,14 @@
     "not started, please check config files or atributes": "no iniciado, compruebe archivos de configuración o atributos",
     "or": "o",
     "using": "utiliza",
-    "was downloaded successfully into /tmp": "se descargó correctamente en /tmp"
+    "was downloaded successfully into /tmp": "se descargó correctamente en /tmp",
+    "This CAM has no installed package to update.": "Este CAM no tiene un paquete instalado que actualizar.",
+    "Loading OSCam start configuration...": "Cargando configuración de inicio de OSCam...",
+    "Unable to read OSCam start configuration.": "No se puede leer la configuración de inicio de OSCam.",
+    "Plugin version, authors and changes in the installed release.": "Versión del complemento, autores y cambios en la versión instalada.",
+    "Diagnostic bundle and plugin information.": "Paquete de diagnóstico e información del complemento.",
+    "Create one archive with system information and GSU logs.": "Crear un archivo con información del sistema y registros de GSU.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "Paquete de diagnóstico creado:\n%s\n\nTamaño: %s KiB\n\nEl archivo está disponible en el receptor en la ruta indicada arriba."
   },
   "al": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Regjistrimet e tabelës së ndarjeve nuk janë sipas rendit të diskut. Dëshironi t’i korrigjoni? (Të gjitha të dhënat do të shkatërrohen)",
@@ -2517,7 +2580,14 @@
     "not started, please check config files or atributes": "nuk është nisur, kontrolloni skedarët e konfigurimit ose atributet",
     "or": "ose",
     "using": "përdor",
-    "was downloaded successfully into /tmp": "u shkarkua me sukses në /tmp"
+    "was downloaded successfully into /tmp": "u shkarkua me sukses në /tmp",
+    "This CAM has no installed package to update.": "Ky CAM nuk ka paketë të instaluar për përditësim.",
+    "Loading OSCam start configuration...": "Po ngarkohet konfigurimi i nisjes së OSCam...",
+    "Unable to read OSCam start configuration.": "Nuk mund të lexohet konfigurimi i nisjes së OSCam.",
+    "Plugin version, authors and changes in the installed release.": "Versioni i shtojcës, autorët dhe ndryshimet në versionin e instaluar.",
+    "Diagnostic bundle and plugin information.": "Paketa diagnostikuese dhe informacioni i shtojcës.",
+    "Create one archive with system information and GSU logs.": "Krijo një arkiv me informacionin e sistemit dhe regjistrat GSU.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "Paketa diagnostikuese u krijua:\n%s\n\nMadhësia: %s KiB\n\nSkedari është i disponueshëm në marrës në shtegun e mësipërm."
   },
   "el": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Οι εγγραφές του πίνακα κατατμήσεων δεν ακολουθούν τη σειρά του δίσκου. Να διορθωθούν; (Όλα τα δεδομένα θα καταστραφούν)",
@@ -2769,7 +2839,14 @@
     "not started, please check config files or atributes": "δεν εκκινήθηκε, ελέγξτε αρχεία ρυθμίσεων ή ιδιότητες",
     "or": "ή",
     "using": "χρησιμοποιεί",
-    "was downloaded successfully into /tmp": "λήφθηκε με επιτυχία στο /tmp"
+    "was downloaded successfully into /tmp": "λήφθηκε με επιτυχία στο /tmp",
+    "This CAM has no installed package to update.": "Αυτό το CAM δεν διαθέτει εγκατεστημένο πακέτο προς ενημέρωση.",
+    "Loading OSCam start configuration...": "Φόρτωση ρυθμίσεων εκκίνησης OSCam...",
+    "Unable to read OSCam start configuration.": "Αδυναμία ανάγνωσης ρυθμίσεων εκκίνησης OSCam.",
+    "Plugin version, authors and changes in the installed release.": "Έκδοση πρόσθετου, δημιουργοί και αλλαγές της εγκατεστημένης έκδοσης.",
+    "Diagnostic bundle and plugin information.": "Πακέτο διαγνωστικών και πληροφορίες πρόσθετου.",
+    "Create one archive with system information and GSU logs.": "Δημιουργία ενός αρχείου με πληροφορίες συστήματος και καταγραφές GSU.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "Δημιουργήθηκε πακέτο διαγνωστικών:\n%s\n\nΜέγεθος: %s KiB\n\nΤο αρχείο βρίσκεται στον δέκτη στην παραπάνω διαδρομή."
   },
   "et": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Partitsioonitabeli kirjed ei ole ketta järjekorras. Kas parandada? (Kõik andmed hävitatakse)",
@@ -3021,7 +3098,14 @@
     "not started, please check config files or atributes": "ei käivitunud, kontrolli seadistusfaile või atribuute",
     "or": "või",
     "using": "kasutab",
-    "was downloaded successfully into /tmp": "laaditi edukalt alla kausta /tmp"
+    "was downloaded successfully into /tmp": "laaditi edukalt alla kausta /tmp",
+    "This CAM has no installed package to update.": "Sellel CAM-il pole uuendatavat paigaldatud paketti.",
+    "Loading OSCam start configuration...": "OSCam-i käivitusseadete laadimine...",
+    "Unable to read OSCam start configuration.": "OSCam-i käivitusseadeid ei saa lugeda.",
+    "Plugin version, authors and changes in the installed release.": "Plugina versioon, autorid ja paigaldatud väljalaske muudatused.",
+    "Diagnostic bundle and plugin information.": "Diagnostikapakett ja plugina teave.",
+    "Create one archive with system information and GSU logs.": "Loo üks arhiiv süsteemiteabe ja GSU logidega.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "Diagnostikapakett loodud:\n%s\n\nSuurus: %s KiB\n\nFail on vastuvõtjas ülaltoodud asukohas."
   },
   "fa": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "ورودی‌های جدول پارتیشن به ترتیب دیسک نیستند. اصلاح شوند؟ (همه داده‌ها از بین می‌روند)",
@@ -3273,7 +3357,14 @@
     "not started, please check config files or atributes": "راه‌اندازی نشده، فایل‌های پیکربندی یا ویژگی‌ها را بررسی کنید",
     "or": "یا",
     "using": "استفاده می‌کند",
-    "was downloaded successfully into /tmp": "با موفقیت در /tmp بارگیری شد"
+    "was downloaded successfully into /tmp": "با موفقیت در /tmp بارگیری شد",
+    "This CAM has no installed package to update.": "برای این CAM بسته نصب‌شده‌ای جهت به‌روزرسانی وجود ندارد.",
+    "Loading OSCam start configuration...": "در حال بارگیری پیکربندی راه‌اندازی OSCam...",
+    "Unable to read OSCam start configuration.": "خواندن پیکربندی راه‌اندازی OSCam ممکن نیست.",
+    "Plugin version, authors and changes in the installed release.": "نسخه افزونه، نویسندگان و تغییرات نسخه نصب‌شده.",
+    "Diagnostic bundle and plugin information.": "بسته عیب‌یابی و اطلاعات افزونه.",
+    "Create one archive with system information and GSU logs.": "ایجاد یک بایگانی شامل اطلاعات سیستم و گزارش‌های GSU.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "بسته عیب‌یابی ایجاد شد:\n%s\n\nاندازه: %s KiB\n\nفایل در گیرنده در مسیر بالا موجود است."
   },
   "lt": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Skaidinių lentelės įrašai neatitinka disko eilės tvarkos. Ar taisyti? (Visi duomenys bus sunaikinti)",
@@ -3525,7 +3616,14 @@
     "not started, please check config files or atributes": "nepaleista, patikrinkite konfigūracijos failus arba atributus",
     "or": "arba",
     "using": "naudoja",
-    "was downloaded successfully into /tmp": "sėkmingai atsisiųsta į /tmp"
+    "was downloaded successfully into /tmp": "sėkmingai atsisiųsta į /tmp",
+    "This CAM has no installed package to update.": "Šis CAM neturi įdiegto paketo, kurį būtų galima atnaujinti.",
+    "Loading OSCam start configuration...": "Įkeliama OSCam paleidimo konfigūracija...",
+    "Unable to read OSCam start configuration.": "Nepavyko perskaityti OSCam paleidimo konfigūracijos.",
+    "Plugin version, authors and changes in the installed release.": "Papildinio versija, autoriai ir įdiegtos laidos pakeitimai.",
+    "Diagnostic bundle and plugin information.": "Diagnostikos paketas ir papildinio informacija.",
+    "Create one archive with system information and GSU logs.": "Sukurti vieną archyvą su sistemos informacija ir GSU žurnalais.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "Diagnostikos paketas sukurtas:\n%s\n\nDydis: %s KiB\n\nFailas pasiekiamas imtuve nurodytu keliu."
   },
   "nl": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "De vermeldingen in de partitietabel staan niet in schijfvolgorde. Corrigeren? (Alle gegevens worden vernietigd)",
@@ -3777,7 +3875,14 @@
     "not started, please check config files or atributes": "niet gestart, controleer configuratiebestanden of attributen",
     "or": "of",
     "using": "gebruikt",
-    "was downloaded successfully into /tmp": "is succesvol gedownload naar /tmp"
+    "was downloaded successfully into /tmp": "is succesvol gedownload naar /tmp",
+    "This CAM has no installed package to update.": "Voor deze CAM is geen bij te werken pakket geïnstalleerd.",
+    "Loading OSCam start configuration...": "OSCam-startconfiguratie laden...",
+    "Unable to read OSCam start configuration.": "Kan de OSCam-startconfiguratie niet lezen.",
+    "Plugin version, authors and changes in the installed release.": "Pluginversie, auteurs en wijzigingen in de geïnstalleerde uitgave.",
+    "Diagnostic bundle and plugin information.": "Diagnostisch pakket en plugininformatie.",
+    "Create one archive with system information and GSU logs.": "Maak één archief met systeeminformatie en GSU-logboeken.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "Diagnostisch pakket gemaakt:\n%s\n\nGrootte: %s KiB\n\nHet bestand staat op de ontvanger op het bovenstaande pad."
   },
   "pt": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "As entradas da tabela de partições não seguem a ordem do disco. Corrigir? (Todos os dados serão destruídos)",
@@ -4029,7 +4134,14 @@
     "not started, please check config files or atributes": "não iniciado, verifique ficheiros de configuração ou atributos",
     "or": "ou",
     "using": "utiliza",
-    "was downloaded successfully into /tmp": "foi descarregado com sucesso para /tmp"
+    "was downloaded successfully into /tmp": "foi descarregado com sucesso para /tmp",
+    "This CAM has no installed package to update.": "Este CAM não tem um pacote instalado para atualizar.",
+    "Loading OSCam start configuration...": "A carregar a configuração de arranque do OSCam...",
+    "Unable to read OSCam start configuration.": "Não foi possível ler a configuração de arranque do OSCam.",
+    "Plugin version, authors and changes in the installed release.": "Versão do plugin, autores e alterações na versão instalada.",
+    "Diagnostic bundle and plugin information.": "Pacote de diagnóstico e informações do plugin.",
+    "Create one archive with system information and GSU logs.": "Criar um arquivo com informações do sistema e registos do GSU.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "Pacote de diagnóstico criado:\n%s\n\nTamanho: %s KiB\n\nO ficheiro está disponível no recetor no caminho acima."
   },
   "ro": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Intrările din tabela de partiții nu sunt în ordinea discului. Doriți să le corectați? (Toate datele vor fi distruse)",
@@ -4281,7 +4393,14 @@
     "not started, please check config files or atributes": "nu a pornit, verificați fișierele de configurare sau atributele",
     "or": "sau",
     "using": "utilizează",
-    "was downloaded successfully into /tmp": "a fost descărcat cu succes în /tmp"
+    "was downloaded successfully into /tmp": "a fost descărcat cu succes în /tmp",
+    "This CAM has no installed package to update.": "Acest CAM nu are un pachet instalat pentru actualizare.",
+    "Loading OSCam start configuration...": "Se încarcă configurația de pornire OSCam...",
+    "Unable to read OSCam start configuration.": "Configurația de pornire OSCam nu poate fi citită.",
+    "Plugin version, authors and changes in the installed release.": "Versiunea pluginului, autorii și modificările din versiunea instalată.",
+    "Diagnostic bundle and plugin information.": "Pachet de diagnosticare și informații despre plugin.",
+    "Create one archive with system information and GSU logs.": "Creează o arhivă cu informații despre sistem și jurnale GSU.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "Pachet de diagnosticare creat:\n%s\n\nDimensiune: %s KiB\n\nFișierul este disponibil pe receptor la calea de mai sus."
   },
   "tr": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Bölüm tablosu girdileri disk sırasına uygun değil. Düzeltmek ister misiniz? (Tüm veriler silinecek)",
@@ -4533,7 +4652,14 @@
     "not started, please check config files or atributes": "başlatılmadı, yapılandırma dosyalarını veya öznitelikleri denetleyin",
     "or": "veya",
     "using": "kullanıyor",
-    "was downloaded successfully into /tmp": "başarıyla /tmp konumuna indirildi"
+    "was downloaded successfully into /tmp": "başarıyla /tmp konumuna indirildi",
+    "This CAM has no installed package to update.": "Bu CAM için güncellenecek kurulu paket yok.",
+    "Loading OSCam start configuration...": "OSCam başlatma yapılandırması yükleniyor...",
+    "Unable to read OSCam start configuration.": "OSCam başlatma yapılandırması okunamadı.",
+    "Plugin version, authors and changes in the installed release.": "Eklenti sürümü, yazarlar ve kurulu sürümdeki değişiklikler.",
+    "Diagnostic bundle and plugin information.": "Tanılama paketi ve eklenti bilgileri.",
+    "Create one archive with system information and GSU logs.": "Sistem bilgileri ve GSU günlüklerini içeren tek bir arşiv oluştur.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "Tanılama paketi oluşturuldu:\n%s\n\nBoyut: %s KiB\n\nDosya alıcıda yukarıdaki yolda bulunur."
   },
   "uk": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Записи таблиці розділів розташовані не в порядку диска. Виправити? (Усі дані буде знищено)",
@@ -4785,7 +4911,14 @@
     "not started, please check config files or atributes": "не запущено, перевірте файли конфігурації або атрибути",
     "or": "або",
     "using": "використовує",
-    "was downloaded successfully into /tmp": "успішно завантажено в /tmp"
+    "was downloaded successfully into /tmp": "успішно завантажено в /tmp",
+    "This CAM has no installed package to update.": "Для цього CAM немає встановленого пакета для оновлення.",
+    "Loading OSCam start configuration...": "Завантаження конфігурації запуску OSCam...",
+    "Unable to read OSCam start configuration.": "Не вдалося прочитати конфігурацію запуску OSCam.",
+    "Plugin version, authors and changes in the installed release.": "Версія плагіна, автори та зміни у встановленому випуску.",
+    "Diagnostic bundle and plugin information.": "Діагностичний пакет та інформація про плагін.",
+    "Create one archive with system information and GSU logs.": "Створити один архів із системною інформацією та журналами GSU.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "Діагностичний пакет створено:\n%s\n\nРозмір: %s KiB\n\nФайл доступний на приймачі за вказаним вище шляхом."
   },
   "zh": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "分区表条目未按磁盘顺序排列。是否修复？（所有数据都将被销毁）",
@@ -5037,7 +5170,14 @@
     "not started, please check config files or atributes": "未启动，请检查配置文件或属性",
     "or": "或",
     "using": "使用",
-    "was downloaded successfully into /tmp": "已成功下载到 /tmp"
+    "was downloaded successfully into /tmp": "已成功下载到 /tmp",
+    "This CAM has no installed package to update.": "此 CAM 没有可更新的已安装软件包。",
+    "Loading OSCam start configuration...": "正在加载 OSCam 启动配置...",
+    "Unable to read OSCam start configuration.": "无法读取 OSCam 启动配置。",
+    "Plugin version, authors and changes in the installed release.": "插件版本、作者及已安装版本的变更。",
+    "Diagnostic bundle and plugin information.": "诊断包和插件信息。",
+    "Create one archive with system information and GSU logs.": "创建包含系统信息与 GSU 日志的单个归档文件。",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "诊断包已创建：\n%s\n\n大小：%s KiB\n\n文件位于接收机上的上述路径。"
   },
   "en": {
     "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)": "Partition table entries are not in disk order, are you want to fix it? (all data will be destroyed)",
@@ -5289,6 +5429,13 @@
     "not started, please check config files or atributes": "not started, please check config files or atributes",
     "or": "or",
     "using": "using",
-    "was downloaded successfully into /tmp": "was downloaded successfully into /tmp"
+    "was downloaded successfully into /tmp": "was downloaded successfully into /tmp",
+    "This CAM has no installed package to update.": "This CAM has no installed package to update.",
+    "Loading OSCam start configuration...": "Loading OSCam start configuration...",
+    "Unable to read OSCam start configuration.": "Unable to read OSCam start configuration.",
+    "Plugin version, authors and changes in the installed release.": "Plugin version, authors and changes in the installed release.",
+    "Diagnostic bundle and plugin information.": "Diagnostic bundle and plugin information.",
+    "Create one archive with system information and GSU logs.": "Create one archive with system information and GSU logs.",
+    "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.": "Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above."
   }
 }
