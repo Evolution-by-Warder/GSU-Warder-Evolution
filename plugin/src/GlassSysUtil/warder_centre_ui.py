@@ -143,10 +143,17 @@ class Report(Screen):
         self.show_categories(True)
         for i,(name,size,done) in enumerate(rows):
             self['category_name%d'%i].setText(self.tr(name))
-            self['category_size%d'%i].setText('%.1f MiB'%(size/1048576))
-            share=100*size/total if total else 0
-            self['category_meter%d'%i].setValue(round(share))
-            self['category_state%d'%i].setText(('%d %%'%round(share)) if done and complete else self.tr('Partial result'))
+            self['category_size%d'%i].setText(('' if done else '≥ ')+'%.1f MiB'%(size/1048576) if size or done else '—')
+            meter=self['category_meter%d'%i]
+            if complete and total:
+                share=100*size/total
+                meter.setValue(round(share))
+                meter.show()
+                state='%d %%'%round(share)
+            else:
+                meter.hide()
+                state='—' if done else self.tr('Partial result')
+            self['category_state%d'%i].setText(state)
         from time import strftime
         self['report_status'].setText('%s   ·   %s: %.1f MiB%s' %
             (strftime('%H:%M:%S'),self.tr('Measured categories total'),total/1048576,
