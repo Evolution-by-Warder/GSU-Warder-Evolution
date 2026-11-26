@@ -87,3 +87,30 @@ def open_centre(screen, api, key):
     if group is None:return
     screen.session.openWithCallback(screen.dispatch_menu_id, CentreMenu, api,
                                     tuple(screen.menuListAll), dict(screen.status), key)
+
+
+class NetworkOverview(DetailText):
+    """Collect in a worker; ignore late results after the screen is closed."""
+    def __init__(self,session,api):
+        self.api=api
+        self.closed=False
+        self.started=False
+        DetailText.__init__(self,session,api,for_api(api,'Network overview'),for_api(api,'Loading…'))
+        self.onLayoutFinish.append(self.start)
+        self.onClose.append(self.cleanup)
+    def start(self):
+        if self.closed or self.started:return
+        self.started=True
+        from twisted.internet.threads import deferToThread
+        from .warder_network import collect
+        request=deferToThread(collect)
+        request.addCallback(self.done)
+        request.addErrback(self.failed)
+    def done(self,report):
+        if self.closed:return
+        from .warder_network import summary
+        self['file_info'].setText(summary(report,lambda key:for_api(self.api,key)))
+    def failed(self,failure):
+        if not self.closed:self['file_info'].setText(for_api(self.api,'Unavailable'))
+        return None
+    def cleanup(self):self.closed=True
