@@ -384,6 +384,59 @@ class DiagnosticTests(unittest.TestCase):
                 screen.startScan(['tp'],0,0,networkid=1)
                 self.assertEqual(calls,[(['tp'],0,0,(),{'networkid':1})])
 
+    def test_manual_scan_progress_keeps_native_components_and_callbacks(self):
+        from Components.Sources.StaticText import StaticText
+        from Screens.Screen import Screen
+        ui=module('warder_tuner_ui')
+        calls=[]
+        class ServiceScan(Screen):
+            def __init__(self,session,scanList,**kwargs):
+                Screen.__init__(self,session)
+                self.native_args=(scanList,kwargs)
+                self.setTitle('Service scan')
+                for name in ui.SCAN_COMPONENTS:self[name]=api['Label']('')
+                self['key_red']=StaticText('Cancel')
+                self['key_green']=api['Label']('OK')
+                self.native_widgets=dict(self)
+                self.onLayoutFinish.append(lambda:calls.append('native'))
+            def native_completion(self):return 'original result'
+        ServiceScan.__module__='Screens.ServiceScan'
+        scope={'ServiceScan':ServiceScan}
+        exec('def startScan(self,tlist,flags,feid,networkid=0):\n'
+             '    self.session.openWithCallback(self.finished_cb,ServiceScan,[{"transponders":tlist,"flags":flags,"feid":feid,"networkid":networkid}],updateBouquets=False)',scope)
+        from types import MethodType
+        session=MagicMock()
+        owner=SimpleNamespace(session=session,finished_cb=MagicMock())
+        method=MethodType(scope['startScan'],owner)
+        ui.run_with_scan_progress(method,['tp'],0,1,networkid=123)
+        callback,screen_class,payload=session.openWithCallback.call_args.args
+        kwargs=session.openWithCallback.call_args.kwargs
+        self.assertIs(callback,owner.finished_cb)
+        self.assertEqual(payload,[{'transponders':['tp'],'flags':0,'feid':1,'networkid':123}])
+        self.assertEqual(kwargs,{'updateBouquets':False})
+        self.assertIs(scope['ServiceScan'],ServiceScan)
+        self.assertTrue(issubclass(screen_class,ServiceScan))
+        screen=screen_class(session,payload,**kwargs)
+        self.assertEqual(screen.skinName,['WarderServiceScan'])
+        self.assertEqual(screen.native_completion(),'original result')
+        for name,component in screen.native_widgets.items():self.assertIs(screen[name],component)
+        self.assertEqual(screen.native_args,(payload,kwargs))
+        screen.onLayoutFinish[0]()
+        self.assertEqual(calls,['native'])
+        root=ET.fromstring(screen.skin)
+        self.assertIsNotNone(root.find("widget[@source='key_red']"))
+        self.assertIsNotNone(root.find("widget[@name='key_green']"))
+        self.assertIsNotNone(root.find("widget[@name='servicelist']"))
+        method(['tp'],0,1)
+        self.assertIs(session.openWithCallback.call_args.args[1],ServiceScan)
+        for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160),(1920,1200)):
+            root=ET.fromstring(ui.progress_skin(width,height,ui.SCAN_COMPONENTS|{'key_red','key_green'},{'key_red','key_green'}))
+            for node in root:
+                x,y=map(int,node.get('position').split(','));w,h=map(int,node.get('size').split(','))
+                self.assertGreater(min(w,h),0);self.assertLessEqual(x+w,width);self.assertLessEqual(y+h,height)
+            node=root.find("widget[@name='servicelist']")
+            self.assertEqual(int(node.get('size').split(',')[1])%int(node.get('itemHeight')),0)
+
     def test_forum_report_allowlist_preview_and_private_mode(self):
         service = module('warder_service')
         data = {'checks':[{'name':'RAM','available_percent':51.768},{'name':'Flash','available_percent':None},

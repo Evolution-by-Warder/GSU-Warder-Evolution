@@ -253,7 +253,8 @@ def manual_scan(session):
             if not recording_safe(self.session.nav) or flags & eComponentScan.scanRemoveServices:
                 tuner_info(self.session,_,'Recording or channel-list protection stopped the scan.')
                 return
-            return super().startScan(tlist, flags, feid, *args, **kwargs)
+            from .warder_tuner_ui import run_with_scan_progress
+            return run_with_scan_progress(super().startScan,tlist,flags,feid,*args,**kwargs)
 
     if recording_safe(session.nav):
         session.open(AdditiveScan)
