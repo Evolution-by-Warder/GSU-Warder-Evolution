@@ -83,6 +83,16 @@ def skin(width, height, mode):
         label('report_status',116,299,1680,48,25,'#00bcd2df',noWrap='1')
         element('eLabel',116,353,1680,2,backgroundColor='#00314b65',zPosition='-1')
         label('file_info', 116, 372, 1680, 540, 29, '#00ffffff', scrollbarMode='showOnDemand',valign='top')
+        if mode=='categories':
+            for i in range(6):
+                y=371+i*88
+                element('eLabel',116,y,1680,80,backgroundColor='#00203548' if i%2==0 else '#00172539',zPosition='-1')
+                label('category_name%d'%i,132,y+5,430,70,28,'#00e2edf5',valign='center',noWrap='1')
+                element('widget',580,y+34,530,12,name='category_meter%d'%i,
+                        backgroundColor='#002f465a',foregroundColor=style.CYAN,borderWidth='0',
+                        transparent='0',zPosition='5')
+                label('category_size%d'%i,1140,y+5,290,70,29,'#00ffffff',halign='right',valign='center',noWrap='1')
+                label('category_state%d'%i,1450,y+5,320,70,24,'#00bcd2df',valign='center',noWrap='1')
         if mode=='process':
             # Fixed columns in the same coordinate space as the row renderer.
             element('eLabel',116,369,1680,49,backgroundColor='#00243b50',zPosition='-1')
