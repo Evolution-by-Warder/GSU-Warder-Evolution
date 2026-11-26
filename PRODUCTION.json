@@ -3,10 +3,88 @@
   "product": "GSU",
   "status": "production-update-active",
   "approved_on": "2026-11-26",
-  "approval": "Owner-approved five-project stable localization and fixes batch",
+  "approval": "Owner-approved independent GSU numbering migration",
   "source_branch": "main",
-  "source_commit": "9e03199394ca498d30120cca5cf184752e0f1bbf",
+  "source_commit": "45a9fad7be6e20a6eae6055c0cb59551be45b9f9",
   "release": {
+    "version": "13.41-r6",
+    "tag": "v13.41-r6",
+    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.41-r6/enigma2-plugin-extensions-gsu_13.41-r6_all.ipk",
+    "sha256": "a8e79609147666b27f18460b3340e099bb013664478a787746bcf56bb28052e2",
+    "bytes": 3813348,
+    "notes": "Prechodová verzia pripravuje aktualizátor na nové číslovanie 0.41.x. Nastavenia zostávajú zachované. Po aktualizácii reštartujte GUI.",
+    "notes_i18n": {
+      "sk": "Prechodová verzia pripravuje aktualizátor na nové číslovanie 0.41.x. Nastavenia zostávajú zachované. Po aktualizácii reštartujte GUI.",
+      "en": "This transition release prepares the updater for the new 0.41.x numbering. Existing settings are preserved. Restart the GUI after updating.",
+      "cs": "Přechodová verze připravuje aktualizátor na nové číslování 0.41.x. Nastavení zůstávají zachována. Po aktualizaci restartujte GUI.",
+      "de": "Diese Übergangsversion bereitet den Updater auf die neue Nummerierung 0.41.x vor. Einstellungen bleiben erhalten. Nach dem Update die GUI neu starten.",
+      "pl": "Wersja przejściowa przygotowuje aktualizator do nowej numeracji 0.41.x. Ustawienia zostają zachowane. Po aktualizacji uruchom ponownie GUI.",
+      "hu": "Ez az átmeneti kiadás előkészíti a frissítőt az új 0.41.x verziószámozásra. A beállítások megmaradnak. Frissítés után indítsd újra a GUI-t.",
+      "ru": "Переходная версия подготавливает модуль обновления к новой нумерации 0.41.x. Настройки сохраняются. После обновления перезапустите GUI.",
+      "fr": "Cette version de transition prépare le module de mise à jour à la nouvelle numérotation 0.41.x. Les réglages sont conservés. Redémarrez l’interface après la mise à jour.",
+      "it": "Questa versione di transizione prepara il modulo di aggiornamento alla nuova numerazione 0.41.x. Le impostazioni sono conservate. Riavviare la GUI dopo l’aggiornamento.",
+      "es": "Esta versión de transición prepara el actualizador para la nueva numeración 0.41.x. Se conservan los ajustes. Reinicie la interfaz tras actualizar.",
+      "al": "Ky version kalimtar përgatit përditësuesin për numërtimin e ri 0.41.x. Cilësimet ruhen. Rinisni ndërfaqen grafike pas përditësimit.",
+      "el": "Αυτή η μεταβατική έκδοση προετοιμάζει τον μηχανισμό ενημέρωσης για τη νέα αρίθμηση 0.41.x. Οι ρυθμίσεις διατηρούνται. Επανεκκινήστε το GUI μετά την ενημέρωση.",
+      "et": "See üleminekuversioon valmistab uuendaja ette uueks 0.41.x versiooninumbriks. Seaded säilivad. Taaskäivita GUI pärast uuendamist.",
+      "fa": "این نسخهٔ انتقالی به‌روزرسان را برای شماره‌گذاری جدید 0.41.x آماده می‌کند. تنظیمات حفظ می‌شوند. پس از به‌روزرسانی رابط گرافیکی را دوباره راه‌اندازی کنید.",
+      "lt": "Ši pereinamoji versija paruošia naujinimo modulį naujai 0.41.x numeracijai. Nustatymai išsaugomi. Po naujinimo paleiskite GUI iš naujo.",
+      "nl": "Deze overgangsversie bereidt de updater voor op de nieuwe nummering 0.41.x. Instellingen blijven behouden. Start de GUI na de update opnieuw.",
+      "pt": "Esta versão de transição prepara o atualizador para a nova numeração 0.41.x. As definições são preservadas. Reinicie a interface após a atualização.",
+      "ro": "Această versiune de tranziție pregătește modulul de actualizare pentru noua numerotare 0.41.x. Setările sunt păstrate. Reporniți interfața după actualizare.",
+      "tr": "Bu geçiş sürümü güncelleyiciyi yeni 0.41.x numaralandırmasına hazırlar. Ayarlar korunur. Güncellemeden sonra arayüzü yeniden başlatın.",
+      "uk": "Ця перехідна версія готує модуль оновлення до нової нумерації 0.41.x. Налаштування збережено. Після оновлення перезапустіть GUI.",
+      "zh": "此过渡版本为更新程序使用新的 0.41.x 版本编号做好准备。保留现有设置。更新后请重启图形界面。"
+    },
+    "release_url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/tag/v13.41-r6"
+  },
+  "package_id": "enigma2-plugin-extensions-gsu-warder-evolution",
+  "installation_directory": "/usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/",
+  "update_feeds": [
+    "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/plugin/update/stable.json",
+    "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/plugin/update/candidate.json",
+    "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/restoration/update/candidate.json"
+  ],
+  "validation": {
+    "version": "13.41-r6",
+    "package_source_commit": "45a9fad7be6e20a6eae6055c0cb59551be45b9f9",
+    "workflow_run": 45773458863,
+    "public_ipk_sha256_verified": true,
+    "public_ipk_sidecar_verified": true,
+    "bytes": 3813348,
+    "sha256": "a8e79609147666b27f18460b3340e099bb013664478a787746bcf56bb28052e2",
+    "matrices_passed": true,
+    "OpenPLi_refs": [
+      "release-9.2",
+      "develop"
+    ],
+    "OpenATV_refs": [
+      "8.0",
+      "8.0-next",
+      "master"
+    ],
+    "installed_r5_updater_accepts_ipk": true,
+    "packaged_install": {
+      "version": "13.41-r6",
+      "package": "enigma2-plugin-extensions-gsu-warder-evolution",
+      "bytes": 3813348,
+      "sha256": "a8e79609147666b27f18460b3340e099bb013664478a787746bcf56bb28052e2",
+      "shipped_postinst_verifier_exit": 0,
+      "installed_version_parser_passed": true,
+      "updater_empty_feed_passed": true,
+      "minimal_python_without_dataclasses_passed": true
+    },
+    "physical_receiver_all_features_verified": false
+  },
+  "version_policy": "Stable r6 compatibility bridge; frozen r93 identity bridges unchanged. New 0.41.x feed is separate.",
+  "identity_transition": {
+    "bridge_version": "13.40-r93",
+    "target_version": "13.41-r6",
+    "legacy_feed_frozen": true,
+    "steps": "Update to frozen r93 when offered, restart GUI, then update to 13.41-r6"
+  },
+  "package_source_commit": "45a9fad7be6e20a6eae6055c0cb59551be45b9f9",
+  "previous_release": {
     "version": "13.41-r5",
     "tag": "v13.41-r5",
     "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.41-r5/enigma2-plugin-extensions-gsu_13.41-r5_all.ipk",
@@ -37,73 +115,6 @@
       "zh": "语言支持扩展至 21 种，包括时钟、日期和更新提示。改进界面生命周期管理。保留现有设置。更新后请重启图形界面。"
     },
     "release_url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/tag/v13.41-r5"
-  },
-  "package_id": "enigma2-plugin-extensions-gsu-warder-evolution",
-  "installation_directory": "/usr/lib/enigma2/python/Plugins/Extensions/GlassSysUtil/",
-  "update_feeds": [
-    "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/plugin/update/stable.json",
-    "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/plugin/update/candidate.json",
-    "https://raw.githubusercontent.com/Evolution-by-Warder/GSU-Warder-Evolution/original-python314/restoration/update/candidate.json"
-  ],
-  "validation": {
-    "version": "13.41-r5",
-    "package_source_commit": "9e03199394ca498d30120cca5cf184752e0f1bbf",
-    "workflow_run": 45763722273,
-    "public_ipk_sha256_verified": true,
-    "public_ipk_sidecar_verified": true,
-    "bytes": 3812194,
-    "sha256": "17de1b2624dd90b77d2c8c05ceba997e683c2d66d888212dda21e31233ef7085",
-    "matrices_passed": true,
-    "OpenPLi_refs": [
-      "release-9.2",
-      "develop"
-    ],
-    "OpenATV_refs": [
-      "8.0",
-      "8.0-next",
-      "master"
-    ],
-    "installed_r4_updater_accepts_ipk": true,
-    "packaged_install": {
-      "version": "13.41-r5",
-      "package": "enigma2-plugin-extensions-gsu-warder-evolution",
-      "bytes": 3812194,
-      "sha256": "17de1b2624dd90b77d2c8c05ceba997e683c2d66d888212dda21e31233ef7085",
-      "shipped_postinst_verifier_exit": 0,
-      "installed_version_parser_passed": true,
-      "updater_empty_feed_passed": true,
-      "minimal_python_without_dataclasses_passed": true
-    },
-    "physical_receiver_all_features_verified": false
-  },
-  "version_policy": "Stable r5, frozen r93 identity bridges unchanged.",
-  "identity_transition": {
-    "bridge_version": "13.40-r93",
-    "target_version": "13.41-r5",
-    "legacy_feed_frozen": true,
-    "steps": "Update to frozen r93 when offered, restart GUI, then update to 13.41-r5"
-  },
-  "package_source_commit": "9e03199394ca498d30120cca5cf184752e0f1bbf",
-  "previous_release": {
-    "version": "13.41-r4",
-    "tag": "v13.41-r4",
-    "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v13.41-r4/enigma2-plugin-extensions-gsu_13.41-r4_all.ipk",
-    "sha256": "48d8f90a6f1665f28e777b615f4dd25b1b8afc0b85128685965d44b66134acb2",
-    "bytes": 3692762,
-    "notes": "Spoločná verzia pre OpenPLi a OpenATV. Opravený štart aktualizátora bez modulu dataclasses a pád ECM panela na OpenPLi; rovnaké volania sú opravené aj v informáciách o kanáli a klientoch OSCam. Zahrnuté sú úpravy zoznamov, rozlíšení HD/FHD/WQHD/UHD a kompatibility OpenATV 8.1/GLES. Nastavenia a spravované štartovanie CAM-u zostávajú zachované. Po aktualizácii reštartujte GUI.",
-    "notes_i18n": {
-      "cs": "Společné vydání pro OpenPLi a OpenATV. Opravy instalace, kompatibility a zobrazení; dosavadní nastavení zůstávají zachována. Po aktualizaci restartujte GUI.",
-      "de": "Gemeinsame Ausgabe für OpenPLi und OpenATV. Korrekturen an Installation, Kompatibilität und Darstellung; vorhandene Einstellungen bleiben erhalten. Nach dem Update die GUI neu starten.",
-      "pl": "Wspólne wydanie dla OpenPLi i OpenATV. Poprawki instalacji, zgodności i wyświetlania; dotychczasowe ustawienia pozostają zachowane. Po aktualizacji uruchom ponownie GUI.",
-      "hu": "Közös kiadás OpenPLi és OpenATV rendszerekhez. Telepítési, kompatibilitási és megjelenítési javítások; a meglévő beállítások megmaradnak. Frissítés után indítsd újra a GUI-t.",
-      "ru": "Общий выпуск для OpenPLi и OpenATV. Исправлены установка, совместимость и отображение; существующие настройки сохраняются. После обновления перезапустите GUI.",
-      "fr": "Version commune pour OpenPLi et OpenATV. Corrections d’installation, de compatibilité et d’affichage ; les réglages existants sont conservés. Redémarrez l’interface après la mise à jour.",
-      "it": "Versione comune per OpenPLi e OpenATV. Correzioni di installazione, compatibilità e visualizzazione; le impostazioni esistenti vengono conservate. Riavviare la GUI dopo l’aggiornamento.",
-      "es": "Versión común para OpenPLi y OpenATV. Correcciones de instalación, compatibilidad y visualización; se conservan los ajustes existentes. Reinicie la interfaz tras actualizar.",
-      "sk": "Spoločná verzia pre OpenPLi a OpenATV. Opravený štart aktualizátora bez modulu dataclasses a pád ECM panela na OpenPLi; rovnaké volania sú opravené aj v informáciách o kanáli a klientoch OSCam. Zahrnuté sú úpravy zoznamov, rozlíšení HD/FHD/WQHD/UHD a kompatibility OpenATV 8.1/GLES. Nastavenia a spravované štartovanie CAM-u zostávajú zachované. Po aktualizácii reštartujte GUI.",
-      "en": "Common OpenPLi and OpenATV release. Removes the updater dataclasses dependency and fixes the OpenPLi ECM OSD startup crash, channel information and OSCam client labels. Includes list fitting, HD/FHD/WQHD/UHD layouts and OpenATV 8.1/GLES compatibility. Settings and managed CAM startup are preserved. Restart the GUI after updating."
-    },
-    "release_url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/tag/v13.41-r4"
   },
   "peer_production": {
     "fullhdglass": "1.0.63",

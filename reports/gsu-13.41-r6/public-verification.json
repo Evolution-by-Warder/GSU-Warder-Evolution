@@ -1,0 +1,31 @@
+{
+  "version": "13.41-r6",
+  "package_source_commit": "45a9fad7be6e20a6eae6055c0cb59551be45b9f9",
+  "workflow_run": 45773458863,
+  "public_ipk_sha256_verified": true,
+  "public_ipk_sidecar_verified": true,
+  "bytes": 3813348,
+  "sha256": "a8e79609147666b27f18460b3340e099bb013664478a787746bcf56bb28052e2",
+  "matrices_passed": true,
+  "OpenPLi_refs": [
+    "release-9.2",
+    "develop"
+  ],
+  "OpenATV_refs": [
+    "8.0",
+    "8.0-next",
+    "master"
+  ],
+  "installed_r5_updater_accepts_ipk": true,
+  "packaged_install": {
+    "version": "13.41-r6",
+    "package": "enigma2-plugin-extensions-gsu-warder-evolution",
+    "bytes": 3813348,
+    "sha256": "a8e79609147666b27f18460b3340e099bb013664478a787746bcf56bb28052e2",
+    "shipped_postinst_verifier_exit": 0,
+    "installed_version_parser_passed": true,
+    "updater_empty_feed_passed": true,
+    "minimal_python_without_dataclasses_passed": true
+  },
+  "physical_receiver_all_features_verified": false
+}
