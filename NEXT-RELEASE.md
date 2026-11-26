@@ -1,3 +1,9 @@
+# 26.11.2026 — Diagnostic descriptions and compact network dashboard
+
+Owner requested useful descriptive sentences and one attractive screen instead of scrolling ordinary technical values. Added localized explanatory templates and complete system/process/active tuning descriptions for all 21 languages; all 17 diagnostic routes now show expanded content descriptions. Network overview now uses two side-by-side native panels with actual interfaces, speeds, IP addresses, gateways, DNS and mount count, with independent overflow navigation only if needed. Missing data and error fallback retained. Tests for descriptions, panels, focus, data binding and layout added. Runtime/test checkpoint c7057988eb3cf826b7fad2d7b88b28e5f12d2fb7. Shared icon standard saved in e74712e6d69c9f473f7eaf7a8b8d3e4af6f91540; actual new menu PNGs and integration still pending. Other bounded reports still require individual layout redesign, physical receiver check and exact HEAD CI; no production release changes. GSU first, other projects deferred.
+
+---
+
 # 26.11.2026 — Warder visual standard and single-screen diagnostic presentation
 
 Owner approved small functional menu picons throughout all five projects, based on existing Radio/YouTube artwork, and replacement of decorative blue/green navigation dots in FullHDGlass settings without changing status indicators, menu density or actions. Full scope is recorded in [WARDER-ICON-STANDARD.md](docs/WARDER-ICON-STANDARD.md). GSU first; remaining projects deferred until GSU is complete.
