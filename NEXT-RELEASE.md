@@ -1,3 +1,11 @@
+# 26.11.2026 — Prepare 0.41.6 release machinery and migration checks
+
+OpenPLi/OpenATV runs 45803201697 / 45803201817 on 35c2efb failed exactly one of 490 tests: PNG signature fixture used escaped backslashes rather than bytes. Corrected in 853c59884759d1f160c128a6b7cc269490a1f773 (same PNG/CRC/deflate integrity assertions). Reproducibility on that prior HEAD succeeded, 3,910,370 bytes, SHA256 e1f6f732cf9feb895a20188a29f56e91897a562153f3e6fe82817b504403f4a3 (unpublished 0.41.5-numbered development build; not production artifact).
+
+Generalized modern publisher for stable 0.41.x runtime version, verifies version/request/notes and exact active predecessor in register/feed, forward-only upgrade, verifies previous public IPK bytes, keeps immutable tags/assets and frozen r6/r93 feeds. README preflight now precedes tag creation. Updated reproducibility workflow and real offline OPKG migration to test direct upgrade from active modern release in addition to three historical paths. Workflow changes manually inspected: same restricted main-only publishing context, permissions and four prerequisite workflow families; only version selection and predecessor artifact retrieval added. Draft source version/request and 21 localized release notes advanced atomically to 0.41.6 in 53a06707db6d568c193df22cf2b6142615227498. New publisher regressions in 2d0336cf406c37200bfa16f1599bb70eb5f5aef8. Exact HEAD CI pending. No merge, tag, public IPK, stable feed or web change; 0.41.5 remains current. Further UI work remains (legacy CAM/settings menus, official product logos and structured right-hand cards), and physical receiver retest remains outstanding. GSU first; other projects unchanged.
+
+---
+
 # 26.11.2026 — Six simultaneous live plots and navigation picons
 
 Owner-approved modernization continued in PR #19. System live screen now renders six simultaneous 60-second trend cards (CPU, RAM, swap, temperature, RX, TX), with actual current values, independent scales and min/max/mean. One existing sampler and timer, no new workers per metric; missing observations create gaps, not fake data. Native CanvasSource.line confirmed in OpenATV 8.0 and OpenPLi 9.2. Existing signal history/export remains separate. System controls pause/resume and interval; arrow cycling is no longer needed on this screen.
