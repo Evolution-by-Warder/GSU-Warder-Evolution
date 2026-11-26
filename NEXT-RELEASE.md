@@ -1,3 +1,9 @@
+# 2026-11-26 — Expanded signal centre scope approved by owner
+
+Extend functional assimilation with EvgQuickSignal, CiefpSignalInfo and CiefpSatelliteAnalyzer, native SatFinder/PositionerSetup and SatScanner as reference products. Audit actual features and existing GSU warder_channel/bitrate_worker before implementation; do not claim source-level parity from prior discussion alone. Integrate into existing Channel Information, not duplicate main-menu functions. Target: current service and tuner selection, SNR/AGC/BER/lock and supported dB, bounded history/min/max/mean, signal instability and lock-loss diagnostics, optional audio feedback for dish alignment, orbital position and transponder parameters (DVB-S/S2/S2X, MIS/PLS/T2-MI, DVB-T/T2/C/C2 only when supported), video/audio bitrate/PIDs/codecs/resolution, native tuning/scanning/blindscan and DiSEqC/USALS only through supported image APIs, compact quick signal view, optional local measurement export. No invented measurements or inferred unsupported capability; display unavailable explicitly. Read-only default; protect playback and recordings, require explicit confirmation for tuner retuning/motor movement/bouquet changes and preserve existing configuration. No conditional-access bypass. Reuse common sampling and graph widgets, cancel on close, 21 languages, all four resolutions, no GLES requirement. Compare sources and record actual feature coverage, tests and receiver limitations. Own implementation and UI; no third-party asset copying. Scope only, not implementation or verified parity.
+
+---
+
 # 2026-11-26 — Owner-approved functional assimilation of five reference products
 
 Target stable 0.41.5, own implementations and UI, no copied third-party assets. Reference inventory (public documentation reviewed, not exhaustive source audit):
