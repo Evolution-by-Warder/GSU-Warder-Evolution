@@ -16,6 +16,7 @@ class CentreMenu(Screen):
         self.skin = dashboard.skin(self.width, self.height, 'menu')
         Screen.__init__(self, session)
         self.api = api
+        dashboard.install_header(self,api)
         self.groups = legacy_routes(entries)
         self.enabled = dict(enabled)
         self.group = next((g for g in self.groups if g[0] == initial), None)
@@ -83,6 +84,8 @@ class Report(Screen):
         self.skin = dashboard.skin(*dashboard.dimensions(api), 'detail')
         Screen.__init__(self, session)
         self.api, self.kind = api, kind
+        dashboard.install_header(self,api)
+        self['report_status']=Label(for_api(api,'Loading…'))
         self.cancelled = Event()
         self.pending = False
         self.preview = None
@@ -109,6 +112,7 @@ class Report(Screen):
             return
         self.pending = True
         self.preview = None
+        self['report_status'].setText(self.tr('Loading…'))
         self['file_info'].setText(self.tr('Loading…'))
         if self.kind == 'transponder-services':
             try:
@@ -160,8 +164,11 @@ class Report(Screen):
         # Never display an empty screen on a missing/empty result. Only a real
         # report may become an export preview.
         if not isinstance(result, str) or not result.strip():
+            self['report_status'].setText(self.tr('Unavailable'))
             self['file_info'].setText(self.tr('Unavailable'))
             return
+        from time import strftime
+        self['report_status'].setText(strftime('%H:%M:%S'))
         if self.kind == 'forum-report':
             self.preview = result
         if self.kind == 'network-test':
@@ -174,6 +181,7 @@ class Report(Screen):
     def failed(self, failure):
         self.pending = False
         if not self.cancelled.is_set():
+            self['report_status'].setText(self.tr('Unavailable'))
             self['file_info'].setText(self.tr('Unavailable'))
 
     def export_services(self, kind):
