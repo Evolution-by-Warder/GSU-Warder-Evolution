@@ -60,6 +60,14 @@ def skin(width, height, mode):
         element('eLabel',834,406,960,2,backgroundColor='#00314b65',zPosition='-1')
         label('descriptions',834,425,960,486,28,'#00e2edf5',
               scrollbarMode='showOnDemand',valign='top')
+        # The right panel also supports the same two independent network bodies
+        # as the full report. Keep their scroll widget parents unobstructed.
+        for i in range(2):
+            x=834+i*488
+            label('inline_network_title%d'%i,x+8,425,454,45,25,style.CYAN,
+                  noWrap='1',valign='center')
+            label('inline_network_body%d'%i,x+8,480,454,425,26,'#00e2edf5',
+                  scrollbarMode='showOnDemand',valign='top')
         # The same right-hand area can show six native cards instead of text.
         # Card widgets are hidden together whenever a text report is selected.
         for i in range(6):

@@ -1,3 +1,7 @@
+# 26.11.2026 — Inline network overview panels
+
+Reused the existing two-part network overview in the right-hand centre panel, with native headings and separate ScrollLabels, synchronized left/right paging and lifecycle cleanup. No duplicate collection or active probe. Existing full report retained. Added native-widget regression for selection, data binding, paging, refresh and stale completion; existing viewport test covers the new widgets. Largest-files route now uses existing search artwork. Fresh exact-head CI and receiver retest required; no production mutation.
+
 # 26.11.2026 — Bounded local largest-files report
 
 Predecessor `41aa58a8019a88b6526249e876f5ac6f18747fbb`: OpenATV, OpenPLi and reproducible IPK SUCCESS; architecture still running at inspection. Added an explicit on-demand storage report for up to 20 largest logical file sizes, selected local folders only, with entry/time/depth limits, cancellation and incomplete marker. No full-disk crawl, remote mounts, symlink traversal, file contents or writes. Reused existing storage category/profile paths, worker and split result panel. All 21 translations and regression fixtures added. No production mutation; exact-head CI and receiver retest required.

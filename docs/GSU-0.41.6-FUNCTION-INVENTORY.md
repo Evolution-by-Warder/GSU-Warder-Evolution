@@ -64,3 +64,7 @@ Ostré vydanie blokuje neukončené CI presného HEAD a požadovaný fyzický re
 ### Rebríček veľkých súborov
 
 - Existujúce centrum Pamäť a úložisko obsahuje samostatný výsledok Najväčšie súbory, najviac 20 položiek podľa logickej veľkosti. Len vybrané lokálne priečinky Enigma2, picony a známe lokálne médiá (movie/timeshift/logs); nie celé disky. Výslovná akcia OK/Obnoviť, pretože čítanie adresárov môže zobudiť HDD. Limity 15 000 položiek, 2 sekundy medzi operáciami, 32 úrovní; čiastočný výsledok výslovne označený. Bez sledovania symlinkov, prechodu vnorených mountov, sieťových ciest, čítania obsahu alebo mazania. Testy pokrývajú poradie, hardlinky, limity a zrušenie. 21 jazykov. Fyzický retest a CI presného HEAD zostávajú.
+
+### Pravý panel — sieťový prehľad
+
+- Existujúci automatický sieťový prehľad zobrazuje dve paralelné natívne oblasti priamo v pravom paneli: rozhrania/IP a brána/DNS/mounty. Znovupoužíva pôvodný výsledok `overview_panels`, bez ďalšieho zberu; ľavé/pravé tlačidlá stránkujú obe oblasti, výber v ľavom menu zostáva. Pri zmene položky, obnove či chybe sa panely skryjú a staré údaje vyčistia. Pridaná regresia väzby údajov a životného cyklu; existujúca kontrola hraníc inline widgetov pokrýva HD/FHD/WQHD/UHD. Najväčšie súbory používajú existujúcu ikonu vyhľadávania. Fyzická čitateľnosť ešte nepotvrdená.

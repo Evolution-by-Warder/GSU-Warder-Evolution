@@ -206,6 +206,10 @@ class CentreMenu(Screen):
         for i,title in enumerate(('PID','Process Info','S','RAM (MiB)','CPU (%)')):
             self['inline_process_column%d'%i]=Label(for_api(api,title) if i==1 else title)
         self.process_visible=False
+        self.inline_network_visible=False
+        for i in range(2):
+            self['inline_network_title%d'%i]=Label('')
+            self['inline_network_body%d'%i]=ScrollLabel('')
         self.hide_cards()
         self['actions'] = ActionMap(['WizardActions', 'ColorActions', 'SetupActions','DirectionActions'],
             {'ok':self.select, 'green':self.select, 'red':self.back, 'back':self.back, 'cancel':self.back,
@@ -261,6 +265,7 @@ class CentreMenu(Screen):
                 self['inline_%s%d'%(field,i)].hide()
         self['inline_summary'].hide()
         self.hide_process_table()
+        self.hide_inline_network()
         self['descriptions'].show()
 
     def hide_process_table(self):
@@ -283,7 +288,33 @@ class CentreMenu(Screen):
         self['result_status'].setText('%s · %s %d · RAM ↓'%(strftime('%H:%M:%S'),
             for_api(self.api,'Total:'),len(rows)))
 
+    def hide_inline_network(self):
+        self.inline_network_visible=False
+        for i in range(2):
+            for field in ('title','body'):
+                widget=self['inline_network_%s%d'%(field,i)]
+                widget.hide()
+                widget.setText('')
+
+    def show_inline_network(self,panels):
+        self.hide_cards()
+        self['descriptions'].hide()
+        self.inline_network_visible=True
+        tr=lambda key:for_api(self.api,key)
+        for i,(title,body) in enumerate(zip((tr('Network link'),tr('Default gateway')+' · DNS'),panels)):
+            self['inline_network_title%d'%i].setText(title)
+            self['inline_network_body%d'%i].setText(body or tr('Unavailable'))
+            self['inline_network_title%d'%i].show()
+            self['inline_network_body%d'%i].show()
+
     def page_result(self,direction):
+        if self.inline_network_visible:
+            # Paging both columns keeps left/right behavior identical to other
+            # inline reports; each ScrollLabel clamps at its own end.
+            for i in range(2):
+                widget=self['inline_network_body%d'%i]
+                (widget.pageUp if direction<0 else widget.pageDown)()
+            return
         if self.process_visible:
             widget=self['inline_process_list']
         else:widget=self['descriptions']
@@ -292,6 +323,7 @@ class CentreMenu(Screen):
     def show_cards(self,model):
         cards,summary=model
         self.hide_process_table()
+        self.hide_inline_network()
         self['descriptions'].hide()
         self.cards_visible=True
         for i,(title,value,meter,note) in enumerate(cards):
@@ -447,6 +479,9 @@ class CentreMenu(Screen):
                 self['result_status'].setText(strftime('%H:%M:%S') if model or text.strip() else tr('Unavailable'))
                 if not failed and key=='system-processes' and isinstance(value,list) and value and text.strip():
                     self.show_process_table(value)
+                elif (not failed and key=='network-overview' and isinstance(value,tuple)
+                      and len(value)==2 and all(isinstance(v,str) for v in value) and text.strip()):
+                    self.show_inline_network(value)
                 elif model:self.show_cards(model)
                 else:
                     self.hide_cards()

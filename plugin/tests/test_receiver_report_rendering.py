@@ -654,6 +654,41 @@ class ReceiverRenderingTests(unittest.TestCase):
             self.assertTrue(menu['descriptions'].visible)
             self.assertEqual(menu['inline_process_list'].l.list,[])
 
+    def test_inline_network_panels_keep_selection_and_hide_old_data(self):
+        ui=self.ui
+        entries=[('network-overview','Network overview','Network'),
+                 ('network-interfaces','Network interfaces','Interfaces')]
+        menu=ui.CentreMenu(MagicMock(),self.api,entries,{k:True for k,_,_ in entries},'network')
+        menu.render()
+        panels=('eth0\n192.0.2.4','Gateway\n192.0.2.1\nDNS')
+        with patch.object(ui,'deferToThread') as worker:
+            menu.auto_result()
+            worker.return_value.addCallbacks.call_args.args[0](panels)
+            self.assertTrue(menu.inline_network_visible)
+            self.assertFalse(menu['descriptions'].visible)
+            self.assertEqual(menu['list'].getCurrent()[0],'network-overview')
+            for idx,body in enumerate(panels):
+                self.assertTrue(menu['inline_network_title%d'%idx].visible)
+                self.assertTrue(menu['inline_network_body%d'%idx].visible)
+                self.assertEqual(menu['inline_network_body%d'%idx].getText(),body)
+            with patch.object(menu['inline_network_body0'],'pageDown') as a,patch.object(menu['inline_network_body1'],'pageDown') as b:
+                menu.page_result(1)
+                a.assert_called_once()
+                b.assert_called_once()
+            menu.refresh_result()
+            self.assertFalse(menu.inline_network_visible)
+            self.assertEqual(menu['inline_network_body0'].getText(),'')
+            callback=worker.return_value.addCallbacks.call_args.args[0]
+            menu['list'].moveToIndex(1)
+            menu.describe()
+            callback(panels)
+            self.assertFalse(menu.inline_network_visible)
+            self.assertFalse(menu['inline_network_body0'].visible)
+            menu.auto_result()
+            worker.return_value.addCallbacks.call_args.args[0]('Interfaces data')
+            self.assertEqual(menu['descriptions'].getText(),'Interfaces data')
+            self.assertTrue(menu['descriptions'].visible)
+
     def test_inline_storage_cards_do_not_show_percentages_for_partial_scans(self):
         ui=self.ui
         names=('Picons','Skins','Plugins','EPG','Cache','Logs')
