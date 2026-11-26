@@ -427,3 +427,29 @@ class BackupTests(unittest.TestCase):
         self.assertFalse(view.revealed)
         self.assertNotIn(secret,displayed())
         self.assertEqual(view.result,(None,))
+
+
+    def test_six_character_minimum_in_editor_and_crypto(self):
+        from Plugins.Extensions.GlassSysUtil.warder_backup_password import BackupPassword
+        api=vars(load(ROOT))
+        view=BackupPassword(MagicMock(),api,'Password')
+        self.assertEqual(b.crypto.MIN_PASSWORD,6)
+        self.assertFalse(b.crypto.valid_password('Ab12!'))
+        self.assertTrue(b.crypto.valid_password('Ab12!x'))
+        self.assertFalse(b.crypto.valid_password('A'*129))
+        self.assertTrue(b.crypto.valid_password('A'*128))
+        for char in 'Ab12!':view.append(char)
+        view.accept()
+        self.assertEqual(view.secret,'Ab12!')
+        self.assertEqual(view['result_status'].getText(),view.tr('At least 6 characters.'))
+        view.append('x')
+        view.accept()
+        self.assertEqual(view.result,('Ab12!x',))
+        self.assertEqual(view.secret,'')
+
+    @unittest.skipUnless(b.crypto.available(),'optional AES-GCM provider unavailable')
+    def test_six_character_password_roundtrip(self):
+        raw=b'local backup fixture'
+        envelope=b.crypto.seal(raw,'Ab12!x')
+        self.assertEqual(b.crypto.unseal(envelope,'Ab12!x'),raw)
+        with self.assertRaises(ValueError):b.crypto.seal(raw,'Ab12!')

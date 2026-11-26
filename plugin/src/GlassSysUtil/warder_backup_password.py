@@ -6,6 +6,7 @@ from xml.etree import ElementTree as ET
 from .warder_screen import Screen
 from . import warder_dashboard as dashboard
 from .i18n import for_api
+from .warder_backup_crypto import MIN_PASSWORD,MAX_PASSWORD
 
 # Familiar YouTube-style QWERTY ordering, including all printable ASCII.
 KEYS=(
@@ -138,7 +139,7 @@ class BackupPassword(Screen):
         for i in range(3):
             self['password%d'%i].setText(value[i*48:(i+1)*48] or ('—' if not value and i==0 else ''))
         self['blue'].setText(self.tr('Hide password' if self.revealed else 'Show password'))
-        self['result_status'].setText('%d / 128  ·  %s'%(len(self.secret),self.tr('At least 12 characters.')))
+        self['result_status'].setText('%d / %d  ·  %s'%(len(self.secret),MAX_PASSWORD,self.tr('At least 6 characters.')))
 
     def horizontal(self,direction):
         self.column=(self.column+direction)%COLUMNS
@@ -153,7 +154,7 @@ class BackupPassword(Screen):
         self.render()
 
     def append(self,char):
-        if len(self.secret)<128:self.secret+=char
+        if len(self.secret)<MAX_PASSWORD:self.secret+=char
         self.mask()
 
     def add(self):
@@ -166,8 +167,8 @@ class BackupPassword(Screen):
         self.mask()
 
     def accept(self):
-        if len(self.secret)<12:
-            self['result_status'].setText(self.tr('At least 12 characters.'))
+        if len(self.secret)<MIN_PASSWORD:
+            self['result_status'].setText(self.tr('At least 6 characters.'))
             return
         value=self.secret
         self.clear()

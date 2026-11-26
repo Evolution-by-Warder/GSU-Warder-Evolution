@@ -1,3 +1,7 @@
+# 26.11.2026 — Owner-approved six-character backup password minimum
+
+Physical keyboard accepted on 7aad8c7. Reduce minimum from 12 to 6 consistently in editor, encryption and all 21 catalogs; retain maximum 128, existing encryption/KDF and double entry. Add boundary and actual encrypted roundtrip tests. Longer passwords recommended; separate draft, new CI pending.
+
 # 26.11.2026 — Owner feedback: full-width QWERTY and password visibility
 
 Classic YouTube-style keyboard, single active cell, fixed geometry, Aa case/symbol switch, blue Show/Hide password (masked by default, re-mask on hide, clear on close), 21 languages. Full printable ASCII and up to 128 characters displayed across three lines. Tests updated; exact-head CI and physical validation pending. Separate draft PR #20; no production changes.

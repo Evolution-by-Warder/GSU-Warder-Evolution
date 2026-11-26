@@ -6,6 +6,8 @@ import os
 
 FORMAT='warder-private-v1'
 AAD=b'Warder Evolution private backup v1'
+MIN_PASSWORD=6
+MAX_PASSWORD=128
 MAX_PLAINTEXT=2*1024*1024
 MAX_ENVELOPE=3*1024*1024
 
@@ -23,8 +25,12 @@ def available():
     except Exception:return False
 
 
+def valid_password(password):
+    return isinstance(password,str) and MIN_PASSWORD<=len(password)<=MAX_PASSWORD and password.isprintable()
+
+
 def key(password,salt):
-    if not isinstance(password,str) or not 12<=len(password)<=128 or not password.isprintable():
+    if not valid_password(password):
         raise ValueError('Private backup password requirements')
     if not available():raise ValueError('Private backup encryption unavailable')
     return hashlib.scrypt(password.encode('utf-8'),salt=salt,n=32768,r=8,p=1,dklen=32,maxmem=64*1024*1024)

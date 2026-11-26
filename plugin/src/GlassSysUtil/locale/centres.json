@@ -140,7 +140,6 @@
     "Unlock backup": "Unlock backup",
     "Incorrect password or damaged backup": "Incorrect password or damaged backup",
     "Use arrows and OK to enter characters. Green confirms.": "Use arrows and OK to enter characters. Green confirms.",
-    "At least 12 characters.": "At least 12 characters.",
     "Erase character": "Erase character",
     "To restore": "To restore",
     "Restored": "Restored",
@@ -153,7 +152,8 @@
     "Previous settings restored": "Previous settings restored",
     "Recovery backup required": "Recovery backup required",
     "Show password": "Show password",
-    "Hide password": "Hide password"
+    "Hide password": "Hide password",
+    "At least 6 characters.": "At least 6 characters."
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -296,7 +296,6 @@
     "Unlock backup": "Odomknúť zálohu",
     "Incorrect password or damaged backup": "Nesprávne heslo alebo poškodená záloha",
     "Use arrows and OK to enter characters. Green confirms.": "Šípkami a OK zadávajte znaky. Zelené tlačidlo potvrdí.",
-    "At least 12 characters.": "Najmenej 12 znakov.",
     "Erase character": "Vymazať znak",
     "To restore": "Na obnovu",
     "Restored": "Obnovené",
@@ -309,7 +308,8 @@
     "Previous settings restored": "Pôvodné nastavenia boli obnovené",
     "Recovery backup required": "Použite bezpečnostnú zálohu na obnovu",
     "Show password": "Zobraziť heslo",
-    "Hide password": "Skryť heslo"
+    "Hide password": "Skryť heslo",
+    "At least 6 characters.": "Najmenej 6 znakov."
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -452,7 +452,6 @@
     "Unlock backup": "Odemknout zálohu",
     "Incorrect password or damaged backup": "Nesprávné heslo nebo poškozená záloha",
     "Use arrows and OK to enter characters. Green confirms.": "Šipkami a OK zadávejte znaky. Zelené tlačítko potvrdí.",
-    "At least 12 characters.": "Nejméně 12 znaků.",
     "Erase character": "Smazat znak",
     "To restore": "K obnově",
     "Restored": "Obnoveno",
@@ -465,7 +464,8 @@
     "Previous settings restored": "Původní nastavení bylo obnoveno",
     "Recovery backup required": "Použijte bezpečnostní zálohu k obnově",
     "Show password": "Zobrazit heslo",
-    "Hide password": "Skrýt heslo"
+    "Hide password": "Skrýt heslo",
+    "At least 6 characters.": "Nejméně 6 znaků."
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -608,7 +608,6 @@
     "Unlock backup": "Sicherung entsperren",
     "Incorrect password or damaged backup": "Falsches Passwort oder beschädigte Sicherung",
     "Use arrows and OK to enter characters. Green confirms.": "Zeichen mit Pfeilen und OK eingeben. Grün bestätigt.",
-    "At least 12 characters.": "Mindestens 12 Zeichen.",
     "Erase character": "Zeichen löschen",
     "To restore": "Zur Wiederherstellung",
     "Restored": "Wiederhergestellt",
@@ -621,7 +620,8 @@
     "Previous settings restored": "Vorherige Einstellungen wiederhergestellt",
     "Recovery backup required": "Sicherung zur Wiederherstellung erforderlich",
     "Show password": "Passwort anzeigen",
-    "Hide password": "Passwort verbergen"
+    "Hide password": "Passwort verbergen",
+    "At least 6 characters.": "Mindestens 6 Zeichen."
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -764,7 +764,6 @@
     "Unlock backup": "Odblokuj kopię",
     "Incorrect password or damaged backup": "Nieprawidłowe hasło lub uszkodzona kopia",
     "Use arrows and OK to enter characters. Green confirms.": "Strzałki i OK wprowadzają znaki. Zielony potwierdza.",
-    "At least 12 characters.": "Co najmniej 12 znaków.",
     "Erase character": "Usuń znak",
     "To restore": "Do przywrócenia",
     "Restored": "Przywrócono",
@@ -777,7 +776,8 @@
     "Previous settings restored": "Przywrócono poprzednie ustawienia",
     "Recovery backup required": "Wymagana kopia do odzyskania",
     "Show password": "Pokaż hasło",
-    "Hide password": "Ukryj hasło"
+    "Hide password": "Ukryj hasło",
+    "At least 6 characters.": "Co najmniej 6 znaków."
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -920,7 +920,6 @@
     "Unlock backup": "Mentés feloldása",
     "Incorrect password or damaged backup": "Hibás jelszó vagy sérült mentés",
     "Use arrows and OK to enter characters. Green confirms.": "Nyilakkal és OK-val adja meg a karaktereket. Zöld: jóváhagyás.",
-    "At least 12 characters.": "Legalább 12 karakter.",
     "Erase character": "Karakter törlése",
     "To restore": "Visszaállítandó",
     "Restored": "Visszaállítva",
@@ -933,7 +932,8 @@
     "Previous settings restored": "A korábbi beállítások visszaálltak",
     "Recovery backup required": "Helyreállítási mentés szükséges",
     "Show password": "Jelszó megjelenítése",
-    "Hide password": "Jelszó elrejtése"
+    "Hide password": "Jelszó elrejtése",
+    "At least 6 characters.": "Legalább 6 karakter."
   },
   "ru": {
     "System centre": "Системный центр",
@@ -1076,7 +1076,6 @@
     "Unlock backup": "Разблокировать копию",
     "Incorrect password or damaged backup": "Неверный пароль или повреждённая копия",
     "Use arrows and OK to enter characters. Green confirms.": "Вводите символы стрелками и OK. Зелёная кнопка подтверждает.",
-    "At least 12 characters.": "Не менее 12 символов.",
     "Erase character": "Удалить символ",
     "To restore": "К восстановлению",
     "Restored": "Восстановлено",
@@ -1089,7 +1088,8 @@
     "Previous settings restored": "Прежние настройки восстановлены",
     "Recovery backup required": "Необходима резервная копия для восстановления",
     "Show password": "Показать пароль",
-    "Hide password": "Скрыть пароль"
+    "Hide password": "Скрыть пароль",
+    "At least 6 characters.": "Не менее 6 символов."
   },
   "fr": {
     "System centre": "Centre système",
@@ -1232,7 +1232,6 @@
     "Unlock backup": "Déverrouiller",
     "Incorrect password or damaged backup": "Mot de passe incorrect ou sauvegarde endommagée",
     "Use arrows and OK to enter characters. Green confirms.": "Saisissez les caractères avec les flèches et OK. Vert pour confirmer.",
-    "At least 12 characters.": "Au moins 12 caractères.",
     "Erase character": "Effacer un caractère",
     "To restore": "À restaurer",
     "Restored": "Restauré",
@@ -1245,7 +1244,8 @@
     "Previous settings restored": "Réglages précédents restaurés",
     "Recovery backup required": "Sauvegarde de récupération nécessaire",
     "Show password": "Afficher le mot de passe",
-    "Hide password": "Masquer le mot de passe"
+    "Hide password": "Masquer le mot de passe",
+    "At least 6 characters.": "Au moins 6 caractères."
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -1388,7 +1388,6 @@
     "Unlock backup": "Sblocca backup",
     "Incorrect password or damaged backup": "Password errata o backup danneggiato",
     "Use arrows and OK to enter characters. Green confirms.": "Inserire i caratteri con frecce e OK. Il verde conferma.",
-    "At least 12 characters.": "Almeno 12 caratteri.",
     "Erase character": "Cancella carattere",
     "To restore": "Da ripristinare",
     "Restored": "Ripristinato",
@@ -1401,7 +1400,8 @@
     "Previous settings restored": "Impostazioni precedenti ripristinate",
     "Recovery backup required": "Necessario il backup di recupero",
     "Show password": "Mostra password",
-    "Hide password": "Nascondi password"
+    "Hide password": "Nascondi password",
+    "At least 6 characters.": "Almeno 6 caratteri."
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -1544,7 +1544,6 @@
     "Unlock backup": "Desbloquear copia",
     "Incorrect password or damaged backup": "Contraseña incorrecta o copia dañada",
     "Use arrows and OK to enter characters. Green confirms.": "Introduzca caracteres con flechas y OK. Verde confirma.",
-    "At least 12 characters.": "Al menos 12 caracteres.",
     "Erase character": "Borrar carácter",
     "To restore": "Por restaurar",
     "Restored": "Restaurado",
@@ -1557,7 +1556,8 @@
     "Previous settings restored": "Ajustes anteriores restaurados",
     "Recovery backup required": "Se requiere la copia de recuperación",
     "Show password": "Mostrar contraseña",
-    "Hide password": "Ocultar contraseña"
+    "Hide password": "Ocultar contraseña",
+    "At least 6 characters.": "Al menos 6 caracteres."
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -1700,7 +1700,6 @@
     "Unlock backup": "Zhblloko kopjen",
     "Incorrect password or damaged backup": "Fjalëkalim i gabuar ose kopje e dëmtuar",
     "Use arrows and OK to enter characters. Green confirms.": "Përdorni shigjetat dhe OK për karakteret. Jeshilja konfirmon.",
-    "At least 12 characters.": "Të paktën 12 karaktere.",
     "Erase character": "Fshi karakterin",
     "To restore": "Për rikthim",
     "Restored": "Rikthyer",
@@ -1713,7 +1712,8 @@
     "Previous settings restored": "Cilësimet e mëparshme u rikthyen",
     "Recovery backup required": "Nevojitet kopja e rikuperimit",
     "Show password": "Shfaq fjalëkalimin",
-    "Hide password": "Fshih fjalëkalimin"
+    "Hide password": "Fshih fjalëkalimin",
+    "At least 6 characters.": "Të paktën 6 karaktere."
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -1856,7 +1856,6 @@
     "Unlock backup": "Ξεκλείδωμα αντιγράφου",
     "Incorrect password or damaged backup": "Λάθος κωδικός ή κατεστραμμένο αντίγραφο",
     "Use arrows and OK to enter characters. Green confirms.": "Εισαγάγετε χαρακτήρες με βέλη και OK. Το πράσινο επιβεβαιώνει.",
-    "At least 12 characters.": "Τουλάχιστον 12 χαρακτήρες.",
     "Erase character": "Διαγραφή χαρακτήρα",
     "To restore": "Προς επαναφορά",
     "Restored": "Επαναφέρθηκαν",
@@ -1869,7 +1868,8 @@
     "Previous settings restored": "Επαναφέρθηκαν οι προηγούμενες ρυθμίσεις",
     "Recovery backup required": "Απαιτείται αντίγραφο ανάκτησης",
     "Show password": "Εμφάνιση κωδικού",
-    "Hide password": "Απόκρυψη κωδικού"
+    "Hide password": "Απόκρυψη κωδικού",
+    "At least 6 characters.": "Τουλάχιστον 6 χαρακτήρες."
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -2012,7 +2012,6 @@
     "Unlock backup": "Ava varukoopia",
     "Incorrect password or damaged backup": "Vale parool või rikutud varukoopia",
     "Use arrows and OK to enter characters. Green confirms.": "Sisesta märgid noolte ja OK-ga. Roheline kinnitab.",
-    "At least 12 characters.": "Vähemalt 12 märki.",
     "Erase character": "Kustuta märk",
     "To restore": "Taastamiseks",
     "Restored": "Taastatud",
@@ -2025,7 +2024,8 @@
     "Previous settings restored": "Eelmised sätted taastatud",
     "Recovery backup required": "Vajalik taastevarukoopia",
     "Show password": "Näita parooli",
-    "Hide password": "Peida parool"
+    "Hide password": "Peida parool",
+    "At least 6 characters.": "Vähemalt 6 märki."
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -2168,7 +2168,6 @@
     "Unlock backup": "باز کردن قفل پشتیبان",
     "Incorrect password or damaged backup": "رمز نادرست یا پشتیبان آسیب‌دیده",
     "Use arrows and OK to enter characters. Green confirms.": "با جهت‌ها و OK نویسه وارد کنید. دکمه سبز تأیید می‌کند.",
-    "At least 12 characters.": "حداقل ۱۲ نویسه.",
     "Erase character": "حذف نویسه",
     "To restore": "برای بازیابی",
     "Restored": "بازیابی‌شده",
@@ -2181,7 +2180,8 @@
     "Previous settings restored": "تنظیمات قبلی بازیابی شدند",
     "Recovery backup required": "نسخه پشتیبان بازیابی لازم است",
     "Show password": "نمایش رمز عبور",
-    "Hide password": "پنهان کردن رمز عبور"
+    "Hide password": "پنهان کردن رمز عبور",
+    "At least 6 characters.": "حداقل ۶ نویسه."
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -2324,7 +2324,6 @@
     "Unlock backup": "Atrakinti kopiją",
     "Incorrect password or damaged backup": "Neteisingas slaptažodis arba sugadinta kopija",
     "Use arrows and OK to enter characters. Green confirms.": "Įveskite simbolius rodyklėmis ir OK. Žalias mygtukas patvirtina.",
-    "At least 12 characters.": "Bent 12 simbolių.",
     "Erase character": "Ištrinti simbolį",
     "To restore": "Atkurti",
     "Restored": "Atkurta",
@@ -2337,7 +2336,8 @@
     "Previous settings restored": "Ankstesnės nuostatos atkurtos",
     "Recovery backup required": "Reikalinga atkūrimo kopija",
     "Show password": "Rodyti slaptažodį",
-    "Hide password": "Slėpti slaptažodį"
+    "Hide password": "Slėpti slaptažodį",
+    "At least 6 characters.": "Bent 6 simbolių."
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -2480,7 +2480,6 @@
     "Unlock backup": "Back-up ontgrendelen",
     "Incorrect password or damaged backup": "Onjuist wachtwoord of beschadigde back-up",
     "Use arrows and OK to enter characters. Green confirms.": "Voer tekens in met pijlen en OK. Groen bevestigt.",
-    "At least 12 characters.": "Minstens 12 tekens.",
     "Erase character": "Teken wissen",
     "To restore": "Te herstellen",
     "Restored": "Hersteld",
@@ -2493,7 +2492,8 @@
     "Previous settings restored": "Vorige instellingen hersteld",
     "Recovery backup required": "Herstelback-up vereist",
     "Show password": "Wachtwoord tonen",
-    "Hide password": "Wachtwoord verbergen"
+    "Hide password": "Wachtwoord verbergen",
+    "At least 6 characters.": "Minstens 6 tekens."
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -2636,7 +2636,6 @@
     "Unlock backup": "Desbloquear cópia",
     "Incorrect password or damaged backup": "Palavra-passe incorreta ou cópia danificada",
     "Use arrows and OK to enter characters. Green confirms.": "Introduza caracteres com setas e OK. Verde confirma.",
-    "At least 12 characters.": "Pelo menos 12 caracteres.",
     "Erase character": "Apagar carácter",
     "To restore": "A restaurar",
     "Restored": "Restaurado",
@@ -2649,7 +2648,8 @@
     "Previous settings restored": "Definições anteriores restauradas",
     "Recovery backup required": "É necessária a cópia de recuperação",
     "Show password": "Mostrar palavra-passe",
-    "Hide password": "Ocultar palavra-passe"
+    "Hide password": "Ocultar palavra-passe",
+    "At least 6 characters.": "Pelo menos 6 caracteres."
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -2792,7 +2792,6 @@
     "Unlock backup": "Deblochează copia",
     "Incorrect password or damaged backup": "Parolă incorectă sau copie deteriorată",
     "Use arrows and OK to enter characters. Green confirms.": "Introduceți caractere cu săgeți și OK. Verde confirmă.",
-    "At least 12 characters.": "Cel puțin 12 caractere.",
     "Erase character": "Șterge caracterul",
     "To restore": "De restaurat",
     "Restored": "Restaurat",
@@ -2805,7 +2804,8 @@
     "Previous settings restored": "Setările anterioare au fost restaurate",
     "Recovery backup required": "Este necesară copia de recuperare",
     "Show password": "Arată parola",
-    "Hide password": "Ascunde parola"
+    "Hide password": "Ascunde parola",
+    "At least 6 characters.": "Cel puțin 6 caractere."
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -2948,7 +2948,6 @@
     "Unlock backup": "Yedeğin kilidini aç",
     "Incorrect password or damaged backup": "Yanlış parola veya hasarlı yedek",
     "Use arrows and OK to enter characters. Green confirms.": "Oklar ve OK ile karakter girin. Yeşil onaylar.",
-    "At least 12 characters.": "En az 12 karakter.",
     "Erase character": "Karakteri sil",
     "To restore": "Geri yüklenecek",
     "Restored": "Geri yüklendi",
@@ -2961,7 +2960,8 @@
     "Previous settings restored": "Önceki ayarlar geri yüklendi",
     "Recovery backup required": "Kurtarma yedeği gerekli",
     "Show password": "Parolayı göster",
-    "Hide password": "Parolayı gizle"
+    "Hide password": "Parolayı gizle",
+    "At least 6 characters.": "En az 6 karakter."
   },
   "uk": {
     "System centre": "Системний центр",
@@ -3104,7 +3104,6 @@
     "Unlock backup": "Розблокувати копію",
     "Incorrect password or damaged backup": "Неправильний пароль або пошкоджена копія",
     "Use arrows and OK to enter characters. Green confirms.": "Вводьте символи стрілками й OK. Зелена кнопка підтверджує.",
-    "At least 12 characters.": "Щонайменше 12 символів.",
     "Erase character": "Видалити символ",
     "To restore": "До відновлення",
     "Restored": "Відновлено",
@@ -3117,7 +3116,8 @@
     "Previous settings restored": "Попередні налаштування відновлено",
     "Recovery backup required": "Потрібна резервна копія для відновлення",
     "Show password": "Показати пароль",
-    "Hide password": "Приховати пароль"
+    "Hide password": "Приховати пароль",
+    "At least 6 characters.": "Щонайменше 6 символів."
   },
   "zh": {
     "System centre": "系统中心",
@@ -3260,7 +3260,6 @@
     "Unlock backup": "解锁备份",
     "Incorrect password or damaged backup": "密码错误或备份损坏",
     "Use arrows and OK to enter characters. Green confirms.": "用方向键和 OK 输入字符，绿色键确认。",
-    "At least 12 characters.": "至少 12 个字符。",
     "Erase character": "删除字符",
     "To restore": "待恢复",
     "Restored": "已恢复",
@@ -3273,6 +3272,7 @@
     "Previous settings restored": "已恢复原设置",
     "Recovery backup required": "需要使用恢复备份",
     "Show password": "显示密码",
-    "Hide password": "隐藏密码"
+    "Hide password": "隐藏密码",
+    "At least 6 characters.": "至少 6 个字符。"
   }
 }

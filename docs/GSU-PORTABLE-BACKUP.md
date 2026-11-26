@@ -45,3 +45,7 @@ Owner's receiver screenshots of candidate 485ec37 show the native row selection 
 ## Owner feedback: full-width keyboard and reveal toggle
 
 Reviewed the YouTube secret editor and adopted its familiar QWERTY ordering in GSU's branded full-width panel, without depending on an installed YouTube plugin or exposing a native unmasked input. Two symbol/case pages cover all printable ASCII, with a single active cell and a dedicated Aa key. Blue explicitly toggles show/hide; passwords start masked on every new editor, re-mask on screen hide, and clear on close/submit. Three input lines display up to 128 characters, with no truncation. Added two localized captions in all 21 languages and tests of cursor, case, symbols, masking/reveal, lifecycle and resolution geometry. New exact-head CI and receiver confirmation required. No production mutation.
+
+## Owner-approved password minimum
+
+Owner confirmed the full-width keyboard on physical receiver (7aad8c7) and requested minimum six characters instead of twelve. Shared crypto and editor limits now 6–128 characters; all 21 localized prompts updated. Existing encrypted archives remain compatible; AES-GCM and scrypt parameters unchanged. Six characters offer less resistance to offline password guessing, so longer unique passphrases remain recommended. Boundary and encryption roundtrip tests added. No production change; new CI pending.
