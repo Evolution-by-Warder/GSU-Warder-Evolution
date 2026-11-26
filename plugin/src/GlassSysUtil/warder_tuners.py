@@ -217,6 +217,16 @@ def manual_scan(session):
     from .plugin import _
 
     class AdditiveScan(ScanSetup):
+        def __init__(self,session):
+            super().__init__(session)
+            # Enigma2's Screen constructor defaults to the actual subclass name.
+            # No image ships a skin named AdditiveScan. Keep the native ScanSetup
+            # and any explicit fallbacks supplied by the image.
+            names=getattr(self,'skinName',None)
+            names=names if isinstance(names,(list,tuple)) else [names]
+            self.skinName=['ScanSetup']+[name for name in names
+                if isinstance(name,str) and name not in ('ScanSetup','AdditiveScan')]
+
         def startScan(self, tlist, flags, feid, *args, **kwargs):
             if not recording_safe(self.session.nav) or flags & eComponentScan.scanRemoveServices:
                 self.session.open(MessageBox, _('Recording or channel-list protection stopped the scan.'), type=MessageBox.TYPE_INFO)
