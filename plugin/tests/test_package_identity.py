@@ -28,15 +28,15 @@ class PackageIdentityTests(unittest.TestCase):
         cls.bridge=build_ipk.build(root/'bridge',bridge=True)
         cls.current=build_ipk.build(root/'current')
         cls.bridge_doc=publish_update.manifest(cls.bridge,'13.40-r93','Compatible transition')
-        short=cls.current.with_name('enigma2-plugin-extensions-gsu_13.40-r94_all.ipk')
-        cls.current_doc=publish_update.manifest(short,'13.40-r94','Correct plugin group')
+        cls.version=(ROOT/'src/GlassSysUtil/version').read_text().strip()
+        cls.current_doc=publish_update.manifest(cls.current,cls.version,'Correct plugin group')
         cls.release=update.parse_release(json.dumps(cls.current_doc),'13.40-r93')
 
     @classmethod
     def tearDownClass(cls):cls.folder.cleanup()
 
     def test_only_short_filename_is_built_with_unchanged_package_identity(self):
-        self.assertEqual(self.current.name,'enigma2-plugin-extensions-gsu_13.40-r94_all.ipk')
+        self.assertEqual(self.current.name,'enigma2-plugin-extensions-gsu_'+self.version+'_all.ipk')
         self.assertEqual(list(self.current.parent.glob('*.ipk')),[self.current])
         update.validate_ipk(self.current,self.release)
 
@@ -63,15 +63,15 @@ class PackageIdentityTests(unittest.TestCase):
                 calls.append(command[:2])
                 if command[1]=='status':
                     identity=command[2]
-                    version=legacy_version if identity==update.LEGACY_PACKAGE_ID else '13.40-r94'
+                    version=legacy_version if identity==update.LEGACY_PACKAGE_ID else self.version
                     return types.SimpleNamespace(returncode=0,stdout='Package: '+identity+'\nVersion: '+version+'\nStatus: install ok installed\n')
                 self.assertTrue(flag.is_file())
-                self.assertEqual(flag.read_text(),'13.40-r94\n')
+                self.assertEqual(flag.read_text(),self.version+'\n')
                 return types.SimpleNamespace(returncode=returncode,stdout='opkg result')
             with patch.object(update,'MIGRATION_FLAG',flag), patch.object(update,'verify_installation'):
                 if returncode or legacy_version=='13.40-r92':
                     with self.assertRaises(update.UpdateError):update.install_release(self.release,opener,runner)
-                else:self.assertEqual(update.install_release(self.release,opener,runner),'13.40-r94')
+                else:self.assertEqual(update.install_release(self.release,opener,runner),self.version)
             self.assertFalse(flag.exists())
         return calls
 
