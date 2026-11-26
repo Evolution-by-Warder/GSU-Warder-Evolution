@@ -140,6 +140,16 @@ def render_readme(old, previous_version, item):
     return old
 
 
+def verified_predecessor(previous,record,feed,built_against):
+    prior=previous.get('release')
+    require(isinstance(prior,dict) and record.get('release')==prior,'production register and active feed differ')
+    updater=runpy.run_path(str(ROOT/'plugin/src/GlassSysUtil/plugin_update.py'))
+    require(updater['parse_release'](encode(previous),'13.41-r6','stable-modern') is not None,'invalid previous release')
+    require(updater['parse_release'](encode(feed),prior['version'],'stable-modern') is not None,'not a forward stable upgrade')
+    require(prior==built_against,'build did not verify the active predecessor')
+    return prior
+
+
 def publish(directory,feed,install):
     require(os.environ.get('GITHUB_REF')=='refs/heads/main' and os.environ.get('GITHUB_REPOSITORY')==REPO,'production context')
     revision=os.environ['GITHUB_SHA']
@@ -157,12 +167,7 @@ def publish(directory,feed,install):
             verify_public(URL.rsplit('/',1)[0]+'/'+name,(directory/name).read_bytes())
     else:
         require(revision==command('git','rev-parse','origin/main'),'main advanced')
-        prior=previous.get('release')
-        require(isinstance(prior,dict) and record.get('release')==prior,'production register and active feed differ')
-        updater=runpy.run_path(str(ROOT/'plugin/src/GlassSysUtil/plugin_update.py'))
-        require(updater['parse_release'](encode(previous),'13.41-r6','stable-modern') is not None,'invalid previous release')
-        require(updater['parse_release'](encode(feed),prior['version'],'stable-modern') is not None,'not a forward stable upgrade')
-        require(prior==json.loads((ROOT/MODERN).read_text(encoding='utf-8')).get('release'),'build did not verify the active predecessor')
+        prior=verified_predecessor(previous,record,feed,json.loads((ROOT/MODERN).read_text(encoding='utf-8')).get('release'))
         # Existing previous tag and release are read only. Prove its public IPK
         # still has the byte identity from the active manifest before advancing.
         with tempfile.TemporaryDirectory() as temp:
