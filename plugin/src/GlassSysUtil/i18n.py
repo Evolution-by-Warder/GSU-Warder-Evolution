@@ -4,12 +4,14 @@ import gettext
 import json
 from pathlib import Path
 
-LANGUAGES=('en','sk','cs','de','pl','hu','ru','fr','it','es')
+LANGUAGES=('en','sk','cs','de','pl','hu','ru','fr','it','es','al','el','et','fa','lt','nl','pt','ro','tr','uk','zh')
+ALIASES={'sq':'al','gr':'el','cz':'cs','ua':'uk','cn':'zh'}
 ROOT=Path(__file__).parent
 
 
 def language(value):
     code=str(value or 'en').replace('-','_').split('_')[0].lower()
+    code=ALIASES.get(code,code)
     return code if code in LANGUAGES else 'en'
 
 
@@ -22,16 +24,27 @@ def catalog(root,code):
     except (OSError,ValueError):values={}
     try:original=gettext.translation('gsu',str(base),languages=[code],fallback=True)
     except (OSError,ValueError,EOFError):original=gettext.NullTranslations()
-    return values,original
+    supplement={}
+    path=base/'legacy-supplement.json'
+    if path.is_file():
+        try:
+            all_values=json.loads(path.read_text(encoding='utf-8'))
+            candidate=all_values.get(code,{}) if isinstance(all_values,dict) else {}
+            if isinstance(candidate,dict):supplement=candidate
+        except (OSError,ValueError):pass
+    return values,original,supplement
 
 
 def translate(value,locale='en',root=None):
     code=language(locale)
     if code=='en':return value
-    values,original=catalog(str(ROOT if root is None else root),code)
+    values,original,supplement=catalog(str(ROOT if root is None else root),code)
     result=values.get(value)
     if isinstance(result,str) and result:return result
-    return original.gettext(value)
+    legacy=original.gettext(value)
+    if legacy!=value:return legacy
+    result=supplement.get(value)
+    return result if isinstance(result,str) and result else value
 
 
 def for_api(api,value,fallback=None):

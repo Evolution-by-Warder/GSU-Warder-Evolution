@@ -20,6 +20,11 @@ class ReleaseNotesTests(unittest.TestCase):
         self.assertEqual(module.load_notes(self.path,'0.1.12','sk_SK'),'Slovenské zmeny')
         self.assertEqual(module.load_notes(self.path,'0.1.12','en-GB'),'English changes')
 
+    def test_language_aliases_use_localized_notes(self):
+        self.path.write_text(json.dumps({'version':'0.1.12','notes':{'en':'English','al':'Shqip','el':'Ελληνικά','cs':'Česky','uk':'Українська','zh':'中文'}}))
+        for alias,expected in (('sq_AL','Shqip'),('gr-GR','Ελληνικά'),('cz_CZ','Česky'),('ua_UA','Українська'),('cn_CN','中文')):
+            self.assertEqual(module.load_notes(self.path,'0.1.12',alias),expected)
+
     def test_unsupported_language_falls_back_to_english(self):
         self.assertEqual(module.load_notes(self.path,'0.1.12','nl_NL'),'English changes')
 

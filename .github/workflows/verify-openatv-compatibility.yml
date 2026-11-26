@@ -43,7 +43,7 @@ jobs:
           python compatibility/audit-openatv-skin-bindings.py --upstream upstream/enigma2/lib/python --plugin-root plugin/src
 
   generated-layouts:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     name: Generated layouts / Python ${{ matrix.python }}
     strategy:
       fail-fast: false

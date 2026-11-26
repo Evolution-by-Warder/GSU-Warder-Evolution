@@ -62,15 +62,19 @@ def build(destination, bridge=False):
     for path in sorted((runtime/'locale').glob('*.json')):
         entries.append((PLUGIN+'/locale/'+path.name,path.read_bytes(),0o644))
     entries.append((PLUGIN+'/version',(version+'\n').encode(),0o644))
+    history=json.loads((BASE/'update/RELEASE-NOTES.i18n.json').read_text())
     notes=(BASE/'update/RELEASE-NOTES.md').read_text()
-    if bridge:notes=notes.replace('GSU 13.40-r94','GSU 13.40-r93',1)
+    if bridge:
+        # Historical migration test package must not inherit newer release notes.
+        # This does not rebuild or publish the immutable public r93 IPK.
+        history['entries']=[entry for entry in history['entries']
+                            if version_key(entry['version'])<=version_key(version)]
+        historical=next(entry for entry in history['entries'] if entry['version']==version)
+        history['notes']=historical['notes']
+        notes='GSU '+version+'\n\n'+history['notes'].get('sk',history['notes']['en'])+'\n\n'+history['notes']['en']+'\n'
     assert notes.splitlines()[0]=='GSU '+version,'Release notes do not match runtime version'
     entries.append((PLUGIN+'/release-notes.txt',notes.encode('utf-8'),0o644))
-    history=json.loads((BASE/'update/RELEASE-NOTES.i18n.json').read_text())
     history['version']=version
-    if bridge:
-        history['entries']=[entry for entry in history['entries']
-                            if version_key(entry['version'])<=version_key('13.40-r93')]
     entries.append((PLUGIN+'/release-history.json',
                     (json.dumps(history,ensure_ascii=False,indent=2)+'\n').encode(),0o644))
     for path in sorted((BASE/'converters').glob('*.py')):

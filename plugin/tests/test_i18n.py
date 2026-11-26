@@ -14,9 +14,10 @@ i18n=importlib.util.module_from_spec(spec);spec.loader.exec_module(i18n)
 
 
 class LocalizationTests(unittest.TestCase):
-    def test_all_ten_catalogs_have_common_keys_and_safe_format_arguments(self):
+    def test_all_twenty_one_catalogs_have_common_keys_and_safe_format_arguments(self):
         english=json.loads((ROOT/'locale/en.json').read_text())
-        self.assertGreaterEqual(len(english),100)
+        self.assertGreaterEqual(len(english),141)
+        self.assertEqual(len(i18n.LANGUAGES),21)
         for lang in i18n.LANGUAGES:
             values=json.loads((ROOT/'locale'/(lang+'.json')).read_text())
             self.assertFalse(set(english)-set(values),lang)
@@ -26,12 +27,41 @@ class LocalizationTests(unittest.TestCase):
                 self.assertEqual(re.findall(r'%[sdi]',key),re.findall(r'%[sdi]',value),(lang,key))
             if lang!='en':self.assertNotEqual(i18n.translate('System Information',lang),'System Information')
 
+    def test_legacy_destructive_operation_warnings_are_translated(self):
+        extra=json.loads((ROOT/'locale/legacy-supplement.json').read_text(encoding='utf-8'))
+        self.assertEqual(set(extra),set(i18n.LANGUAGES))
+        self.assertEqual(len(extra['en']),257)
+        for code,catalog in extra.items():
+            self.assertEqual(set(catalog),set(extra['en']))
+            for key,value in catalog.items():
+                self.assertTrue(value)
+                self.assertEqual(re.findall(r'%[sdi]',key),re.findall(r'%[sdi]',value),(code,key))
+                if code!='en' and value!=key:
+                    self.assertNotEqual(i18n.translate(key,code),key,(code,key))
+                elif code!='en':
+                    self.assertIn(key,('Disk','Source','Destination','Partition'),(code,key))
+
+    def test_legacy_plugin_literal_translation_inventory(self):
+        import ast
+        common=json.loads((ROOT/'locale/en.json').read_text(encoding='utf-8'))
+        extra=json.loads((ROOT/'locale/legacy-supplement.json').read_text(encoding='utf-8'))['en']
+        technical={'/etc/nfs_cifs.cfg','CAMs','CIFS','CIFS/NFS','HDD','ID','NFS','SRVs','SSD','TCP','UDP'}
+        tree=ast.parse((ROOT/'plugin.py').read_text(encoding='utf-8'))
+        keys={node.args[0].value for node in ast.walk(tree)
+              if isinstance(node,ast.Call) and isinstance(node.func,ast.Name)
+              and node.func.id=='_' and node.args and isinstance(node.args[0],ast.Constant)
+              and isinstance(node.args[0].value,str)}
+        self.assertFalse(keys-set(common)-set(extra)-technical)
+
     def test_normalizes_regions_and_falls_back_to_english_without_global_locale(self):
         for code in ('sk_SK','SK-sk','sk'):
             self.assertEqual(i18n.translate('Settings',code),'Nastavenia')
         for code in ('xx_XX','../../sk',None,'en_GB'):
             self.assertEqual(i18n.translate('Settings',code),'Settings')
         self.assertEqual(i18n.translate('A missing sentence','ru'),'A missing sentence')
+        for alias,expected in (('sq_AL','al'),('gr-GR','el'),('cz_CZ','cs'),('ua_UA','uk'),('cn_CN','zh')):
+            self.assertEqual(i18n.language(alias),expected)
+            self.assertEqual(i18n.translate('Settings',alias),i18n.translate('Settings',expected))
         with patch('locale.setlocale',side_effect=AssertionError('global locale changed')):
             self.assertEqual(i18n.translate('Back','fr'),'Retour')
 
@@ -67,6 +97,21 @@ class LocalizationTests(unittest.TestCase):
             self.assertEqual(plugin._warder_main.text(vars(plugin),'Settings'),'Settings')
             plugin.config.plugins.GlassSysUtil.par62.value=True
 
+    def test_calendar_covers_every_supported_language(self):
+        from datetime import datetime
+        plugin=load(ROOT)
+        main=plugin._warder_main
+        self.assertEqual(set(main.DAYS),set(i18n.LANGUAGES))
+        self.assertEqual(set(main.MONTHS),set(i18n.LANGUAGES))
+        for lang in i18n.LANGUAGES:
+            self.assertEqual(len(main.DAYS[lang]),7,lang)
+            self.assertEqual(len(main.MONTHS[lang]),12,lang)
+            day,date,clock,seconds=main.clock_values(datetime(2026,11,26,12,34,56),lang)
+            self.assertEqual(day,main.DAYS[lang][3])
+            self.assertIn('2026',date)
+            self.assertEqual((clock,seconds),('12:34',':56'))
+        self.assertEqual(main.clock_values(datetime(2026,11,26),'cn_CN')[1],'2026年11月26日')
+
     def test_translated_system_labels_keep_layout_and_data_separate(self):
         from xml.etree import ElementTree as ET
         plugin=load(ROOT)
@@ -92,6 +137,7 @@ class LocalizationTests(unittest.TestCase):
                 names={m.name.removeprefix('./') for m in archive}
                 prefix=build_ipk.PLUGIN+'/locale/'
                 for lang in i18n.LANGUAGES:self.assertIn(prefix+lang+'.json',names)
+                self.assertIn(prefix+'legacy-supplement.json',names)
                 self.assertIn(prefix+'sk/LC_MESSAGES/gsu.mo',names)
             with tarfile.open(fileobj=io.BytesIO(control)) as archive:
                 self.assertNotIn(b'python3-gettext',archive.extractfile('./control').read())

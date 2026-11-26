@@ -22,6 +22,17 @@ DAYS = {
     'fr': 'Lundi Mardi Mercredi Jeudi Vendredi Samedi Dimanche'.split(),
     'it': 'Lunedì Martedì Mercoledì Giovedì Venerdì Sabato Domenica'.split(),
     'es': 'Lunes Martes Miércoles Jueves Viernes Sábado Domingo'.split(),
+    'al': 'E hënë|E martë|E mërkurë|E enjte|E premte|E shtunë|E diel'.split('|'),
+    'el': 'Δευτέρα|Τρίτη|Τετάρτη|Πέμπτη|Παρασκευή|Σάββατο|Κυριακή'.split('|'),
+    'et': 'Esmaspäev|Teisipäev|Kolmapäev|Neljapäev|Reede|Laupäev|Pühapäev'.split('|'),
+    'fa': 'دوشنبه|سه‌شنبه|چهارشنبه|پنجشنبه|جمعه|شنبه|یکشنبه'.split('|'),
+    'lt': 'Pirmadienis|Antradienis|Trečiadienis|Ketvirtadienis|Penktadienis|Šeštadienis|Sekmadienis'.split('|'),
+    'nl': 'Maandag|Dinsdag|Woensdag|Donderdag|Vrijdag|Zaterdag|Zondag'.split('|'),
+    'pt': 'Segunda-feira|Terça-feira|Quarta-feira|Quinta-feira|Sexta-feira|Sábado|Domingo'.split('|'),
+    'ro': 'Luni|Marți|Miercuri|Joi|Vineri|Sâmbătă|Duminică'.split('|'),
+    'tr': 'Pazartesi|Salı|Çarşamba|Perşembe|Cuma|Cumartesi|Pazar'.split('|'),
+    'uk': 'Понеділок|Вівторок|Середа|Четвер|П’ятниця|Субота|Неділя'.split('|'),
+    'zh': '星期一|星期二|星期三|星期四|星期五|星期六|星期日'.split('|'),
 }
 MONTHS = {
     'en': 'January February March April May June July August September October November December'.split(),
@@ -34,6 +45,17 @@ MONTHS = {
     'fr': 'janvier février mars avril mai juin juillet août septembre octobre novembre décembre'.split(),
     'it': 'gennaio febbraio marzo aprile maggio giugno luglio agosto settembre ottobre novembre dicembre'.split(),
     'es': 'enero febrero marzo abril mayo junio julio agosto septiembre octubre noviembre diciembre'.split(),
+    'al': 'janar|shkurt|mars|prill|maj|qershor|korrik|gusht|shtator|tetor|nëntor|dhjetor'.split('|'),
+    'el': 'Ιανουαρίου|Φεβρουαρίου|Μαρτίου|Απριλίου|Μαΐου|Ιουνίου|Ιουλίου|Αυγούστου|Σεπτεμβρίου|Οκτωβρίου|Νοεμβρίου|Δεκεμβρίου'.split('|'),
+    'et': 'jaanuar|veebruar|märts|aprill|mai|juuni|juuli|august|september|oktoober|november|detsember'.split('|'),
+    'fa': 'ژانویه|فوریه|مارس|آوریل|مه|ژوئن|ژوئیه|اوت|سپتامبر|اکتبر|نوامبر|دسامبر'.split('|'),
+    'lt': 'sausio|vasario|kovo|balandžio|gegužės|birželio|liepos|rugpjūčio|rugsėjo|spalio|lapkričio|gruodžio'.split('|'),
+    'nl': 'januari|februari|maart|april|mei|juni|juli|augustus|september|oktober|november|december'.split('|'),
+    'pt': 'janeiro|fevereiro|março|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro'.split('|'),
+    'ro': 'ianuarie|februarie|martie|aprilie|mai|iunie|iulie|august|septembrie|octombrie|noiembrie|decembrie'.split('|'),
+    'tr': 'Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık'.split('|'),
+    'uk': 'січня|лютого|березня|квітня|травня|червня|липня|серпня|вересня|жовтня|листопада|грудня'.split('|'),
+    'zh': '1月|2月|3月|4月|5月|6月|7月|8月|9月|10月|11月|12月'.split('|'),
 }
 
 
@@ -49,10 +71,12 @@ def text(api,value):
 
 def clock_values(now, lang):
     """Format locally, without changing the process-wide locale used by Enigma2."""
+    lang = _i18n_language(lang)
     if lang in DAYS:
         day = DAYS[lang][now.weekday()]
         month = MONTHS[lang][now.month-1]
-        date = '%d. %s %d' % (now.day, month, now.year)
+        date = ('%d年%d月%d日' % (now.year, now.month, now.day) if lang == 'zh'
+                else '%d. %s %d' % (now.day, month, now.year))
     else:
         day = DAYS['en'][now.weekday()]
         date = '%d. %s %d' % (now.day,MONTHS['en'][now.month-1],now.year)
