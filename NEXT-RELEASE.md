@@ -1,3 +1,9 @@
+# 2026-11-26 — stable r5 publication
+
+PR #14, source `9e03199394ca498d30120cca5cf184752e0f1bbf`, workflow 45763722273, public IPK SHA-256 `17de1b2624dd90b77d2c8c05ceba997e683c2d66d888212dda21e31233ef7085`, 3812194 bytes. Both native matrices and packaged install gate passed. Feed activation via atomic fast-forward below; website verification remains pending.
+
+---
+
 # 2026-11-26 — GSU PR #14 stable candidate preparation
 
 Source r5 version and explicit release request staged; 21 localized release notes and historical entries retained. New one-shot publisher: read-only PR package gates, native CI, deterministic IPK, actual r4 updater validator, public IPK and sidecar comparison, both stable feeds advanced atomically with no force, frozen r93 bridges unchanged. No release/feed advance has occurred. Exact HEAD requires all relevant CI before manual merge. Website sync after actual publication.
