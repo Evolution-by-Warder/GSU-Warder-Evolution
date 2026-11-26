@@ -19,6 +19,7 @@ DOWNLOAD_PREFIX = "enigma2-plugin-extensions-gsu"
 MIGRATION_FLAG = pathlib.Path("/var/lib/warder-gsu/package-rename-in-progress")
 # The recovered runtime has its own feed; production dashboards never enter it.
 FEED_URL = "https://raw.githubusercontent.com/" + REPOSITORY + "/original-python314/plugin/update/stable.json"
+MODERN_FEED_URL = "https://raw.githubusercontent.com/" + REPOSITORY + "/main/plugin/update/stable-modern.json"
 MAX_IPK_BYTES = 128 * 1024 * 1024
 
 
@@ -29,13 +30,20 @@ class UpdateError(ValueError):
 def version_key(value):
     if not isinstance(value, str):
         raise UpdateError("Invalid plugin version")
+    modern = re.fullmatch(r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)", value)
+    if modern:
+        return (1, int(modern[1]), int(modern[2]), 0, int(modern[3]), 0)
     match = re.fullmatch(r"(\d+)\.(\d+)-r(\d+)(?:-test([1-9]\d*))?", value)
     if not match:
         raise UpdateError("Invalid restoration version")
     major, minor, revision, test = match.groups()
     # opkg splits at the last hyphen: legacy -testN adds an upstream
     # component, so no same-minor plain rNN release is a native upgrade.
-    return (int(major), int(minor), int(test is not None), int(revision), int(test or 0))
+    return (0, int(major), int(minor), int(test is not None), int(revision), int(test or 0))
+
+
+def package_version(value):
+    return ("1:" + value) if version_key(value)[0] == 1 else value
 
 
 # Use a core-Python immutable record: some receiver images split or omit
@@ -50,7 +58,7 @@ class Release(namedtuple('_Release', 'version url sha256 bytes notes notes_i18n 
         return super().__new__(cls, version, url, sha256, bytes, notes, {} if notes_i18n is _DEFAULT_NOTES else notes_i18n, package_id)
 
 
-def parse_release(payload, current_version):
+def parse_release(payload, current_version, channel="original-python314"):
     """Return a newer published release, never a work commit or downgrade."""
     current = version_key(current_version)
     try:
@@ -59,7 +67,7 @@ def parse_release(payload, current_version):
         raise UpdateError("Invalid release manifest") from exc
     if not isinstance(document, dict) or type(document.get("schema")) is not int or document["schema"] != 1:
         raise UpdateError("Unsupported release manifest")
-    if document.get("product") != "Glass System Utility Warder Evolution" or document.get("channel") != "original-python314":
+    if document.get("product") != "Glass System Utility Warder Evolution" or document.get("channel") != channel:
         raise UpdateError("Wrong update product or channel")
     if "release" not in document:
         raise UpdateError("Missing release entry")
@@ -69,8 +77,10 @@ def parse_release(payload, current_version):
     if not isinstance(item, dict):
         raise UpdateError("Invalid release entry")
     remote = version_key(item.get("version"))
-    if remote[2] != 0:
+    if remote[3] != 0:
         raise UpdateError("Test build in production channel")
+    if (remote[0] == 1) != (channel == "stable-modern"):
+        raise UpdateError("Wrong version generation for update channel")
     tag = item.get("tag")
     if tag not in (item["version"], "v" + item["version"]):
         raise UpdateError("Release tag does not match version")
@@ -106,11 +116,12 @@ def _open(url, timeout=6):
 
 
 def check_release(current_version, opener=_open):
-    with opener(FEED_URL) as response:
+    modern = version_key(current_version)[0] == 1 or version_key(current_version) >= version_key("13.41-r6")
+    with opener(MODERN_FEED_URL if modern else FEED_URL) as response:
         payload = response.read(65537)
     if len(payload) > 65536:
         raise UpdateError("Release manifest is too large")
-    return parse_release(payload, current_version)
+    return parse_release(payload, current_version, "stable-modern" if modern else "original-python314")
 
 
 def download_release(release, destination, opener=_open):
@@ -189,7 +200,7 @@ def validate_ipk(path, release):
             if key in fields:
                 raise UpdateError("Duplicate IPK control field")
             fields[key] = value.strip()
-    if fields.get("Package") != release.package_id or fields.get("Version") != release.version or fields.get("Architecture") != "all":
+    if fields.get("Package") != release.package_id or fields.get("Version") != package_version(release.version) or fields.get("Architecture") != "all":
         raise UpdateError("IPK package identity, version or architecture mismatch")
 
 
