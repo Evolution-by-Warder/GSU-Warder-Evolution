@@ -89,6 +89,28 @@ def cpu_processes(tr, cancel, p=None):
         for cpu, pid, name, rss in sorted(measured, key=lambda r: (-r[0], r[1]))) if measured else tr('Unavailable')
 
 
+def process_table(cancel, cpu_order=False, p=None):
+    """Return measured columns; keep processes with unavailable CPU measurements."""
+    import os
+    from time import monotonic
+    p=p or Probe()
+    rows=processes(p)
+    before={pid:process_ticks(p,pid) for pid,_,_,_ in rows}
+    started=monotonic()
+    if cancel.wait(0.5):return []
+    try:elapsed=(monotonic()-started)*os.sysconf('SC_CLK_TCK')
+    except (OSError,ValueError,TypeError):elapsed=0
+    result=[]
+    for pid,name,state,rss in rows:
+        old,new=before[pid],process_ticks(p,pid)
+        cpu=None
+        if old and new and old[0]==new[0] and new[1]>=old[1] and elapsed>0:
+            cpu=100*(new[1]-old[1])/elapsed
+        result.append((pid,name,state,rss,cpu))
+    column=4 if cpu_order else 3
+    return sorted(result,key=lambda row:(row[column] is None,-(row[column] or 0),row[0]))
+
+
 def dashboard(cancel, p=None):
     from .warder_live import Sampler
     from .warder_storage import mounts, disks
@@ -100,9 +122,12 @@ def dashboard(cancel, p=None):
         return None
     live = sampler.sample()
     local = disks(p, mounts(p))
-    selected = [usage for path, _, _, _, usage in local if path != '/' and usage]
+    selected = [(path,usage) for path, _, _, _, usage in local if path != '/' and usage and (path.startswith('/media/') or path.startswith('/mnt/'))]
+    best=max(selected,key=lambda item:item[1].free,default=None)
     flash = report['checks'][1]['available_percent']
     # List separate mount capacities. Bind mounts can otherwise double-count the same device.
     return {'health':report['health'], 'basis':report['memory']['ram_basis'],
+            'disk_mount':best[0] if best else None,
+            'temperature_source':sampler.temperature_source,
             'values':(live['cpu'], live['ram'], live['swap'], flash,
-                      max((d.free for d in selected), default=None), live['temp'])}
+                      best[1].free if best else None, live['temp'])}
