@@ -96,6 +96,43 @@ class PluginUpdateTests(unittest.TestCase):
         with self.assertRaises(update.UpdateError):update.install_release(self.release(),lambda *a,**kw:io.BytesIO(b'broken'),runner)
         runner.assert_not_called()
 
+    def test_modern_version_epoch_and_channel_isolation(self):
+        self.assertGreater(update.version_key('0.41.5'), update.version_key('13.41-r6'))
+        self.assertGreater(update.version_key('0.41.6'), update.version_key('0.41.5'))
+        self.assertEqual(update.package_version('0.41.5'), '1:0.41.5')
+        self.assertEqual(update.package_version('13.41-r6'), '13.41-r6')
+        for invalid in ('1:0.41.5', '0.041.5', '0.41.5-test1', '0.41', '0.41.5;reboot'):
+            with self.assertRaises(update.UpdateError):
+                update.version_key(invalid)
+        self.assertIsNone(update.parse_release(json.dumps(self.document), '0.41.5'))
+        data = ipk('1:0.41.5')
+        self.item.update(version='0.41.5', tag='v0.41.5',
+                         url='https://github.com/'+update.REPOSITORY+'/releases/download/v0.41.5/'+update.DOWNLOAD_PREFIX+'_0.41.5_all.ipk',
+                         bytes=len(data), sha256=hashlib.sha256(data).hexdigest())
+        with self.assertRaises(update.UpdateError):
+            update.parse_release(json.dumps(self.document), '13.41-r5')
+        self.document['channel']='stable-modern'
+        release=update.parse_release(json.dumps(self.document), '13.41-r6', 'stable-modern')
+        self.assertEqual(release.version, '0.41.5')
+        self.assertIsNone(update.parse_release(json.dumps(self.document), '0.41.5', 'stable-modern'))
+        opener=MagicMock(side_effect=lambda url:io.BytesIO(json.dumps(self.document).encode()))
+        self.assertEqual(update.check_release('13.41-r6',opener).version,'0.41.5')
+        opener.assert_called_once_with(update.MODERN_FEED_URL)
+        with tempfile.TemporaryDirectory() as folder:
+            path=Path(folder)/'modern.ipk'
+            path.write_bytes(data)
+            update.validate_ipk(path,release)
+            path.write_bytes(ipk('0.41.5'))
+            with self.assertRaises(update.UpdateError):
+                update.validate_ipk(path,release)
+
+    def test_bridge_r6_remains_visible_to_legacy_client(self):
+        self.item.update(version='13.41-r6', tag='v13.41-r6',
+            url='https://github.com/'+update.REPOSITORY+'/releases/download/v13.41-r6/'+update.DOWNLOAD_PREFIX+'_13.41-r6_all.ipk')
+        opener=MagicMock(side_effect=lambda url:io.BytesIO(json.dumps(self.document).encode()))
+        self.assertEqual(update.check_release('13.41-r5',opener).version,'13.41-r6')
+        opener.assert_called_once_with(update.FEED_URL)
+
 
 class PublishUpdateTests(unittest.TestCase):
     def prepare(self,folder):

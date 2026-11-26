@@ -43,3 +43,9 @@ Vlastník výslovne nariadil pre všetky súčasné aj budúce projekty Evolutio
 Centrálne pokyny: [WEBSITE-RELEASE-POLICY.md](https://github.com/Evolution-by-Warder/YouTube-Warder-Evolution/blob/main/WEBSITE-RELEASE-POLICY.md), [zdroj webu](https://github.com/Evolution-by-Warder/YouTube-Warder-Evolution/tree/main/docs), [dokumentácia animácie](https://github.com/Evolution-by-Warder/YouTube-Warder-Evolution/blob/main/docs/WEBSITE-ORBIT.md).
 
 Pre tento projekt: `docs/gsu.html` v centrálnom webovom repozitári.
+
+## Trvalé číslovanie GSU Warder Evolution (26. 11. 2026)
+
+Vlastník výslovne schválil prechod na vlastné trojzložkové číslovanie: cieľová verzia `0.41.5`, potom `0.41.6` atď. Historické verzie 13.x-rN, tagy a IPK zostávajú nemenné. Nové používateľské verzie nemajú príponu -r ani epochu; OPKG metadata používajú epochu `1:`. Zachovať identitu balíka, adresár a nastavenia.
+
+**Povinná migračná brána:** existujúci r5 aktualizátor neprijíma X.Y.Z a vyžaduje presnú zhodu verzie IPK s manifestom. Najprv pripraviť kompatibilnú stabilnú prechodovú verziu `13.41-r6` s novým parserom, validáciou epochy a oddeleným novým stabilným feedom. Pôvodný stabilný feed musí zostať dostupný pre staré aktualizátory a ponúkať prechodový r6; zmrazené r93 feedy sa nemenia. Následne publikovať `0.41.5` iba po overení reálneho prechodu r93/r4/r5 → r6 → 0.41.5, OPKG epochy, kontroly inštalácie, histórie, natívnych CI a verejných IPK/feedov. Nepoužívať force-downgrade ani meniť existujúce tagy. Web aktualizovať až po overení produkcie, vo všetkých štyroch jazykoch. Zapisovať presné SHA, testy, artefakty a blokácie do registra.

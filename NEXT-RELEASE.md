@@ -1,3 +1,9 @@
+# 2026-11-26 — Owner-approved independent version numbering
+
+Target public version `0.41.5`, OPKG version `1:0.41.5`, GitHub tag `v0.41.5`, subsequent releases `0.41.6` etc. Stable r5 was already published: source `9e03199394ca498d30120cca5cf184752e0f1bbf`, SHA256 `17de1b2624dd90b77d2c8c05ceba997e683c2d66d888212dda21e31233ef7085`. Do not overwrite. Existing updater only parses historical versions and validates exact control version, so direct feed switch would break installed receivers. Prepare final legacy-compatible r6 bridge and separate modern feed, keep old feed on bridge and frozen r93 feeds unchanged. Implement epoch-aware package builder, manifest and installed health validation, version comparison and history, localized notes, tests for actual old updater and OPKG, then stable publisher and four-language website. No production changes at this checkpoint. Branch `work/gsu-version-normalization`. Existing r5 website synchronization remains separately required.
+
+---
+
 # 2026-11-26 — stable r5 publication
 
 PR #14, source `9e03199394ca498d30120cca5cf184752e0f1bbf`, workflow 45763722273, public IPK SHA-256 `17de1b2624dd90b77d2c8c05ceba997e683c2d66d888212dda21e31233ef7085`, 3812194 bytes. Both native matrices and packaged install gate passed. Feed activation via atomic fast-forward below; website verification remains pending.
