@@ -33,8 +33,9 @@ def archive(entries):
 def build(destination, bridge=False):
     runtime=BASE/'src/GlassSysUtil'
     version='13.40-r93' if bridge else (runtime/'version').read_text().strip()
-    version_key=runpy.run_path(str(runtime/'plugin_update.py'))['version_key']
-    version_key(version)
+    updater=runpy.run_path(str(runtime/'plugin_update.py'))
+    version_key=updater['version_key']
+    control_version=updater['package_version'](version)
     package=LEGACY_PACKAGE if bridge else PACKAGE
     resources=BASE/'resources.tar.gz'
     manifest=json.loads((BASE/'resources.json').read_text())
@@ -84,7 +85,7 @@ def build(destination, bridge=False):
     # Existing receiver configuration and custom scripts are never overwritten.
     for path in sorted((BASE/'defaults').iterdir()):
         entries.append((PLUGIN+'/defaults/'+path.name,path.read_bytes(),0o644))
-    control=('Package: '+package+'\nVersion: '+version+'\nArchitecture: all\nSection: '+('extra' if bridge else 'extensions')+'\nPriority: optional\nMaintainer: Warder Evolution\nDepends: enigma2, python3-core, python3-xml, python3-netclient, python3-compression, python3-fcntl, python3-json, python3-threading, ca-certificates\nDescription: GSU Warder Evolution: receiver information, CAM/ECM management and diagnostics\n'+('' if bridge else 'Replaces: '+LEGACY_PACKAGE+'\nConflicts: '+LEGACY_PACKAGE+'\n')).encode()
+    control=('Package: '+package+'\nVersion: '+control_version+'\nArchitecture: all\nSection: '+('extra' if bridge else 'extensions')+'\nPriority: optional\nMaintainer: Warder Evolution\nDepends: enigma2, python3-core, python3-xml, python3-netclient, python3-compression, python3-fcntl, python3-json, python3-threading, ca-certificates\nDescription: GSU Warder Evolution: receiver information, CAM/ECM management and diagnostics\n'+('' if bridge else 'Replaces: '+LEGACY_PACKAGE+'\nConflicts: '+LEGACY_PACKAGE+'\n')).encode()
     checked = {name[len(PLUGIN)+1:]: hashlib.sha256(data).hexdigest()
                for name, data, mode in entries if name.startswith(PLUGIN+'/')
                and (name.endswith('.py') or name == PLUGIN+'/version')}

@@ -9,6 +9,7 @@ import importlib.util
 import io
 import json
 import os
+import re
 from pathlib import Path, PurePosixPath
 import subprocess
 import sys
@@ -38,7 +39,8 @@ with tarfile.open(fileobj=io.BytesIO(parts['control.tar.gz'])) as arc:
     postinst=arc.extractfile('./postinst').read().decode()
 fields=dict(line.split(': ',1) for line in control.splitlines() if ': ' in line)
 identity='enigma2-plugin-extensions-'+args.product+'-warder-evolution'
-assert fields['Package']==identity and fields['Version']==args.version,'Package identity/version mismatch'
+control_version = '1:'+args.version if args.product=='gsu' and re.fullmatch(r'\d+\.\d+\.\d+',args.version) else args.version
+assert fields['Package']==identity and fields['Version']==control_version,'Package identity/version mismatch'
 with tempfile.TemporaryDirectory(prefix='warder-install-gate-') as temp:
     root=Path(temp)
     with tarfile.open(fileobj=io.BytesIO(parts['data.tar.gz'])) as arc:
@@ -93,7 +95,12 @@ else:
     updater.version_key(args.version)
     product='PiconHub Warder Evolution' if args.product=='piconhub' else 'Glass System Utility Warder Evolution'
     channel='stable' if args.product=='piconhub' else 'original-python314'
-    assert updater.parse_release(json.dumps({'schema':1,'product':product,'channel':channel,'release':None}),args.version) is None
+    if args.product=='gsu' and control_version!=args.version:
+        channel='stable-modern'
+        assert updater.package_version(args.version)==control_version
+        assert updater.parse_release(json.dumps({'schema':1,'product':product,'channel':channel,'release':None}),args.version,channel) is None
+    else:
+        assert updater.parse_release(json.dumps({'schema':1,'product':product,'channel':channel,'release':None}),args.version) is None
 report={'version':args.version,'package':identity,'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),
         'shipped_postinst_verifier_exit':0,'installed_version_parser_passed':True,'updater_empty_feed_passed':True,'minimal_python_without_dataclasses_passed':True}
 if args.report:

@@ -214,11 +214,17 @@ with cam.command_lock(sys.argv[2]): print('acquired',flush=True)
             original_wait=self.cam._wait_stopped
             for ignore in (False,True):
                 process=subprocess.Popen([str(self.exe),'60'],preexec_fn=(lambda:signal.signal(signal.SIGTERM,signal.SIG_IGN)) if ignore else None)
+                entry=None
                 try:
                     # Some test hosts expose an outer /proc PID namespace.
                     # Map the child's namespace PID to its actual proc entry.
                     self.cam.proc_dir=pathlib.Path('/proc')
+                    import time
+                    deadline=time.monotonic()+2
                     host_pids=self.cam._matching_pids('oscam-uni')
+                    while not host_pids and process.poll() is None and time.monotonic()<deadline:
+                        time.sleep(0.02)
+                        host_pids=self.cam._matching_pids('oscam-uni')
                     self.assertEqual(len(host_pids),1)
                     entry=self.proc/str(process.pid)
                     entry.symlink_to(pathlib.Path('/proc')/str(next(iter(host_pids))),target_is_directory=True)
@@ -233,7 +239,7 @@ with cam.command_lock(sys.argv[2]): print('acquired',flush=True)
                 finally:
                     if process.poll() is None:process.kill()
                     process.wait(timeout=2)
-                    entry.unlink(missing_ok=True)
+                    if entry is not None:entry.unlink(missing_ok=True)
         finally:
             unrelated.terminate();unrelated.wait(timeout=2)
 
