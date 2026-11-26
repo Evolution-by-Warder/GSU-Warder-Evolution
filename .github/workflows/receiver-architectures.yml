@@ -48,13 +48,13 @@ jobs:
           python-version: '3.11.14'
       - name: Build target interpreter and run measured sampler
         env:
-          LIBC: ${{ matrix.libc }}
+          DEBIAN_CROSS_ARCH: ${{ matrix.libc }}
           ABI: ${{ matrix.abi }}
           EMULATOR: ${{ matrix.qemu }}
         run: |
           set -euo pipefail
           sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends "gcc-$ABI" "libc6-dev-$LIBC-cross" qemu-user
+          sudo apt-get install -y --no-install-recommends "gcc-$ABI" "libc6-dev-$DEBIAN_CROSS_ARCH-cross" qemu-user
           export CC="$ABI-gcc" AR="$ABI-ar" RANLIB="$ABI-ranlib"
           zlib="$RUNNER_TEMP/zlib"
           (cd upstream/zlib && CFLAGS="-O2 -fPIC" ./configure --static --prefix="$zlib" && make -j4 && make install)

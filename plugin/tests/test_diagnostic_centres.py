@@ -20,6 +20,19 @@ def module(name):
 
 
 class DiagnosticTests(unittest.TestCase):
+    def test_remote_mount_is_never_used_for_a_channel_backup(self):
+        backup=module('warder_scan_backup')
+        storage=module('warder_storage')
+        with TemporaryDirectory() as temp:
+            src=Path(temp);(src/'lamedb').write_bytes(b'tv')
+            with patch.object(storage,'mounts',return_value=[('server:/private','/media/hdd','nfs',False)]), patch.object(backup.tempfile,'mkdtemp',wraps=backup.tempfile.mkdtemp) as make:
+                out=Path(backup.create(src))
+                try:
+                    self.assertEqual(make.call_args.kwargs['dir'],Path('/tmp'))
+                    self.assertEqual((out/'lamedb').read_bytes(),b'tv')
+                finally:
+                    backup.shutil.rmtree(out)
+
     def test_thermal_polling_reuses_observation_with_age_and_refreshes(self):
         live=module('warder_live')
         p=MagicMock()

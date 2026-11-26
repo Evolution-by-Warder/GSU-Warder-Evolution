@@ -76,7 +76,12 @@
     "Internet reachable": "Internet reachable",
     "Gateway reachable; external checks failed": "Gateway reachable; external checks failed",
     "Unstable reception": "Unstable reception",
-    "No signal lock": "No signal lock"
+    "No signal lock": "No signal lock",
+    "Pilot": "Pilot",
+    "Roll-off": "Roll-off",
+    "PLS code": "PLS code",
+    "FBC root": "FBC root",
+    "FBC link": "FBC link"
   },
   "sk": {
     "System centre": "Systémové centrum",
@@ -155,7 +160,12 @@
     "Internet reachable": "Internet je dostupný",
     "Gateway reachable; external checks failed": "Brána odpovedá, externé kontroly zlyhali",
     "Unstable reception": "Nestabilný príjem",
-    "No signal lock": "Signál bez zámku"
+    "No signal lock": "Signál bez zámku",
+    "Pilot": "Pilotný signál",
+    "Roll-off": "Tvarovanie spektra",
+    "PLS code": "Kód PLS",
+    "FBC root": "Hlavný tuner FBC",
+    "FBC link": "Prepojený tuner FBC"
   },
   "cs": {
     "System centre": "Systémové centrum",
@@ -234,7 +244,12 @@
     "Internet reachable": "Internet je dostupný",
     "Gateway reachable; external checks failed": "Brána odpovídá, vnější kontroly selhaly",
     "Unstable reception": "Nestabilní příjem",
-    "No signal lock": "Signál bez zámku"
+    "No signal lock": "Signál bez zámku",
+    "Pilot": "Pilotní signál",
+    "Roll-off": "Tvarování spektra",
+    "PLS code": "Kód PLS",
+    "FBC root": "Hlavní tuner FBC",
+    "FBC link": "Připojený tuner FBC"
   },
   "de": {
     "System centre": "Systemzentrale",
@@ -313,7 +328,12 @@
     "Internet reachable": "Internet erreichbar",
     "Gateway reachable; external checks failed": "Gateway erreichbar, externe Prüfungen fehlgeschlagen",
     "Unstable reception": "Instabiler Empfang",
-    "No signal lock": "Kein Signallock"
+    "No signal lock": "Kein Signallock",
+    "Pilot": "Pilotsignal",
+    "Roll-off": "Roll-off-Faktor",
+    "PLS code": "PLS-Code",
+    "FBC root": "FBC-Haupttuner",
+    "FBC link": "Verknüpfter FBC-Tuner"
   },
   "pl": {
     "System centre": "Centrum systemu",
@@ -392,7 +412,12 @@
     "Internet reachable": "Internet jest dostępny",
     "Gateway reachable; external checks failed": "Brama odpowiada, testy zewnętrzne nie powiodły się",
     "Unstable reception": "Niestabilny odbiór",
-    "No signal lock": "Brak synchronizacji sygnału"
+    "No signal lock": "Brak synchronizacji sygnału",
+    "Pilot": "Sygnał pilotujący",
+    "Roll-off": "Współczynnik roll-off",
+    "PLS code": "Kod PLS",
+    "FBC root": "Główny tuner FBC",
+    "FBC link": "Powiązany tuner FBC"
   },
   "hu": {
     "System centre": "Rendszerközpont",
@@ -471,7 +496,12 @@
     "Internet reachable": "Az internet elérhető",
     "Gateway reachable; external checks failed": "Az átjáró elérhető, a külső tesztek sikertelenek",
     "Unstable reception": "Ingadozó vétel",
-    "No signal lock": "Nincs jelzár"
+    "No signal lock": "Nincs jelzár",
+    "Pilot": "Pilotjel",
+    "Roll-off": "Lekerekítési tényező",
+    "PLS code": "PLS-kód",
+    "FBC root": "Elsődleges FBC tuner",
+    "FBC link": "Kapcsolt FBC tuner"
   },
   "ru": {
     "System centre": "Системный центр",
@@ -550,7 +580,12 @@
     "Internet reachable": "Интернет доступен",
     "Gateway reachable; external checks failed": "Шлюз доступен, внешние проверки не пройдены",
     "Unstable reception": "Нестабильный приём",
-    "No signal lock": "Нет захвата сигнала"
+    "No signal lock": "Нет захвата сигнала",
+    "Pilot": "Пилот-сигнал",
+    "Roll-off": "Коэффициент сглаживания",
+    "PLS code": "Код PLS",
+    "FBC root": "Основной тюнер FBC",
+    "FBC link": "Связанный тюнер FBC"
   },
   "fr": {
     "System centre": "Centre système",
@@ -629,7 +664,12 @@
     "Internet reachable": "Internet accessible",
     "Gateway reachable; external checks failed": "Passerelle accessible, échec des tests externes",
     "Unstable reception": "Réception instable",
-    "No signal lock": "Signal non verrouillé"
+    "No signal lock": "Signal non verrouillé",
+    "Pilot": "Signal pilote",
+    "Roll-off": "Facteur de retombée",
+    "PLS code": "Code PLS",
+    "FBC root": "Tuner FBC principal",
+    "FBC link": "Tuner FBC lié"
   },
   "it": {
     "System centre": "Centro di sistema",
@@ -708,7 +748,12 @@
     "Internet reachable": "Internet raggiungibile",
     "Gateway reachable; external checks failed": "Gateway raggiungibile, test esterni falliti",
     "Unstable reception": "Ricezione instabile",
-    "No signal lock": "Segnale non agganciato"
+    "No signal lock": "Segnale non agganciato",
+    "Pilot": "Segnale pilota",
+    "Roll-off": "Fattore di roll-off",
+    "PLS code": "Codice PLS",
+    "FBC root": "Tuner FBC principale",
+    "FBC link": "Tuner FBC collegato"
   },
   "es": {
     "System centre": "Centro del sistema",
@@ -787,7 +832,12 @@
     "Internet reachable": "Internet disponible",
     "Gateway reachable; external checks failed": "La puerta de enlace responde, fallaron las pruebas externas",
     "Unstable reception": "Recepción inestable",
-    "No signal lock": "Sin enganche de señal"
+    "No signal lock": "Sin enganche de señal",
+    "Pilot": "Señal piloto",
+    "Roll-off": "Factor de caída",
+    "PLS code": "Código PLS",
+    "FBC root": "Sintonizador FBC principal",
+    "FBC link": "Sintonizador FBC vinculado"
   },
   "al": {
     "System centre": "Qendra e sistemit",
@@ -866,7 +916,12 @@
     "Internet reachable": "Interneti është i arritshëm",
     "Gateway reachable; external checks failed": "Porta përgjigjet, kontrollet e jashtme dështuan",
     "Unstable reception": "Marrje e paqëndrueshme",
-    "No signal lock": "Sinjali nuk është sinkronizuar"
+    "No signal lock": "Sinjali nuk është sinkronizuar",
+    "Pilot": "Sinjali pilot",
+    "Roll-off": "Faktori i rënies",
+    "PLS code": "Kodi PLS",
+    "FBC root": "Tuneri kryesor FBC",
+    "FBC link": "Tuneri i lidhur FBC"
   },
   "el": {
     "System centre": "Κέντρο συστήματος",
@@ -945,7 +1000,12 @@
     "Internet reachable": "Το διαδίκτυο είναι προσβάσιμο",
     "Gateway reachable; external checks failed": "Η πύλη ανταποκρίνεται, οι εξωτερικοί έλεγχοι απέτυχαν",
     "Unstable reception": "Ασταθής λήψη",
-    "No signal lock": "Χωρίς κλείδωμα σήματος"
+    "No signal lock": "Χωρίς κλείδωμα σήματος",
+    "Pilot": "Πιλοτικό σήμα",
+    "Roll-off": "Συντελεστής εξασθένησης",
+    "PLS code": "Κωδικός PLS",
+    "FBC root": "Κύριος δέκτης FBC",
+    "FBC link": "Συνδεδεμένος δέκτης FBC"
   },
   "et": {
     "System centre": "Süsteemikeskus",
@@ -1024,7 +1084,12 @@
     "Internet reachable": "Internet on kättesaadav",
     "Gateway reachable; external checks failed": "Lüüs vastab, välised kontrollid ebaõnnestusid",
     "Unstable reception": "Ebastabiilne vastuvõtt",
-    "No signal lock": "Signaal pole lukustunud"
+    "No signal lock": "Signaal pole lukustunud",
+    "Pilot": "Pilootsignaal",
+    "Roll-off": "Ümardustegur",
+    "PLS code": "PLS-kood",
+    "FBC root": "FBC põhituuner",
+    "FBC link": "Seotud FBC-tuuner"
   },
   "fa": {
     "System centre": "مرکز سیستم",
@@ -1103,7 +1168,12 @@
     "Internet reachable": "اینترنت در دسترس است",
     "Gateway reachable; external checks failed": "دروازه پاسخ می‌دهد، بررسی‌های بیرونی ناموفق بود",
     "Unstable reception": "دریافت ناپایدار",
-    "No signal lock": "سیگنال قفل نشده است"
+    "No signal lock": "سیگنال قفل نشده است",
+    "Pilot": "سیگنال پایلوت",
+    "Roll-off": "ضریب افت طیف",
+    "PLS code": "کد PLS",
+    "FBC root": "تیونر اصلی FBC",
+    "FBC link": "تیونر پیوندی FBC"
   },
   "lt": {
     "System centre": "Sistemos centras",
@@ -1182,7 +1252,12 @@
     "Internet reachable": "Internetas pasiekiamas",
     "Gateway reachable; external checks failed": "Tinklų sietuvas atsako, išorinės patikros nepavyko",
     "Unstable reception": "Nestabilus priėmimas",
-    "No signal lock": "Signalas neužfiksuotas"
+    "No signal lock": "Signalas neužfiksuotas",
+    "Pilot": "Pilotinis signalas",
+    "Roll-off": "Spektro nuolydžio koeficientas",
+    "PLS code": "PLS kodas",
+    "FBC root": "Pagrindinis FBC imtuvas",
+    "FBC link": "Susietas FBC imtuvas"
   },
   "nl": {
     "System centre": "Systeemcentrum",
@@ -1261,7 +1336,12 @@
     "Internet reachable": "Internet bereikbaar",
     "Gateway reachable; external checks failed": "Gateway bereikbaar, externe controles mislukt",
     "Unstable reception": "Onstabiele ontvangst",
-    "No signal lock": "Geen signaalvergrendeling"
+    "No signal lock": "Geen signaalvergrendeling",
+    "Pilot": "Pilootsignaal",
+    "Roll-off": "Roll-offfactor",
+    "PLS code": "PLS-code",
+    "FBC root": "FBC-hoofdtuner",
+    "FBC link": "Gekoppelde FBC-tuner"
   },
   "pt": {
     "System centre": "Centro do sistema",
@@ -1340,7 +1420,12 @@
     "Internet reachable": "Internet acessível",
     "Gateway reachable; external checks failed": "O gateway responde, os testes externos falharam",
     "Unstable reception": "Receção instável",
-    "No signal lock": "Sem sincronização de sinal"
+    "No signal lock": "Sem sincronização de sinal",
+    "Pilot": "Sinal piloto",
+    "Roll-off": "Fator de decaimento",
+    "PLS code": "Código PLS",
+    "FBC root": "Sintonizador FBC principal",
+    "FBC link": "Sintonizador FBC associado"
   },
   "ro": {
     "System centre": "Centru de sistem",
@@ -1419,7 +1504,12 @@
     "Internet reachable": "Internet accesibil",
     "Gateway reachable; external checks failed": "Gateway-ul răspunde, verificările externe au eșuat",
     "Unstable reception": "Recepție instabilă",
-    "No signal lock": "Fără sincronizare de semnal"
+    "No signal lock": "Fără sincronizare de semnal",
+    "Pilot": "Semnal pilot",
+    "Roll-off": "Factor de atenuare",
+    "PLS code": "Cod PLS",
+    "FBC root": "Tuner FBC principal",
+    "FBC link": "Tuner FBC asociat"
   },
   "tr": {
     "System centre": "Sistem merkezi",
@@ -1498,7 +1588,12 @@
     "Internet reachable": "İnternete erişilebiliyor",
     "Gateway reachable; external checks failed": "Ağ geçidi yanıt verdi, dış denetimler başarısız",
     "Unstable reception": "Kararsız sinyal alımı",
-    "No signal lock": "Sinyal kilidi yok"
+    "No signal lock": "Sinyal kilidi yok",
+    "Pilot": "Pilot sinyali",
+    "Roll-off": "Yuvarlanma katsayısı",
+    "PLS code": "PLS kodu",
+    "FBC root": "Ana FBC alıcısı",
+    "FBC link": "Bağlı FBC alıcısı"
   },
   "uk": {
     "System centre": "Системний центр",
@@ -1577,7 +1672,12 @@
     "Internet reachable": "Інтернет доступний",
     "Gateway reachable; external checks failed": "Шлюз відповідає, зовнішні перевірки не вдалися",
     "Unstable reception": "Нестабільний прийом",
-    "No signal lock": "Немає захоплення сигналу"
+    "No signal lock": "Немає захоплення сигналу",
+    "Pilot": "Пілот-сигнал",
+    "Roll-off": "Коефіцієнт згладжування",
+    "PLS code": "Код PLS",
+    "FBC root": "Основний тюнер FBC",
+    "FBC link": "Пов’язаний тюнер FBC"
   },
   "zh": {
     "System centre": "系统中心",
@@ -1656,6 +1756,11 @@
     "Internet reachable": "互联网可达",
     "Gateway reachable; external checks failed": "网关可达，外部检测失败",
     "Unstable reception": "接收不稳定",
-    "No signal lock": "信号未锁定"
+    "No signal lock": "信号未锁定",
+    "Pilot": "导频信号",
+    "Roll-off": "滚降系数",
+    "PLS code": "PLS 码",
+    "FBC root": "FBC 主调谐器",
+    "FBC link": "FBC 关联调谐器"
   }
 }

@@ -42,14 +42,18 @@ def copy_database(source, destination, limit):
             check.update(block)
     if check.digest()!=digest.digest():
         raise OSError('backup verification failed')
-    return count,digest.hexdigest()
+    return count,digest.hexdigest(),(info.st_dev,info.st_ino,info.st_size,info.st_mtime_ns)
 
 
 def create(source, parent=None):
     source = Path(source)
     if parent is None:
         hdd = Path('/media/hdd')
-        parent = hdd if hdd.is_mount() and os.access(hdd,os.W_OK) else Path('/tmp')
+        from .warder_storage import mounts,REMOTE
+        from .warder_tools import Probe
+        local = any(device.startswith('/dev/') and target==str(hdd) and fs not in REMOTE and not readonly
+                    for device,target,fs,readonly in mounts(Probe()))
+        parent = hdd if local and os.access(hdd,os.W_OK) else Path('/tmp')
     entries = []
     for path in source.iterdir():
         if CHANNEL_FILE.fullmatch(path.name):
@@ -61,14 +65,24 @@ def create(source, parent=None):
     limit = min(MAX_BYTES,shutil.disk_usage(parent).free - 8*1024*1024)
     root = Path(tempfile.mkdtemp(prefix='gsu-channel-backup-',dir=parent))
     try:
-        checks = {}
+        if root.stat().st_mode & 0o077:
+            if Path(parent)==Path('/media/hdd'):
+                root.rmdir()
+                return create(source,Path('/tmp'))
+            raise OSError('private backup directory unavailable')
+        checks, identities = {}, {}
         for path in sorted(entries):
-            size, checks[path.name] = copy_database(path,root/path.name,limit)
+            size, checks[path.name], identities[path] = copy_database(path,root/path.name,limit)
             limit -= size
         if {p.name for p in entries} != {p.name for p in source.iterdir() if CHANNEL_FILE.fullmatch(p.name)}:
             raise ValueError('channel list changed during backup')
+        for path,identity in identities.items():
+            st=path.lstat()
+            if (st.st_dev,st.st_ino,st.st_size,st.st_mtime_ns)!=identity:
+                raise ValueError('channel files changed during snapshot')
         (root/'SHA256.json').write_text(json.dumps(checks,sort_keys=True,indent=2)+'\n',encoding='utf-8')
         return str(root)
     except Exception:
-        shutil.rmtree(root)
+        if root.exists():
+            shutil.rmtree(root)
         raise

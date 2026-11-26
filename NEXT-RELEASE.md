@@ -1,3 +1,9 @@
+# 26. 11. 2026 · kandidát pred vydaním
+
+Predchádzajúci HEAD 5e5b062a70a03dec43cfa0f05ee62f52a4a0dd4c prešiel OpenATV 45784124685, OpenPLi 45784124525, inštalátorom 45784124554 a reprodukciou/migráciou 45784124546. Log linkera z behu 45784124598 ukázal presnú príčinu zlyhania krížovej zostavy. Premenná LIBC s názvom architektúry kolidovala s rovnomennou premennou CPython. Workflow už používa samostatný názov pre výber správneho balíka Debian.
+
+Aktuálny kandidát dopĺňa údaje DVB-T/T2 a DVB-S/S2 podľa údajov ovládača, opätovne overuje súbežné zmeny súborov v zálohe a zabraňuje uloženiu zálohy používateľa na sieťový mount. Príručka zodpovedá novým centrám a vysvetľuje obnovu. Lokálne prešlo 466 testov a 3 024 kontrol rozmerov. Dve zostavy IPK majú 3 873 060 bajtov a SHA-256 115bc57d4c842049d72864a0e2deaf0eceb35f0bb7d53f515cc5533e9abc48fc, bežné súbory po rozbalení 6 500 779 bajtov. Produkčná aktivácia a web sa evidujú až po úspešnom merge a kontrole verejných bajtov.
+
 # 26. 11. 2026 · meranie a optimalizácia teplotných čidiel
 
 Na 17f50f2745ade5e90757880722c8da09cdf59af4 uspeli OpenATV 45782325859, OpenPLi 45782325928, reprodukcia/migrácie 45782325936 aj kontrola inštalátora 45782325857. OpenBH prešiel aj kontrolou 3 024 ovládacích textov. Pri zostavovaní krížového CPython zachytilo CI 45782325842 problém s nesúvisiacimi rozšíreniami pre vývojový hostiteľ. Nové zostavenie cieli na skutočné natívne moduly potrebné na spustenie samplera a IPv4/IPv6 pod emuláciou.

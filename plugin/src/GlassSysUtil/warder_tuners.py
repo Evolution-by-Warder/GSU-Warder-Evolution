@@ -34,10 +34,13 @@ def details(session, api, tr, slot_number=None):
     for key, caption in [('system','System:'), ('tuner_type','Type'), ('frequency','Frequency:'),
                          ('polarization','Polarisation:'), ('modulation','Modulation:'), ('fec_inner','FEC'),
                          ('symbol_rate','Symbol Rate:'), ('orbital_position','Satellite:'),
+                         ('bandwidth','BW'), ('code_rate_hp','FEC HP'), ('code_rate_lp','FEC LP'),
+                         ('transmission_mode','FFT'), ('guard_interval','GI'), ('hierarchy_information','α'),
+                         ('inversion','I/Q'), ('rolloff','Roll-off'), ('pilot','Pilot'),
                          ('is_id','MIS'), ('pls_mode','PLS'), ('pls_code','PLS code'),
                          ('t2mi_plp_id','T2-MI PLP'), ('t2mi_pid','T2-MI PID'), ('plp_id','PLP')]:
         if key in data and data[key] not in (None, -1):
-            rows.append('%s   %s' % (tr(caption), human.get(key, data[key])))
+            rows.append('%s   %s' % (tr(caption), human[key] if human.get(key) is not None else data[key]))
     try:
         recordings = nav.getRecordings()
         count = len(recordings)
@@ -60,7 +63,7 @@ def details(session, api, tr, slot_number=None):
         for method,label in (('isFBCRoot','FBC root'),('isFBCLink','FBC link')):
             flag=getattr(slot,method,None)
             if callable(flag) and flag():
-                state.append(label)
+                state.append(tr(label))
         rows.append('%s    %s' % (slot.getSlotName(), ' · '.join(state) or '—'))
         if slot_number is not None:
             description=getattr(slot,'getFriendlyFullDescription',None)
