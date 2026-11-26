@@ -1530,6 +1530,7 @@ class SysUtilMngMain(Screen):
             ('9', _('Swap Management'), _('Create,remove and show single/multi swap on mapped devices on your hw')),
             ('17', _warder_tools_ui.text(globals(), 'Tools'), _warder_tools_ui.text(globals(), 'Create one archive with system information and GSU logs.')),
             ('16', _plugin_update_text(globals(), 'Update'), _plugin_update_text(globals(), 'Check for a new version of Glass System Utility Warder Evolution'))]
+        self.menuListAll.append(('network-overview', _('Network overview'), _('Network link')))
         self.status = {}
         self['list'] = ListboxSys2(self.list)
         self['list'].onSelectionChanged.append(self.reactivate)
@@ -1596,6 +1597,9 @@ class SysUtilMngMain(Screen):
                 _warder_right.show(self, globals(), 'tools')
             elif selectedItem == '16':
                 self.updatechckact()
+            elif selectedItem == 'network-overview':
+                from .warder_centre_ui import NetworkOverview
+                self.session.open(NetworkOverview, globals())
         return
 
     def updatemenulist(self):
