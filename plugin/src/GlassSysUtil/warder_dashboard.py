@@ -83,6 +83,16 @@ def skin(width, height, mode):
         label('report_status',116,299,1680,48,25,'#00bcd2df',noWrap='1')
         element('eLabel',116,353,1680,2,backgroundColor='#00314b65',zPosition='-1')
         label('file_info', 116, 372, 1680, 540, 29, '#00ffffff', scrollbarMode='showOnDemand',valign='top')
+        if mode=='network':
+            # Bounded information is visible side by side, with independent
+            # scroll containers only when a receiver exposes many interfaces.
+            for i,x in enumerate((116,966)):
+                element('eLabel',x,372,820,540,backgroundColor='#00102136',zPosition='-1')
+                element('eLabel',x,372,820,3,backgroundColor=style.CYAN,zPosition='-1')
+                label('network_title%d'%i,x+24,391,772,45,28,style.CYAN,noWrap='1',valign='center')
+                element('eLabel',x+24,450,772,2,backgroundColor='#00314b65',zPosition='-1')
+                label('network_body%d'%i,x+24,471,772,413,28,'#00e2edf5',
+                      scrollbarMode='showOnDemand',valign='top')
         if mode=='categories':
             for i in range(6):
                 y=371+i*88
