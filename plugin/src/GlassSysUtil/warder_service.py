@@ -60,8 +60,9 @@ def health(tr, p=None):
     p = p or Probe()
     try:
         result = install_health.verify_files()
+        integrity=tr('Ready')+' · '+result
     except (OSError, ValueError, TypeError):
-        result = tr('Warning')
+        integrity=tr('Warning')+' · '+tr('Check installed files')
     packages = [cmd for cmd in ('opkg', 'apt', 'dpkg-query') if shutil.which(cmd)]
     from .warder_package_status import database, dependency_state
     records, manager = database(p.path('/'))
@@ -72,5 +73,5 @@ def health(tr, p=None):
                 'FileNotFoundError':'Check installed files', 'AttributeError':'Check image compatibility',
                 'TypeError':'Check image compatibility'}
     suggestions = [tr(messages[name]) for name in dict.fromkeys(exceptions) if name in messages]
-    return '\n'.join(('GSU   '+result, tr('Package manager')+'   '+(', '.join(packages) or '—'),
-                      tr('Package dependencies')+'   '+tr(dependencies), tr('Crash logs')+'   '+(', '.join(exceptions) or '—'), *dict.fromkeys(suggestions)))
+    return '\n\n'.join(('GSU   '+integrity, tr('Package manager')+'\n    '+(', '.join(packages) or '—'),
+                      tr('Package dependencies')+'\n    '+tr(dependencies), tr('Crash logs')+'\n    '+(', '.join(exceptions) or '—'), *dict.fromkeys(suggestions)))
