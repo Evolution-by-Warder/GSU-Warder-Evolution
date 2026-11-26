@@ -476,6 +476,46 @@ class DiagnosticTests(unittest.TestCase):
                 x,y=map(int,node.get('position').split(','));w,h=map(int,node.get('size').split(','))
                 self.assertLessEqual(x+w,width);self.assertLessEqual(y+h,height)
 
+    def test_finder_comparison_keeps_explicit_bounded_session_snapshots(self):
+        ui=module('warder_tuner_ui')
+        signal=module('warder_signal')
+        tp=(12304,30000,0,3,2,235,1,2,0,2,-1,0,0,-1,4096)
+        native=SimpleNamespace(transponder=tp,scan_nims=SimpleNamespace(value='0'))
+        identity=signal.satellite_identity(native)
+        self.assertEqual(identity,(0,tp))
+        native.transponder=(1,2,3)
+        self.assertIsNone(signal.satellite_identity(native))
+        rows=[(0,{'snr':70,'agc':80,'db':10,'ber':0,'lock':1}),
+              (1,{'snr':10,'lock':0}),(2,{'snr':80,'agc':82,'db':11,'ber':2,'lock':1}),
+              (3,{'snr':75,'agc':81,'db':12,'ber':1,'lock':1})]
+        self.assertIsNone(signal.measurement_record(identity,rows[:2],'test'))
+        record=signal.measurement_record(identity,rows,'test')
+        self.assertEqual(record['stats']['snr'],(70,80,75))
+        self.assertEqual(record['losses'],1)
+        text=signal.comparison_text([record],str)
+        self.assertIn('23.5° E',text)
+        self.assertIn('12304 H',text)
+        self.assertIn('LOCK + SNR   3/4',text)
+        from Screens.Screen import Screen
+        screen=Screen(MagicMock())
+        screen['config']=api['Label']('')
+        screen['Frontend']=MagicMock()
+        screen._warder_measurement_id=identity
+        self.assertTrue(ui.install(screen,api,True))
+        header=screen._diagnostic_header
+        header.ready=True
+        with patch.object(header.history,'snapshot',return_value=tuple(rows)):
+            self.assertEqual(header.saved_records(),[])
+            for _ in range(14):header.save_measurement()
+            self.assertEqual(len(header.saved_records()),12)
+            self.assertEqual(screen['warder_compare_key'].getText().split(' · ')[-1],'12')
+            header.compare_measurements()
+            screen.session.open.assert_called_once()
+        header.reset_history()
+        self.assertEqual(len(header.saved_records()),12)
+        self.assertEqual(screen['warder_save_key'].getText(),'')
+        header.cleanup()
+
     def test_finder_measurements_share_aligned_single_rows_and_larger_plot(self):
         ui=module('warder_tuner_ui')
         for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160),(1920,1200)):

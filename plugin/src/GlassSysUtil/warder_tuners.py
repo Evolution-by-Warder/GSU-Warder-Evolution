@@ -167,7 +167,21 @@ def styled_satfinder(action):
             # mix observations from two tuning attempts.
             header=getattr(self,'_diagnostic_header',None)
             if header is not None and hasattr(header,'reset_history'):header.reset_history()
+            self._warder_measurement_id=None
             return super().retune(*args,**kwargs)
+
+        def retuneSat(self,*args,**kwargs):
+            # Only recognize a newly prepared native satellite tuple after a
+            # completed tuning call. Do not infer parameters from live TV.
+            previous=getattr(self,'transponder',None)
+            result=super().retuneSat(*args,**kwargs)
+            self._warder_measurement_id=None
+            if (getattr(self,'initcomplete',False) is True
+                    and getattr(self,'frontend',None) is not None
+                    and getattr(self,'transponder',None) is not previous):
+                from .warder_signal import satellite_identity
+                self._warder_measurement_id=satellite_identity(self)
+            return result
 
         def keyGoScan(self,*args,**kwargs):
             # The native OK/green handler otherwise releases the live frontend

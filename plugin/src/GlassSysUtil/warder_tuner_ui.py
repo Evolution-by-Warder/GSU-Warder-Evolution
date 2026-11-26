@@ -57,6 +57,8 @@ def skin(width,height,finder,components):
         label('warder_history_window',1270,820,522,27,21,'#00bcd2df',halign='right',noWrap='1')
         label('warder_lock_losses',1270,850,522,32,23,'#00ffffff',noWrap='1')
         label('warder_audio_state',92,914,1734,55,23,'#00bcd2df',halign='center',valign='center')
+        label('warder_compare_key',510,990,443,81,28,'#0039ff59',halign='center',valign='center',noWrap='1')
+        label('warder_save_key',965,990,443,81,28,'#00ffdb52',halign='center',valign='center',noWrap='1')
         label('warder_audio_key',1420,990,443,81,28,'#0045b9ff',halign='center',valign='center',noWrap='1')
     if not finder and 'introduction' in components:
         label('introduction',92,914,1734,55,23,'#00bcd2df',halign='center',valign='center')
@@ -108,10 +110,51 @@ class Header(dashboard.DiagnosticHeader):
         self.audio_busy=False
         self.audio_failed=False
         super().__init__(screen,api)
-        if self.finder:self.audio_label()
+        if self.finder:
+            self.audio_label()
+            self.measurement_labels()
+
+    def saved_records(self):
+        records=getattr(self.screen.session,'_warder_signal_comparison',None)
+        if not isinstance(records,list):
+            records=[]
+            self.screen.session._warder_signal_comparison=records
+        return records
+
+    def current_record(self):
+        from .warder_signal import measurement_record
+        from time import strftime
+        return measurement_record(getattr(self.screen,'_warder_measurement_id',None),
+            self.history.snapshot(),strftime('%Y-%m-%d %H:%M:%S'))
+
+    def measurement_labels(self):
+        if not self.finder:return
+        tr=lambda key:main.text(self.api,key)
+        records=self.saved_records()
+        self.screen['warder_compare_key'].setText(tr('Compare')+' · %d'%len(records) if records else '')
+        self.screen['warder_save_key'].setText(tr('Save') if self.current_record() else '')
+
+    def save_measurement(self):
+        if self.closed or self.suspended or not self.ready or not self.finder:return
+        record=self.current_record()
+        if record is None:return
+        records=self.saved_records()
+        records.append(record)
+        del records[:-12]
+        self.measurement_labels()
+
+    def compare_measurements(self):
+        if self.closed or self.suspended or not self.finder:return
+        records=self.saved_records()
+        if not records:return
+        from .warder_signal import comparison_text
+        from .warder_dialog import show_info
+        tr=lambda key:main.text(self.api,key)
+        show_info(self.screen.session,self.api,comparison_text(records,tr),tr('Compare'))
 
     def reset_history(self):
         self.history.samples.clear()
+        if self.finder:self.measurement_labels()
 
     def audio_label(self):
         if not self.finder:return
@@ -170,7 +213,8 @@ class Header(dashboard.DiagnosticHeader):
         else:meter.setValue(agc);meter.show()
         width,height=dashboard.dimensions(self.api)
         draw_quality(self.screen['warder_quality'],snr,lock,round(FINDER_QUALITY_SIZE[0]*width/1920),round(FINDER_QUALITY_SIZE[1]*height/1080))
-        self.history.append({'snr':snr,'lock':lock})
+        self.history.append({'snr':snr,'agc':agc,'db':db/100 if db is not None else None,
+                             'ber':ber,'lock':lock})
         samples=self.history.snapshot()
         from .warder_chart import draw_trend
         from .warder_signal import lock_losses
@@ -179,6 +223,7 @@ class Header(dashboard.DiagnosticHeader):
         tr=lambda key:main.text(self.api,key)
         losses=str(lock_losses(samples)) if any(v.get('lock') is not None for _,v in samples) else '—'
         self.screen['warder_lock_losses'].setText(tr('Lock losses')+'  '+losses)
+        self.measurement_labels()
         if self.audio_enabled and not self.audio_busy and snr is not None and lock==1:
             from twisted.internet.threads import deferToThread
             tone=self.tone
@@ -214,10 +259,14 @@ def install(screen,api,finder):
         screen['warder_lock_losses']=api['Label']('—')
         screen['warder_audio_state']=api['Label']('')
         screen['warder_audio_key']=api['Label']('')
+        screen['warder_save_key']=api['Label']('')
+        screen['warder_compare_key']=api['Label']('')
     screen._diagnostic_header=Header(screen,api)
     if finder:
         screen['warder_audio_actions']=api['ActionMap'](['ColorActions'],
-            {'blue':screen._diagnostic_header.toggle_audio},-4)
+            {'blue':screen._diagnostic_header.toggle_audio,
+             'yellow':screen._diagnostic_header.save_measurement,
+             'green':screen._diagnostic_header.compare_measurements},-4)
     return True
 
 
