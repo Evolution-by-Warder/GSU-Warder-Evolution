@@ -7,6 +7,10 @@
     "tag": "v0.41.5",
     "url": "https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/releases/download/v0.41.5/enigma2-plugin-extensions-gsu_0.41.5_all.ipk",
     "sha256": "115bc57d4c842049d72864a0e2deaf0eceb35f0bb7d53f515cc5533e9abc48fc",
+    "warder_signature": {
+      "manifest_b64": "eyJiYWxpayI6ImVuaWdtYTItcGx1Z2luLWV4dGVuc2lvbnMtZ3N1LXdhcmRlci1ldm9sdXRpb24iLCJjb21taXQiOiIzMGE0MjBkNTAxOTQ0NmMxYjMzZjQ4ZmU1ODZhZGRjNWY5ZWFkMTUzIiwia2FuYWwiOiJzdGFibGUiLCJwcm9qZWt0IjoiRXZvbHV0aW9uLWJ5LVdhcmRlci9HU1UtV2FyZGVyLUV2b2x1dGlvbiIsInNjaGVtYSI6MSwic2hhMjU2IjoiMTE1YmM1N2Q0Yzg0MjA0OWQ3Mjg2NGEwZTJkZWFmMGVjZWIzNWYwYmI3ZDUzZjUxNWNjNTUzM2U5YWJjNDhmYyIsInZlcnppYSI6IjAuNDEuNSIsInZlcnppYV9iYWxpa2EiOiIxOjAuNDEuNSJ9Cg==",
+      "podpis_b64": "2UEvl+tm9FObl4ESc/nbFgN3lf1iu70OBpLdRnwmRDEJoc9D9EtlJ75zzV6M6W3UDw4LIO3CyMrH+iQp+ocoAQ=="
+    },
     "bytes": 3873060,
     "notes": "Seven diagnostic centres with live system and signal graphs, storage analysis and local forum reports. Receiver functions depend on the tuner and image. Restart the GUI after updating.",
     "notes_i18n": {
