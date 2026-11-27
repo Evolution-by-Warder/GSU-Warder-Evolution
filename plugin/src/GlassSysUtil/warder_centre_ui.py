@@ -6,8 +6,157 @@ from Components.ScrollLabel import ScrollLabel
 from twisted.internet.threads import deferToThread
 from .warder_screen import Screen
 from . import warder_dashboard as dashboard
-from .warder_centres import legacy_routes, DIAGNOSTICS
+from .warder_centres import legacy_routes, DIAGNOSTICS, description as route_description
 from .i18n import for_api, language
+
+
+# Read-only result routes. Actions changing tuner state or configuration remain
+# explicit native screens; graphs and full-size tables remain available in Details.
+INLINE_REPORTS=frozenset(('system-overview','system-processes','system-log','system-cpu',
+    'signal-quick','tuner-details','transponder-services','storage-overview','storage-categories','storage-memory','storage-activity','storage-largest',
+    'network-overview','network-test','network-interfaces','network-statistics','network-mounts','network-services','service-health','service-smart','service-crashes','service-plugins','service-ipk','forum-report','17'))
+# Explicit actions must never run merely because the cursor passes over them.
+MANUAL_INLINE=frozenset(('17','network-test','storage-largest'))
+NATIVE_REPORTS=frozenset(('tuner-details','transponder-services'))
+
+
+def collect_report(kind,tr,cancelled,cpu_order=False):
+    if kind=='system-processes':
+        from .warder_system_data import process_table
+        return process_table(cancelled,cpu_order)
+    if kind=='system-cpu':
+        from .warder_system_data import cpu_details
+        return cpu_details(tr,cancelled)
+    if kind=='system-log':
+        from .warder_system_data import detail_text
+        return detail_text('log',tr)
+    if kind=='storage-memory':
+        from .warder_storage import memory_report
+        return memory_report(tr,cancelled)
+    if kind=='storage-largest':
+        from .warder_storage import largest_report
+        return largest_report(tr,cancelled)
+    if kind=='storage-activity':
+        from .warder_storage import disk_activity
+        return disk_activity(tr,cancelled)
+    if kind=='service-smart':
+        from .warder_system_data import smart_diagnostics
+        return smart_diagnostics(tr,cancelled)
+    if kind=='storage-categories':
+        from .warder_storage import category_snapshot
+        return category_snapshot(cancelled=cancelled)
+    if kind=='storage-overview':
+        from .warder_storage import report
+        return report(tr,False)
+    if kind.startswith('network-'):
+        from .warder_network import collect, overview_panels, diagnostics, detail_report
+        if kind=='network-overview':return overview_panels(collect(include_addresses=True),tr)
+        if kind=='network-test':return diagnostics(tr,cancelled)
+        return detail_report(kind,tr,cancelled)
+    if kind == 'forum-report':
+        import json
+        from .warder_service import forum_snapshot
+        return json.dumps(forum_snapshot(), ensure_ascii=False, indent=2)
+    if kind == 'service-ipk':
+        from .warder_ipk import review
+        return review(tr)
+    if kind=='service-crashes':
+        from .warder_service import crash_report
+        return crash_report(tr,cancelled)
+    if kind=='service-plugins':
+        from .warder_package_status import plugin_inventory
+        return plugin_inventory(tr,cancelled)
+    if kind == 'service-health':
+        from .warder_service import health
+        return health(tr)
+    raise ValueError('unknown diagnostic')
+
+
+def preview_text(kind,value,tr):
+    if kind=='system-overview' and isinstance(value,dict):
+        lines=[]
+        for i,(label,number) in enumerate(zip(('CPU','RAM','Swap','Flash','HDD / SSD / USB','Temperature'),value['values'])):
+            title=tr(label)
+            if i in (3,4):title+=' · '+tr('free')
+            if number is None:shown='—'
+            elif i==4:shown='%.1f GiB'%(number/1073741824)
+            elif i==5:shown='%.1f °C'%number
+            else:shown='%.0f %%'%number
+            lines.append(title+'    '+shown)
+        health=value['health']
+        lines.extend(('',tr('Resource score')+'    '+(str(health['score'])+'/100' if health['score'] is not None else '—'),
+                      tr('Measured checks')+'    %d/%d (RAM / Flash)'%health['coverage']))
+        return '\n'.join(lines)
+    if kind=='system-processes' and isinstance(value,list):
+        return '\n'.join('%s   %s   %s MiB'%(pid,name,'—' if rss is None else '%.1f'%(rss/1024))
+                         for pid,name,state,rss,cpu in value)
+    if kind=='storage-categories' and isinstance(value,list):
+        from .warder_storage import category_size
+        return '\n'.join('%s    %s%s'%(tr(name),category_size(size,complete),
+                         '' if complete else ' · '+tr('Partial result')) for name,size,complete in value)
+    if kind in ('network-overview','tuner-details','service-smart','service-health','storage-overview') and isinstance(value,tuple) and len(value)==2 and all(isinstance(v,str) for v in value):
+        return '\n\n'.join(value)
+    if kind in ('transponder-services','FullHDGlass','PiconHub','Warder Radio','YouTube','GSU') and isinstance(value,tuple) and len(value)==2 and all(isinstance(v,tuple) and len(v)==2 and all(isinstance(x,str) for x in v) for v in value):
+        return '\n\n'.join(title+'\n'+body for title,body in value)
+    if kind=='forum-report' and isinstance(value,str) and value:
+        from .warder_service import format_preview
+        return format_preview(value,tr)
+    return value if isinstance(value,str) else ''
+
+
+def card_result(kind, value, tr):
+    """Build truthful, compact card data from the same collectors as Details."""
+    if kind=='system-overview' and isinstance(value,dict):
+        numbers=value['values']
+        if len(numbers)!=6:raise ValueError('system card count')
+        cards=[]
+        for i,(caption,number) in enumerate(zip(('CPU','RAM','Swap','Flash','HDD / SSD / USB','Temperature'),numbers)):
+            title=tr(caption)
+            if i in (3,4):title+=' · '+tr('free')
+            if number is None:shown='—'
+            elif i==4:shown='%.1f GiB'%(number/1073741824)
+            elif i==5:shown='%.1f °C'%number
+            else:shown='%.0f %%'%number
+            meter=round(max(0,min(100,number))) if i<4 and number is not None else None
+            note=(str(value.get('disk_mount') or '') if i==4 else
+                  str(value.get('temperature_source') or '').rsplit('/',1)[-1] if i==5 else '')
+            cards.append((title,shown,meter,note))
+        health=value['health']
+        summary='%s  %s   ·   %s  %d/%d (RAM / Flash)'%(tr('Resource score'),
+            str(health['score'])+'/100' if health['score'] is not None else '—',
+            tr('Measured checks'),*health['coverage'])
+        if health.get('state') in ('warning','critical'):
+            summary+='\n'+tr('Review memory and storage')
+        return cards,summary
+    if kind=='storage-categories' and isinstance(value,list) and len(value)==6:
+        total=sum(size for _,size,_ in value)
+        complete=all(done for _,_,done in value)
+        from .warder_storage import category_size
+        cards=[]
+        for name,size,done in value:
+            shown=category_size(size,done)
+            meter=round(100*size/total) if complete and total else None
+            note='' if done else tr('Partial result')
+            cards.append((tr(name),shown,meter,note))
+        summary=tr('Measured categories total')+': '+('' if complete else '≥ ')+'%.1f MiB'%(total/1048576)
+        if not complete:summary+=' · '+tr('Partial result')
+        return cards,summary
+    return None
+
+
+def process_rows(api,rows,columns,sx,sy,row_height):
+    """One data-to-native-row mapping for the compact and full process tables."""
+    content=[]
+    for pid,name,state,rss,cpu in rows:
+        values=(str(pid),name,str(state),'—' if rss is None else '%.1f'%(rss/1024),
+                '—' if cpu is None else '%.1f'%cpu)
+        row=[pid]
+        for i,((offset,span),value) in enumerate(zip(columns,values)):
+            row.append(api['MultiContentEntryText'](
+                pos=(round(offset*sx),0),size=(round(span*sx),round(row_height*sy)),
+                font=0,text=value,color=0xbcd2df if i==2 else 0xffffff))
+        content.append(row)
+    return content
 
 
 class CentreMenu(Screen):
@@ -16,41 +165,432 @@ class CentreMenu(Screen):
         self.skin = dashboard.skin(self.width, self.height, 'menu')
         Screen.__init__(self, session)
         self.api = api
+        dashboard.install_header(self,api)
         self.groups = legacy_routes(entries)
         self.enabled = dict(enabled)
         self.group = next((g for g in self.groups if g[0] == initial), None)
         self.direct = initial is not None
+        self.native_actions = {}
+        self._result_key=None
+        self._result_job=None
+        self._result_queued=None
+        self._result_closed=False
+        self._result_hidden=False
+        self._result_reload=False
+        self._auto_key=None
+        self._quick_source=None
+        self._quick_tone=None
+        self._quick_sound=False
+        self._quick_busy=None
+        self._auto_timer=api['eTimer']()
+        signal=getattr(self._auto_timer,'timeout',None)
+        if hasattr(signal,'connect'):
+            self._auto_connection=signal.connect(self.auto_result)
+        elif hasattr(signal,'get'):
+            signal.get().append(self.auto_result)
+        else:
+            self._auto_timer.callback.append(self.auto_result)
+        self.onClose.append(self.close_results)
+        self.onHide.append(self.suspend_results)
+        self.onShow.append(self.resume_results)
         self['list'] = api['ListboxSys2']([])
-        self['list'].l.setFont(0, api['gFont']('Regular', round(34*self.height/1080)))
+        self['list'].l.setFont(0, api['gFont']('Regular', round(28*self.height/1080)))
         self['list'].l.setItemHeight(round(74*self.height/1080))
         self['list'].onSelectionChanged.append(self.describe)
-        for name, key in [('heading',''), ('descriptions',''), ('red','Back'), ('green','Select'), ('yellow',''), ('blue','')]:
+        for name, key in [('heading',''), ('result_title',''), ('result_status',''), ('red','Back'), ('green','Select'), ('yellow',''), ('blue','')]:
             self[name] = Label(for_api(api, key))
-        self['actions'] = ActionMap(['WizardActions', 'ColorActions', 'SetupActions'],
-            {'ok':self.select, 'green':self.select, 'red':self.back, 'back':self.back, 'cancel':self.back}, -2)
+        self['descriptions']=ScrollLabel('')
+        self.cards_visible=False
+        for i in range(6):
+            for field in ('bg','name','value','note'):
+                self['inline_%s%d'%(field,i)]=Label('')
+            self['inline_meter%d'%i]=api['ProgressBar']()
+        self['inline_summary']=Label('')
+        self['inline_process_list']=api['ListboxSys2']([])
+        self['inline_process_list'].l.setFont(0,api['gFont']('Regular',round(24*self.height/1080)))
+        self['inline_process_list'].l.setItemHeight(round(42*self.height/1080))
+        for i,title in enumerate(('PID','Process Info','S','RAM (MiB)','CPU (%)')):
+            self['inline_process_column%d'%i]=Label(for_api(api,title) if i==1 else title)
+        self.process_visible=False
+        self.inline_network_visible=False
+        for i in range(2):
+            self['inline_network_title%d'%i]=Label('')
+            self['inline_network_body%d'%i]=ScrollLabel('')
+        self.hide_cards()
+        self['actions'] = ActionMap(['WizardActions', 'ColorActions', 'SetupActions','DirectionActions'],
+            {'ok':self.select, 'green':self.select, 'red':self.back, 'back':self.back, 'cancel':self.back,
+             'yellow':self.refresh_result,'blue':self.full_result,
+             'left':lambda:self.page_result(-1),'right':lambda:self.page_result(1),
+             'up':self['list'].up,'down':self['list'].down}, -2)
         self.onLayoutFinish.append(self.render)
 
     def entries(self):
         if self.group is None:
             return [(key,for_api(self.api,label),'',bool(items)) for key,label,items in self.groups if items]
-        return [(key,label,description,self.enabled.get(key,False)) for key,label,description in self.group[2]]
+        rows=[]
+        for key,label,description in self.group[2]:
+            if key=='tuner-native' and self.native_actions:
+                rows.extend((ident,name,for_api(self.api,'A channel backup will be created before opening the tool.'),self.enabled.get(key,False))
+                            for ident,(name,action) in self.native_actions.items())
+            else:
+                rows.append((key,label,description,self.enabled.get(key,False)))
+        return rows
 
     def render(self):
+        self.native_actions={}
+        if self.group and self.group[0]=='reception' and self.enabled.get('tuner-native',False):
+            from .warder_tuners import native_tools
+            try:
+                self.native_actions={'native:%d'%i:item for i,item in enumerate(native_tools(lambda key:for_api(self.api,key)))}
+            except (ImportError,AttributeError,RuntimeError,TypeError):
+                pass
         title = for_api(self.api, self.group[1] if self.group else 'GSU Warder Evolution')
         self.setTitle(title)
         self['heading'].setText(title)
         rows = []
-        for key, label, description, enabled in self.entries():
-            rows.append([key, self.api['MultiContentEntryText'](pos=(round(20*self.width/1920),round(12*self.height/1080)),
-                size=(round(960*self.width/1920),round(52*self.height/1080)), font=0, text=label,
-                color=0xffffff if enabled else 0x8291a5)])
+        from .warder_menu_icons import pixmap_entry
+        sx,sy=self.width/1920,self.height/1080
+        for key,label,description,enabled in self.entries():
+            project=key in getattr(self,'projects',{})
+            tx,tw= (148,476) if project else (72,552)
+            iw,ih=(120,58) if project else (48,48)
+            row=[key,self.api['MultiContentEntryText'](pos=(round(tx*sx),round(12*sy)),
+                size=(round(tw*sx),round(52*sy)),font=0,text=label,
+                color=0xffffff if enabled else 0x8291a5)]
+            icon=pixmap_entry(self.api,key,(round(12*sx),round((74-ih)*sy/2)),
+                              (round(iw*sx),round(ih*sy)),project=project)
+            if icon is not None:row.append(icon)
+            rows.append(row)
         self['list'].l.setList(rows)
         self.describe()
+
+    def hide_cards(self):
+        self.cards_visible=False
+        for i in range(6):
+            for field in ('bg','name','value','note','meter'):
+                self['inline_%s%d'%(field,i)].hide()
+        self['inline_summary'].hide()
+        self.hide_process_table()
+        self.hide_inline_network()
+        self['descriptions'].show()
+
+    def hide_process_table(self):
+        self.process_visible=False
+        self['inline_process_list'].hide()
+        self['inline_process_list'].l.setList([])
+        for i in range(5):self['inline_process_column%d'%i].hide()
+
+    def show_process_table(self,rows):
+        self.hide_cards()
+        self['descriptions'].hide()
+        self.process_visible=True
+        widget=self['inline_process_list']
+        widget.l.setList(process_rows(self.api,rows,dashboard.INLINE_PROCESS_COLUMNS,
+            self.width/1920,self.height/1080,42))
+        widget.moveToIndex(0)
+        widget.show()
+        for i in range(5):self['inline_process_column%d'%i].show()
+        from time import strftime
+        self['result_status'].setText('%s · %s %d · RAM ↓'%(strftime('%H:%M:%S'),
+            for_api(self.api,'Total:'),len(rows)))
+
+    def hide_inline_network(self):
+        self.inline_network_visible=False
+        for i in range(2):
+            for field in ('title','body'):
+                widget=self['inline_network_%s%d'%(field,i)]
+                widget.hide()
+                widget.setText('')
+
+    def show_inline_network(self,panels,titles=None):
+        self.hide_cards()
+        self['descriptions'].hide()
+        self.inline_network_visible=True
+        tr=lambda key:for_api(self.api,key)
+        if titles is None:titles=(tr('Network link'),tr('Default gateway')+' · DNS')
+        for i,(title,body) in enumerate(zip(titles,panels)):
+            self['inline_network_title%d'%i].setText(title)
+            self['inline_network_body%d'%i].setText(body or tr('Unavailable'))
+            self['inline_network_title%d'%i].show()
+            self['inline_network_body%d'%i].show()
+
+    def page_result(self,direction):
+        if self.inline_network_visible:
+            # Paging both columns keeps left/right behavior identical to other
+            # inline reports; each ScrollLabel clamps at its own end.
+            for i in range(2):
+                widget=self['inline_network_body%d'%i]
+                (widget.pageUp if direction<0 else widget.pageDown)()
+            return
+        if self.process_visible:
+            widget=self['inline_process_list']
+        else:widget=self['descriptions']
+        (widget.pageUp if direction<0 else widget.pageDown)()
+
+    def show_cards(self,model):
+        cards,summary=model
+        self.hide_process_table()
+        self.hide_inline_network()
+        self['descriptions'].hide()
+        self.cards_visible=True
+        for i,(title,value,meter,note) in enumerate(cards):
+            for field,text in (('name',title),('value',value),('note',note)):
+                self['inline_%s%d'%(field,i)].setText(text)
+            for field in ('bg','name','value'):
+                self['inline_%s%d'%(field,i)].show()
+            if meter is None:
+                self['inline_meter%d'%i].hide()
+                self['inline_note%d'%i].show()
+            else:
+                self['inline_note%d'%i].hide()
+                bar=self['inline_meter%d'%i]
+                bar.setValue(meter)
+                bar.show()
+        self['inline_summary'].setText(summary)
+        self['inline_summary'].show()
 
     def describe(self):
         row = self['list'].getCurrent()
         entry = next((e for e in self.entries() if row and e[0] == row[0]), None)
-        self['descriptions'].setText(entry[2] if entry else '')
+        description=route_description(row[0],lambda key:for_api(self.api,key),entry[2]) if row and entry else ''
+        backup=getattr(self,'_gsu_last_channel_backup',None)
+        if row and row[0] in self.native_actions and isinstance(backup,str):
+            description+='\n\n'+for_api(self.api,'Verified channel backup')+'\n'+backup
+        key=row[0] if row and entry else None
+        changed=key!=self._result_key
+        if changed:
+            self.cancel_result()
+            self._result_key=key
+            self.hide_cards()
+            self['result_status'].setText('')
+            self['descriptions'].setText(description)
+        elif key in self.native_actions:
+            self['descriptions'].setText(description)
+        self['result_title'].setText(entry[1] if entry else '')
+        inline=self.inline_route(key)
+        self['yellow'].setText(for_api(self.api,'Refresh') if inline and key!='17' else '')
+        self['blue'].setText(for_api(self.api,'Audio:') if inline and key=='signal-quick' else for_api(self.api,'Details') if inline and key!='17' else '')
+        if changed:
+            self._result_reload=False
+        if changed and inline and key not in MANUAL_INLINE:
+            self.schedule_result(key)
+
+    def schedule_result(self,key):
+        # Debounce quick cursor movement. A hidden screen records a pending
+        # passive refresh instead of launching a worker.
+        if self._result_closed:return
+        if self._result_hidden:
+            self._result_reload=True
+            return
+        self._auto_key=key
+        self['result_status'].setText(for_api(self.api,'Loading…'))
+        self._auto_timer.start(180,True)
+
+    def auto_result(self):
+        key=self._auto_key
+        self._auto_key=None
+        if not self._result_hidden and key is not None and key==self._result_key and key not in MANUAL_INLINE:
+            self.request_result(key)
+
+    def inline_route(self,key):
+        return key if key in INLINE_REPORTS and self.enabled.get(key,False) else None
+
+    def collect_inline(self,key,tr,token):
+        if key=='17':
+            if token.is_set():return ''
+            from .warder_tools import run_task
+            from .warder_tools_ui import text
+            result=run_task('bundle')
+            return text(self.api,'Diagnostic bundle created:\n%s\n\nSize: %s KiB\n\nThe file is available on the receiver at the path above.') % (
+                result['path'],max(1,(result['bytes']+1023)//1024))
+        if key=='system-overview':
+            from .warder_system_data import dashboard
+            return dashboard(token)
+        if key=='storage-overview':
+            from .warder_storage import report
+            return report(tr,panels=True,cancelled=token)
+        if key=='service-smart':
+            from .warder_system_data import smart_diagnostics
+            return smart_diagnostics(tr,token,panels=True)
+        if key=='service-health':
+            from .warder_service import health
+            return '' if token.is_set() else health(tr,panels=True)
+        return collect_report(key,tr,token)
+
+    def stop_quick_signal(self):
+        self._quick_source=None
+        self._quick_sound=False
+        if self._quick_tone is not None:
+            self._quick_tone.close()
+            self._quick_tone=None
+
+    def quick_signal(self):
+        """Read the active frontend while selected, without tuning or a child screen."""
+        if self._result_closed or self._result_hidden or self._result_key!='signal-quick':return
+        from .warder_signal import SignalMonitor
+        from .warder_quick import Tone
+        from time import strftime
+        tr=lambda key:for_api(self.api,key)
+        if self._quick_source is None:self._quick_source=SignalMonitor(self.session.nav)
+        if self._quick_tone is None:self._quick_tone=Tone()
+        try:values=self._quick_source.sample()
+        except (AttributeError,RuntimeError,OSError,TypeError,ValueError):values={}
+        cards=[]
+        for key,label,fmt in (('snr','SNR','%.0f %%'),('agc','AGC','%.0f %%'),
+                              ('db','SNR · dB','%.1f dB'),('ber','BER','%.0f'),
+                              ('lock','LOCK','%d')):
+            value=values.get(key)
+            meter=round(max(0,min(100,value))) if key in ('snr','agc') and value is not None else None
+            cards.append((label,'—' if value is None else fmt%value,meter,''))
+        tone=self._quick_tone
+        audio=tr('yes' if self._quick_sound else 'no') if tone.command else tr('Unavailable')
+        cards.append((tr('Audio:'),audio,None,''))
+        self.show_cards((cards,''))
+        self['result_status'].setText(strftime('%H:%M:%S'))
+        self['blue'].setText(tr('Audio:') if tone.command else '')
+        if self._quick_sound and self._quick_busy is None and values.get('snr') is not None and values.get('lock')==1:
+            self._quick_busy=tone
+            def finished(result):
+                if self._quick_busy is tone:self._quick_busy=None
+                if self._quick_tone is tone and result is False:self._quick_sound=False
+            deferToThread(tone.play,values['snr']).addBoth(finished)
+        self._auto_key='signal-quick'
+        self._auto_timer.start(1000,True)
+
+    def toggle_quick_audio(self):
+        if self._result_closed or self._result_hidden or self._result_key!='signal-quick':return
+        if self._quick_tone is None or not self._quick_tone.command:return
+        if self._quick_sound:
+            self._quick_sound=False
+            self._quick_tone.close()
+            self._quick_tone=None
+        else:self._quick_sound=True
+        self.request_result('signal-quick')
+
+    def cancel_result(self):
+        self.stop_quick_signal()
+        self._auto_timer.stop()
+        self._auto_key=None
+        self._result_queued=None
+        if self._result_job is not None:self._result_job[1].set()
+
+    def close_results(self):
+        self._result_closed=True
+        self._result_reload=False
+        self.cancel_result()
+
+    def suspend_results(self):
+        if self._result_closed or self._result_hidden:return
+        self._result_hidden=True
+        key=self._result_key
+        passive=bool(self.inline_route(key)) and key not in MANUAL_INLINE
+        # A native child may have changed the tuned service or the installed
+        # package version. Refresh only passive data when it closes.
+        self._result_reload=passive
+        pending=self._auto_key is not None or self._result_queued is not None or self._result_job is not None
+        self.cancel_result()
+        if pending and not passive:
+            # Do not leave a canceled manual action showing Loading forever.
+            # The operation itself may already have completed; never repeat it.
+            self['result_status'].setText('')
+            row=next((e for e in self.entries() if e[0]==key),None)
+            self['descriptions'].setText(route_description(key,lambda k:for_api(self.api,k),row[2] if row else ''))
+
+    def resume_results(self):
+        if self._result_closed or not self._result_hidden:return
+        self._result_hidden=False
+        key=self._result_key
+        if self._result_reload and self.inline_route(key) and key not in MANUAL_INLINE:
+            self.schedule_result(key)
+        self._result_reload=False
+
+    def refresh_result(self):
+        key=self._result_key
+        if self.inline_route(key) and key!='17':self.request_result(key)
+
+    def full_result(self):
+        if self._result_closed or self._result_hidden:return
+        key=self._result_key
+        if key=='signal-quick':
+            self.toggle_quick_audio()
+        elif self.inline_route(key) and key!='17':
+            self.cancel_result()
+            open_diagnostic(self.session,self.api,key)
+
+    def request_result(self,key):
+        if self._result_closed or self._result_hidden or key!=self._result_key or not self.inline_route(key):return
+        self._auto_timer.stop()
+        self._auto_key=None
+        if self._result_job is not None:
+            if self._result_job[0]==key and not self._result_job[1].is_set():return
+            self._result_queued=key
+            self['result_status'].setText(for_api(self.api,'Loading…'))
+            return
+        if key=='signal-quick':
+            self.quick_signal()
+            return
+        token=Event()
+        job=(key,token)
+        self._result_job=job
+        self.hide_cards()
+        self['result_status'].setText(for_api(self.api,'Loading…'))
+        self['descriptions'].setText('')
+        tr=lambda k:for_api(self.api,k)
+        def finish(value,failed=False):
+            if self._result_job is not job:return
+            self._result_job=None
+            if not self._result_closed and not self._result_hidden and not token.is_set() and self._result_key==key:
+                model=None
+                try:
+                    if not failed:model=card_result(key,value,tr)
+                    text=preview_text(key,value,tr) if not failed and model is None else ''
+                except (ValueError,TypeError,AttributeError,KeyError,OverflowError):
+                    model=None
+                    text=''
+                from time import strftime
+                self['result_status'].setText(strftime('%H:%M:%S') if model or text.strip() else tr('Unavailable'))
+                if not failed and key=='system-processes' and isinstance(value,list) and value and text.strip():
+                    self.show_process_table(value)
+                elif (not failed and key in ('network-overview','tuner-details','service-smart','service-health','storage-overview') and isinstance(value,tuple)
+                      and len(value)==2 and all(isinstance(v,str) for v in value) and text.strip()):
+                    captions={
+                        'tuner-details':('Transponder','Tuner interfaces'),
+                        'service-smart':('System health check','Installation check'),
+                        'service-health':('Installation check','Crash logs'),
+                        'storage-overview':('Memory and storage','HDD / SSD / USB'),
+                    }.get(key)
+                    titles=tuple(map(tr,captions)) if captions else None
+                    self.show_inline_network(value,titles)
+                elif not failed and (key=='transponder-services' or key in getattr(self,'projects',{})) and isinstance(value,tuple) and text.strip():
+                    titles,bodies=zip(*value)
+                    self.show_inline_network(bodies,titles)
+                elif model:self.show_cards(model)
+                else:
+                    self.hide_cards()
+                    if failed and key=='17':
+                        from .warder_tools_ui import text as tool_text
+                        self['descriptions'].setText(tool_text(self.api,'Diagnostic collection failed.'))
+                    else:self['descriptions'].setText(text if text.strip() else tr('Unavailable'))
+            queued=self._result_queued
+            self._result_queued=None
+            if queued is not None:self.request_result(queued)
+        if key in NATIVE_REPORTS:
+            try:
+                if key=='tuner-details':
+                    from .warder_tuners import details
+                    value=details(self.session,self.api,tr,panels=True)
+                else:
+                    from enigma import eServiceCenter,eServiceReference
+                    from .warder_services import services,overview_panels
+                    value=overview_panels(services(self.session.nav,eServiceCenter.getInstance(),eServiceReference),tr)
+                finish(value)
+            except (AttributeError,RuntimeError,TypeError,OSError,ImportError,ValueError):
+                finish(None,True)
+        else:
+            def collect():
+                return self.collect_inline(key,tr,token)
+            try:deferToThread(collect).addCallbacks(finish,lambda failure:finish(None,True))
+            except (RuntimeError,TypeError,OSError):finish(None,True)
 
     def select(self):
         row = self['list'].getCurrent()
@@ -59,9 +599,17 @@ class CentreMenu(Screen):
         if self.group is None:
             self.group = next((g for g in self.groups if g[0] == row[0]), None)
             self.render()
+        elif row[0] in self.native_actions and self.enabled.get('tuner-native',False):
+            from .warder_tuners import open_native
+            open_native(self.session,lambda key:for_api(self.api,key),self.native_actions[row[0]][1])
         elif self.enabled.get(row[0], False):
-            if row[0] in DIAGNOSTICS:
+            if self.inline_route(row[0]):
+                if self._result_key!=row[0]:self.describe()
+                self.request_result(row[0])
+            elif row[0] in DIAGNOSTICS:
                 open_diagnostic(self.session, self.api, row[0])
+            elif row[0] in LEGACY_CHILDREN:
+                open_legacy_child(self.session,self.api,row[0])
             else:
                 self.close(row[0])
 
@@ -73,6 +621,37 @@ class CentreMenu(Screen):
             self.close(None)
 
 
+LEGACY_CHILDREN=frozenset(('0','1','2','3','4','6','7','8','9','16'))
+
+
+def open_legacy_child(session,api,key):
+    """Keep the owning centre alive; never dispatch through the hidden main menu."""
+    name={'0':'GlassSysInfoBrowser','1':'channelInfoCenter','4':'mboxInfo',
+          '6':'ECMInfo','7':'univCamMng','8':'OSD_ECM_Menu','9':'swap_manager'}.get(key)
+    if key in ('2','3'):
+        try:cc_local,os_local=api['countServers']()
+        except (KeyError,TypeError,OSError,ValueError,AttributeError):
+            from .warder_dialog import show_info
+            return show_info(session,api,for_api(api,'Unavailable'),for_api(api,'CAM / ECM centre'))
+        if key=='2':name='cccamInfo' if cc_local else 'cccamInfoChoiceServer'
+        else:
+            from .warder_oscam import open_workspace
+            return open_workspace(session,api,select_server=not os_local)
+    elif key=='6':
+        from .warder_ecm import open_history
+        return open_history(session,api)
+    elif key in ('8','9'):
+        from .warder_right import open_management
+        return open_management(session,api,'osd' if key=='8' else 'swap')
+    elif key=='16':
+        from .warder_projects import PROJECTS
+        return session.open(ProjectReport,api,next(p for p in PROJECTS if p[0]=='GSU'))
+    target=api.get(name)
+    if callable(target):return session.open(target)
+    from .warder_dialog import show_info
+    return show_info(session,api,for_api(api,'Unavailable'),for_api(api,'Unavailable'))
+
+
 def open_centre(screen, api, key):
     screen.session.openWithCallback(screen.dispatch_menu_id, CentreMenu, api,
                                     tuple(screen.menuListAll), dict(screen.status), key)
@@ -80,48 +659,166 @@ def open_centre(screen, api, key):
 
 class Report(Screen):
     def __init__(self, session, api, kind, title):
-        self.skin = dashboard.skin(*dashboard.dimensions(api), 'detail')
+        self.width,self.height=dashboard.dimensions(api)
+        mode={'system-processes':'process','storage-categories':'categories','network-overview':'network','project-overview':'project-overview'}.get(kind,'detail')
+        self.skin=dashboard.skin(self.width,self.height,mode)
         Screen.__init__(self, session)
         self.api, self.kind = api, kind
+        dashboard.install_header(self,api)
+        self['report_status']=Label(for_api(api,'Loading…'))
         self.cancelled = Event()
         self.pending = False
         self.preview = None
         self.services = []
         self.slot_number = None
         self.cpu_order = False
+        self.process_names = {}
         self.history = []
         self['file_info'] = ScrollLabel('')
-        for name, key in [('heading',title), ('red','Back'), ('green','TV' if kind == 'transponder-services' else ''), ('yellow','Refresh'),
+        if kind=='system-processes':
+            self['process_list']=api['ListboxSys2']([])
+            self['process_list'].l.setFont(0,api['gFont']('Regular',round(28*self.height/1080)))
+            self['process_list'].l.setItemHeight(round(48*self.height/1080))
+            for i,title in enumerate(('PID','Process Info','S','RAM (MiB)','CPU (%)')):
+                self['column%d'%i]=Label(self.tr(title) if i==1 else title)
+            self.show_process_table(False)
+        if kind=='storage-categories':
+            for i in range(6):
+                for field in ('name','size','state'):
+                    self['category_%s%d'%(field,i)]=Label('')
+                self['category_meter%d'%i]=api['ProgressBar']()
+            self.show_categories(False)
+        if kind=='network-overview':
+            self.network_focus=0
+            self.network_visible=False
+            for i in range(2):
+                self['network_title%d'%i]=Label('')
+                self['network_body%d'%i]=ScrollLabel('')
+            self.show_network(False)
+        for name, key in [('heading',title), ('red','Back'), ('green','TV' if kind == 'transponder-services' else 'Details' if kind in ('system-processes','service-crashes') else 'Channel backups' if kind=='tuner-details' else ''), ('yellow','Refresh'),
                           ('blue','Tuner interfaces' if kind == 'tuner-details' else 'Radio' if kind == 'transponder-services' else 'Save' if kind == 'forum-report' else 'CPU / RAM' if kind == 'system-processes' else '')]:
             self[name] = Label(self.tr(key))
         self['actions'] = ActionMap(['ColorActions','SetupActions','DirectionActions'],
-            {'red':self.close,'cancel':self.close,'yellow':self.start,'blue':self.action,'green':lambda:self.export_services('tv'),
-             'up':self['file_info'].pageUp, 'down':self['file_info'].pageDown,
-             'left':self['file_info'].pageUp,'right':self['file_info'].pageDown}, -2)
+            {'red':self.close,'cancel':self.close,'yellow':self.start,'blue':self.action,'green':self.green_action,
+             'up':lambda:self.scroll(-1), 'down':lambda:self.scroll(1),
+             'left':lambda:self.scroll(-1,True),'right':lambda:self.scroll(1,True)}, -2)
         self.onLayoutFinish.append(self.start)
         self.onClose.append(self.cancelled.set)
 
     def tr(self, key):
         return for_api(self.api, key)
 
+    def show_process_table(self, visible):
+        self.table_visible=bool(visible)
+        if self.kind!='system-processes':return
+        for key in ('process_list',)+tuple('column%d'%i for i in range(5)):
+            (self[key].show if visible else self[key].hide)()
+        (self['file_info'].hide if visible else self['file_info'].show)()
+
+    def show_categories(self,visible):
+        if self.kind!='storage-categories':return
+        for i in range(6):
+            for field in ('name','size','state','meter'):
+                widget=self['category_%s%d'%(field,i)]
+                (widget.show if visible else widget.hide)()
+        (self['file_info'].hide if visible else self['file_info'].show)()
+
+    def display_categories(self,rows):
+        total=sum(size for _,size,_ in rows)
+        complete=all(done for _,_,done in rows)
+        from .warder_storage import category_size
+        self.show_categories(True)
+        for i,(name,size,done) in enumerate(rows):
+            self['category_name%d'%i].setText(self.tr(name))
+            self['category_size%d'%i].setText(category_size(size,done))
+            meter=self['category_meter%d'%i]
+            if complete and total:
+                share=100*size/total
+                meter.setValue(round(share))
+                meter.show()
+                state='%d %%'%round(share)
+            else:
+                meter.hide()
+                state='—' if done else self.tr('Partial result')
+            self['category_state%d'%i].setText(state)
+        from time import strftime
+        self['report_status'].setText('%s   ·   %s: %.1f MiB%s' %
+            (strftime('%H:%M:%S'),self.tr('Measured categories total'),total/1048576,
+             '' if complete else ' · '+self.tr('Partial result')))
+
+    def show_network(self,visible):
+        if self.kind!='network-overview':return
+        self.network_visible=bool(visible)
+        for i in range(2):
+            for field in ('title','body'):
+                widget=self['network_%s%d'%(field,i)]
+                (widget.show if visible else widget.hide)()
+        (self['file_info'].hide if visible else self['file_info'].show)()
+
+    def network_titles(self):
+        titles=(self.tr('Network link'),self.tr('Default gateway')+' · DNS')
+        for i,title in enumerate(titles):
+            self['network_title%d'%i].setText(('› ' if i==self.network_focus else '  ')+title)
+
+    def display_network(self,panels):
+        self.network_focus=0
+        for i,body in enumerate(panels):
+            self['network_body%d'%i].setText(body or self.tr('Unavailable'))
+        self.network_titles()
+        self.show_network(True)
+        from time import strftime
+        self['report_status'].setText(strftime('%H:%M:%S'))
+
+    def scroll(self,direction,page=False):
+        if getattr(self,'network_visible',False) is True:
+            if page:
+                self.network_focus=(self.network_focus+direction)%2
+                self.network_titles()
+            else:
+                widget=self['network_body%d'%self.network_focus]
+                (widget.pageUp if direction<0 else widget.pageDown)()
+            return
+        if getattr(self,'table_visible',False):
+            widget=self['process_list']
+            method=('pageUp' if direction<0 else 'pageDown') if page else ('up' if direction<0 else 'down')
+            getattr(widget,method)()
+        else:
+            (self['file_info'].pageUp if direction<0 else self['file_info'].pageDown)()
+
+    def display_process_table(self,rows):
+        api=self.api
+        sx,sy=self.width/1920,self.height/1080
+        self.process_names={row[0]:row[1] for row in rows}
+        content=process_rows(api,rows,dashboard.PROCESS_COLUMNS,sx,sy,48)
+        self['process_list'].l.setList(content)
+        self['process_list'].moveToIndex(0)
+        self.show_process_table(True)
+        from time import strftime
+        self['report_status'].setText('%s   ·   %s %d   ·   %s ↓' %
+            (strftime('%H:%M:%S'),self.tr('Total:'),len(rows),'CPU' if self.cpu_order else 'RAM'))
+
     def start(self):
         if self.pending or self.cancelled.is_set():
             return
         self.pending = True
         self.preview = None
+        self.show_process_table(False)
+        self.show_categories(False)
+        self.show_network(False)
+        self['report_status'].setText(self.tr('Loading…'))
         self['file_info'].setText(self.tr('Loading…'))
         if self.kind == 'transponder-services':
-            from enigma import eServiceCenter, eServiceReference
-            from .warder_services import services
             try:
+                from enigma import eServiceCenter, eServiceReference
+                from .warder_services import services, display
                 self.services = services(self.session.nav, eServiceCenter.getInstance(), eServiceReference)
-                self.done('\n'.join(name or ident for _, ident, name in self.services) or self.tr('Unavailable'))
-            except (RuntimeError, TypeError, ValueError, AttributeError):
+                self.done(display(self.services,self.tr))
+            except (RuntimeError, TypeError, ValueError, AttributeError, OSError, ImportError):
                 self.services = []
                 self.failed(None)
         elif self.kind == 'tuner-details':
-            from .warder_tuners import details
             try:
+                from .warder_tuners import details
                 self.done(details(self.session, self.api, self.tr, self.slot_number))
             except (AttributeError, RuntimeError, TypeError, OSError, ImportError):
                 self.failed(None)
@@ -129,36 +826,40 @@ class Report(Screen):
             deferToThread(self.collect).addCallbacks(self.done, self.failed)
 
     def collect(self):
-        kind, tr = self.kind, self.tr
-        if kind in ('system-processes','system-log'):
-            from .warder_system_data import detail_text, cpu_processes
-            if kind == 'system-processes' and self.cpu_order:
-                return cpu_processes(tr, self.cancelled)
-            return detail_text('log' if kind == 'system-log' else 'processes', tr)
-        if kind.startswith('storage-'):
-            from .warder_storage import report
-            return report(tr, kind == 'storage-categories')
-        if kind.startswith('network-'):
-            from .warder_network import collect, summary, diagnostics
-            return summary(collect(), tr) if kind == 'network-overview' else diagnostics(tr, self.cancelled)
-        if kind == 'forum-report':
-            import json
-            from .warder_service import forum_snapshot
-            return json.dumps(forum_snapshot(), ensure_ascii=False, indent=2)
-        if kind == 'service-ipk':
-            from .warder_ipk import review
-            return review(tr)
-        if kind == 'service-health':
-            from .warder_service import health
-            return health(tr)
-        raise ValueError('unknown diagnostic')
+        return collect_report(self.kind,self.tr,self.cancelled,self.cpu_order)
 
     def done(self, result):
         self.pending = False
         if self.cancelled.is_set():
             return
+        if self.kind=='system-processes' and isinstance(result,list) and result:
+            self.display_process_table(result)
+            return
+        if self.kind=='storage-categories' and isinstance(result,list) and len(result)==6:
+            self.display_categories(result)
+            return
+        if self.kind=='network-overview' and isinstance(result,tuple) and len(result)==2 and all(isinstance(v,str) for v in result):
+            self.display_network(result)
+            return
+        self.show_process_table(False)
+        self.show_categories(False)
+        self.show_network(False)
+        # Never display an empty screen on a missing/empty result. Only a real
+        # report may become an export preview.
+        if not isinstance(result, str) or not result.strip():
+            self['report_status'].setText(self.tr('Unavailable'))
+            self['file_info'].setText(self.tr('Unavailable'))
+            return
+        from time import strftime
+        self['report_status'].setText(strftime('%H:%M:%S'))
         if self.kind == 'forum-report':
+            from .warder_service import format_preview
+            try:
+                readable=format_preview(result,self.tr)
+            except (ValueError,TypeError,KeyError,AttributeError):
+                readable=result
             self.preview = result
+            result=readable
         if self.kind == 'network-test':
             from time import strftime
             self.history.insert(0, strftime('%H:%M:%S')+'\n'+result)
@@ -169,18 +870,93 @@ class Report(Screen):
     def failed(self, failure):
         self.pending = False
         if not self.cancelled.is_set():
+            self.show_process_table(False)
+            self.show_categories(False)
+            self.show_network(False)
+            self['report_status'].setText(self.tr('Unavailable'))
             self['file_info'].setText(self.tr('Unavailable'))
 
     def export_services(self, kind):
-        if self.kind != 'transponder-services' or not self.services:
+        if self.kind != 'transponder-services' or self.pending or self.cancelled.is_set() or not self.services:
             return
         from .warder_services import export
-        from Screens.MessageBox import MessageBox
+        from .warder_dialog import show_info
         try:
             result = export(self.services,kind)
         except OSError:
             result = None
-        self.session.open(MessageBox,result or self.tr('Unavailable'),type=MessageBox.TYPE_INFO)
+        show_info(self.session,self.api,result or self.tr('Unavailable'),self.tr('Unavailable') if not result else self.tr('Save'))
+
+    def green_action(self):
+        if self.kind=='transponder-services':
+            return self.export_services('tv')
+        if self.kind=='service-crashes':
+            return self.choose_crash()
+        if self.kind=='tuner-details':
+            return self.show_backups()
+        if self.kind!='system-processes' or self.pending or self.cancelled.is_set() or not self.table_visible:return
+        selected=self['process_list'].getCurrent()
+        if not selected or selected[0] not in self.process_names:return
+        pid=selected[0]
+        from .warder_system_data import process_memory
+        from .warder_dialog import show_info
+        self.pending=True
+        def done(value):
+            self.pending=False
+            if not self.cancelled.is_set():
+                show_info(self.session,self.api,value,self.tr('Details'))
+        def failed(failure):
+            done(self.tr('Unavailable'))
+        try:deferToThread(process_memory,pid,self.process_names[pid],self.tr).addCallbacks(done,failed)
+        except (RuntimeError,TypeError,OSError):failed(None)
+
+    def show_backups(self):
+        if self.pending or self.cancelled.is_set():return
+        from .warder_scan_backup import inventory
+        from .warder_dialog import show_info
+        self.pending=True
+        def done(value):
+            self.pending=False
+            if not self.cancelled.is_set():
+                show_info(self.session,self.api,value or self.tr('Unavailable'),self.tr('Channel backups'))
+        def failed(failure):done(self.tr('Unavailable'))
+        try:deferToThread(inventory,self.tr,self.cancelled).addCallbacks(done,failed)
+        except (RuntimeError,TypeError,OSError):failed(None)
+
+    def choose_crash(self):
+        if self.pending or self.cancelled.is_set():return
+        from .warder_service import crash_inventory,crash_detail
+        from .warder_dialog import choose,show_info
+        self.pending=True
+        def failed(failure):
+            self.pending=False
+            if not self.cancelled.is_set():show_info(self.session,self.api,self.tr('Unavailable'),self.tr('Crash logs'))
+        def selected(item):
+            if self.cancelled.is_set() or self.pending or not item:return
+            payload=item[1]
+            if payload not in choices:return
+            self.pending=True
+            def done(value):
+                self.pending=False
+                if not self.cancelled.is_set():show_info(self.session,self.api,value or self.tr('Unavailable'),self.tr('Crash logs'))
+            try:deferToThread(crash_detail,*payload,self.tr,self.cancelled).addCallbacks(done,failed)
+            except (RuntimeError,TypeError,OSError):failed(None)
+        choices=[]
+        def listed(rows):
+            self.pending=False
+            if self.cancelled.is_set():return
+            if not rows:return failed(None)
+            from datetime import datetime
+            options=[]
+            for stamp,size,path,identity in rows:
+                payload=(path,identity)
+                choices.append(payload)
+                try:date=datetime.fromtimestamp(stamp).strftime('%Y-%m-%d %H:%M:%S')
+                except (OverflowError,OSError,ValueError):date='—'
+                options.append((date+' · '+path.name,payload))
+            choose(self.session,self.api,selected,self.tr('Crash logs'),options)
+        try:deferToThread(crash_inventory,self.cancelled).addCallbacks(listed,failed)
+        except (RuntimeError,TypeError,OSError):failed(None)
 
     def action(self):
         if self.pending or self.cancelled.is_set():
@@ -189,24 +965,24 @@ class Report(Screen):
             self.export_services('radio')
         elif self.kind == 'tuner-details':
             from .warder_tuners import slots
-            from Screens.ChoiceBox import ChoiceBox
+            from .warder_dialog import choose
             def selected(item):
                 if item and not self.cancelled.is_set():
                     self.slot_number = item[1]
                     self.start()
-            self.session.openWithCallback(selected,ChoiceBox,title=self.tr('Tuner interfaces'),
-                                          list=[(self.tr('Overview'),None)]+slots())
+            choose(self.session,self.api,selected,self.tr('Tuner interfaces'),
+                   [(self.tr('Overview'),None)]+slots())
         elif self.kind == 'system-processes':
             self.cpu_order = not self.cpu_order
             self.start()
         elif self.kind == 'forum-report' and self.preview is not None:
             from .warder_service import save_preview
-            from Screens.MessageBox import MessageBox
+            from .warder_dialog import show_info
             try:
                 path = save_preview(self.preview)
             except OSError:
                 path = self.tr('Unavailable')
-            self.session.open(MessageBox, path, type=MessageBox.TYPE_INFO)
+            show_info(self.session,self.api,path,self.tr('Save'))
 
 
 def open_diagnostic(session, api, kind):
@@ -215,8 +991,9 @@ def open_diagnostic(session, api, kind):
     if kind == 'projects':
         session.open(ProjectMenu, api)
     elif kind == 'signal-quick':
-        from .warder_quick import QuickSignal
-        session.open(QuickSignal, api)
+        tr=lambda key:for_api(api,key)
+        title,hint=DIAGNOSTICS[kind]
+        session.open(CentreMenu,api,((kind,tr(title),tr(hint)),),{kind:True},'reception')
     elif kind == 'system-overview':
         from .warder_overview import Overview
         session.open(Overview, api)
@@ -235,6 +1012,13 @@ class ProjectMenu(CentreMenu):
         from .warder_projects import PROJECTS
         self.projects = {p[0]:p for p in PROJECTS}
         super().__init__(session,api,(),{},None)
+        self['green'].setText(self.tr('Overview'))
+        self['actions'].actions['green']=self.overview
+
+    def overview(self):
+        if self._result_closed or self._result_hidden:return
+        self.cancel_result()
+        self.session.open(ProjectOverview,self.api)
 
     def entries(self):
         return [(name,name,self.tr('Installed version')+' · '+self.tr('Stable version'),True)
@@ -247,10 +1031,80 @@ class ProjectMenu(CentreMenu):
         super().render()
         self['heading'].setText(self.tr('Warder Evolution centre'))
 
+    def inline_route(self,key):
+        return key if key in self.projects else None
+
+    def collect_inline(self,key,tr,token):
+        from .warder_projects import report
+        config=self.api['config']
+        locale=language(config.osd.language.value) if config.plugins.GlassSysUtil.par62.value else 'en'
+        result=report(tr,locale,token,projects=(self.projects[key],),presentation='panels')
+        if isinstance(result,tuple) and len(result)==2:
+            return ((tr('Stable releases'),result[0]),(tr('Release notes'),result[1]))
+        return result
+
     def select(self):
         row=self['list'].getCurrent()
         if row and row[0] in self.projects:
-            self.session.open(ProjectReport,self.api,self.projects[row[0]])
+            if self._result_key!=row[0]:self.describe()
+            self.request_result(row[0])
+
+    def full_result(self):
+        if self._result_closed or self._result_hidden:return
+        key=self._result_key
+        if key in self.projects:
+            self.cancel_result()
+            self.session.open(ProjectReport,self.api,self.projects[key])
+
+
+class ProjectOverview(Report):
+    """Explicit five-product version check through the canonical feed reader."""
+    def __init__(self,session,api):
+        super().__init__(session,api,'project-overview','Warder Evolution centre')
+        for col,key in enumerate(('Warder Evolution','Installed version','Stable version','Status')):
+            self['project_column%d'%col]=Label(self.tr(key))
+        for row in range(5):
+            for col in range(4):self['project_%d_%d'%(row,col)]=Label('')
+        self.show_projects(False)
+
+    def show_projects(self,visible):
+        for col in range(4):
+            widget=self['project_column%d'%col]
+            (widget.show if visible else widget.hide)()
+        for row in range(5):
+            for col in range(4):
+                widget=self['project_%d_%d'%(row,col)]
+                if not visible:widget.setText('')
+                (widget.show if visible else widget.hide)()
+        (self['file_info'].hide if visible else self['file_info'].show)()
+
+    def start(self):
+        if not self.pending and not self.cancelled.is_set():self.show_projects(False)
+        super().start()
+
+    def done(self,result):
+        if self.cancelled.is_set():return
+        if isinstance(result,list) and len(result)==5 and all(
+                isinstance(row,tuple) and len(row)==4 and all(isinstance(v,str) for v in row) for row in result):
+            self.pending=False
+            for i,row in enumerate(result):
+                for col,value in enumerate(row):self['project_%d_%d'%(i,col)].setText(value)
+            self.show_projects(True)
+            from time import strftime
+            self['report_status'].setText(strftime('%H:%M:%S'))
+            return
+        self.show_projects(False)
+        super().done(result)
+
+    def failed(self,failure):
+        if not self.cancelled.is_set():self.show_projects(False)
+        super().failed(failure)
+
+    def collect(self):
+        from .warder_projects import report
+        config=self.api['config']
+        locale=language(config.osd.language.value) if config.plugins.GlassSysUtil.par62.value else 'en'
+        return report(self.tr,locale,self.cancelled,compact=True,presentation='table')
 
 
 class ProjectReport(Report):
@@ -267,7 +1121,7 @@ class ProjectReport(Report):
 
     def action(self):
         from .warder_projects import entrypoint
-        from Screens.MessageBox import MessageBox
+        from .warder_dialog import show_info
         if self.project[0] == 'GSU':
             # The canonical in-plugin updater owns check, confirmation and installation.
             from .plugin_update_ui import StartupUpdateCheck
@@ -279,7 +1133,7 @@ class ProjectReport(Report):
         if descriptor:
             descriptor(session=self.session)
         else:
-            self.session.open(MessageBox,self.tr('Unavailable'),type=MessageBox.TYPE_INFO)
+            show_info(self.session,self.api,self.tr('Unavailable'),self.project[0])
 
     def update_status(self, value):
         self['file_info'].setText(value)

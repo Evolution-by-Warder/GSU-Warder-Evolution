@@ -3,18 +3,29 @@ from collections import deque
 from math import isfinite
 from time import monotonic
 
+def cpu_line(fields):
+    try:
+        values=[int(v) for v in fields[1:9]]
+        if len(values)<4 or min(values)<0:return None
+        return sum(values),values[3]+(values[4] if len(values)>4 else 0)
+    except ValueError:return None
+
+
 def cpu_counters(text):
     for line in text.splitlines():
-        fields = line.split()
-        if fields and fields[0] == "cpu":
-            try:
-                values = [int(v) for v in fields[1:9]]
-                if len(values) < 4 or min(values) < 0:
-                    return None
-                return sum(values), values[3] + (values[4] if len(values) > 4 else 0)
-            except ValueError:
-                return None
+        fields=line.split()
+        if fields and fields[0]=='cpu':return cpu_line(fields)
     return None
+
+
+def core_counters(text):
+    result={}
+    for line in text.splitlines():
+        fields=line.split()
+        if fields and fields[0].startswith('cpu') and fields[0][3:].isdigit():
+            number=int(fields[0][3:])
+            if number<256:result[number]=cpu_line(fields)
+    return result
 
 def cpu_percent(previous, current):
     if previous is None or current is None:
@@ -24,7 +35,7 @@ def cpu_percent(previous, current):
         return None
     return 100.0 * (total-idle)/total
 
-def memory_values(text):
+def memory_fields(text):
     values = {}
     for line in text.splitlines():
         key, sep, value = line.partition(":")
@@ -36,6 +47,11 @@ def memory_values(text):
                     values[key] = number * 1024
             except ValueError:
                 pass
+    return values
+
+
+def memory_values(text):
+    values=memory_fields(text)
     total = values.get("MemTotal")
     available = values.get("MemAvailable")
     basis = "MemAvailable"

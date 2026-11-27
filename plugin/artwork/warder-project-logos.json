@@ -1,0 +1,33 @@
+{
+  "fullhdglass": {
+    "repository": "Evolution-by-Warder/FullHDGlass-Warder-Evolution",
+    "path": "source/package-root/usr/lib/enigma2/python/Plugins/Extensions/setupGlass17/images/warder-config.png",
+    "blob_sha": "0839de8bc23ce211684bfb9a725cad870a995e2f",
+    "installed": "plugin/src/GlassSysUtil/images/project-fullhdglass.png"
+  },
+  "piconhub": {
+    "repository": "Evolution-by-Warder/PiconHub-Warder-Evolution",
+    "path": "plugin/src/Plugins/Extensions/WarderPiconHub/images/plugin_fhd.png",
+    "blob_sha": "3426170cecc3bce007eabeb6de81610462291a42",
+    "installed": "plugin/src/GlassSysUtil/images/project-piconhub.png"
+  },
+  "youtube": {
+    "repository": "Evolution-by-Warder/YouTube-Warder-Evolution",
+    "path": "plugin/Plugins/Extensions/WarderYouTube/images/plugin_fhd.png",
+    "blob_sha": "776fc55a33b96d09d3172559688f03cae8338d7e",
+    "installed": "plugin/src/GlassSysUtil/images/project-youtube.png"
+  },
+  "gsu": {
+    "repository": "Evolution-by-Warder/GSU-Warder-Evolution",
+    "path": "plugin/src/GlassSysUtil/images/warder-plugin.png",
+    "blob_sha": "9af6b201635a6eefd8d471191a1fbf72086d2da8",
+    "existing": true
+  },
+  "radio": {
+    "repository": "Evolution-by-Warder/Radio-Warder-Evolution",
+    "path": "src/WarderRadio/plugin.png",
+    "blob_sha": "369b60c8efac9439d05c104ebf46fd32a94f1d60",
+    "installed_path": "/usr/lib/enigma2/python/Plugins/Extensions/WarderRadio/plugin.png",
+    "note": "Use optional installed logo and local semantic fallback; approved source exceeds connector binary read capability."
+  }
+}

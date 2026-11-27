@@ -15,6 +15,7 @@ class Sampler:
         self.previous=None
         self.sensors=None
         self.temperature=None
+        self.temperature_source=None
         self.last_temperature=None
     def reset(self):
         self.previous=None
@@ -34,7 +35,9 @@ class Sampler:
         # between thermal polls and carry its age alongside faster CPU/network data.
         if self.last_temperature is None or not 0<=now-self.last_temperature<5:
             readings = p.temperatures(self.sensors) if self.sensors else ()
-            self.temperature = max((s['celsius'] for s in readings),default=None)
+            hottest=max(readings,key=lambda item:item['celsius'],default=None)
+            self.temperature=hottest['celsius'] if hottest else None
+            self.temperature_source=str(hottest.get('label') or '')[:64] if hottest else None
             self.last_temperature = now
         values['temp'] = self.temperature
         values['temp_age'] = now-self.last_temperature if self.temperature is not None else None

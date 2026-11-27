@@ -130,11 +130,15 @@ def menu_row(api, ident, title, enabled, width, height):
     sx,sy=width/1920.0,height/1080.0
     def scaled(values):return tuple(round(v*(sx if i%2==0 else sy)) for i,v in enumerate(values))
     entry=api['MultiContentEntryText']
-    return [ident,
-            entry(pos=scaled((54,24)),size=scaled((925,62)),font=0,text=title,
-                  color=0xffffff if enabled else 0x8291a5,color_sel=0xffffff if enabled else 0xb1bbc8),
-            entry(pos=scaled((14,34)),size=scaled((28,40)),font=1,text='●',
-                  color=0x39ff59 if enabled else 0xff526a,color_sel=0x39ff59 if enabled else 0xff526a)]
+    from .warder_menu_icons import pixmap_entry
+    row=[ident,entry(pos=scaled((82,24)),size=scaled((868,62)),font=0,text=title,
+                  color=0xffffff if enabled else 0x8291a5,color_sel=0xffffff if enabled else 0xb1bbc8)]
+    icon=pixmap_entry(api,ident,scaled((16,26)),scaled((48,48)))
+    if icon is not None:row.append(icon)
+    if not enabled:
+        row.append(entry(pos=scaled((956,32)),size=scaled((30,40)),font=1,text='●',
+                  color=0xff526a,color_sel=0xff526a))
+    return row
 
 
 class Header:

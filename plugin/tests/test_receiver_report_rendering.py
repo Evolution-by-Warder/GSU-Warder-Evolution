@@ -1,0 +1,929 @@
+"""Regression for physical receiver reports: native ScrollLabel parent is at z=0."""
+from pathlib import Path
+import importlib
+import unittest
+from unittest.mock import MagicMock,patch
+from xml.etree import ElementTree as ET
+from receiver_stubs import load
+
+ROOT=Path(__file__).resolve().parents[1]/'src/GlassSysUtil'
+def mod(name):
+    return importlib.import_module('Plugins.Extensions.GlassSysUtil.'+name)
+
+class ReceiverRenderingTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.api=vars(load(ROOT))
+        cls.ui=mod('warder_centre_ui')
+
+    def test_all_dashboard_backings_behind_native_scroll_container(self):
+        for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
+            root=ET.fromstring(mod('warder_dashboard').skin(width,height,'detail'))
+            target=root.find("widget[@name='file_info']")
+            x,y=map(int,target.get('position').split(','))
+            w,h=map(int,target.get('size').split(','))
+            # Native OpenATV ScrollLabel.applySkin forwards zPosition only to
+            # its child eLabels. The eWidget container stays at layer zero.
+            for node in root:
+                if node.tag not in ('eLabel','ePixmap'):continue
+                nx,ny=map(int,node.get('position').split(','))
+                nw,nh=map(int,node.get('size').split(','))
+                if nx<x+w and nx+nw>x and ny<y+h and ny+nh>y:
+                    self.assertLess(int(node.get('zPosition','0')),0,(width,height,node.attrib))
+            for name in ('red','green','yellow','blue'):
+                self.assertEqual(root.find("widget[@name='%s']"%name).get('noWrap'),'1')
+
+    def test_blank_translation_bypasses_real_legacy_catalogue_metadata(self):
+        i18n=mod('i18n')
+        fake=MagicMock(return_value='Project-Id-Version: GSU')
+        api=dict(self.api,_=fake)
+        for lang in i18n.LANGUAGES:
+            with patch.object(i18n,'catalog',side_effect=AssertionError('empty text must bypass catalogue')):
+                self.assertEqual(i18n.translate('',lang),'')
+                self.assertEqual(i18n.for_api(api,''),'')
+        fake.assert_not_called()
+
+    def test_every_report_route_displays_data_or_explicit_state(self):
+        routes=mod('warder_centres').DIAGNOSTICS
+        kinds={'system-processes','system-log','system-cpu','tuner-details','transponder-services',
+               'storage-overview','storage-categories','storage-memory','storage-activity','storage-largest','network-overview','network-test',
+               'network-interfaces','network-statistics','network-mounts','network-services',
+               'service-health','service-smart','service-crashes','service-plugins','service-ipk','forum-report'}
+        for kind in kinds:
+            with self.subTest(kind=kind):
+                session=MagicMock()
+                self.ui.open_diagnostic(session,self.api,kind)
+                session.open.assert_called_once_with(self.ui.Report,self.api,kind,routes[kind][0])
+                report=self.ui.Report(session,self.api,kind,routes[kind][0])
+                self.assertEqual(report['green'].getText(),report.tr('TV') if kind=='transponder-services' else report.tr('Details') if kind in ('system-processes','service-crashes') else report.tr('Channel backups') if kind=='tuner-details' else '')
+                report.done('Receiver content')
+                self.assertIn('Receiver content',report['file_info'].getText())
+                for value in ('',None,'   '):
+                    report.done(value)
+                    self.assertEqual(report['file_info'].getText(),report.tr('Unavailable'))
+                report.failed(None)
+                self.assertEqual(report['file_info'].getText(),report.tr('Unavailable'))
+                report.cancelled.set()
+                report.done('late')
+                self.assertNotIn('late',report['file_info'].getText())
+        self.assertEqual(set(routes)-kinds,{'projects','signal-quick','system-overview','system-live','signal-live','tuner-native'})
+
+    def test_all_five_project_reports_share_visible_layout_and_empty_state(self):
+        for project in mod('warder_projects').PROJECTS:
+            report=self.ui.ProjectReport(MagicMock(),self.api,project)
+            self.assertEqual(report['green'].getText(),'')
+            report.done('Version 1.0.0')
+            self.assertIn('Version 1.0.0',report['file_info'].getText())
+            report.done(None)
+            self.assertEqual(report['file_info'].getText(),report.tr('Unavailable'))
+
+    def test_ram_card_title_does_not_expose_or_wrap_memory_basis(self):
+        screen=mod('warder_overview').Overview(MagicMock(),self.api)
+        screen.done({'values':[2,44,None,70,None,48], 'basis':'MemAvailable',
+                     'health':{'state':'ok','score':100,'coverage':(2,2)}})
+        self.assertNotIn('MemAvailable',screen['label1'].getText())
+        self.assertEqual(screen['value1'].getText(),'44 %')
+
+    def test_worker_routes_call_the_correct_provider(self):
+        cases=(
+            ('system-log','warder_system_data','detail_text','log'),
+            ('storage-overview','warder_storage','report',None),
+            ('network-test','warder_network','diagnostics',None),
+            ('service-health','warder_service','health',None),
+            ('service-ipk','warder_ipk','review',None),
+        )
+        for kind,module,method,argument in cases:
+            with self.subTest(kind=kind):
+                report=self.ui.Report(MagicMock(),self.api,kind,'Overview')
+                with patch.object(mod(module),method,return_value='provider data') as provider:
+                    report.done(report.collect())
+                    provider.assert_called_once()
+                    if argument is not None:
+                        self.assertEqual(provider.call_args.args[0],argument)
+                    if kind=='storage-overview':
+                        self.assertIs(provider.call_args.args[-1],False)
+                    self.assertIn('provider data',report['file_info'].getText())
+        report=self.ui.Report(MagicMock(),self.api,'network-overview','Overview')
+        with patch.object(mod('warder_network'),'collect',return_value={'fixture':1}) as collect, patch.object(mod('warder_network'),'overview_panels',return_value=('network data','connection data')) as panels:
+            report.done(report.collect())
+            collect.assert_called_once_with(include_addresses=True)
+            self.assertEqual(panels.call_args.args[0],{'fixture':1})
+            self.assertTrue(report.network_visible)
+            self.assertEqual(report['network_body0'].getText(),'network data')
+            self.assertEqual(report['network_body1'].getText(),'connection data')
+        report=self.ui.Report(MagicMock(),self.api,'forum-report','Overview')
+        with patch.object(mod('warder_service'),'forum_snapshot',return_value={'schema':2}) as snapshot:
+            report.done(report.collect())
+            snapshot.assert_called_once()
+            self.assertIn('"schema": 2',report.preview)
+
+    def test_native_routes_collect_on_gui_thread(self):
+        report=self.ui.Report(MagicMock(),self.api,'tuner-details','Overview')
+        with patch.object(mod('warder_tuners'),'details',return_value='Tuner fixture') as provider:
+            report.start()
+            provider.assert_called_once()
+            self.assertEqual(report['file_info'].getText(),'Tuner fixture')
+        report=self.ui.Report(MagicMock(),self.api,'transponder-services','Overview')
+        with patch.object(mod('warder_services'),'services',return_value=[('tv','ref','Channel fixture')]) as provider:
+            report.start()
+            provider.assert_called_once()
+            self.assertIn('Channel fixture',report['file_info'].getText())
+            self.assertIn('TV  ·  1',report['file_info'].getText())
+
+    def test_process_table_and_category_rows_are_bound_to_measured_values(self):
+        ui=self.ui
+        report=ui.Report(MagicMock(),self.api,'system-processes','Process Info')
+        rows=[(42,'enigma2','S',1536,12.5),(7,'kernel','R',None,None)]
+        with patch.object(mod('warder_system_data'),'process_table',return_value=rows) as provider:
+            report.done(report.collect())
+            provider.assert_called_once_with(report.cancelled,False)
+        self.assertTrue(report.table_visible)
+        content=report['process_list'].l.list
+        self.assertEqual(content[0][0],42)
+        self.assertEqual([entry['text'] for entry in content[0][1:]],['42','enigma2','S','1.5','12.5'])
+        self.assertEqual([entry['text'] for entry in content[1][-2:]],['—','—'])
+        report.done([])
+        self.assertFalse(report.table_visible)
+        self.assertEqual(report['file_info'].getText(),report.tr('Unavailable'))
+
+        report=ui.Report(MagicMock(),self.api,'storage-categories','Space by category')
+        rows=[('Picons',1048576,True),('Skins',1048576,True),('Plugins',0,True),
+              ('EPG',0,True),('Cache',0,True),('Logs',0,False)]
+        with patch.object(mod('warder_storage'),'category_snapshot',return_value=rows) as provider:
+            report.done(report.collect())
+            provider.assert_called_once_with(cancelled=report.cancelled)
+        self.assertEqual(report['category_size0'].getText(),'1.0 MiB')
+        self.assertEqual(report['category_state5'].getText(),report.tr('Partial result'))
+        self.assertIn('2.0 MiB',report['report_status'].getText())
+        self.assertIn(report.tr('Partial result'),report['report_status'].getText())
+
+    def test_process_details_use_only_selected_pid_and_ignore_late_result(self):
+        ui=self.ui
+        session=MagicMock()
+        report=ui.Report(session,self.api,'system-processes','Process Info')
+        report.done([(42,'enigma2','S',1536,12.5),(7,'kernel','R',None,None)])
+        report['process_list'].moveToIndex(1)
+        with patch.object(ui,'deferToThread') as worker:
+            report.green_action()
+            worker.assert_called_once_with(mod('warder_system_data').process_memory,7,'kernel',report.tr)
+            callback=worker.return_value.addCallbacks.call_args.args[0]
+            callback('Pss   1.25 MiB')
+            session.open.assert_called_once_with(mod('warder_dialog').InformationDialog,self.api,
+                'Pss   1.25 MiB',report.tr('Details'))
+            session.open.reset_mock()
+            report.green_action()
+            report.cancelled.set()
+            worker.return_value.addCallbacks.call_args.args[0]('late')
+            session.open.assert_not_called()
+
+    def test_crash_details_choose_existing_file_and_ignore_closed_screen(self):
+        from pathlib import Path
+        ui=self.ui
+        session=MagicMock()
+        report=ui.Report(session,self.api,'service-crashes','Crash logs')
+        path=Path('/tmp/enigma2_crash_a.log');identity=(1,2,3,4)
+        with patch.object(ui,'deferToThread') as worker:
+            report.green_action()
+            worker.assert_called_once_with(mod('warder_service').crash_inventory,report.cancelled)
+            worker.return_value.addCallbacks.call_args.args[0]([(0,4,path,identity)])
+            args=session.openWithCallback.call_args.args
+            callback=args[0]
+            item=args[-1][0]
+            self.assertEqual(item[1],(path,identity))
+            callback(('bad',(Path('/etc/passwd'),identity)))
+            self.assertEqual(worker.call_count,1)
+            callback(item)
+            worker.assert_called_with(mod('warder_service').crash_detail,path,identity,report.tr,report.cancelled)
+            done=worker.return_value.addCallbacks.call_args.args[0]
+            report.cancelled.set()
+            done('late')
+            session.open.assert_not_called()
+
+    def test_information_dialog_is_scoped_scrollable_and_has_no_confirmation(self):
+        dialog=mod('warder_dialog')
+        session=MagicMock()
+        dialog.show_info(session,self.api,'/tmp/report.json','Save')
+        session.open.assert_called_once_with(dialog.InformationDialog,self.api,'/tmp/report.json','Save')
+        screen=dialog.InformationDialog(session,self.api,'/tmp/report.json','Save')
+        self.assertEqual(screen['file_info'].getText(),'/tmp/report.json')
+        self.assertEqual(screen['heading'].getText(),'Save')
+        self.assertEqual(screen['green'].getText(),'')
+        self.assertEqual(screen['blue'].getText(),'')
+        self.assertEqual(screen['actions'].actions['ok'],screen.close)
+        self.assertEqual(screen['actions'].actions['cancel'],screen.close)
+
+    def test_choice_preserves_original_value_identity_and_cancel(self):
+        dialog=mod('warder_dialog')
+        session=MagicMock()
+        value=object()
+        options=(('Overview',None),('Tuner A',value))
+        callback=MagicMock()
+        dialog.choose(session,self.api,callback,'Tuners',options)
+        session.openWithCallback.assert_called_once_with(callback,dialog.ChoiceDialog,self.api,'Tuners',options)
+        screen=dialog.ChoiceDialog(session,self.api,'Tuners',options)
+        screen['choices'].moveToIndex(1)
+        screen.select()
+        self.assertIs(screen.result[0],options[1])
+        screen.cancel()
+        self.assertEqual(screen.result,(None,))
+        callback.assert_not_called()
+        for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160),(1920,1200)):
+            root=ET.fromstring(dialog.choice_skin(width,height))
+            self.assertIsNone(root.find("widget[@name='file_info']"))
+            node=root.find("widget[@name='choices']")
+            x,y=map(int,node.get('position').split(','));w,h=map(int,node.get('size').split(','))
+            self.assertLessEqual(x+w,width);self.assertLessEqual(y+h,height)
+            self.assertEqual(h%int(node.get('itemHeight')),0)
+
+    def test_header_lifecycle_preserves_footer_and_version(self):
+        report=self.ui.Report(MagicMock(),self.api,'network-overview','Network overview')
+        header=report._diagnostic_header
+        header.timer=MagicMock()
+        footer=report['yellow'].getText()
+        header.prepare()
+        self.assertEqual(report['version'].getText(),(ROOT/'version').read_text().strip())
+        self.assertEqual(report['yellow'].getText(),footer)
+        self.assertTrue(report['clock'].getText())
+        header.suspend()
+        header.timer.stop.assert_called()
+        header.cleanup()
+        header.timer.reset_mock()
+        header.resume()
+        header.timer.start.assert_not_called()
+
+    def test_new_modes_fit_all_resolutions_and_keep_native_backings_behind_content(self):
+        view=mod('warder_dashboard')
+        for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
+            for mode in ('menu','overview','chart','multichart','signal-multichart','detail','process','categories','network'):
+                root=ET.fromstring(view.skin(w,h,mode))
+                names=[n.get('name') for n in root if n.get('name')]
+                self.assertEqual(len(names),len(set(names)),mode)
+                for n in root:
+                    x,y=map(int,n.get('position').split(','))
+                    width,height=map(int,n.get('size').split(','))
+                    self.assertGreaterEqual(min(x,y),0,(mode,n.attrib))
+                    self.assertGreater(min(width,height),0,(mode,n.attrib))
+                    self.assertLessEqual(x+width,w,(mode,n.attrib))
+                    self.assertLessEqual(y+height,h,(mode,n.attrib))
+                for name in ('day','date','clock','seconds','version_title','version'):
+                    self.assertIn(name,names)
+                if mode in ('detail','process','categories','network'):
+                    target=root.find("widget[@name='file_info']")
+                    x,y=map(int,target.get('position').split(','))
+                    tw,th=map(int,target.get('size').split(','))
+                    for n in root:
+                        if n.tag not in ('eLabel','ePixmap'):continue
+                        nx,ny=map(int,n.get('position').split(','))
+                        nw,nh=map(int,n.get('size').split(','))
+                        if nx<x+tw and nx+nw>x and ny<y+th and ny+nh>y:
+                            self.assertLess(int(n.get('zPosition','0')),0,(mode,n.attrib))
+
+    def test_forum_preview_is_readable_and_retains_exact_export(self):
+        import json
+        report=self.ui.Report(MagicMock(),self.api,'forum-report','Forum report')
+        snapshot={'schema':2,'gsu':'0.41.5','python':[3,14],'architecture':'aarch64',
+                  'available_percent':{'RAM':55.2,'Flash':None},'temperature_c':48.0,
+                  'crash_classes':['TypeError']}
+        raw=json.dumps(snapshot)
+        report.done(raw)
+        shown=report['file_info'].getText()
+        self.assertIn('3.14',shown)
+        self.assertIn('55.2 %',shown)
+        self.assertIn('48.0 °C',shown)
+        self.assertIn('TypeError',shown)
+        self.assertEqual(report.preview,raw)
+        self.assertNotIn('"available_percent"',shown)
+        raw_unknown=json.dumps(dict(snapshot,extra='not hidden'))
+        report.done(raw_unknown)
+        self.assertEqual(report['file_info'].getText(),raw_unknown)
+
+    def test_transponder_preview_separates_tv_and_radio_without_mutation(self):
+        rows=[('tv','ref1','TV station'),('radio','ref2','Radio station')]
+        expected=list(rows)
+        value=mod('warder_services').display(rows,str)
+        self.assertIn('TV  ·  1',value)
+        self.assertIn('Radio  ·  1',value)
+        self.assertIn('Radio station',value)
+        self.assertEqual(rows,expected)
+        self.assertEqual(mod('warder_services').display([],str),'Unavailable')
+
+    def test_network_panels_keep_actual_addresses_and_missing_data(self):
+        network=mod('warder_network')
+        data={'interfaces':[{'name':'eth0','state':'up','speed':1000,'addresses':['192.0.2.1','2001:db8::1']}],
+              'gateways':['192.0.2.254'],'dns':[],'network_mounts':0}
+        left,right=network.overview_panels(data,str)
+        self.assertIn('1000 Mb/s',left)
+        self.assertIn('2001:db8::1',left)
+        self.assertIn('192.0.2.254',right)
+        self.assertIn('—',right)
+        report=self.ui.Report(MagicMock(),self.api,'network-overview','Network overview')
+        report.done((left,right))
+        self.assertTrue(report.network_visible)
+        report.scroll(1,True)
+        self.assertEqual(report.network_focus,1)
+        report.done(None)
+        self.assertFalse(report.network_visible)
+        self.assertEqual(report['file_info'].getText(),report.tr('Unavailable'))
+
+    def test_diagnostic_descriptions_are_explanatory_in_all_languages(self):
+        centres=mod('warder_centres')
+        i18n=mod('i18n')
+        for lang in i18n.LANGUAGES:
+            tr=lambda key:i18n.translate(key,lang)
+            for ident,(_,hint) in centres.DIAGNOSTICS.items():
+                value=centres.description(ident,tr,tr(hint))
+                self.assertNotEqual(value,tr(hint),(lang,ident))
+                self.assertGreater(len(value),15,(lang,ident))
+                self.assertNotIn('%s',value)
+        value=centres.description('system-overview',lambda k:i18n.translate(k,'sk'))
+        self.assertIn('CPU',value)
+        self.assertIn('teplotu',value)
+        self.assertIn('flash',value)
+
+
+    def test_centre_inline_result_keeps_navigation_and_ignores_stale_worker(self):
+        ui=self.ui
+        session=MagicMock()
+        menu=ui.CentreMenu(session,self.api,[('system-overview','System health check','memory'),
+                   ('system-log','Log view','log')],{'system-overview':True,'system-log':True},'system')
+        menu.render()
+        with patch.object(ui,'deferToThread') as worker:
+            menu.select()
+            self.assertEqual(worker.call_count,1)
+            self.assertEqual(menu['result_status'].getText(),mod('i18n').for_api(menu.api,'Loading…'))
+            old=worker.return_value.addCallbacks.call_args.args[0]
+            menu['list'].moveToIndex(1)
+            menu.describe()
+            menu.select()
+            self.assertEqual(worker.call_count,1)
+            old({'values':(99,10,0,20,None,50),'health':{'score':100,'coverage':(2,2)}})
+            self.assertEqual(worker.call_count,2)
+            done=worker.return_value.addCallbacks.call_args.args[0]
+            done('Kernel log content')
+            self.assertEqual(menu['descriptions'].getText(),'Kernel log content')
+            session.open.assert_not_called()
+            menu.full_result()
+            session.open.assert_called_once_with(ui.Report,self.api,'system-log','Log view')
+            session.open.reset_mock()
+            menu.refresh_result()
+            late=worker.return_value.addCallbacks.call_args.args[0]
+            menu.close_results()
+            late('stale')
+            self.assertNotEqual(menu['descriptions'].getText(),'stale')
+        menu.full_result()
+        session.open.assert_not_called()
+
+    def test_highlight_loads_results_without_ok_but_never_creates_archives_or_probes(self):
+        ui=self.ui
+        session=MagicMock()
+        entries=[('service-health','Installation check','Health'),
+                 ('service-ipk','IPK','Packages'),('17','Create diagnostic bundle','Archive')]
+        menu=ui.CentreMenu(session,self.api,entries,{k:True for k,_,_ in entries},'service')
+        menu.render()
+        with patch.object(ui,'deferToThread') as worker:
+            menu.auto_result()
+            self.assertEqual(worker.call_count,1)
+            old=worker.return_value.addCallbacks.call_args.args[0]
+            menu['list'].moveToIndex(1)
+            menu.describe()
+            menu.auto_result()
+            self.assertEqual(worker.call_count,1)
+            old('stale health')
+            self.assertEqual(worker.call_count,2)
+            worker.return_value.addCallbacks.call_args.args[0]('Current package data')
+            self.assertEqual(menu['descriptions'].getText(),'Current package data')
+            menu['list'].moveToIndex(2)
+            menu.describe()
+            menu.auto_result()
+            menu.refresh_result()
+            menu.full_result()
+            self.assertEqual(worker.call_count,2)
+            menu.select()
+            self.assertEqual(worker.call_count,3)
+            from threading import Event
+            with patch.object(mod('warder_tools'),'run_task',return_value={'path':'/tmp/gsu-report.tar.gz','bytes':2048}) as task:
+                result=menu.collect_inline('17',lambda k:k,Event())
+                task.assert_called_once_with('bundle')
+            worker.return_value.addCallbacks.call_args.args[0](result)
+            self.assertIn('/tmp/gsu-report.tar.gz',menu['descriptions'].getText())
+            session.open.assert_not_called()
+            menu.close_results()
+        net=ui.CentreMenu(session,self.api,[('network-test','Connection test','Test')],{'network-test':True},'network')
+        net.render()
+        with patch.object(ui,'deferToThread') as worker:
+            net.auto_result()
+            worker.assert_not_called()
+            net.select()
+            worker.assert_called_once()
+
+    def test_centre_suspends_passive_worker_and_refreshes_only_on_return(self):
+        ui=self.ui
+        session=MagicMock()
+        menu=ui.CentreMenu(session,self.api,[('network-overview','Network overview','Network')],
+            {'network-overview':True},'network')
+        menu.render()
+        self.assertIn(menu.suspend_results,menu.onHide)
+        self.assertIn(menu.resume_results,menu.onShow)
+        with patch.object(ui,'deferToThread') as worker:
+            menu.auto_result()
+            self.assertEqual(worker.call_count,1)
+            callback=worker.return_value.addCallbacks.call_args.args[0]
+            menu.suspend_results()
+            self.assertTrue(menu._result_job[1].is_set())
+            menu.refresh_result()
+            menu.auto_result()
+            self.assertEqual(worker.call_count,1)
+            callback('stale')
+            self.assertNotIn('stale',menu['descriptions'].getText())
+            menu.resume_results()
+            menu.auto_result()
+            self.assertEqual(worker.call_count,2)
+            worker.return_value.addCallbacks.call_args.args[0]('fresh')
+            self.assertEqual(menu['descriptions'].getText(),'fresh')
+            menu.suspend_results()
+            menu.close_results()
+            menu.resume_results()
+            menu.auto_result()
+            self.assertEqual(worker.call_count,2)
+        manual=ui.CentreMenu(session,self.api,[('network-test','Connection test','Test')],
+            {'network-test':True},'network')
+        manual.render()
+        with patch.object(ui,'deferToThread') as worker:
+            manual.select()
+            manual.suspend_results()
+            worker.return_value.addCallbacks.call_args.args[0]('late')
+            manual.resume_results()
+            manual.auto_result()
+            self.assertEqual(worker.call_count,1)
+            self.assertEqual(manual['result_status'].getText(),'')
+            self.assertNotIn('late',manual['descriptions'].getText())
+
+    def test_channel_information_opens_above_centre_without_closing_it(self):
+        session=MagicMock()
+        target=MagicMock()
+        api=dict(self.api,channelInfoCenter=target)
+        menu=self.ui.CentreMenu(session,api,[('1','Channel Information','Details')],{'1':True},'reception')
+        menu.render()
+        menu.select()
+        session.open.assert_called_once_with(target)
+        self.assertEqual(menu['list'].getCurrent()[0],'1')
+        self.assertFalse(hasattr(menu,'result'))
+
+    def test_legacy_centre_children_preserve_parent_and_canonical_update(self):
+        session=MagicMock()
+        targets={name:MagicMock() for name in ('GlassSysInfoBrowser','channelInfoCenter',
+            'cccamInfo','cccamInfoChoiceServer','mboxInfo','ECMInfo','univCamMng','OSD_ECM_Menu','swap_manager')}
+        api=dict(self.api,**targets,countServers=lambda:(False,False))
+        routes={'0':'GlassSysInfoBrowser','1':'channelInfoCenter','2':'cccamInfoChoiceServer',
+            '4':'mboxInfo','6':'ECMInfo','7':'univCamMng','8':'OSD_ECM_Menu','9':'swap_manager'}
+        for key,name in routes.items():
+            self.ui.open_legacy_child(session,api,key)
+            session.open.assert_called_with(targets[name])
+        api['countServers']=lambda:(True,True)
+        self.ui.open_legacy_child(session,api,'2')
+        session.open.assert_called_with(targets['cccamInfo'])
+        with patch.object(mod('warder_oscam'),'open_workspace') as workspace:
+            self.ui.open_legacy_child(session,api,'3')
+            workspace.assert_called_once_with(session,api,select_server=False)
+        self.ui.open_legacy_child(session,api,'16')
+        self.assertIs(session.open.call_args.args[0],self.ui.ProjectReport)
+        self.assertEqual(session.open.call_args.args[2][0],'GSU')
+        self.assertEqual(self.ui.LEGACY_CHILDREN,set(routes)|{'3','16'})
+
+    def test_menu_panels_are_disjoint_and_backings_cannot_cover_result(self):
+        for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
+            root=ET.fromstring(mod('warder_dashboard').skin(w,h,'menu'))
+            left=root.find("widget[@name='list']")
+            right=root.find("widget[@name='descriptions']")
+            x,y=map(int,left.get('position').split(','))
+            lw,lh=map(int,left.get('size').split(','))
+            rx,ry=map(int,right.get('position').split(','))
+            rw,rh=map(int,right.get('size').split(','))
+            self.assertLess(x+lw,rx)
+            for n in root:
+                if n.tag not in ('eLabel','ePixmap'):continue
+                nx,ny=map(int,n.get('position').split(','))
+                nw,nh=map(int,n.get('size').split(','))
+                if nx<rx+rw and nx+nw>rx and ny<ry+rh and ny+nh>ry:
+                    self.assertLess(int(n.get('zPosition','0')),0,n.attrib)
+
+
+    def test_live_system_dashboard_binds_six_real_metrics_and_one_sampler(self):
+        chart=mod('warder_chart')
+        screen=chart.LiveChart(MagicMock(),self.api)
+        samples=[(10,{'cpu':None,'ram':18,'swap':0,'temp':78.9,'rx':None,'tx':None}),
+                 (12,{'cpu':62,'ram':19,'swap':0,'temp':79.4,'rx':2048,'tx':1024})]
+        screen.source=MagicMock()
+        screen.source.history.snapshot.return_value=samples
+        with patch.object(chart,'draw_trend') as draw:
+            screen.render()
+        self.assertEqual(screen.source.history.snapshot.call_count,1)
+        self.assertEqual(draw.call_count,6)
+        self.assertEqual([call.args[2] for call in draw.call_args_list],[key for key,_,_ in chart.SYSTEM])
+        self.assertEqual([screen['metric_value%d'%i].getText() for i in range(6)],
+                         ['62.0 %','19.0 %','0.0 %','79.4 °C','2.0 KiB/s','1.0 KiB/s'])
+        self.assertEqual(screen['stat_value0_0'].getText(),'62.0')
+        self.assertEqual(screen['stat_value1_2'].getText(),'18.5')
+        screen.source.history.snapshot.return_value=[]
+        screen.render()
+        self.assertEqual(screen['metric_value0'].getText(),'— %')
+        self.assertEqual(screen['stat_value0_0'].getText(),'—')
+
+    def test_signal_dashboard_displays_five_simultaneous_plots_and_lock_losses(self):
+        chart=mod('warder_chart')
+        screen=chart.LiveChart(MagicMock(),self.api,True)
+        screen.source=MagicMock()
+        samples=[(10,{'snr':70,'agc':88,'db':10.7,'ber':0,'lock':1}),
+                 (12,{'snr':68,'agc':87,'db':10.1,'ber':3,'lock':0}),
+                 (14,{'snr':71,'agc':88,'db':10.8,'ber':1,'lock':1})]
+        screen.source.history.snapshot.return_value=samples
+        with patch.object(chart,'draw_trend') as draw:
+            screen.render()
+            self.assertEqual(draw.call_count,5)
+            self.assertEqual([call.args[2] for call in draw.call_args_list],[key for key,_,_ in chart.SIGNAL])
+        self.assertEqual(screen.source.history.snapshot.call_count,1)
+        self.assertEqual([screen['metric_value%d'%i].getText() for i in range(5)],
+                         ['71.0 %','88.0 %','10.8 dB','1','1'])
+        self.assertEqual(screen['signal_loss_count'].getText(),'1')
+        self.assertEqual(screen['signal_lock_state'].getText(),'LOCK   1')
+        self.assertEqual(screen['stat_value4_2'].getText(),'0.7')
+        self.assertEqual(screen['signal_summary_note'].getText(),screen.tr('Unstable reception'))
+        self.assertNotIn('right',screen['actions'].actions)
+        with patch.object(chart,'export',return_value='/tmp/signal.csv') as save:
+            screen.export_or_next()
+            save.assert_called_once_with(samples)
+            screen.session.open.assert_called_once_with(mod('warder_dialog').InformationDialog,
+                self.api,'/tmp/signal.csv',screen.tr('Export CSV'))
+        screen.source.history.snapshot.return_value=[]
+        screen.render()
+        self.assertEqual(screen['signal_loss_count'].getText(),'—')
+        self.assertEqual(screen['metric_value4'].getText(),'—')
+        for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160),(1920,1200)):
+            root=ET.fromstring(mod('warder_dashboard').skin(w,h,'signal-multichart'))
+            self.assertEqual(len(root.findall("widget[@render='Canvas']")),5)
+            for node in root:
+                name=node.get('name') or node.get('source')
+                if name:self.assertIn(name,screen)
+
+    def test_trends_do_not_connect_missing_or_old_samples(self):
+        chart=mod('warder_chart')
+        canvas=MagicMock()
+        chart.draw_trend(canvas,[(0,{'cpu':10}),(2,{'cpu':None}),(4,{'cpu':20}),
+                                (6,{'cpu':30}),(20,{'cpu':40})],'cpu',30,12,100,2)
+        canvas.line.assert_called_once()
+        for call in canvas.fill.call_args_list:
+            x,y,w,h,_=call.args
+            self.assertGreaterEqual(min(x,y),0)
+            self.assertLessEqual(x+w,30)
+            self.assertLessEqual(y+h,12)
+        canvas.flush.assert_called_once()
+
+
+    def test_centre_and_project_rows_include_cached_navigation_picons(self):
+        ui=self.ui
+        api=dict(self.api,LoadPixmap=MagicMock(return_value=object()))
+        menu=ui.CentreMenu(MagicMock(),api,[('system-overview','System health check','health'),
+                             ('system-log','Log view','log')],{'system-overview':True,'system-log':True},'system')
+        menu.render()
+        for row in menu['list'].l.list:
+            self.assertEqual(len(row),3)
+            self.assertIn('png',row[2])
+        menu.render()
+        self.assertEqual(api['LoadPixmap'].call_count,2)
+        projects=ui.ProjectMenu(MagicMock(),api)
+        projects.render()
+        self.assertEqual(len(projects['list'].l.list),5)
+        self.assertTrue(all(len(row)==3 for row in projects['list'].l.list))
+
+
+    def test_inline_system_cards_show_real_values_and_clear_on_navigation(self):
+        ui=self.ui
+        menu=ui.CentreMenu(MagicMock(),self.api,[('system-overview','System health check','health'),
+            ('system-log','Log view','log')],{'system-overview':True,'system-log':True},'system')
+        menu.render()
+        value={'values':(62,18,0,29,465*1073741824,79.4),
+               'disk_mount':'/media/hdd','temperature_source':'/sys/class/thermal/cpu',
+               'health':{'score':100,'coverage':(2,2),'state':'ok'}}
+        with patch.object(ui,'deferToThread') as worker:
+            menu.select()
+            worker.return_value.addCallbacks.call_args.args[0](value)
+            self.assertTrue(menu.cards_visible)
+            self.assertFalse(menu['descriptions'].visible)
+            self.assertEqual([menu['inline_value%d'%i].getText() for i in range(6)],
+                ['62 %','18 %','0 %','29 %','465.0 GiB','79.4 °C'])
+            self.assertTrue(menu['inline_meter2'].visible)
+            self.assertFalse(menu['inline_meter4'].visible)
+            self.assertEqual(menu['inline_note4'].getText(),'/media/hdd')
+            self.assertEqual(menu['inline_note5'].getText(),'cpu')
+            self.assertIn('100/100',menu['inline_summary'].getText())
+            menu.refresh_result()
+            self.assertFalse(menu.cards_visible)
+            callback=worker.return_value.addCallbacks.call_args.args[0]
+            callback(dict(value,values=(None,18,0,29,None,None)))
+            self.assertEqual(menu['inline_value0'].getText(),'—')
+            self.assertFalse(menu['inline_meter0'].visible)
+            menu['list'].moveToIndex(1)
+            menu.describe()
+            self.assertFalse(menu.cards_visible)
+            self.assertTrue(menu['descriptions'].visible)
+            self.assertFalse(menu['inline_bg0'].visible)
+
+    def test_inline_process_table_uses_actual_rows_and_clears_on_navigation(self):
+        ui=self.ui
+        menu=ui.CentreMenu(MagicMock(),self.api,[('system-processes','Process Info','processes'),
+            ('system-log','Log view','log')],{'system-processes':True,'system-log':True},'system')
+        menu.render()
+        rows=[(42,'enigma2','S',1536,12.5),(7,'kernel','R',None,None)]
+        with patch.object(ui,'deferToThread') as worker:
+            menu.select()
+            worker.return_value.addCallbacks.call_args.args[0](rows)
+            self.assertTrue(menu.process_visible)
+            self.assertFalse(menu['descriptions'].visible)
+            content=menu['inline_process_list'].l.list
+            self.assertEqual(content[0][0],42)
+            self.assertEqual([x['text'] for x in content[0][1:]],['42','enigma2','S','1.5','12.5'])
+            self.assertEqual([x['text'] for x in content[1][-2:]],['—','—'])
+            with patch.object(menu['inline_process_list'],'pageDown') as page:
+                menu.page_result(1);page.assert_called_once()
+            menu.refresh_result()
+            self.assertFalse(menu.process_visible)
+            worker.return_value.addCallbacks.call_args.args[0](rows)
+            menu['list'].moveToIndex(1);menu.describe()
+            self.assertFalse(menu.process_visible)
+            self.assertFalse(menu['inline_process_list'].visible)
+            self.assertTrue(menu['descriptions'].visible)
+            self.assertEqual(menu['inline_process_list'].l.list,[])
+
+    def test_project_overview_table_and_inline_notes_keep_unknowns(self):
+        ui=self.ui
+        projects=mod('warder_projects')
+        session=MagicMock()
+        menu=ui.ProjectMenu(session,self.api)
+        menu.render()
+        with patch.object(ui,'deferToThread') as worker,patch.object(projects,'report',return_value=('Versions','Notes')) as provider:
+            menu.select()
+            value=worker.call_args.args[0]()
+            self.assertEqual(provider.call_args.kwargs['presentation'],'panels')
+            worker.return_value.addCallbacks.call_args.args[0](value)
+            self.assertTrue(menu.inline_network_visible)
+            self.assertEqual(menu['inline_network_body0'].getText(),'Versions')
+            self.assertEqual(menu['inline_network_body1'].getText(),'Notes')
+        view=ui.ProjectOverview(session,self.api)
+        rows=[(project[0],'—','0.1.2','Unavailable') for project in projects.PROJECTS]
+        view.done(rows)
+        self.assertFalse(view['file_info'].visible)
+        self.assertTrue(view['project_4_0'].visible)
+        self.assertEqual(view['project_4_0'].getText(),'GSU')
+        self.assertEqual(view['project_4_1'].getText(),'—')
+        self.assertEqual(view['project_4_3'].getText(),'Unavailable')
+        view.failed(None)
+        self.assertTrue(view['file_info'].visible)
+        self.assertFalse(view['project_4_0'].visible)
+        self.assertEqual(view['project_4_0'].getText(),'')
+        for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
+            root=ET.fromstring(mod('warder_dashboard').skin(w,h,'project-overview'))
+            for widget in root.findall('widget'):
+                if not widget.get('name','').startswith('project_'):continue
+                x,y=map(int,widget.get('position').split(','))
+                ww,hh=map(int,widget.get('size').split(','))
+                self.assertLessEqual(x+ww,w)
+                self.assertLessEqual(y+hh,h)
+
+    def test_quick_signal_is_live_inline_and_stops_on_navigation(self):
+        ui=self.ui
+        signal=mod('warder_signal')
+        quick=mod('warder_quick')
+        session=MagicMock()
+        entries=[('signal-quick','Quick signal','SNR'),('tuner-details','Tuner interfaces','Tuner')]
+        menu=ui.CentreMenu(session,self.api,entries,{k:True for k,_,_ in entries},'reception')
+        menu._auto_timer=MagicMock()
+        values={'snr':68,'agc':42,'db':10.9,'ber':0,'lock':1}
+        with patch.object(signal.SignalMonitor,'sample',return_value=values) as sample,patch.object(quick.shutil,'which',return_value=None):
+            menu.render()
+            menu.auto_result()
+            self.assertTrue(menu.cards_visible)
+            self.assertFalse(menu['descriptions'].visible)
+            self.assertEqual([menu['inline_value%d'%i].getText() for i in range(5)],
+                             ['68 %','42 %','10.9 dB','0','1'])
+            self.assertEqual(menu['inline_value5'].getText(),mod('i18n').for_api(self.api,'Unavailable'))
+            menu._auto_timer.start.assert_called_with(1000,True)
+            menu.auto_result()
+            self.assertEqual(sample.call_count,2)
+            menu.select()
+            self.assertEqual(sample.call_count,3)
+            menu.full_result()
+            session.open.assert_not_called()
+            menu.suspend_results()
+            menu.auto_result()
+            self.assertEqual(sample.call_count,3)
+            self.assertIsNone(menu._quick_source)
+            menu.resume_results()
+            menu.auto_result()
+            self.assertEqual(sample.call_count,4)
+            menu['list'].moveToIndex(1)
+            menu.describe()
+            self.assertIsNone(menu._quick_source)
+            self.assertFalse(menu.cards_visible)
+            menu.close_results()
+            menu.auto_result()
+            self.assertEqual(sample.call_count,4)
+        session.nav.stopService.assert_not_called()
+        session.nav.playService.assert_not_called()
+
+    def test_quick_signal_audio_is_opt_in_and_stops_on_hide(self):
+        ui=self.ui
+        signal=mod('warder_signal')
+        quick=mod('warder_quick')
+        menu=ui.CentreMenu(MagicMock(),self.api,[('signal-quick','Quick signal','SNR')],
+                           {'signal-quick':True},'reception')
+        tone=MagicMock(command='/usr/bin/paplay')
+        with patch.object(signal.SignalMonitor,'sample',return_value={'snr':50,'lock':1}),patch.object(quick,'Tone',return_value=tone),patch.object(ui,'deferToThread') as worker:
+            menu.render()
+            menu.auto_result()
+            worker.assert_not_called()
+            menu.full_result()
+            worker.assert_called_once()
+            menu.suspend_results()
+            tone.close.assert_called_once()
+            self.assertFalse(menu._quick_sound)
+            self.assertIsNone(menu._quick_tone)
+
+    def test_inline_storage_overview_uses_shared_panels(self):
+        ui=self.ui
+        entries=[('storage-overview','Memory and storage','Storage'),
+                 ('storage-memory','Memory details','RAM')]
+        menu=ui.CentreMenu(MagicMock(),self.api,entries,{k:True for k,_,_ in entries},'storage')
+        menu.render()
+        with patch.object(ui,'deferToThread') as worker,patch.object(mod('warder_storage'),'report',return_value=('RAM and paths','Disks and SMART')) as provider:
+            menu.auto_result()
+            value=worker.call_args.args[0]()
+            self.assertTrue(provider.call_args.kwargs['panels'])
+            self.assertIs(provider.call_args.kwargs['cancelled'],menu._result_job[1])
+            worker.return_value.addCallbacks.call_args.args[0](value)
+            self.assertTrue(menu.inline_network_visible)
+            self.assertEqual(menu['inline_network_body0'].getText(),'RAM and paths')
+            self.assertEqual(menu['inline_network_body1'].getText(),'Disks and SMART')
+            menu['list'].moveToIndex(1)
+            menu.describe()
+            self.assertFalse(menu.inline_network_visible)
+            self.assertEqual(menu['inline_network_body0'].getText(),'')
+            self.assertTrue(menu['descriptions'].visible)
+
+    def test_inline_service_panels_reuse_existing_providers(self):
+        ui=self.ui
+        from threading import Event
+        entries=[('service-smart','Smart Diagnostics','Health'),
+                 ('service-health','Installation check','Files')]
+        session=MagicMock()
+        menu=ui.CentreMenu(session,self.api,entries,{k:True for k,_,_ in entries},'service')
+        menu.render()
+        with patch.object(ui,'deferToThread') as worker:
+            menu.auto_result()
+            with patch.object(mod('warder_system_data'),'smart_diagnostics',return_value=('RAM unknown','GSU status')) as provider:
+                value=worker.call_args.args[0]()
+                self.assertTrue(provider.call_args.kwargs['panels'])
+                provider.assert_called_once()
+            worker.return_value.addCallbacks.call_args.args[0](value)
+            self.assertTrue(menu.inline_network_visible)
+            self.assertEqual(menu['inline_network_body0'].getText(),'RAM unknown')
+            self.assertEqual(menu['inline_network_body1'].getText(),'GSU status')
+            menu['list'].moveToIndex(1)
+            menu.describe()
+            self.assertFalse(menu.inline_network_visible)
+            menu.auto_result()
+            with patch.object(mod('warder_service'),'health',return_value=('Files','Crash recommendation')) as provider:
+                value=worker.call_args.args[0]()
+                self.assertTrue(provider.call_args.kwargs['panels'])
+                provider.assert_called_once()
+            worker.return_value.addCallbacks.call_args.args[0](value)
+            self.assertTrue(menu.inline_network_visible)
+            self.assertEqual(menu['inline_network_body1'].getText(),'Crash recommendation')
+            menu.refresh_result()
+            worker.return_value.addCallbacks.call_args.args[0]('')
+            self.assertFalse(menu.inline_network_visible)
+            self.assertEqual(menu['descriptions'].getText(),mod('i18n').for_api(self.api,'Unavailable'))
+        session.open.assert_not_called()
+
+    def test_inline_reception_reuses_two_native_result_columns(self):
+        ui=self.ui
+        entries=[('tuner-details','Tuner interfaces','Transponder'),
+                 ('transponder-services','Transponder services','TV / Radio')]
+        session=MagicMock()
+        menu=ui.CentreMenu(session,self.api,entries,{k:True for k,_,_ in entries},'reception')
+        menu.render()
+        with patch.object(mod('warder_tuners'),'details',return_value=('Frequency 12345','Tuner A')) as details:
+            menu.auto_result()
+            details.assert_called_once()
+            self.assertTrue(details.call_args.kwargs['panels'])
+        self.assertTrue(menu.inline_network_visible)
+        self.assertEqual(menu['inline_network_body0'].getText(),'Frequency 12345')
+        self.assertEqual(menu['inline_network_body1'].getText(),'Tuner A')
+        menu['list'].moveToIndex(1)
+        menu.describe()
+        self.assertFalse(menu.inline_network_visible)
+        with patch.object(mod('warder_services'),'services',return_value=[('tv','ref','TV station'),('radio','ref2','Radio station')]):
+            menu.auto_result()
+        self.assertTrue(menu.inline_network_visible)
+        self.assertIn('1',menu['inline_network_title0'].getText())
+        self.assertIn('1',menu['inline_network_title1'].getText())
+        self.assertEqual(menu['inline_network_body0'].getText(),'TV station')
+        self.assertEqual(menu['inline_network_body1'].getText(),'Radio station')
+        session.open.assert_not_called()
+        with patch.object(mod('warder_services'),'services',return_value=[]):
+            menu.refresh_result()
+        self.assertFalse(menu.inline_network_visible)
+        self.assertEqual(menu['descriptions'].getText(),menu.tr('Unavailable') if hasattr(menu,'tr') else mod('i18n').for_api(self.api,'Unavailable'))
+
+    def test_inline_network_panels_keep_selection_and_hide_old_data(self):
+        ui=self.ui
+        entries=[('network-overview','Network overview','Network'),
+                 ('network-interfaces','Network interfaces','Interfaces')]
+        menu=ui.CentreMenu(MagicMock(),self.api,entries,{k:True for k,_,_ in entries},'network')
+        menu.render()
+        panels=('eth0\n192.0.2.4','Gateway\n192.0.2.1\nDNS')
+        with patch.object(ui,'deferToThread') as worker:
+            menu.auto_result()
+            worker.return_value.addCallbacks.call_args.args[0](panels)
+            self.assertTrue(menu.inline_network_visible)
+            self.assertFalse(menu['descriptions'].visible)
+            self.assertEqual(menu['list'].getCurrent()[0],'network-overview')
+            for idx,body in enumerate(panels):
+                self.assertTrue(menu['inline_network_title%d'%idx].visible)
+                self.assertTrue(menu['inline_network_body%d'%idx].visible)
+                self.assertEqual(menu['inline_network_body%d'%idx].getText(),body)
+            with patch.object(menu['inline_network_body0'],'pageDown') as a,patch.object(menu['inline_network_body1'],'pageDown') as b:
+                menu.page_result(1)
+                a.assert_called_once()
+                b.assert_called_once()
+            menu.refresh_result()
+            self.assertFalse(menu.inline_network_visible)
+            self.assertEqual(menu['inline_network_body0'].getText(),'')
+            callback=worker.return_value.addCallbacks.call_args.args[0]
+            menu['list'].moveToIndex(1)
+            menu.describe()
+            callback(panels)
+            self.assertFalse(menu.inline_network_visible)
+            self.assertFalse(menu['inline_network_body0'].visible)
+            menu.auto_result()
+            worker.return_value.addCallbacks.call_args.args[0]('Interfaces data')
+            self.assertEqual(menu['descriptions'].getText(),'Interfaces data')
+            self.assertTrue(menu['descriptions'].visible)
+
+    def test_inline_storage_cards_do_not_show_percentages_for_partial_scans(self):
+        ui=self.ui
+        names=('Picons','Skins','Plugins','EPG','Cache','Logs')
+        complete=[(n,1048576,True) for n in names]
+        cards,summary=ui.card_result('storage-categories',complete,str)
+        self.assertEqual(cards[0],('Picons','1.0 MiB',17,''))
+        partial=complete[:-1]+[('Logs',0,False)]
+        cards,summary=ui.card_result('storage-categories',partial,str)
+        self.assertTrue(all(c[2] is None for c in cards))
+        self.assertEqual(cards[-1],('Logs','—',None,'Partial result'))
+        self.assertIn('≥ 5.0 MiB',summary)
+        self.assertIn('Partial result',summary)
+
+    def test_inline_card_widgets_stay_within_the_right_panel(self):
+        for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
+            root=ET.fromstring(mod('warder_dashboard').skin(w,h,'menu'))
+            area=root.find("widget[@name='descriptions']")
+            ax,ay=map(int,area.get('position').split(','))
+            aw,ah=map(int,area.get('size').split(','))
+            for widget in root.findall('widget'):
+                if not widget.get('name','').startswith('inline_'):continue
+                x,y=map(int,widget.get('position').split(','))
+                ww,hh=map(int,widget.get('size').split(','))
+                self.assertGreaterEqual(x,ax)
+                self.assertGreaterEqual(y,ay)
+                self.assertLessEqual(x+ww,ax+aw)
+                self.assertLessEqual(y+hh,ay+ah)
+
+
+    def test_project_logo_provenance_and_optional_radio_fallback(self):
+        import hashlib
+        import json
+        import tempfile
+        from pathlib import Path
+        icons=mod('warder_menu_icons')
+        manifest=json.loads((ROOT.parents[1]/'artwork/warder-project-logos.json').read_text())
+        for name,path in (('fullhdglass','project-fullhdglass.png'),('piconhub','project-piconhub.png'),
+                          ('youtube','project-youtube.png'),('gsu','warder-plugin.png')):
+            raw=(ROOT/'images'/path).read_bytes()
+            blob=hashlib.sha1(('blob %d\0'%len(raw)).encode()+raw).hexdigest()
+            self.assertEqual(blob,manifest[name]['blob_sha'])
+        api=dict(self.api,LoadPixmap=MagicMock(return_value=object()))
+        icons.cached.cache_clear()
+        icons.project_cached.cache_clear()
+        with tempfile.TemporaryDirectory() as folder:
+            radio=Path(folder)/'plugin.png'
+            with patch.dict(icons.PROJECT_ASSETS,{'Warder Radio':radio}):
+                entry=icons.pixmap_entry(api,'Warder Radio',(0,0),(120,58),project=True)
+                self.assertIsNotNone(entry)
+                api['LoadPixmap'].assert_called_once_with(path=str(ROOT/'images/nav-signal.png'),cached=True)
+                radio.write_bytes(b'fixture')
+                icons.project_cached.cache_clear()
+                api['LoadPixmap'].reset_mock()
+                entry=icons.pixmap_entry(api,'Warder Radio',(0,0),(120,58),project=True)
+                self.assertIsNotNone(entry)
+                api['LoadPixmap'].assert_called_once_with(path=str(radio),cached=True)
+        icons.cached.cache_clear()
+        icons.project_cached.cache_clear()

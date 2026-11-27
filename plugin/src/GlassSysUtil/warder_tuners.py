@@ -17,7 +17,7 @@ def slots():
             if type(getattr(slot,'slot',None)) is int]
 
 
-def details(session, api, tr, slot_number=None):
+def details(session, api, tr, slot_number=None, panels=False):
     from Components.NimManager import nimmanager
     nav = session.nav
     service = nav.getCurrentService()
@@ -31,6 +31,7 @@ def details(session, api, tr, slot_number=None):
     except (KeyError, TypeError, ValueError, AttributeError):
         human = {}
     rows = []
+    if data:rows.append(tr('Transponder'))
     for key, caption in [('system','System:'), ('tuner_type','Type'), ('frequency','Frequency:'),
                          ('polarization','Polarisation:'), ('modulation','Modulation:'), ('fec_inner','FEC'),
                          ('symbol_rate','Symbol Rate:'), ('orbital_position','Satellite:'),
@@ -40,14 +41,17 @@ def details(session, api, tr, slot_number=None):
                          ('is_id','MIS'), ('pls_mode','PLS'), ('pls_code','PLS code'),
                          ('t2mi_plp_id','T2-MI PLP'), ('t2mi_pid','T2-MI PID'), ('plp_id','PLP')]:
         if key in data and data[key] not in (None, -1):
-            rows.append('%s   %s' % (tr(caption), human[key] if human.get(key) is not None else data[key]))
+            rows.append('    %s   %s' % (tr(caption), human[key] if human.get(key) is not None else data[key]))
     try:
         recordings = nav.getRecordings()
         count = len(recordings)
         occupied = {read_frontend(r).get('tuner_number') for r in recordings}
     except (AttributeError, RuntimeError, TypeError):
         occupied, count = set(), None
-    rows.extend(('', tr('Recordings')+'   '+('—' if count is None else str(count))))
+    transponder=rows[1:] if data else []
+    if panels:rows=[]
+    elif rows:rows.append('')
+    rows.extend((tr('Tuner interfaces'), '    '+tr('Recordings')+'   '+('—' if count is None else str(count))))
     for slot in getattr(nimmanager, 'nim_slots', []):
         number = getattr(slot, 'slot', None)
         if type(number) is not int or (slot_number is not None and slot_number!=number):
@@ -64,7 +68,7 @@ def details(session, api, tr, slot_number=None):
             flag=getattr(slot,method,None)
             if callable(flag) and flag():
                 state.append(tr(label))
-        rows.append('%s    %s' % (slot.getSlotName(), ' · '.join(state) or '—'))
+        rows.append('    %s    %s' % (slot.getSlotName(), ' · '.join(state) or '—'))
         if slot_number is not None:
             description=getattr(slot,'getFriendlyFullDescription',None)
             if callable(description):
@@ -75,6 +79,7 @@ def details(session, api, tr, slot_number=None):
                 if isinstance(values,(list,tuple,set)):
                     rows.append(' / '.join(str(v) for v in values))
     if service and show_current:
+        rows.extend(('',tr('Channel Information')))
         info = service.info()
         enum = api['iServiceInformation']
         for name, label in [('sVideoPID','Video PID'), ('sAudioPID','Audio PID'), ('sPCRPID','PCR PID'),
@@ -85,13 +90,17 @@ def details(session, api, tr, slot_number=None):
                 if type(value) is int and value >= 0:
                     if name == 'sGamma':
                         value = {0:'SDR', 1:'HDR', 2:'HDR10', 3:'HLG'}.get(value, value)
-                    rows.append('%s   %s' % (label, value))
+                    rows.append('    %s   %s' % (label, value))
+        from .warder_channel import video_codec
+        codec=video_codec(info,enum)
+        if codec:rows.append('    '+tr('Video Format:')+'   '+codec)
         tracks = getattr(service,'audioTracks',lambda:None)()
         if tracks and 0 <= tracks.getCurrentTrack() < tracks.getNumberOfTracks():
             audio = tracks.getTrackInfo(tracks.getCurrentTrack())
-            rows.append('Audio   '+str(audio.getDescription())+'   '+str(audio.getLanguage()))
+            rows.append('    '+tr('Audio:')+'   '+str(audio.getDescription())+'   '+str(audio.getLanguage()))
     from .warder_tools import Probe
     if not show_current:
+        if panels:return ('\n'.join(transponder).strip() or tr('Unavailable'),'\n'.join(rows[1:]).strip() or tr('Unavailable'))
         return '\n'.join(rows).strip() or tr('Unavailable')
     p = Probe()
     for label, path in [('HDMI', '/proc/stb/video/videomode'), ('HDMI · OUT', '/proc/stb/hdmi/output'),
@@ -99,6 +108,7 @@ def details(session, api, tr, slot_number=None):
         value = p.text(path, 96)
         if value and value.isprintable():
             rows.append(label+'   '+value)
+    if panels:return ('\n'.join(transponder).strip() or tr('Unavailable'),'\n'.join(rows[1:]).strip() or tr('Unavailable'))
     return '\n'.join(rows).strip() or tr('Unavailable')
 
 
@@ -126,7 +136,9 @@ def native_tools(tr):
     options = []
     for item in plugins.getPluginsForMenu('scan'):
         if len(item) >= 3 and item[2] in allowed and callable(item[1]):
-            options.append((item[0], item[1]))
+            action=styled_satfinder(item[1]) if item[2]=='satfinder' else item[1]
+            # Do not offer an unrecognized scanner as a measurement-only finder.
+            if action is not None:options.append((item[0],action))
     try:
         from Screens.ScanSetup import ScanSetup
         from enigma import eComponentScan
@@ -137,62 +149,153 @@ def native_tools(tr):
     return options
 
 
-def choose_native(session, tr):
-    from Screens.ChoiceBox import ChoiceBox
-    from Screens.MessageBox import MessageBox
+def styled_satfinder(action):
+    """Use the native frontend but expose a measurement-only finder in GSU."""
+    from types import FunctionType
+    if not isinstance(action,FunctionType):return None
+    original=action.__globals__.get('Satfinder')
+    if (not isinstance(original,type) or action.__name__!='SatfinderMain'
+            or not callable(getattr(original,'keyGoScan',None))
+            or not callable(getattr(original,'retune',None))):return None
+
+    class WarderSatfinder(original):
+        def __init__(self,session):
+            super().__init__(session)
+            from . import plugin
+            from .warder_tuner_ui import install
+            # Native fallback skins may still bind these components.
+            for name in ('key_green','introduction'):
+                if name in self:self[name].setText('')
+            if not install(self,vars(plugin),True):
+                self.skinName=['Satfinder']
+
+        def retune(self,*args,**kwargs):
+            # Native retune continues to own the selected frontend. Never
+            # mix observations from two tuning attempts.
+            header=getattr(self,'_diagnostic_header',None)
+            if header is not None and hasattr(header,'reset_history'):header.reset_history()
+            self._warder_measurement_id=None
+            return super().retune(*args,**kwargs)
+
+        def retuneSat(self,*args,**kwargs):
+            # Only recognize a newly prepared native satellite tuple after a
+            # completed tuning call. Do not infer parameters from live TV.
+            previous=getattr(self,'transponder',None)
+            result=super().retuneSat(*args,**kwargs)
+            self._warder_measurement_id=None
+            if (getattr(self,'initcomplete',False) is True
+                    and getattr(self,'frontend',None) is not None
+                    and getattr(self,'transponder',None) is not previous):
+                from .warder_signal import satellite_identity
+                self._warder_measurement_id=satellite_identity(self)
+            return result
+
+        def keyGoScan(self,*args,**kwargs):
+            # The native OK/green handler otherwise releases the live frontend
+            # BEFORE calling startScan. Prevent that path at its entry.
+            return None
+
+        def keyGo(self,*args,**kwargs):
+            # Also guard inherited ScanSetup action bindings.
+            return None
+
+        def startScan(self,*args,**kwargs):
+            # Last line of defense; the finder never launches a service scan.
+            return None
+
+    namespace=dict(action.__globals__,Satfinder=WarderSatfinder)
+    wrapped=FunctionType(action.__code__,namespace,action.__name__,action.__defaults__,action.__closure__)
+    wrapped.__kwdefaults__=action.__kwdefaults__
+    return wrapped
+
+
+def tuner_info(session,tr,message):
+    from . import plugin
+    from .warder_dialog import show_info
+    return show_info(session,vars(plugin),tr(message),tr('Tuner setup'))
+
+
+def open_native(session,tr,action):
+    """Explicit menu selection opens the tool after a private verified backup."""
     def info(msg):
-        session.open(MessageBox, tr(msg), type=MessageBox.TYPE_INFO)
+        return tuner_info(session,tr,msg)
+    if not callable(action) or not recording_safe(session.nav):
+        return info('Tuner in use')
+    owner=session.current_dialog
+    if getattr(owner,'_gsu_native_pending',False) is True:
+        return
+    owner._gsu_native_pending=True
+    def clear():
+        owner._gsu_native_pending=False
+    from twisted.internet.threads import deferToThread
+    from Tools.Directories import resolveFilename,SCOPE_CONFIG
+    from .warder_scan_backup import create
+    def launch(folder):
+        clear()
+        if session.current_dialog is not owner:
+            return
+        if not recording_safe(session.nav):
+            return info('Tuner in use')
+        owner._gsu_last_channel_backup=folder
+        describe=getattr(owner,'describe',None)
+        if callable(describe):describe()
+        try:
+            action(session)
+        except (AttributeError,RuntimeError,TypeError,ImportError,OSError,ValueError):
+            info('Unavailable')
+    def failed(_failure):
+        clear()
+        if session.current_dialog is owner:
+            info('Recording or channel-list protection stopped the scan.')
+    try:
+        deferToThread(create,resolveFilename(SCOPE_CONFIG)).addCallbacks(launch,failed)
+    except (OSError,RuntimeError,TypeError,AttributeError):
+        failed(None)
+
+
+def choose_native(session, tr):
+    """Compatibility route; skip a redundant selector if only one tool exists."""
+    from . import plugin
+    from .warder_dialog import choose
+    def info(msg):
+        return tuner_info(session,tr,msg)
     if not recording_safe(session.nav):
         return info('Tuner in use')
     try:
-        options = native_tools(tr)
-    except (ImportError, AttributeError, RuntimeError):
-        options = []
-    if not options:
-        return info('Unavailable')
+        options=native_tools(tr)
+    except (ImportError,AttributeError,RuntimeError,TypeError):
+        options=[]
+    if not options:return info('Unavailable')
+    if len(options)==1:return open_native(session,tr,options[0][1])
     def selected(item):
-        if not item:
-            return
-        def confirmed(answer):
-            if answer is not True:
-                return
-            if not recording_safe(session.nav):
-                return info('Tuner in use')
-            from twisted.internet.threads import deferToThread
-            from Tools.Directories import resolveFilename, SCOPE_CONFIG
-            from .warder_scan_backup import create
-            owner = session.current_dialog
-            def offer(folder):
-                if session.current_dialog is not owner:
-                    return
-                def launch(accepted):
-                    if accepted is True:
-                        if recording_safe(session.nav):
-                            item[1](session)
-                        else:
-                            info('Tuner in use')
-                message = tr('Verified channel backup')+'\n'+folder+'\n\n'+tr('Open tuner setup? Live TV may stop.')
-                session.openWithCallback(launch,MessageBox,message,type=MessageBox.TYPE_YESNO,default=False)
-            def failed(_failure):
-                if session.current_dialog is owner:
-                    info('Recording or channel-list protection stopped the scan.')
-            deferToThread(create,resolveFilename(SCOPE_CONFIG)).addCallbacks(offer,failed)
-        session.openWithCallback(confirmed, MessageBox, tr('Open tuner setup? Live TV may stop.'), type=MessageBox.TYPE_YESNO, default=False)
-    session.openWithCallback(selected, ChoiceBox, title=tr('Tuner setup'), list=options)
-
+        if item in options:open_native(session,tr,item[1])
+    choose(session,vars(plugin),selected,tr('Tuner setup'),options)
 
 def manual_scan(session):
     from Screens.ScanSetup import ScanSetup
-    from Screens.MessageBox import MessageBox
-    from enigma import eComponentScan
     from .plugin import _
 
-    class AdditiveScan(ScanSetup):
+    class WarderManualScan(ScanSetup):
+        def __init__(self,session):
+            super().__init__(session)
+            # Enigma2's Screen constructor defaults to the actual subclass name.
+            # Keep the native ScanSetup fallback on images with unfamiliar components.
+            names=getattr(self,'skinName',None)
+            names=names if isinstance(names,(list,tuple)) else [names]
+            self.skinName=['ScanSetup']+[name for name in names
+                if isinstance(name,str) and name not in ('ScanSetup','WarderManualScan')]
+            from . import plugin
+            from .warder_tuner_ui import install
+            install(self,vars(plugin),False)
+
         def startScan(self, tlist, flags, feid, *args, **kwargs):
-            if not recording_safe(self.session.nav) or flags & eComponentScan.scanRemoveServices:
-                self.session.open(MessageBox, _('Recording or channel-list protection stopped the scan.'), type=MessageBox.TYPE_INFO)
+            # The user's native clear-before-scan selection is authoritative.
+            # The verified backup was created before opening this tool.
+            if not recording_safe(self.session.nav):
+                tuner_info(self.session,_,'Tuner in use')
                 return
-            return super().startScan(tlist, flags, feid, *args, **kwargs)
+            from .warder_tuner_ui import run_with_scan_progress
+            return run_with_scan_progress(super().startScan,tlist,flags,feid,*args,**kwargs)
 
     if recording_safe(session.nav):
-        session.open(AdditiveScan)
+        session.open(WarderManualScan)

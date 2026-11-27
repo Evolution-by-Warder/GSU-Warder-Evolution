@@ -85,6 +85,7 @@ class Pane:
         api['eTimer']=timer
         api['MultiContentEntryText']=self.text
         api['MultiContentEntryPixmapAlphaTest']=self.pixmap
+        if kind in ('intro','files'):api['_warder_navigation_row']=self.navigation_row
         original=host.api[CLASSES[kind]]
         methods={}
         for name,value in vars(original).items():
@@ -146,6 +147,26 @@ class Pane:
                         size=(round(465*self.host.sx),round(30*self.host.sy)),font=0,
                         text=main.text(self.host.api,{'TypeCRD':'Type','CAIDcrd':'CAID'}.get(columns[min(index,len(columns)-1)],columns[min(index,len(columns)-1)]))+': '+str(data.get('text','')))
         return self.host.api['MultiContentEntryText'](**data)
+    def navigation_row(self,ident,title,enabled,icon_ident=None,show_status=True):
+        # The workspace uses 42-pixel design rows rather than legacy 25-pixel
+        # rows. Place text, availability and alpha-blended symbols in one
+        # coordinate system, without the legacy horizontal-only transform.
+        from .warder_menu_icons import pixmap_entry
+        api=self.host.api;sx,sy=self.host.sx,self.host.sy
+        width=690 if self.kind=='intro' else 1010
+        def pos(x,y):return round(x*sx),round(y*sy)
+        side=round(32*min(sx,sy))
+        symbol=pixmap_entry(api,icon_ident or ident,
+            (round((34 if show_status else 8)*sx),(round(42*sy)-side)//2),(side,side))
+        left=(78 if show_status else 50) if symbol is not None else (34 if show_status else 8)
+        row=[ident,api['MultiContentEntryText'](pos=pos(left,2),size=pos(width-left-12,38),
+            font=0,text=title,color=0xffffff if enabled else 0x8291a5,
+            color_sel=0xffffff if enabled else 0xb1bbc8)]
+        if show_status:
+            status=api['LoadPixmap'](api['BP_ICO'] % ('green' if enabled else 'red'))
+            row.append(api['MultiContentEntryPixmapAlphaTest'](pos=pos(8,13),size=pos(16,16),png=status))
+        if symbol is not None:row.append(symbol)
+        return row
     def pixmap(self,**kwargs):
         data=dict(kwargs);scale=(690 if self.kind in ('intro','servers') else 1010)*self.host.sx/self.old_width
         x,y=data['pos'];w,h=data['size'];data['pos']=(round(x*scale),y);data['size']=(round(w*scale),h)

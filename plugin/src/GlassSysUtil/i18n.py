@@ -45,6 +45,8 @@ def catalog(root,code):
 
 
 def translate(value,locale='en',root=None):
+    # gettext reserves the empty msgid for catalogue metadata, not UI text.
+    if value=='':return ''
     code=language(locale)
     if code=='en':return value
     values,original,supplement=catalog(str(ROOT if root is None else root),code)
@@ -57,6 +59,7 @@ def translate(value,locale='en',root=None):
 
 
 def for_api(api,value,fallback=None):
+    if value=='':return ''
     settings=api.get('config')
     enabled=getattr(getattr(getattr(getattr(settings,'plugins',None),'GlassSysUtil',None),'par62',None),'value',True)
     if not enabled:return value

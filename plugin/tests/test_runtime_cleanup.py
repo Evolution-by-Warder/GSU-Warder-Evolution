@@ -36,10 +36,13 @@ class CleanupTests(unittest.TestCase):
         self.assertIn('32',screen['bit_act'].text)
 
     def test_dmesg_collection_is_memory_only(self):
-        screen=self.plugin.GlassSysInfoBrowser(types.SimpleNamespace())
-        with patch.object(self.plugin,'_commandLines',return_value=[' kernel message ']) as command,patch('builtins.open',side_effect=AssertionError('Unexpected temporary file')):
-            self.assertEqual(screen.getDmesg(),'kernel message\n')
-        command.assert_called_once_with(['dmesg'])
+        import importlib
+        data=importlib.import_module('Plugins.Extensions.GlassSysUtil.warder_system_data')
+        def runner(*args,**kwargs):
+            self.assertEqual(args[0],['dmesg'])
+            return types.SimpleNamespace(returncode=0,stdout=b'kernel message')
+        with patch('builtins.open',side_effect=AssertionError('Unexpected temporary file')):
+            self.assertEqual(data.system_log(runner),'kernel message')
 
     def test_no_automatic_file_logging_in_bitrate_callbacks(self):
         tree=ast.parse((ROOT/'plugin.py').read_text())

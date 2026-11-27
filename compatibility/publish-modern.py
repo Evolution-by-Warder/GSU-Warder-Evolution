@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import runpy
 import subprocess
@@ -12,7 +13,9 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 REPO = 'Evolution-by-Warder/GSU-Warder-Evolution'
-VERSION = '0.41.5'
+VERSION = (ROOT/'plugin/src/GlassSysUtil/version').read_text(encoding='utf-8').strip()
+if not re.fullmatch(r'0\.41\.(0|[1-9][0-9]*)', VERSION):
+    raise ValueError('Publisher requires a stable 0.41.x runtime version')
 TAG = 'v'+VERSION
 FILENAME = 'enigma2-plugin-extensions-gsu_'+VERSION+'_all.ipk'
 MODERN = 'plugin/update/stable-modern.json'
@@ -49,7 +52,11 @@ def check(directory):
     require((ROOT/'plugin/src/GlassSysUtil/version').read_text().strip()==VERSION,'public version')
     require((ROOT/'plugin/update/release-request').read_text().strip()==VERSION,'release request')
     routes=json.loads((directory/'migration.json').read_text()).get('allocated_installed_package_file_bytes',{})
-    require(set(routes)=={'13.40-r93','13.41-r4','13.41-r5'} and all(type(v) is int and v>0 for v in routes.values()),'installed OPKG allocation evidence')
+    active=json.loads((ROOT/MODERN).read_text(encoding='utf-8')).get('release')
+    expected_routes={'13.40-r93','13.41-r4','13.41-r5'}
+    if active and active['version']!=VERSION:
+        expected_routes.add(active['version'])
+    require(set(routes)==expected_routes and all(type(v) is int and v>0 for v in routes.values()),'installed OPKG allocation evidence')
     notes = json.loads((ROOT/'plugin/update/RELEASE-NOTES.i18n.json').read_text())
     require(notes['version']==VERSION and set(notes['notes'])==LANGS and all(notes['notes'].values()),'release translations')
     item = dict(version=VERSION,tag=TAG,url=URL,sha256=digest,bytes=len(raw),notes=notes['notes']['en'],
@@ -122,13 +129,34 @@ def historic_feeds():
     require(command('git','rev-parse','v13.41-r6^{commit}')=='45a9fad7be6e20a6eae6055c0cb59551be45b9f9','bridge tag changed')
 
 
+def render_readme(old, previous_version, item):
+    start=old.index('## Stabilné vydanie '+previous_version)
+    end=old.index('\nPlugin pre Enigma2',start)
+    old=old[:start]+'## Stabilné vydanie '+VERSION+'\n\n'+item['notes_i18n']['sk']+' [Poznámky](docs/CURRENT-RELEASE.md) · [IPK]('+URL+').\n'+old[end:]
+    old=old.replace('**Stabilné vydanie: '+previous_version+'.','**Stabilné vydanie: '+VERSION+'.').replace('`enigma2-plugin-extensions-gsu_'+previous_version+'_all.ipk`','`'+FILENAME+'`')
+    old=old.replace('Rozhranie a prejdené funkcie schválil používateľ na GigaBlue Quad 4K Pro s OpenATV 8.', 'Fyzická skúška na GigaBlue Quad 4K Pro sa týkala predchádzajúcej generácie.')
+    old=old.replace('431 udržiavaných spoločných a doplnkových textov','texty diagnostických centier')
+    old=old.replace('r93 → reštart GUI → 13.41-r6 → reštart GUI → '+previous_version,'r93 → reštart GUI → 13.41-r6 → reštart GUI → '+VERSION)
+    return old
+
+
+def verified_predecessor(previous,record,feed,built_against):
+    prior=previous.get('release')
+    require(isinstance(prior,dict) and record.get('release')==prior,'production register and active feed differ')
+    updater=runpy.run_path(str(ROOT/'plugin/src/GlassSysUtil/plugin_update.py'))
+    require(updater['parse_release'](encode(previous),'13.41-r6','stable-modern') is not None,'invalid previous release')
+    require(updater['parse_release'](encode(feed),prior['version'],'stable-modern') is not None,'not a forward stable upgrade')
+    require(prior==built_against,'build did not verify the active predecessor')
+    return prior
+
+
 def publish(directory,feed,install):
     require(os.environ.get('GITHUB_REF')=='refs/heads/main' and os.environ.get('GITHUB_REPOSITORY')==REPO,'production context')
     revision=os.environ['GITHUB_SHA']
     historic_feeds()
     require(revision==command('git','rev-parse','HEAD'),'wrong checkout')
     previous=json.loads(command('git','show','origin/main:'+MODERN))
-    require(previous==dict(feed,release=None) or previous==feed,'another release is active')
+    require({k:v for k,v in previous.items() if k!='release'}=={k:v for k,v in feed.items() if k!='release'},'wrong active feed identity')
     record=json.loads((ROOT/'PRODUCTION.json').read_text())
     if previous==feed:
         recorded=json.loads(command('git','show','origin/main:reports/gsu-'+VERSION+'/public-verification.json'))
@@ -139,7 +167,17 @@ def publish(directory,feed,install):
             verify_public(URL.rsplit('/',1)[0]+'/'+name,(directory/name).read_bytes())
     else:
         require(revision==command('git','rev-parse','origin/main'),'main advanced')
-        require(record['release']['version']=='13.41-r6' and record['release']['sha256']=='a8e79609147666b27f18460b3340e099bb013664478a787746bcf56bb28052e2','production register has changed')
+        prior=verified_predecessor(previous,record,feed,json.loads((ROOT/MODERN).read_text(encoding='utf-8')).get('release'))
+        # Existing previous tag and release are read only. Prove its public IPK
+        # still has the byte identity from the active manifest before advancing.
+        with tempfile.TemporaryDirectory() as temp:
+            command('gh','release','download',prior['tag'],'--repo',REPO,'--pattern','*.ipk','--dir',temp)
+            old_package=Path(temp)/prior['url'].rsplit('/',1)[-1]
+            old_raw=old_package.read_bytes()
+            require(len(old_raw)==prior['bytes'] and hashlib.sha256(old_raw).hexdigest()==prior['sha256'],'previous IPK identity')
+            verify_public(prior['url'],old_raw)
+        # Validate documentation edits before creating any release/tag.
+        new_readme=render_readme((ROOT/'README.md').read_text(),prior['version'],feed['release'])
         stable_assets(directory,revision)
     item=feed['release']
     evidence=dict(source_commit=revision,workflow_run=int(os.environ['GITHUB_RUN_ID']),release=TAG,
@@ -149,9 +187,9 @@ def publish(directory,feed,install):
     if previous!=feed:
         record.update(previous_release=record['release'],release=item,source_commit=revision,package_source_commit=revision,
                       status='production-update-active',validation=evidence,approved_on='2026-11-26',
-                      approval='Owner-approved stable GSU 0.41.5 release',version_policy='Public 0.41.x, OPKG epoch 1. Immutable r6 and r93 migration feeds.',
+                      approval='Owner-approved stable GSU '+VERSION+' release',version_policy='Public 0.41.x, OPKG epoch 1. Immutable r6 and r93 migration feeds.',
                       documentation_checkpoint={'status':'web-sync-pending','continuation':'Update SK/EN/DE/RU and verify Pages.'})
-        record['identity_transition'].update(target_version=VERSION,steps='r93 → restart → 13.41-r6 → restart → 0.41.5')
+        record['identity_transition'].update(target_version=VERSION,steps='r93 → restart → 13.41-r6 → restart → '+VERSION)
         report=ROOT/'reports'/('gsu-'+VERSION)/'public-verification.json'
         report.parent.mkdir(parents=True,exist_ok=True)
         report.write_bytes(encode(evidence))
@@ -160,16 +198,7 @@ def publish(directory,feed,install):
         notes='# GSU '+VERSION+'\n\n'+item['notes_i18n']['sk']+'\n\n[IPK]('+URL+') · [Vydanie]('+item['release_url']+')\n\nSHA-256 '+item['sha256']+'\n'
         (ROOT/'docs/CURRENT-RELEASE.md').write_text(notes)
         (ROOT/('docs/RELEASE-'+VERSION+'.md')).write_text(notes)
-        readme=ROOT/'README.md'
-        old=readme.read_text()
-        start=old.index('## Spoločné ostré vydanie')
-        end=old.index('\nPlugin pre Enigma2',start)
-        old=old[:start]+'## Stabilné vydanie '+VERSION+'\n\n'+item['notes_i18n']['sk']+' [Poznámky](docs/CURRENT-RELEASE.md) · [IPK]('+URL+').\n'+old[end:]
-        old=old.replace('**Stabilné vydanie: 13.41-r6.', '**Stabilné vydanie: '+VERSION+'.').replace('`enigma2-plugin-extensions-gsu_13.41-r6_all.ipk`','`'+FILENAME+'`')
-        old=old.replace('Rozhranie a prejdené funkcie schválil používateľ na GigaBlue Quad 4K Pro s OpenATV 8.', 'Fyzická skúška na GigaBlue Quad 4K Pro sa týkala predchádzajúcej generácie.')
-        old=old.replace('431 udržiavaných spoločných a doplnkových textov','texty diagnostických centier')
-        old=old.replace('r93 → reštart GUI → 13.41-r6.', 'r93 → reštart GUI → 13.41-r6 → reštart GUI → '+VERSION+'.')
-        readme.write_text(old)
+        (ROOT/'README.md').write_text(new_readme)
         log=ROOT/'NEXT-RELEASE.md'
         log.write_text('# Produkčná aktivácia '+TAG+'\n\nZdroj '+revision+', workflow '+str(evidence['workflow_run'])+
                        ', overených '+str(item['bytes'])+' bajtov, SHA-256 '+item['sha256']+

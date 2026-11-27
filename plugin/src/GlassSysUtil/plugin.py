@@ -37,7 +37,7 @@ from Components.ActionMap import ActionMap, HelpableActionMap
 from enigma import ePixmap, eTimer, eListboxPythonMultiContent, eListbox, gFont, getDesktop, ePoint, addFont
 from Components.Pixmap import *
 from Tools.LoadPixmap import LoadPixmap
-from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmapAlphaTest
+from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmapAlphaTest, MultiContentEntryPixmapAlphaBlend
 from Screens.MessageBox import MessageBox
 from os import system, path, statvfs, remove, listdir, rename, symlink, unlink, mkdir
 from Components.ConfigList import ConfigListScreen, ConfigList
@@ -922,9 +922,9 @@ def ECMparser(cl=21, *, full_cam=False):
         return
 
     try:
-        tmp = open('/tmp/ecm.info', 'r')
-        content = tmp.read()
-        tmp.close
+        with open('/tmp/ecm.info', 'r') as tmp:
+            content = tmp.read(65537)
+        if len(content)>65536:content=''
     except:
         content = ''
 
@@ -1529,7 +1529,7 @@ class SysUtilMngMain(Screen):
             ('7', _('CAM/SRV Manager'), _('Start, stop, restart, download, unistall CAM/SRV or set start cfg of OScam')),
             ('8', _('OSD ECM Information'), _('Enable/Disable OSD ECM Info, will be showed in top - right (default) of TV screen, show changes in ECM info only')),
             ('9', _('Swap Management'), _('Create,remove and show single/multi swap on mapped devices on your hw')),
-            ('17', _warder_tools_ui.text(globals(), 'Tools'), _warder_tools_ui.text(globals(), 'Create one archive with system information and GSU logs.')),
+            ('17', _warder_tools_ui.text(globals(), 'Create diagnostic bundle'), _warder_tools_ui.text(globals(), 'Create one archive with system information and GSU logs.')),
             ('16', _plugin_update_text(globals(), 'Update'), _plugin_update_text(globals(), 'Check for a new version of Glass System Utility Warder Evolution'))]
         from .warder_centres import DIAGNOSTICS
         self.menuListAll.extend((ident, _(title), _(hint))
@@ -1717,378 +1717,10 @@ class SysUtilMngMain(Screen):
         return stat
 
 
-class GlassSysInfoBrowser(Screen):
-
+class GlassSysInfoBrowser(_warder_system.Information):
+    """Stable native shortcut identity, with the shared modern dashboard."""
     def __init__(self, session):
-        desktop = getDesktop(0).size()
-        self.skin = _warder_system.system_skin(GlassSysInfo, desktop.width(), desktop.height(), translator=_)
-        self.session = session
-        Screen.__init__(self, session)
-        self['mem_labels'] = Label('\n'+'\n'.join(_(key) for key in ('Total:','Free:','Used:','Used(%):')))
-        self['ram'] = Label('')
-        self['root'] = Label('')
-        self['swap'] = Label('')
-        self['mem_tot'] = Label('')
-        self['space_labels'] = Label('\n'+'\n'.join(_(key) for key in ('Total:','Free:','Used:','Used(%):')))
-        self['cf'] = Label('')
-        self['sd'] = Label('')
-        self['usb'] = Label('')
-        self['hdd'] = Label('')
-        self['cpu'] = Label('')
-        self['HDDTemperature'] = Label('')
-        self['hdddev'] = Label('')
-        self['sensors'] = Label('')
-        self['HDDCPULabels'] = Label(_('What:')+'\n'+_('Value:'))
-        self['ProccessInfo'] = ScrollLabel('')
-        self['DmesgInfo'] = ScrollLabel('')
-        self['cfbar'] = ProgressBar()
-        self['sdbar'] = ProgressBar()
-        self['usbbar'] = ProgressBar()
-        self['hddbar'] = ProgressBar()
-        self['membar'] = ProgressBar()
-        self['rootbar'] = ProgressBar()
-        self['swapbar'] = ProgressBar()
-        self['hddtempbar'] = ProgressBar()
-        self['hddstate'] = ProgressBar()
-        self['cpubar'] = ProgressBar()
-        self['memtotalbar'] = ProgressBar()
-        self['tempDBbar'] = ProgressBar()
-        self['telnet_on'] = Pixmap()
-        self['ftp_on'] = Pixmap()
-        self['vpn_on'] = Pixmap()
-        self['smb_on'] = Pixmap()
-        self['nfs_on'] = Pixmap()
-        self['telnet_on'].hide()
-        self['ftp_on'].hide()
-        self['vpn_on'].hide()
-        self['smb_on'].hide()
-        self['nfs_on'].hide()
-        self['red'] = Label(_('Exit'))
-        self['green'] = Label(_('Help'))
-        self['yellow'] = Label(_('Refresh'))
-        self.cpuTimer = None
-        self.cpu_count = 0
-        self.prev_info = self.getCpuInfo(-3)
-        self.curr_info = self.getCpuInfo()
-        self['actions'] = ActionMap(['ColorActions', 'SetupActions', 'DirectionActions'], {'left': (self.pageUp1), 
-           'right': (self.pageDown1), 
-           'down': (self.pageDown), 
-           'up': (self.pageUp), 
-           'green': (self.HelpKey), 
-           'ok': (self.exit), 
-           'red': (self.exit), 
-           'cancel': (self.exit), 
-           'blue': (self.exit), 
-           'yellow': (self.LetsgoParty)}, -2)
-        self.size = getDesktop(0).size().width()
-        _warder_system.install(self, globals())
-        self.onLayoutFinish.append(self.LetsgoParty)
-        return
-
-    def HelpKey(self):
-        if hasattr(self,'_system_help'):return self._system_help.toggle()
-        help = _('To moving in the list of running aplications use LEFT/RIGHT') + '\n' + _('To moving in the list of system info use UP/DOWN') + '\n' + _('Refresh press a YELLOW button')
-        self.session.open(MessageBox, help, MessageBox.TYPE_INFO)
-        return
-
-    def exit(self):
-        system('rm -rf /tmp/top.info')
-        if self.cpuTimer is not None:
-            self.cpuTimer.stop()
-        self.cpuTimer = None
-        self.close()
-        return
-
-    def LetsgoParty(self):
-        self.ena = True
-        if self.size < 1280:
-            self.close()
-            return
-        self.getMemInfo()
-        self.getSpaceInfo()
-        self.getServicesInfo()
-        self['sensors'].setText(self.getTempSensorsInfo())
-        if self.cpuTimer is None:
-            self.cpuTimer = eTimer()
-            try:
-                self.cpuTimer_conn = self.cpuTimer.timeout.connect(self.getCPUInfo)
-            except AttributeError:
-                self.cpuTimer.timeout.get().append(self.getCPUInfo)
-        self.cpuTimer.start(200)
-        self['ProccessInfo'].setText(self.getProccess())
-        self['DmesgInfo'].setText(self.getDmesg())
-        return
-
-    def pageUp(self):
-        self['DmesgInfo'].pageUp()
-        return
-
-    def pageDown(self):
-        self['DmesgInfo'].pageDown()
-        return
-
-    def pageUp1(self):
-        self['ProccessInfo'].pageUp()
-        return
-
-    def pageDown1(self):
-        self['ProccessInfo'].pageDown()
-        return
-
-    def getMemInfo(self):
-
-        def parse(i):
-            return int(i.strip().split(':')[1].strip().split(' ')[0])
-
-        def setUnits(value):
-            if value >= 1048576:
-                return '%.1f%s' % (float(value) / 1048576, 'GB')
-            else:
-                if value >= 1024:
-                    return '%.1f%s' % (float(value) / 1024, 'MB')
-                return '%.1f%s' % (float(value), 'kB')
-            return
-
-        ramperc = swapperc = ramtot = swaptot = ramfree = swapfree = ramused = swapused = totalperc = 0
-        try:
-            tmp = open('/proc/meminfo').readlines()
-            ramfree = parse(tmp[1])
-            ramtot = parse(tmp[0])
-            ramused = ramtot - ramfree
-            for x in tmp:
-                if 'SwapTotal' in x:
-                    swaptot = parse(x)
-                elif 'SwapFree' in x:
-                    swapfree = parse(x)
-
-            swapused = swaptot - swapfree
-            if ramtot != 0:
-                ramperc = int(ramused * 100 / ramtot)
-            if swaptot != 0:
-                swapperc = int(swapused * 100 / swaptot)
-            if swaptot != 0 or ramtot != 0:
-                totalperc = int((ramused + swapused) * 100 / (ramtot + swaptot))
-        except:
-            pass
-
-        self['ram'].setText('RAM:\n' + setUnits(ramtot) + '\n' + setUnits(ramfree) + '\n' + setUnits(ramused) + '\n' + str(ramperc) + '%')
-        self['swap'].setText('Swap:\n' + setUnits(swaptot) + '\n' + setUnits(swapfree) + '\n' + setUnits(swapused) + '\n' + str(swapperc) + '%')
-        self['mem_tot'].setText(_('Total:')+'\n' + setUnits(ramtot + swaptot) + '\n' + setUnits(ramfree + swapfree) + '\n' + setUnits(ramused + swapused) + '\n' + str(totalperc) + '%')
-        self['memtotalbar'].setValue(int(totalperc))
-        self['swapbar'].setValue(int(swapperc))
-        self['membar'].setValue(int(ramperc))
-        return
-
-    def getSpaceInfo(self):
-        temperature = (_('Temp. %s:') % 'HDD')+'\nN/A'
-        tmp1 = 0
-        isHdd = 'N/A'
-        tt = 'HDD'
-        for i in ['a', 'b', 'c', 'd']:
-            for x in ['smartctl -a /dev/sd%s | grep Temperature > %s', (_gsu_helper('hdd_temp_g') + ' -q -n /dev/sd%s > %s'), 
-             'hddtemp -n -q /dev/sd%s > %s', (_gsu_helper('hdd_temp_g') + ' -q -n -w /dev/sd%s > %s'), 
-             'hddtemp -n -q -w /dev/sd%s > %s']:
-                try:
-                    tta = x % (i, A_TM)
-                    system(tta)
-                    f = open(A_TM, 'r')
-                    temp = f.readlines()
-                    if 'smartctl' in tta:
-                        tmp1 = int(temp[0].strip().split('-')[1].replace('\n', '').replace('\t', '').replace(' ', ''))
-                    else:
-                        tmp1 = int(temp[0].strip().split(' ')[0])
-                    f.close()
-                except:
-                    pass
-
-                system(RM_A_TMP)
-                if tmp1 != 0 and tmp1 < 80:
-                    isHdd = 'sd%s' % i
-                    if checkHdd(i) == 2:
-                        tt = 'SSD'
-                    break
-
-            if tmp1 != 0 and tmp1 < 80:
-                break
-
-        if tmp1 > 80:
-            tmp = 0
-        self['hddtempbar'].setRange((0, 100))
-        self['hddtempbar'].setValue(tmp1)
-        self['hddstate'].setRange((0, 100))
-        if tmp1 != 0:
-            temperature = (_('Temp. %s:') % tt)+'\n' + str(tmp1) + DG + 'C'
-            self['hddstate'].setValue(100)
-        self['hdddev'].setText(tt + ':\n' + isHdd)
-        self['HDDTemperature'].setText(temperature)
-        cfperc = usbperc = hddperc = sdperc = rootperc = 0
-        rootsumm = cfsumm = sdsumm = usbsumm = hddsumm = '....\n....\n....\n....'
-        for line in _commandLines(['df', '-h']):
-            line = line.replace('part1', ' ')
-            parts = line.strip().split()
-            if len(parts) < 6: continue
-            totsp = len(parts) - 1
-            if parts[0] == '/dev/root' or parts[totsp] == '/':
-                rootperc = parts[4]
-                rootsumm = str(parts[1]) + 'B\n' + str(parts[3]) + 'B\n' + str(parts[2]) + 'B\n' + str(rootperc)
-                rootperc = rootperc.replace('%', '')
-            if parts[totsp] == '/media/cf':
-                cfperc = int(parts[totsp - 1].replace('%', ''))
-                cfsumm = parts[totsp - 4] + 'B\n' + parts[totsp - 2] + 'B\n' + parts[totsp - 3] + 'B\n' + parts[totsp - 1]
-            if parts[totsp] == '/media/sd' or parts[totsp] == '/media/mmc' or parts[totsp] == '/media/ba' and parts[0] == '/dev/mmcblk1p1':
-                sdperc = int(parts[totsp - 1].replace('%', ''))
-                sdsumm = parts[totsp - 4] + 'B\n' + parts[totsp - 2] + 'B\n' + parts[totsp - 3] + 'B\n' + parts[totsp - 1]
-            if parts[totsp] == '/media/usb' or parts[totsp] == '/media/ba' and parts[0] == '/dev/sdb1':
-                usbperc = int(parts[totsp - 1].replace('%', ''))
-                usbsumm = parts[totsp - 4] + 'B\n' + parts[totsp - 2] + 'B\n' + parts[totsp - 3] + 'B\n' + parts[totsp - 1]
-            if parts[totsp] == '/media/hdd':
-                strview = parts[totsp - 1].replace('%', '')
-                if strview.isdigit():
-                    hddperc = int(parts[totsp - 1].replace('%', ''))
-                    hddsumm = parts[totsp - 4] + 'B\n' + parts[totsp - 2] + 'B\n' + parts[totsp - 3] + 'B\n' + parts[totsp - 1]
-
-        self['root'].setText('Root:\n' + rootsumm)
-        self['cf'].setText('CF:\n' + cfsumm)
-        self['sd'].setText('SD:\n' + sdsumm)
-        self['usb'].setText('USB:\n' + usbsumm)
-        self['hdd'].setText(tt + ':\n' + hddsumm)
-        self['rootbar'].setValue(int(rootperc))
-        self['cfbar'].setValue(int(cfperc))
-        self['sdbar'].setValue(int(sdperc))
-        self['usbbar'].setValue(int(usbperc))
-        self['hddbar'].setValue(int(hddperc))
-        return
-
-    def getProccess(self):
-        process = ''
-        if generatePS():
-            f = open(A_TM, 'r')
-            for line in f.readlines():
-                txt = line.strip() + '\n'
-                if txt.find('ps -ef') == -1:
-                    process += txt
-
-            f.close()
-            system(RM_A_TMP)
-        return process
-
-    def getDmesg(self):
-        return ''.join(line.strip() + '\n' for line in _commandLines(['dmesg']))
-
-    def getServicesInfo(self):
-        if fileExists('/etc/inetd.conf'):
-            f = open('/etc/inetd.conf', 'r')
-            for line in f.readlines():
-                parts = line.strip().split()
-                try:
-                    if parts[0] == 'telnet':
-                        self['telnet_on'].show()
-                    if parts[0] == 'ftp':
-                        self['ftp_on'].show()
-                except:
-                    pass
-
-            f.close()
-        if generatePS():
-            f = open(A_TM, 'r').read()
-            if f.find('/usr/sbin/openvpn') != -1:
-                self['vpn_on'].show()
-            if f.find('smbd') != -1:
-                self['smb_on'].show()
-            if f.find('/usr/sbin/mountd') != -1 or f.find('[nfsd]') != -1:
-                self['nfs_on'].show()
-            if f.find('/usr/sbin/telnetd') != -1:
-                self['telnet_on'].show()
-            if f.find('/usr/sbin/vsftpd') != -1:
-                self['ftp_on'].show()
-            os.remove(A_TM)
-        return
-
-    def getCPUInfo(self):
-        self.cpuTimer.stop()
-        tmp = 'N/A'
-        zataz = 0
-        self.prev_info, self.curr_info = self.curr_info, self.getCpuInfo()
-        for i in range(len(self.curr_info)):
-            try:
-                zataz = int(100 * (self.curr_info[i][2] - self.prev_info[i][2]) / (self.curr_info[i][1] - self.prev_info[i][1]))
-                tmp = str(zataz) + ' %'
-            except ZeroDivisionError:
-                tmp = 'N/A'
-
-        self['cpubar'].setValue(zataz)
-        self['cpu'].setText(_('CPU using:')+'\n' + tmp)
-        self.cpuTimer.start(3500)
-        return
-
-    def getCpuInfo(self, cpu=-1):
-
-        def validCpu(c):
-            if cpu == -3 and c.isdigit():
-                return True
-            if c == ' ' and cpu == -1:
-                return True
-            if c == str(cpu):
-                return True
-            return False
-
-        res = []
-        calc_cpus = cpu == -3 and self.cpu_count == 0
-        try:
-            fd = open('/proc/stat', 'r')
-            for l in fd:
-                if l[0] != 'c':
-                    continue
-                if l.find('cpu') == 0 and validCpu(l[3]):
-                    if calc_cpus:
-                        self.cpu_count += 1
-                        continue
-                    total = busy = 0
-                    tmp = l.split()
-                    for i in range(1, len(tmp)):
-                        tmp[i] = int(tmp[i])
-                        total += tmp[i]
-
-                    busy = total - tmp[4] - tmp[5]
-                    res.append([tmp[0], total, busy])
-
-            fd.close()
-        except:
-            pass
-
-        return res
-
-    def getTempSensorsInfo(self):
-        temperature = (_('Temp. %s:') % 'DB')+'\nN/A'
-        self['tempDBbar'].setRange((0, 100))
-        temp = 0
-        try:
-            allsensors = sensors.getSensorsList(sensors.TYPE_TEMPERATURE)
-            numtemp = len(allsensors)
-            for num in range(numtemp):
-                idx = allsensors[num]
-                isMax = sensors.getSensorValue(idx)
-                if isMax > temp:
-                    temp = isMax
-
-        except:
-            pass
-
-        if temp > 0:
-            self['tempDBbar'].setValue(int(temp))
-            temperature = (_('Temp. %s:') % 'DB')+'\n' + str(temp) + DG + 'C'
-        elif fileExists('/sys/devices/virtual/thermal/thermal_zone0/temp'):
-            try:
-                temp = open('/sys/devices/virtual/thermal/thermal_zone0/temp').read()[:2]
-                temp = temp.replace('\n', '')
-                temperature = _('CPU Temp.:')+' ' + temp + DG + 'C'
-                self['tempDBbar'].setValue(int(temp))
-            except:
-                pass
-
-        else:
-            self['tempDBbar'].setValue(int(0))
-        return temperature
+        super().__init__(session, globals())
 
 
 class channelInfoCenter(Screen):
@@ -2254,7 +1886,7 @@ class channelInfoCenter(Screen):
 
         try:
             (x, i) = self.getTunerInfo(service)
-            self['tp_values'].setText('%s%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s' % (i, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], iswide, ac, str(num), tmp))
+            self['tp_values'].setText('%s%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s' % (i, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], _warder_channel.video_format(iswide,serviceinfo,iServiceInformation), ac, str(num), _warder_channel.caid_rows(tmp)))
             self['tp_ref'].setText(ref)
             if addr != '':
                 self['tp_lab_sat'].setText('Address:')
@@ -2506,7 +2138,7 @@ class channelInfoCenter(Screen):
                 self['ecmlabels'].setText(self.e.replace(config.plugins.GlassSysUtil.par83.value, 'CHID:'))
             else:
                 self['ecmlabels'].setText(self.e)
-            self['ecmValues'].setText('\n'.join(' '.join(value.split()) for value in (typecam.replace('\n', oscVer), coding, caid, provider, provid, pid, using, adress, hops, share, ecmTime)))
+            self['ecmValues'].setText('\n'.join(' '.join(value.split()) for value in (_warder_channel.compact_ecm_cam(typecam, oscVer), coding, caid, provider, provid, pid, using, adress, hops, share, ecmTime)))
         if coding == '..............':
             coding = 'Unknown'
         self.showPicCode(coding + '-fs8', typecam[:-1] + '-fs8')
@@ -2735,12 +2367,8 @@ class cccamInfo(Screen):
                 self.status[x[0]] = True
             if x[0] == 'extend' and num != -1:
                 self.status[x[0]] = True
-            item = [
-             x[0]]
-            item.append(MultiContentEntryText(pos=(fhd(25), 0), size=(fhd(535), fhd(22)), font=0, text=x[1], color=int({True: '0xffffff', False: '0x666666'}[self.status.get(x[0])], 16)))
-            pix = LoadPixmap({True: (BP_ICO % 'green'), False: (BP_ICO % 'red')}[self.status.get(x[0])])
-            item.append(MultiContentEntryPixmapAlphaTest(pos=(0, fhd(3)), size=(fhd(15), fhd(16)), png=pix))
-            self.list.append(item)
+            from .warder_menu_icons import legacy_cam_row
+            self.list.append(legacy_cam_row(globals(),x[0],x[1],self.status.get(x[0])))
 
         self['list'].l.setList(self.list)
         return
@@ -4094,7 +3722,10 @@ class univCamMng(Screen):
             self.idxAllFnc += 1
         if self.idxAllFnc > 8:
             self.idxAllFnc = 0
-        self['select_pict'].move(ePoint(self['txt%s' % self.idxAllFnc].instance.position().x() - fhd(30), self['txt%s' % self.idxAllFnc].instance.position().y()))
+        if hasattr(self,'_warder_cam'):
+            _warder_cam.position_selection(self,globals())
+        else:
+            self['select_pict'].move(ePoint(self['txt%s' % self.idxAllFnc].instance.position().x() - fhd(30), self['txt%s' % self.idxAllFnc].instance.position().y()))
         self['helpTXT'].setText(self.aa.get(self.idxAllFnc, ''))
         return
 
@@ -5904,12 +5535,8 @@ class oscamInfo(Screen):
             self.status[x[0]] = False
             if tst:
                 self.status[x[0]] = True
-            item = [
-             x[0]]
-            item.append(MultiContentEntryText(pos=(fhd(25), 0), size=(fhd(535), fhd(22)), font=0, text=x[1], color=int({True: '0xffffff', False: '0x666666'}[self.status.get(x[0])], 16)))
-            pix = LoadPixmap({True: (BP_ICO % 'green'), False: (BP_ICO % 'red')}[self.status.get(x[0])])
-            item.append(MultiContentEntryPixmapAlphaTest(pos=(0, fhd(3)), size=(fhd(15), fhd(16)), png=pix))
-            self.list.append(item)
+            from .warder_menu_icons import legacy_cam_row
+            self.list.append(legacy_cam_row(globals(),x[0],x[1],self.status.get(x[0])))
 
         self['list'].l.setList(self.list)
         self['server_name'].setText(start + '\n\n' + infoline + '\n\n' + startInfo)
@@ -5983,12 +5610,9 @@ class oscam_Files(Screen):
     def updatemenulist(self):
         self.list = []
         for x in self.menuListAll:
-            item = [
-             x[0] + '*' + x[1]]
-            item.append(MultiContentEntryText(pos=(fhd(25), 0), size=(fhd(535), fhd(22)), font=0, text=x[1]))
-            pix = LoadPixmap(BP_ICO % 'green')
-            item.append(MultiContentEntryPixmapAlphaTest(pos=(0, fhd(3)), size=(fhd(15), fhd(16)), png=pix))
-            self.list.append(item)
+            from .warder_menu_icons import legacy_cam_row
+            icon = 'log' if x[0] in ('logfile','userfile','anticasc') else 'files'
+            self.list.append(legacy_cam_row(globals(),x[0] + '*' + x[1],x[1],True,icon,False))
 
         self['list'].l.setList(self.list)
         self.setTitle(_('Config Files'))
@@ -6915,6 +6539,8 @@ class ECMInfo(Screen):
         _warder_ecm.channel_picon(self,globals())
         self.runECMTimer.stop()
         (oscVer, typecam, system, caid, provider, provid, pid, using, adress, hops, share, ecmTime, coding, dcw0, dcw1) = ECMparser(cl=24, full_cam=True)
+        observer=getattr(self,'_warder_history_observer',None)
+        if callable(observer):observer(ecmTime if using!='unsupported CAs\n' else '')
         if not getattr(self,'_inline_ecm_display',False):
             oscVer=_warder_ecm.compact_cam_version(oscVer)
         if using == 'unsupported CAs\n':
@@ -7512,12 +7138,8 @@ class mboxInfo(Screen):
             self.status[x[0]] = False
             if fileExists('/tmp/' + x[0]):
                 self.status[x[0]] = True
-            item = [
-             x[0]]
-            item.append(MultiContentEntryText(pos=(fhd(25), 0), size=(fhd(535), fhd(22)), font=0, text=x[1], color=int({True: '0xffffff', False: '0x666666'}[self.status.get(x[0])], 16)))
-            pix = LoadPixmap({True: (BP_ICO % 'green'), False: (BP_ICO % 'red')}[self.status.get(x[0])])
-            item.append(MultiContentEntryPixmapAlphaTest(pos=(0, fhd(3)), size=(fhd(15), fhd(16)), png=pix))
-            self.list.append(item)
+            from .warder_menu_icons import legacy_cam_row
+            self.list.append(legacy_cam_row(globals(),x[0],x[1],self.status.get(x[0])))
 
         self['list'].l.setList(self.list)
         if fileExists('/tmp/mbox.ver'):

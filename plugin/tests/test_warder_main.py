@@ -127,7 +127,7 @@ class WarderMainTests(unittest.TestCase):
         with patch.object(module,'countServers',return_value=(True,True)),patch.object(screen,'checkCam',return_value=False),patch.object(screen,'cccamRunning',return_value=False),patch.object(screen,'mboxRunning',return_value=False),patch.object(module,'oscamRunning',return_value=True):
             screen.updatemenulist()
         self.assertEqual([row[0] for row in screen.list],['centre:system','centre:reception','centre:storage','centre:network','centre:cam','centre:service','centre:warder'])
-        self.assertEqual([e[0] for e in screen.menuListAll],['0','1','2','3','4','6','7','8','9','17','16','network-overview','system-overview','system-processes','system-log','system-live','signal-live','tuner-details','tuner-native','storage-overview','storage-categories','network-test','service-health','forum-report','signal-quick','transponder-services','service-ipk','projects'])
+        self.assertEqual([e[0] for e in screen.menuListAll],['0','1','2','3','4','6','7','8','9','17','16','network-overview','system-overview','system-processes','system-cpu','system-log','system-live','signal-live','tuner-details','tuner-native','storage-overview','storage-categories','storage-memory','storage-largest','storage-activity','network-test','network-interfaces','network-statistics','network-mounts','network-services','service-health','service-smart','service-crashes','service-plugins','forum-report','signal-quick','transponder-services','service-ipk','projects'])
         screen['list'].getCurrent=lambda:['centre:cam']
         screen.selectedmenuitem()
         args=session.openWithCallback.call_args.args
@@ -146,13 +146,50 @@ class WarderMainTests(unittest.TestCase):
         self.assertEqual(screen['actions'].actions['green'],screen['actions'].actions['ok'])
         self.assertEqual(screen['actions'].actions['yellow'],screen.cfgGsu)
 
-    def test_rows_keep_identity_and_render_status_without_loading_images(self):
-        api=dict(vars(self.plugin));api['LoadPixmap']=MagicMock(side_effect=AssertionError('row must not decode images'))
-        for enabled,color in ((True,0x39ff59),(False,0xff526a)):
+    def test_rows_keep_identity_cache_icons_and_render_unavailable_status(self):
+        from Plugins.Extensions.GlassSysUtil import warder_menu_icons as icons
+        api=dict(vars(self.plugin));api['LoadPixmap']=MagicMock(return_value=object())
+        icons.cached.cache_clear()
+        for enabled in (True,False):
             row=ui.menu_row(api,'3','OScam informácie',enabled,1920,1080)
-            self.assertEqual(row[0],'3');self.assertEqual(row[1]['text'],'OScam informácie')
-            self.assertEqual(row[2]['color'],color)
-        api['LoadPixmap'].assert_not_called()
+            self.assertEqual(row[0],'3')
+            self.assertEqual(row[1]['text'],'OScam informácie')
+            self.assertEqual(row[2]['size'],(48,48))
+            if enabled:self.assertEqual(len(row),3)
+            else:self.assertEqual(row[3]['color'],0xff526a)
+        api['LoadPixmap'].assert_called_once()
+        api['LoadPixmap'].assert_called_with(path=str(ROOT/'images/nav-key.png'),cached=True)
+        icons.cached.cache_clear()
+        api['LoadPixmap']=MagicMock(return_value=None)
+        row=ui.menu_row(api,'centre:system','System centre',True,1920,1080)
+        self.assertEqual(len(row),2)
+        self.assertEqual(row[1]['text'],'System centre')
+        icons.cached.cache_clear()
+
+    def test_navigation_assets_cover_all_centres_and_routes(self):
+        from Plugins.Extensions.GlassSysUtil import warder_menu_icons as icons,warder_centres as centres
+        import struct,zlib
+        paths=set()
+        for key,_,members in centres.CENTRES:
+            for ident in ('centre:'+key,*members):
+                paths.add(ROOT/'images'/('nav-'+icons.icon_name(ident)+'.png'))
+        for path in paths:
+            raw=path.read_bytes()
+            self.assertEqual(raw[:8],bytes.fromhex('89504e470d0a1a0a'),path)
+            w,h=struct.unpack('>II',raw[16:24])
+            self.assertEqual(w,h,path)
+            self.assertIn(raw[25],(4,6),path)
+            index=8
+            data=[]
+            while index<len(raw):
+                size=struct.unpack('>I',raw[index:index+4])[0]
+                kind=raw[index+4:index+8]
+                body=raw[index+8:index+8+size]
+                crc=struct.unpack('>I',raw[index+8+size:index+12+size])[0]
+                self.assertEqual(zlib.crc32(kind+body)&0xffffffff,crc,path)
+                if kind==b'IDAT':data.append(body)
+                index+=12+size
+            self.assertTrue(zlib.decompress(b''.join(data)),path)
 
     def test_original_class_interfaces_are_retained(self):
         source=(ROOT/'plugin.py').read_text()
@@ -233,3 +270,52 @@ class SelectionStyleTests(unittest.TestCase):
             for node in root.findall('widget'):
                 if node.get('name') in ui.LIST_WIDGETS:
                     self.assertEqual(node.get('backgroundColorSelected'),ui.SELECTION)
+
+
+class LegacyNavigationIconTests(unittest.TestCase):
+    def test_settings_icons_follow_config_identity_and_fit_native_rows(self):
+        from Plugins.Extensions.GlassSysUtil import warder_settings as settings
+        cfg=types.SimpleNamespace(**{key:object() for key,_ in settings.SETTING_ICONS})
+        entries=[('translated',getattr(cfg,key)) for key,_ in settings.SETTING_ICONS]
+        names=settings.setting_icons(entries,cfg)
+        self.assertEqual(names,tuple(icon for _,icon in settings.SETTING_ICONS))
+        self.assertEqual(settings.setting_icons(entries[::-1],cfg),names[::-1])
+        self.assertEqual(settings.setting_icons(entries[:-1],cfg),())
+        self.assertEqual(settings.setting_icons(entries[:-1]+[('unknown',object())],cfg),())
+        for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
+            root=ET.fromstring(settings.skin(width,height,names))
+            native=root.find("widget[@name='config']")
+            x,y=map(int,native.get('position').split(','))
+            step=int(native.get('itemHeight'))
+            nodes=[n for n in root.findall('ePixmap') if '/nav-' in n.get('pixmap','')]
+            self.assertEqual(len(nodes),len(entries))
+            for index,node in enumerate(nodes):
+                ix,iy=map(int,node.get('position').split(','))
+                w,h=map(int,node.get('size').split(','))
+                self.assertLessEqual(ix+w,x)
+                self.assertGreaterEqual(iy,y+index*step)
+                self.assertLessEqual(iy+h,y+(index+1)*step)
+            fallback=ET.fromstring(settings.skin(width,height,('not-an-asset',)))
+            self.assertFalse(any('/nav-' in n.get('pixmap','') for n in fallback.findall('ePixmap')))
+
+    def test_legacy_cam_row_retains_id_and_status_with_icon_fallback(self):
+        from Plugins.Extensions.GlassSysUtil import warder_menu_icons as icons
+        api=dict(vars(load(ROOT)))
+        api['fhd']=lambda n:n
+        api['LoadPixmap']=MagicMock(return_value=object())
+        icons.cached.cache_clear()
+        for ident in icons.LEGACY_CAM_ICONS:
+            for enabled in (True,False):
+                row=icons.legacy_cam_row(api,ident,'Translated',enabled)
+                self.assertEqual(row[0],ident)
+                self.assertEqual(row[1]['text'],'Translated')
+                self.assertEqual(row[1]['color'],0xffffff if enabled else 0x666666)
+                self.assertEqual(row[2]['size'],(15,16))
+                self.assertEqual(row[3]['size'],(22,22))
+                self.assertEqual(row[1]['pos'],(48,0))
+        icons.cached.cache_clear()
+        api['LoadPixmap']=MagicMock(return_value=None)
+        row=icons.legacy_cam_row(api,'summary','Translated',False)
+        self.assertEqual(len(row),3)
+        self.assertEqual(row[1]['pos'],(25,0))
+        icons.cached.cache_clear()

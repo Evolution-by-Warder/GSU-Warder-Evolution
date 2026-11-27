@@ -131,6 +131,7 @@ class Finder(importlib.abc.MetaPathFinder,importlib.abc.Loader):
         elif name=='Components.MultiContent':
             module.MultiContentEntryText=lambda **kw:kw
             module.MultiContentEntryPixmapAlphaTest=lambda **kw:kw
+            module.MultiContentEntryPixmapAlphaBlend=lambda **kw:kw
 
 
 def load(root):

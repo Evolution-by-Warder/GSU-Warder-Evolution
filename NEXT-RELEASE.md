@@ -1,3 +1,311 @@
+# 26.11.2026 — Receiver feedback: inline quick signal
+
+Owner screenshot shows external QuickSignal overlay; explicitly requests the right panel instead. Reuse SignalMonitor, Tone and existing six-card UI with automatic one-second refresh only while selected. Preserve opt-in sound on blue, stop sampler/tone on hide/close/navigation. No external overlay from the menu. Added regressions; exact-head CI and physical retest required. No production change.
+
+# 26.11.2026 — Final inventory and native video codec
+
+Reviewed exact predecessor `348a55d2e0a202419f126f45850456712c298d30`, native OpenATV/OpenPLi codec maps, legacy navigation and publication gate. Existing channel Video Format row includes known native codec without adding a row; tuner details reuse the same helper. Unknown IDs and missing native fields remain unknown. Updated 21-language release notes and consolidated remaining gaps in the inventory. Runtime/release request already 0.41.6; publisher is version-driven. Physical rendering, exact-head CI, production artifact/feed verification and website synchronization remain pending. No production mutation.
+
+# 26.11.2026 — Inline memory and storage overview
+
+Existing storage collector now optionally formats RAM/swap and saved native paths separately from local disk capacities, SMART attributes and picon storage suggestion. Shared two-column UI, cancellation checkpoints, original detailed report retained, no additional measurements or writes. Existing captions reused. Added collector and UI fixture regressions. Exact-head CI and physical validation required; no production mutation.
+
+# 26.11.2026 — Warder project version dashboard
+
+Exact predecessor `c349f9e930a47a0511688743b5eddde5dcf65cea` passed all four workflow families (OpenATV, OpenPLi, architectures and reproducible IPK). Existing project reader supports two inline columns for versions/status and release notes, and five-row structured overview table. Existing per-project reports and canonical updater actions retained; no new update mechanism or extra feed reads. Added two localized captions to all 21 catalogues and regressions for rendering, unknowns, error cleanup and viewport bounds. Fresh exact-head CI and receiver retest required. No production change.
+
+# 26.11.2026 — Inline service and Smart Diagnostics panels
+
+Smart Diagnostics now presents existing resource checks, coverage, local network and sensor data alongside installation checks and diagnostic limitations. Installation check shows package/integrity results next to crash observations and existing recommendations. Shared collectors and two-column UI, no new score, active probe, export or repair. Existing detailed report format preserved; existing translations reused. Added provider and inline lifecycle regression coverage. Exact-head CI and physical retest pending; no production changes.
+
+# 26.11.2026 — Inline reception overview
+
+Predecessor `06ad25bfda41e36b5c5ad0521cebecf7287a8cb8`: OpenATV/OpenPLi and reproducible IPK SUCCESS, architecture in progress at inspection. Reuse existing native reception collectors and right-hand two-column widgets to display transponder parameters beside tuner occupancy/channel information and TV/radio service lists with counts. Full detail, backup inventory, tuner selection and export remain unchanged. No extra tuning or database enumeration. Added route and non-current-tuner regressions. Exact-head CI and hardware rendering remain required. No production mutation.
+
+# 26.11.2026 — Correct menu inventory regression for largest-files route
+
+Exact predecessor `4681cf048b5a742d1255461c6f1c5a551e2fdaa0` OpenATV/OpenPLi regression jobs failed on one legacy expected menu list (535 tests, one failure; log job 139934109037). Native interfaces and reproducible IPK passed. Extend the exact expected list by the intentionally added storage-largest route without removing any previous identity or action assertions. Inline network panels are included in the current branch; fresh CI and physical retest required. No release or feed mutation.
+
+# 26.11.2026 — Inline network overview panels
+
+Reused the existing two-part network overview in the right-hand centre panel, with native headings and separate ScrollLabels, synchronized left/right paging and lifecycle cleanup. No duplicate collection or active probe. Existing full report retained. Added native-widget regression for selection, data binding, paging, refresh and stale completion; existing viewport test covers the new widgets. Largest-files route now uses existing search artwork. Fresh exact-head CI and receiver retest required; no production mutation.
+
+# 26.11.2026 — Bounded local largest-files report
+
+Predecessor `41aa58a8019a88b6526249e876f5ac6f18747fbb`: OpenATV, OpenPLi and reproducible IPK SUCCESS; architecture still running at inspection. Added an explicit on-demand storage report for up to 20 largest logical file sizes, selected local folders only, with entry/time/depth limits, cancellation and incomplete marker. No full-disk crawl, remote mounts, symlink traversal, file contents or writes. Reused existing storage category/profile paths, worker and split result panel. All 21 translations and regression fixtures added. No production mutation; exact-head CI and receiver retest required.
+
+# 26.11.2026 — OpenWebif native listener attribution
+
+Predecessor `83626b2cf03bbba726d01727f022992b27b6cd05`: OpenATV and OpenPLi SUCCESS, architecture and package reproduction in progress at inspection. Existing Network services report now observes connected native OpenWebif listener handles without importing the plugin, invoking reactor methods, reading credentials or sending requests. Generic local port observations remain independent; unsupported native layouts stay unknown. Reused existing localized status labels across all 21 catalogues. Added fixture regression; fresh exact-head CI and physical receiver retest required. No production change.
+
+# 26.11.2026 — Saved storage paths and explicit ecosystem overview
+
+Previous exact HEAD `66392c8a4b52736677d40e16afbb2bc370434486`: OpenATV/OpenPLi SUCCESS; package/architecture still running at inspection. Existing storage overview now lists only explicitly persisted Enigma2 EPG, timeshift and recording-path keys; native OpenATV 8.0 / OpenPLi 9.2 UsageConfig keys were reviewed, with missing values unknown and modern timeshift key preferred over legacy. No opening, stat, resolving or creation of configured paths, including remote locations. Existing ProjectMenu keeps five product rows; green Overview opens a compact all-product version report using the canonical manifest reader, no new feeds or updater. Blue Details and OK keep their prior behavior. All added labels in 21 catalogues; tests cover allowlisted settings, explicit summary action, five feeds, no duplicate route, cancellation. Latest CI and physical validation required. No production mutation.
+
+---
+
+# 26.11.2026 — Existing channel backup inventory and completion audit
+
+Previous exact HEAD `4811cdd9828fec9491b15d37df254b8aa7843168`: OpenATV/OpenPLi/reproducibility SUCCESS, architecture running at inspection. Added green Channel backups action in the existing full tuner-details report. Lists up to 12 recent private GSU-created backup directories from bounded local /tmp and mounted local HDD inventory, with date and structurally valid SHA256.json entry count. Does not rehash files, read channel contents, restore, delete or create backups. Existing pre-scan verified-copy implementation unchanged. Two labels in 21 languages, regression covers manifest-only display, local/private/symlink exclusions and cancellation. Updated original function inventory with completed vs pending areas. Exact-head CI and physical receiver check remain mandatory. No production mutation.
+
+---
+
+# 26.11.2026 — Centre preview lifecycle and single-worker cancellation
+
+Previous exact HEAD `426e9fe8974cae66aed77fd04b55f9714337798b`: OpenATV/OpenPLi/package SUCCESS; architecture running at initial inspection. Centre and ProjectMenu now cancel pending automatic result work when hidden, reject late callbacks, and schedule a single passive refresh on return. Native child selection remains preserved; manual connection tests/diagnostic archives are never automatically repeated. No new collectors or menu IDs. Added regression for hidden worker, stale result, resumed passive refresh and no replay after explicit action or close. Fresh exact-head CI and physical validation remain required; no production change.
+
+---
+
+# 26.11.2026 — Compare explicitly saved satellite measurements
+
+Previous HEAD `a5062d2f6f4ad28ed3831bf4eb966213ff9deaaf`: OpenATV/OpenPLi/package SUCCESS, architecture pending at inspection. Reviewed actual OpenATV 8.0 and OpenPLi 9.2 native Satfinder satellite tuple/retune implementations. Existing measurement-only finder now supports explicit yellow Save and green Compare for recognized 15-field satellite configurations with at least three locked SNR samples; no scanning, automatic retuning or persistent writes. Maximum 12 snapshots live in the Enigma2 session (lost on GUI restart, oldest evicted at capacity). Existing 60-second history now retains SNR, AGC, dB, BER and lock; min/max/average on locked observations only, with coverage/duration/losses and full native tuple identity. No service URLs or CAM data. Unrecognized tuners/configurations do not offer saving. Comparison uses existing scrollable Warder info view; translated Compare label in all 21 catalogues. Added fixture coverage for explicit save, limits, unknown parameters, locked-only averages and retention after retune. New exact-head CI and physical receiver test required. No publication.
+
+---
+
+# 26.11.2026 — Local crashlog detail in the existing service view
+
+Previous HEAD `1e24370b8202898d36f305ebc29e1f96d102300a`: OpenATV/OpenPLi/package SUCCESS, architecture pending at initial inspection. Existing crash summary now shares a bounded inventory with the full report's green Details action. Select one of the ten recent local regular crash files; read up to 32 KiB of its tail, validate identity against the current inventory and opened file before/after, reject symlinks/changed files, display redacted text and existing exception advice. Local viewing only; no upload, deletion, raw forum export or additional menu route. No new localization keys. Added fixture and UI tests for selection, redaction, limits, identity and stale callback. Saved TP comparison and advanced inline management remain open; new exact-head CI and receiver verification required. No production mutation.
+
+---
+
+# 26.11.2026 — Selected process memory and bounded resolver check
+
+Predecessor `381bd7e9e334976ed35adb6195eb379a7a768e3e`: OpenATV/OpenPLi/package SUCCESS, architecture pending at initial inspection. Added green Details action to the existing full process table; reads only the selected PID smaps_rollup on a worker, validates current name and stable process start time before/after, distinguishes RSS/PSS and missing fields. No command line, environment, process management or additional process list. Added bounded four-second system resolver test for the existing official site to explicit Connection test, not on cursor selection; DNS/NSS observation is not a direct configured DNS-server or Internet reachability claim. Uses fixed hostname and argument vector, no shell, no new package. Existing ping/HTTPS probes retained. No new language keys required; tests cover selected PID, stale callback, units, unknown/reused PID and resolver timeout. Exact-head CI and physical receiver verification pending. Saved TP comparison, raw crash log viewer and advanced inline management remain open; no publication.
+
+---
+
+# 26.11.2026 — Native management child presentation and catalogue parity
+
+Previous exact HEAD `63e3e30c1eaa4ce00404dc4531dc668fab7e0238`: OpenATV/OpenPLi/package SUCCESS; architecture check running at initial inspection. SWAP management, creation and OSD ECM configuration now open as branded full-screen child views when selected in their owning centre. Native controllers, config settings, callbacks, busy guard, confirmation, and swap operations unchanged; geometry and header only. Shared table columns in the SWAP view and renderer, original legacy main workspace unaffected. This is child-screen integration, not full inline editing. Added missing local diagnostic labels and read-only disclaimer across all 21 centre catalogues; explicit parity/placeholder regression. Added five-resolution layout and callback/row identity coverage. Further physical verification required. Optional PSS, DNS-specific test, saved TP comparison and advanced inline editing remain documented as unimplemented rather than silently duplicating collectors. No publication.
+
+---
+
+# 26.11.2026 — Extend existing SMART and service observations
+
+Previous HEAD `9f5a959effe5f6ed68e9aba23c714d4725634246`: OpenATV/OpenPLi SUCCESS, package and architectures in progress at inspection. Existing SMART command now optionally returns allowlisted numerical ATA/NVMe counters; storage report reuses a single result per physical device, at most four, preserving the previous summary API. No serials/WWN, extra commands, self-tests or forced wakeups. Missing data explicitly unknown. Existing daemon observation optionally includes SSH (dropbear/sshd) for network view while original five-service summary remains unchanged. ECM current time no longer displays an old measurement after the history window empties. Regression covers unit/metadata privacy, shared command, partition normalization and SSH detection; new exact-head CI and physical check pending. No release changes.
+
+---
+
+# 26.11.2026 — ECM time history on the existing ECM screen
+
+Prior exact HEAD `9ab1b05b2e13f89d2c5a3939a301dac79c7cf412` passed all four workflows (OpenATV 45821913231, OpenPLi 45821913473, reproducibility 45821913236, architectures 45821913249). Centre CAM/ECM now opens a full-screen Warder subclass of existing ECMInfo; uses its original parser and five-second timer, adds a 60-second ECM time plot, latest observed value, min/max/average and valid sample count. Observes file metadata before/after the existing read, rejects unstable/missing records and uses initial/channel-change metadata as baseline. Repeated unchanged reads do not count as new ECM observations. This is sampled file-update history, not a complete log of decoder requests or error rate. No new permanent background timer, no new ECM payload storage/export, no tuning or CAM changes. Existing parser read bounded and file closed correctly. Retains legacy main-panel path. Added unit, deduplication, channel reset and layout tests. Owner supplied screenshots show quick signal overlay with measured SNR and unavailable sound; screenshot alone does not establish exact installed HEAD. Fresh CI and receiver check required. No production mutation.
+
+---
+
+# 26.11.2026 — Extend memory/storage and compose existing Smart Diagnostics
+
+Added read-only memory field details and a one-second whole-device diskstats sample (read/write KiB/s and IOPS); no disk wake-up, benchmarks or new persistent workers. Reuses memory parser and existing storage module. Smart Diagnostics combines existing resource checks, mounted local disk capacities, network link/DNS configuration, temperature observations and existing installation health; score remains explicitly RAM/flash only with measured coverage. It does not claim internet/DNS resolution, disk integrity or CAM decoding tests; no auto-repair. Two new menu labels translated in all 21 languages, Smart Diagnostics retained as product name. New fixture tests verify units, unknown data and shared checks. Predecessor channel layout CI still in progress at inspection. Physical receiver and exact-head CI required; no publication. Remaining: ECM event history, detailed SMART attributes, optional PSS and legacy inline visual work; not silently marked finished.
+
+---
+
+# 26.11.2026 — Channel information: align existing data, improve legibility
+
+Previous exact HEAD `e750579b266fc0200852feced85fed0e5406d652` passed OpenATV/OpenPLi and reproducibility, architecture running at inspection. Reworked existing channel skin into bounded ECM, bitrate, picon, signal and transponder panels without a new controller. Increased transponder value space and multi-line CAID capacity, aligned labels/values, compacted CAM commit suffix, kept all picons, original native frontend and service converters and bitrate lifecycle. Horizontal SNR/AGC bars and stacked metrics; native source coordinates normalized by original skin size, not target resolution. No new translations or external dependencies. Regression covers five resolutions and CAID preservation. Full raw ECM information remains in ECM centre. Exact-head CI and physical receiver check required; no release mutation.
+
+---
+
+# 26.11.2026 — Owner-approved CPU and service inventory extensions
+
+Added CPU per-core utilization using the same counter arithmetic as the aggregate sampler, optional exposed CPU frequencies and uptime, not a second background monitor. Service centre now shows up to ten recent local regular crash file summaries (exception classes and existing advice only; no raw log export) and up to 512 installed enigma2-plugin package records from the existing database, with explicit partial state. Existing forum allowlist, package transactions, and health-check advice preserved; common crash exception parser and remote mount exclusion. New labels translated into all 21 catalogues. Updated explicit menu inventory regression to include new network/CPU/service routes without dropping any prior IDs; preceding network CI failed solely because the old exact menu inventory omitted four new routes. New fixture tests for per-core counters, uptime, local crash privacy and package inventory. Not a full interactive raw crashlog viewer. Fresh exact-head CI and receiver retest required. No production mutation.
+
+---
+
+# 26.11.2026 — Preserve owning centres for legacy actions
+
+Following the owner-approved navigation rule, CentreMenu no longer closes itself to dispatch known legacy CAM/ECM, swap, OSD and update actions through the main screen. Existing controllers are opened as child screens; CCcam/OSCam keep original server-choice behavior, GSU update uses existing ProjectReport and canonical updater. No extra installer, scanner or controller. Legacy screen visual redesign/inline integration remains separate work; this change addresses back-stack ownership only. Regression verifies existing controller identity and update route. Predecessor `cd74dead62ea78a3cbd0e3f094fd0680fe9c4769` network expansion not yet fully CI-verified; fresh exact-head CI and receiver retest required. No production mutation.
+
+---
+
+# 26.11.2026 — Owner-approved expansion without duplicate network functions
+
+Previous HEAD `fd1ddfea7712ab33963d4994ced5c675a1bc477e`: OpenATV/OpenPLi/package SUCCESS, architecture in progress at initial inspection. Added four distinct passive network views to the existing network centre: interfaces (local IP/MAC/link/duplex/driver Wi-Fi readings), cumulative per-interface RX/TX bytes/packets/errors/drops, mounted remote filesystem local paths (never access remote filesystem or display source/credentials), and existing daemon observations plus local TCP listening/UDP unconnected port numbers (not service attribution or remote reachability). Reuses existing collectors, no separate live sampler, active connection test remains explicit. New menu labels and statistic terms in all 21 language catalogues; regression covers real fixture values, missing data, privacy and cancellation. DNS resolver-specific test, per-interface live history and further navigation/service/system work remain pending. No production changes.
+
+---
+
+# 26.11.2026 — Owner instruction: prevent duplicate functionality before expansion
+
+Reviewed exact HEAD `3038602601ccd527fb458bda731d2c31320949e4`, existing source modules and original reference audit; recorded [functional inventory and reuse decisions](docs/GSU-0.41.6-FUNCTION-INVENTORY.md). Existing RX/TX, SMART, FBC/HDR/audio, network link/gateway/DNS/ping/HTTPS, package dependency checks, channel backups, project update/version paths and diagnostic exports must be reused. New expansion not implemented in this checkpoint. Latest predecessor OpenATV/OpenPLi regression failed only on old legacy route 17 label expectation (511 tests, one failure), package reproduction and architectures SUCCESS. Updated obsolete expected label to the explicitly approved new Create diagnostic bundle label; retained legacy controller/about coverage and new inline route tests. Fresh exact-head CI required. No production mutation.
+
+---
+
+# 26.11.2026 — Owner receiver feedback: automatic inline results and service tools
+
+Previous exact HEAD `cf7e8d43f2315db34cb570ab94c766fc0cc231e6` all four CI workflow families SUCCESS; owner reports channel information EXIT returns to main menu instead of its centre, legacy Tools opens main-screen workspace with duplicate forum report, and read-only details require OK. CentreMenu now schedules automatic read-only inline previews 180 ms after selection (latest selection only, existing single-worker cancellation and stale callbacks retained). Explicit diagnostic archive creation and active network connection test remain user-triggered, not passive cursor effects. Legacy ID 17 becomes direct localized Create diagnostic bundle, result/path displayed in existing service right panel, forum report already has its own route; no duplicated submenu or accidental export on hover. Channel Information and System Information open as child screens above the owning centre without closing it; selected row is retained. Other legacy CAM/swap/OSD navigation still requires audit. Owner also suggested expanding Network centre; proposal remains pending, not claimed implemented. Regression covers selection-only data, cancellation, explicit archive/probe and parent preservation. No production change; fresh CI and receiver retest required.
+
+---
+
+# 26.11.2026 — Owner request: single-line signal finder metrics
+
+Previous exact HEAD `60b0b1923bd709c7c31ce95e316c6f3ddab7f8aa` passed all four CI workflows (OpenATV 45816544714, OpenPLi 45816544939, reproducibility 45816544915, architectures 45816544745). Owner requests SNR, AGC, BER and LOCK one below another with caption and value on the same line. Four full-width aligned measurement rows, shared font and colon labels; SNR retains percentage and dB. SNR/AGC bars stay beneath their own rows. History canvas enlarged from 112 to 196 FHD pixels (75% more height), renderer uses same dimensions. No change to measurement logic, audio, scan behavior or manual scan. Geometry regression verifies aligned baselines, consistent columns, nonoverlap and canvas bounds at five resolutions. Fresh CI and physical receiver confirmation required; no publication.
+
+---
+
+# 26.11.2026 — Owner request: improved measurement-only signal finder
+
+Previous HEAD `7b37bde91748883bb6314555a5d59f8ca41a70b7`: OpenATV/OpenPLi/package SUCCESS, architecture check still running at inspection. Improved right panel: SNR/AGC, BER and LOCK, compact 60-second SNR history and actual observed lock-loss count. Relative red/yellow/green SNR guide with lock-aware color (not universal reception thresholds); missing data remains unknown. Native retune clears history without changing its operation. Optional blue-key sound uses existing bounded PulseAudio Tone only if paplay is available, off by default, locked signal only, worker failure disables sound and hide/close stops it. No new binaries, no service scan, no native tuner parameter changes or changes to manual scan. Reused existing translated labels. Added quality/history/audio capability and resolution regression. Fresh CI and physical receiver retest pending. No publication.
+
+---
+
+# 26.11.2026 — Owner decision: signal finder measures only
+
+Previous exact HEAD `f6de1605795f9fe6393fa19a4f4f308595f59584` passed all four workflows (OpenATV 45815498632, OpenPLi 45815498627, architectures 45815498654, reproducibility 45815498613). Owner supplied receiver screenshot of working integrated Satfinder and requests separation from manual service scan. Reviewed native OpenATV 8.0/OpenPLi 9.2 Satfinder: OK/save invoke keyGoScan which releases frontend before starting ServiceScan; GSU-scoped subclass now overrides keyGoScan, inherited keyGo and startScan without touching frontend or native retune. Finder scan footer and instruction removed, both native text components cleared for fallback skins. Unknown finder entrypoints without recognizable native measurement/scan hooks are not exposed as measurement-only tools. Manual scan remains fully functional including chosen clear flags and branded progress. Regression verifies native frontend identity, retune and scan entry suppression, unmodified original launcher and finder/manual layout difference. Fresh exact-head CI and physical check pending. No publication.
+
+---
+
+# 26.11.2026 — Owner decision: honor native clear-before-scan choice
+
+Owner explicitly requests removal of the GSU-specific block on manually selected clear-before-search, after receiver screenshots show the protection notice. Manual tuning now passes the user's native flags unchanged (including scanRemoveServices and combined flags) through the previously integrated native progress launch. No automatic clearing and no new confirmation. The existing automatic verified channel backup before opening, active recording/timeshift/upcoming recording guard and native scanner behavior remain intact. Recording block now uses the existing localized tuner-in-use message. Regression verifies additive and clearing flags, combined flags/network ID and that both modes remain blocked during unsafe recording conditions. Previous progress integration HEAD `f720702ceb78750b0e5afc3e6db95f274f554b85` CI running at inspection. New exact-head CI and physical check required; no release/feed mutation.
+
+---
+
+# 26.11.2026 — Owner receiver feedback: integrate manual scan progress
+
+Previous exact HEAD `2da1a25692ed01388f6d15fc7f8ce67cb3455553` passed all four workflow families (OpenATV 45814526754, OpenPLi 45814526739, architectures 45814526689, reproducibility 45814526535). Owner physically approves native finder/manual configuration Warder style and supplies screenshots showing that the subsequent native ServiceScan progress window remains external-looking. Reviewed actual OpenATV 8.0/master and OpenPLi release-9.2/develop ScanSetup.startScan and ServiceScan implementations. Manual scan now locally substitutes a subclass of the original native ServiceScan only in a clone of the bound native launch function; no image-wide patch, no copied tuning engine. Native progress bar, pass/network/transponder/state labels, found-services list, footer sources or labels, callbacks and arguments remain intact. New full-screen Warder progress skin and header; unsupported component layouts retain native appearance. Original additive/recording guard untouched. Added exact native callback/flags/network ID/component identity, scoped substitution and resolution regressions. Physical receiver retest and fresh exact-head CI pending; no production release.
+
+---
+
+# 26.11.2026 — Owner receiver feedback: simultaneous signal history
+
+Previous exact HEAD `eec3b5bb2617d997035a25a22fcf1edb126c7e72` all four workflow families SUCCESS (OpenATV 45812773440, OpenPLi 45812773622, architectures 45812773545, reproducibility 45812773433). Owner screenshots show single-plot SNR/AGC selection and request the same one-page design as live system monitoring. New signal dashboard uses shared six-card layout: five actual SNR%, AGC%, SNR dB, BER and LOCK plots, min/max/average and sixth lock-loss/current-lock summary. All five read one shared history snapshot and existing sampler, no new frontend allocations or tuning, no directional switching; 1/2/5-second intervals, pause/resume, CSV of all five metrics retained. Export confirmation uses shared information view. Unknown values remain unknown; fractional averages of BER/LOCK no longer truncated. Existing strings, no new locale keys. Added layout, real data, summary, export and no-selection regression. Fresh exact-head CI and physical retest pending. No release or feed change.
+
+---
+
+# 26.11.2026 — Native process table in right-hand centre panel
+
+Predecessor `62f37297312f713a657105d38aa9e3193e518fab` passed OpenATV, OpenPLi and reproducibility; architecture job still running at inspection. Replaced the compact process text preview with five aligned native columns (PID, name, state, measured RAM MiB, CPU %), actual values and unknown markers. Same data-to-row renderer as full detail; left/right pages the compact table while up/down retains navigation in the left menu. Blue opens existing full detail with CPU/RAM sorting, yellow refreshes. Table hidden and data cleared when leaving route, refreshing or replacing result; existing cancellation/stale callback gates retained. Added actual data, pagination and visibility regression. No production change; exact-head CI and physical retest required.
+
+---
+
+# 26.11.2026 — Warder selection dialogs and tuner warnings
+
+Predecessor `9f78bbc0aea039dec29ecf5f04d37934a796fa6a`: OpenPLi SUCCESS; remaining workflow families still running at inspection. Added scoped native list-based selection dialog for tuner details and compatibility tuner tool selector, preserving exact choice tuple identity (including None values), cancellation and callback semantics. GSU-generated recording protection, failed backup and unavailable tuning notices use the shared Warder information dialog. No additional opening confirmation, no new tuning/scan behavior, no global image changes; native third-party screens and destructive-operation confirmations remain intact. New tests cover selection identity, cancel, four resolutions plus 1920x1200 and actual blocked-tuner routing. Fresh CI and receiver check required. No production changes.
+
+---
+
+# 26.11.2026 — Scoped diagnostic information dialogs and cancellation regression
+
+HEAD `054eb888f7ebddd26dd77084ad6b5f18247c29a9` passed package reproduction/migrations and architectures. OpenATV/OpenPLi regression matrices each failed one of 501 tests because the category provider assertion still expected no arguments; it now checks the actual cancellation token. Added a Warder full-screen scrollable information dialog for diagnostic export results, report saving and unavailable project entry points. Only these GSU-owned information routes use it; native confirmation callbacks, destructive actions and all image-wide screens are untouched. New test verifies real routing and close/scroll controls. Remaining native tuner warnings, selection dialogs, legacy operations and physical checks not claimed complete. No production changes.
+
+---
+
+# 26.11.2026 — Fair storage category budgets and system regression repair
+
+On HEAD `eb2cfd9618877817650e9fdb35b6322986f0adbb` package reproduction passed; OpenATV/OpenPLi regression jobs each failed one of 500 tests because the original AST inventory still required the explicitly replaced GlassSysInfoBrowser.HelpKey and other retired methods. Updated only that obsolete screen contract, preserving public class/constructor and every other inventory guard. Storage analysis now has independent 100,000-entry/3-second budgets per category, depth-bounded streaming traversal, cancellation, existing mount/symlink boundaries, and local configured PiconHub profile paths (verified actual four-profile settings keys on PiconHub main), XPicons/ZZPicons/data locations, custom PNG filtering and hardlink deduplication. Skin traversal excludes picon roots even when their scan is incomplete. Whole disk, arbitrary system and network paths not traversed. Small lower bounds show KiB instead of misleading 0.0 MiB; incomplete states remain explicit. Added fairness, real profile path, cancellation and formatting tests. Exact-head CI and receiver recheck pending; no publication.
+
+---
+
+# 26.11.2026 — Owner feedback: modern full-screen system information
+
+Previous HEAD `8c7767b567e3d61a37bcc9fe89fabb1d7785b190` passed all four CI families (OpenATV 45810113912, OpenPLi 45810113667, architectures 45810113923, reproducibility 45810113679). Owner's screenshots show old packed System Information page duplicating process and log panels. Replaced the actual GlassSysInfoBrowser (same plugin/extension shortcut identity) with a full-screen six-card two-column layout, aligned typography, capacities, resource score, time and five observed protocol-daemon states. No duplicate process list or dmesg reads, old shell/temporary-file diagnostic path removed from the page. CPU/RAM/swap use shared modern measurements; RAM uses available rather than old raw free calculation. Disk temperature is optional non-waking SMART; all local mount detail still available via blue Details; green opens live monitoring and yellow refreshes. Protocol states mean daemon detected/not detected, not service reachability; missing observations remain unknown. Reused existing translated labels and artwork, no new binaries. Updated superseded legacy layout/help/refresh tests to validate new actual screen, independent log collector, one worker and closed callback, retained asset identity. New exact-head CI and physical receiver retest required; no production update.
+
+---
+
+# 26.11.2026 — Owner receiver feedback: integrated tuner screens and direct opening
+
+Owner explicitly requests the native SatFinder and manual tuning black screens use the Warder visual style and removal of redundant Yes/No on opening. Reviewed real OpenATV 8.0 and OpenPLi release-9.2 ScanSetup, Satfinder and skin.py source. New native skin wraps existing configuration component and footer sources, shared Warder header, signal finder right panel uses raw frontend values and honest unknown states. Registered SatfinderMain retained with a scoped class substitution; unrecognized image entries keep native appearance. Native manual scan retains additive guard; SatFinder start rechecks recording safety. Direct user selection initiates verified backup without extra confirmation; existing recording/timeshift/nearby timer checks, duplicate suppression, stale callback rejection, backup failure blocks and native destructive action safeguards remain. Physical screenshot baseline prior HEAD ad51988e892fc86087af059f5cc269d025a80bca all four CI families SUCCESS, main menu/system cards/live charts/process/log and native finder/manual opening verified visually; other hardware checks remain. New exact-head CI and receiver retest mandatory. No production change.
+
+---
+
+# 26.11.2026 — OSCam embedded menu geometry and file navigation
+
+Exact predecessor `31dbcda0fae7ee691f28fe4934c35b192e1f6019` passed all four workflow families: OpenATV 45806695851, OpenPLi 45806695563, architectures 45806695580 and reproducibility 45806695576. Audit found that OSCam workspace stretches legacy text/status geometry horizontally but not alpha-blended navigation icons, which can overlap labels and look too small in 42-pixel rows. Intro and file navigation now use one native geometry with square scaled icons, readable text, retained availability only on actual availability rows and exact original row IDs. File choices use settings/log symbols instead of an unconditional green status light; no file access, URLs, credentials, action dispatch, or CAM logic modified. Added geometry coverage at four resolutions and 1920x1200 plus actual file controller identity regression. Existing data tables and genuine state indicators remain unchanged. No new translatable strings; 21 catalogues retained. New exact-head CI and physical retest pending; production remains 0.41.5.
+
+---
+
+# 26.11.2026 — CAM/SRV action panel icon checkpoint
+
+Continued PR #19 from `d7aa030e102504696ffb517e5c31db8064c708f1` (four workflow families in progress at inspection); earlier `ef18452b6ef78293ac74192e0307c5a455fb230f` completed all four workflow families SUCCESS. Added eight functional local icons to the right-hand CAM/SRV action panel. Selected background includes icon and label, fixed horizontal anchor scales with actual desktop width. The standalone SRV restart icon follows existing native visibility and autocheck icon moves with its existing row; visible heading follows installed server capability. Existing action IDs, focus semantics, commands, availability colors, native configuration and saves preserved. Tests cover icon geometry and layering at HD/FHD/WQHD/UHD and non-16:9, dynamic SRV visibility and title. New exact-head CI and physical receiver verification still required. No release, feed or website changes; production 0.41.5.
+
+---
+
+# 26.11.2026 — Legacy navigation icon checkpoint (continued from PR #19)
+
+Previous exact HEAD `ef18452b6ef78293ac74192e0307c5a455fb230f`: diagnostics reproducibility 45805814172, OpenPLi 45805814142 and OpenATV 45805814149 SUCCESS; architecture run 45805814141 in progress at inspection. Stable release remains 0.41.5. This checkpoint adds a native settings icon gutter keyed by ConfigElement identity, with full-width native fallback for unknown, overflowing or missing icons; it retains existing settings values, native edit/save/cancel, row height and translations. Legacy CCcam, OSCam and Mbox diagnostic menu rows reuse local functional icons while retaining independent green/red availability indicators, disabled colors, row IDs and action dispatch. No CAM operations, configuration or data collectors changed. Regression fixtures cover icon identity, four resolutions, geometry, row status and missing assets. New exact-head CI and physical receiver retest are required; main CAM/SRV action panel and remaining legacy screens still need visual review. No release, feed or website mutation.
+
+---
+
+# 26.11.2026 — Inline resource cards and branded product navigation
+
+Owner-approved two-panel UI extended: the System health check now renders six native metric cards in the right panel (CPU, RAM, swap, flash free, disk free with mount, sensor temperature). Storage category result uses the same six-card surface with measured relative bars only for complete scans and explicit partial/lower-bound states. Summary and measurement coverage remain visible. Existing full-screen details unchanged; selecting another route or refreshing hides old cards, stale callbacks rejected. Layout tested by new fixture assertions for HD/FHD/WQHD/UHD; actual hardware render pending.
+
+Reused byte-identical approved FullHDGlass, PiconHub and YouTube plugin logo PNGs in 118b543fe88f46aa081854a15ac91994c2ea7cf0 and existing GSU logo; provenance plugin/artwork/warder-project-logos.json. Radio logo source blob 369b60c8efac9439d05c104ebf46fd32a94f1d60 (1,338,260 bytes) returned empty base64 via fetch_file and binary UnicodeDecodeError via fetch_blob; instead use the existing local installed WarderRadio/plugin.png with bounded size and semantic fallback, no duplicate large file or external download. Product rows use 120x58 FHD slot and stable IDs. New regression tests verify original logo blob identity, optional Radio fallback, real card values and layout. Runtime/test checkpoint fe112ac79eedf5843c28b91dddd36773f066017a. Exact-head CI queued (45805715590, 45805715712, 45805715568, 45805715705).
+
+Earlier publisher checkpoint 4bf7a7003f15ea53a2138a7a1ae486f52a38d6c4: OpenATV, OpenPLi and reproducibility SUCCESS; architecture check still in progress at inspection. Reproducibility run 45804602559 verified two byte-identical private CI builds 3,912,836 bytes SHA256 ee38e0aefd9c2aca9f0931f4aa43f010e405b03e45c62bf7b7019e64919b3576, installed regular files 6,872,041 bytes. Real isolated OPKG checks passed r93/r4/r5 via r6 and direct 0.41.5 to 1:0.41.6, allocated installed files 7,532,544 bytes on all routes. These are earlier CI artifact bytes, not final or publicly published IPK. Production still 0.41.5. Remaining: legacy CAM and settings icon/navigation review, exact-head CI, actual receiver visual verification, production publication and web synchronization. Other projects unchanged.
+
+---
+
+# 26.11.2026 — Prepare 0.41.6 release machinery and migration checks
+
+OpenPLi/OpenATV runs 45803201697 / 45803201817 on 35c2efb failed exactly one of 490 tests: PNG signature fixture used escaped backslashes rather than bytes. Corrected in 853c59884759d1f160c128a6b7cc269490a1f773 (same PNG/CRC/deflate integrity assertions). Reproducibility on that prior HEAD succeeded, 3,910,370 bytes, SHA256 e1f6f732cf9feb895a20188a29f56e91897a562153f3e6fe82817b504403f4a3 (unpublished 0.41.5-numbered development build; not production artifact).
+
+Generalized modern publisher for stable 0.41.x runtime version, verifies version/request/notes and exact active predecessor in register/feed, forward-only upgrade, verifies previous public IPK bytes, keeps immutable tags/assets and frozen r6/r93 feeds. README preflight now precedes tag creation. Updated reproducibility workflow and real offline OPKG migration to test direct upgrade from active modern release in addition to three historical paths. Workflow changes manually inspected: same restricted main-only publishing context, permissions and four prerequisite workflow families; only version selection and predecessor artifact retrieval added. Draft source version/request and 21 localized release notes advanced atomically to 0.41.6 in 53a06707db6d568c193df22cf2b6142615227498. New publisher regressions in 2d0336cf406c37200bfa16f1599bb70eb5f5aef8. Exact HEAD CI pending. No merge, tag, public IPK, stable feed or web change; 0.41.5 remains current. Further UI work remains (legacy CAM/settings menus, official product logos and structured right-hand cards), and physical receiver retest remains outstanding. GSU first; other projects unchanged.
+
+---
+
+# 26.11.2026 — Six simultaneous live plots and navigation picons
+
+Owner-approved modernization continued in PR #19. System live screen now renders six simultaneous 60-second trend cards (CPU, RAM, swap, temperature, RX, TX), with actual current values, independent scales and min/max/mean. One existing sampler and timer, no new workers per metric; missing observations create gaps, not fake data. Native CanvasSource.line confirmed in OpenATV 8.0 and OpenPLi 9.2. Existing signal history/export remains separate. System controls pause/resume and interval; arrow cycling is no longer needed on this screen.
+
+Added 22 local navigation PNGs: four byte-identical existing Warder YouTube assets (search/history/settings/update, source manifest plugin/artwork/warder-navigation-sources.json) and 18 new transparent 64x64 original cyan/white functional symbols (design paths and blob SHA in plugin/artwork/warder-navigation-original.json). Binary tree commits 1f93564dec9149e656fc8d30c18e2e650b8f16e0, 3811bcd0951078bb0db49a3b679dfa04122d09d2, b409f3488c1289ddd7fdb0fc418cb8dbdd750bac. First all-at-once blob attempt exceeded connector call limit; no branch update from that attempt; smaller atomic batches succeeded. Navigation uses stable IDs, 48x48 FHD scaling, bounded local LoadPixmap cache, alpha blend and text fallback; main centre navigation dots replaced, red unavailable indicator retained. Centre/project list bindings added; project glyphs are semantic icons, not yet official product logos. Existing artwork/other projects unchanged. Settings and older CAM internal lists still pending.
+
+Previous exact checkpoint 86de5331b75cc5634286c51bc3be5fff52e3a21b completed all four workflow families SUCCESS (45798853305, 45798853701, 45798853674, 45798853213). New runtime/test checkpoint 11fa1bf95d629cc73a667ce838ccc09f6f91e438 has new CI queued, not yet green. Added six-metric, missing-data, PNG CRC/deflate, route coverage, native pixmap and cache tests. Physical display/legibility not verified. Next: finish remaining UI including legacy menu icons and product logos, review exact-head CI, prepare safe modern publisher/version, verify receiver and release. No stable asset/feed/version change yet; GSU first.
+
+---
+
+# 26.11.2026 — Two-panel centre workspaces (owner screenshots)
+
+Approved: retain navigation on the left and actual selected results on the right, using two independently outlined panels rather than a full-page list of descriptions followed by another screen. Implemented shared split layout, selected result title, timestamp/loading/error status, explanatory text before activation, OK/green loads read-only results inline for 12 routes plus all five product pages; yellow refreshes; blue opens full detail; up/down navigate left and left/right page the right result. Reused report collectors, no additional automatic active network tests on cursor movement. One worker at a time, cancellation/stale result checks and latest request queue. Native tuner-changing tools, legacy configuration screens, quick signal and live graph screens still open separately; process table, category meters, network panels and export remain available in full detail. Existing main menu/PIG unchanged. No new menu PNGs yet. Tests for panel separation, actual result binding, stale callback and project detail path, adjusted reference-font width check. Runtime/test checkpoint d1cbf9ed70af222729bca8d6fea3837e90b87a87. Exact HEAD CI and receiver verification pending; no release or production changes. Follow-up: refine right-hand visual cards and multi-metric live graph, menu icons, other remaining diagnostics and safe release tooling. Other four projects deferred until GSU complete.
+
+---
+
+# 26.11.2026 — Diagnostic descriptions and compact network dashboard
+
+Owner requested useful descriptive sentences and one attractive screen instead of scrolling ordinary technical values. Added localized explanatory templates and complete system/process/active tuning descriptions for all 21 languages; all 17 diagnostic routes now show expanded content descriptions. Network overview now uses two side-by-side native panels with actual interfaces, speeds, IP addresses, gateways, DNS and mount count, with independent overflow navigation only if needed. Missing data and error fallback retained. Tests for descriptions, panels, focus, data binding and layout added. Runtime/test checkpoint c7057988eb3cf826b7fad2d7b88b28e5f12d2fb7. Shared icon standard saved in e74712e6d69c9f473f7eaf7a8b8d3e4af6f91540; actual new menu PNGs and integration still pending. Other bounded reports still require individual layout redesign, physical receiver check and exact HEAD CI; no production release changes. GSU first, other projects deferred.
+
+---
+
+# 26.11.2026 — Warder visual standard and single-screen diagnostic presentation
+
+Owner approved small functional menu picons throughout all five projects, based on existing Radio/YouTube artwork, and replacement of decorative blue/green navigation dots in FullHDGlass settings without changing status indicators, menu density or actions. Full scope is recorded in [WARDER-ICON-STANDARD.md](docs/WARDER-ICON-STANDARD.md). GSU first; remaining projects deferred until GSU is complete.
+
+Additional owner feedback: menu descriptions must explain actual functions in meaningful sentences (not merely Available memory). For bounded diagnostic data use one clear full-screen dashboard, two or three complementary panels, icon-led headings and aligned values rather than long scrolling prose. Keep separate expert details and scrolling only for genuinely unbounded lists, logs and release notes. Do not combine unrelated functions, hide unsupported hardware status, truncate necessary data, or reduce legibility. Apply this to tuner/channel details, storage, network, service, project pages and anonymous report as appropriate; preserve existing process table and live chart. Exact visual verification on receivers required. Implementation pending; no other project runtime changed.
+
+OpenPLi CI 45795763637 on e139d6a failed one of 482 tests due to wrong test fixture import (Screens package returned a class). Corrected fixture import in 5981f4ef9108ee2939edd4d16b3f090bc66b870c; no runtime guard removed. Reproducibility run 45796906808 succeeded on that checkpoint; all final exact HEAD checks remain required.
+
+---
+
+# 26.11.2026 — Manual scan blank native screen on receiver
+
+Owner's five screenshots show successful channel backup, confirmation, bare live TV, and EXIT returning to Reception centre. Root cause identified from source: GSU opens AdditiveScan subclass; native OpenATV Screen derives skinName from actual subclass and readSkin falls back to empty screen when no skin exists. OpenPLi ScanSetup explicitly provides ScanSetup/Setup names. Fix commit f1dd04ddc6802759b787c8fb33df664baf5ed1f0 preserves ScanSetup and native fallback names after parent initialization, without weakening additive scan/recording safeguards. Regression test commit 9f0afc867ed68d5b66c6b948cd5f20ae42829669 checks both native initialization styles and blocked/allowed scan flags. Earlier single-confirmation and direct tool navigation retained. Exact HEAD CI and physical retest pending; no production changes. Source evidence: openatv/enigma2 8.0 lib/python/Screens/Screen.py and lib/python/skin.py, OpenPLi/enigma2 release-9.2 ScanSetup.py. This is a distinct native skin lookup bug, not the common ScrollLabel layering issue.
+
+---
+
+# 26.11.2026 — Simplify native reception tool navigation (owner receiver screenshots)
+
+Owner reported excessive navigation and repeated confirmation before SatFinder. Reception centre now expands the existing tuner-native route into registered native tool rows, retaining the compatibility selector only when needed. One explicit confirmation covers a verified private channel backup and possible live-TV interruption. No backup or retune on cancellation; recording/timeshift/nearby timer checks before consent, after consent and after backup, no launch if the owning screen changed or backup fails, duplicate requests suppressed. Last successful backup path shown in the centre detail panel rather than a second modal. Passive signal routes unchanged; native tool screens still use the image UI. Localized new consent in all 21 languages; tests cover direct routes, single consent, backup failure, recording and navigation cancellation. Pending exact-head CI and physical retest; no stable release yet.
+
+---
+
+# 26.11.2026 — detail presentation and live feed cross-check
+
+Continued PR #19: group known transponder services into TV and Radio with counts; checked native OpenATV 8.0 db.cpp channelID query ordering (namespace/TSID/ONID). Tuner report separates transponder, tuner occupancy and channel information. Project pages display installed and stable version on separate lines. Forum preview presents the exact allowlisted JSON fields in readable sections, retains exact JSON for save and falls back to raw text for unknown schemas. Added route and presentation regressions. Read actual main manifests for all five projects: FullHDGlass 1.0.94, PiconHub 0.1.46, Radio 0.2.2, YouTube 1.0.4, GSU 0.41.5; feed identities, URLs and formats match the existing parser's expected inputs. Not proof of receiver network connectivity or installed package detection. Existing export and tuner safeguards unchanged. CI was queued on previous checkpoint; exact new HEAD and physical receiver checks required. Release tooling still pins 0.41.5 and must be generalized or advanced safely before a subsequent stable publication; existing tag/feed untouched.
+
+---
+
+# 26.11.2026 — 0.41.6 diagnostic output modernization
+
+PR #19 extends the physical receiver rendering regression fix with a shared branded header (date, live clock, installed version; suspended on hide), a separate result/status area, six readable resource cards and real percent meters, source/mount identification, a native five-column process list (PID/name/state/RSS MiB/measured CPU, RAM/CPU sorting), six storage-category rows with measured sizes and relative bars only when all measurements are complete, chart axes with explicit scale and 60-second history, more legible disk capacities and SMART output, local network addresses/mount count and installation status. Empty results and failed refreshes show explicit unavailable states rather than stale or fabricated values. All new category captions are localized in 21 languages. Existing data collectors, privacy allowlist, tuner/recording safeguards, canonical update actions and approved artwork preserved.
+
+Runtime/test checkpoint ead3e2c1ced227bd70552887cd5712d7f8b5db27. Added regressions for actual provider routing, native process and category binding, header lifecycle, blank translation, backing layers and all six modes at four resolutions. At checkpoint CI runs 45794499664 (package reproducibility), 45794499614 (OpenATV), 45794499501 (CPU architectures), 45794499606 (OpenPLi) were queued; no green result or physical receiver rendering claimed. PR remains draft; no version/tag/feed or web change. Remaining: inspect exact-head CI, verify all affected pages and visual quality on actual hardware; prepare subsequent stable release only after gates, then synchronize SK/EN/DE/RU website and register. Do not overwrite 0.41.5.
+
+---
+
+# 26.11.2026 — Physical receiver regression in 0.41.5
+
+Owner supplied 12 screenshots: System overview RAM heading clipped; Processes, Log, Tuners, Transponder services, Storage, Space by category, Network overview, Connection test, Installation check, IPK /tmp, Forum report show blank content; unused green/blue buttons display gettext header. Code inspection confirmed native OpenATV ScrollLabel.applySkin forwards zPosition to child labels, not parent eWidget; modern opaque backings at +1/+2 occlude the parent at 0. Fix dashboard and CAM backings below 0, protect empty msgid globally, shorten RAM title and ensure footer noWrap, explicitly display Unavailable on empty report or native import failure. Added layout and route/provider regressions for all 11 report kinds and 5 project pages. Current work branch work/gsu-0416-rendering, no production changes, CI and physical receiver retest pending. No claim that all providers work on actual hardware. Next: run exact HEAD CI, inspect failures, verify content on receiver; release subsequent stable version only with verified gates. Do not rewrite 0.41.5.
+
+---
+
 # 26. 11. 2026 · stabilná 0.41.5 a nasadenie webu
 
 [PR #16](https://github.com/Evolution-by-Warder/GSU-Warder-Evolution/pull/16) bol zlúčený po všetkých 17 úspešných kontrolách na b90807a0a4a56a4fb36437fe1978ca00aaa33e54. Publikovaný tag v0.41.5 smeruje na 30a420d5019446c1b33f48fe586addc5f9ead153. Verejné bajty a SHA-256 overil produkčný workflow 45786453936. Moderný feed je aktívny od fac1e9a9a9a7ab022f75361dc0af94b0c44e80b2.

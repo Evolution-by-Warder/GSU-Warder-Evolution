@@ -1,5 +1,9 @@
-GSU 0.41.5
+GSU 0.41.6
 
-Sedem diagnostických centier so živými grafmi systému a signálu, analýzou úložiska a lokálnou správou pre fórum. Funkcie príjmu závisia od tunera a image. Po aktualizácii reštartujte GUI.
+Opravy skrytých diagnostických výpisov, prázdnych popisov tlačidiel a obrazovky manuálneho ladenia. Dvojpanelové centrá, šesť súčasných systémových grafov a navigačné picony zlepšujú ovládanie. Po aktualizácii reštartujte GUI.
 
-Seven diagnostic centres with live system and signal graphs, storage analysis and local forum reports. Receiver functions depend on the tuner and image. Restart the GUI after updating.
+Rozšírená diagnostika zahŕňa CPU po jadrách, pamäť procesov, SMART a aktivitu diskov, najväčšie lokálne súbory, sieťové služby, porovnanie meraní tunera, históriu ECM, crashlogy, prehľad záloh staníc a verzie piatich projektov. Diagnostika je iba na čítanie; aktívne testy a analýza súborov sa spúšťajú výslovne.
+
+Fixes hidden diagnostic reports, empty button translations and the manual scan screen. Two-panel centres, six simultaneous system graphs and navigation icons improve usability. Restart the GUI after updating.
+
+Expanded diagnostics include per-core CPU, process memory, SMART and disk activity, local largest files, network services, tuner comparisons, ECM history, crash logs, channel backup inventory and a five-project version overview. Reports are read-only; active tests and file analysis remain explicit actions.

@@ -37,6 +37,41 @@ class ChannelLayoutTests(unittest.TestCase):
             icon=after.find("widget[@name='picchannel']")
             self.assertLess(int(ecm.get('position').split(',')[0])+int(ecm.get('size').split(',')[0]),int(icon.get('position').split(',')[0]))
 
+    def test_channel_panels_allow_more_caid_rows_and_horizontal_signal_meters(self):
+        plugin=load(ROOT)
+        ui=plugin._warder_channel
+        original=importlib.import_module('Plugins.Extensions.GlassSysUtil.GSU_skins_FHD').channelInfo_Center
+        for w,h in ((1280,720),(1920,1080),(2560,1440),(3840,2160),(1920,1200)):
+            root=ET.fromstring(ui.channel_skin(original,w,h))
+            a=root.find("widget[@name='tp_lab']")
+            b=root.find("widget[@name='tp_values']")
+            self.assertEqual(a.get('font'),b.get('font'))
+            self.assertEqual(a.get('position').split(',')[1],b.get('position').split(',')[1])
+            self.assertEqual(b.get('noWrap'),'1')
+            self.assertGreaterEqual(int(b.get('size').split(',')[1]),round(536*h/1080))
+            meters=[n for n in root if n.get('source')=='session.FrontendStatus' and n.get('render')=='Progress']
+            self.assertEqual(len(meters),2)
+            self.assertTrue(all(n.get('orientation')=='orLeftToRight' for n in meters))
+            self.assertEqual(len({n.get('position') for n in meters}),2)
+        caids='0624 0D96 0500 0B02 0653 181D 1834'
+        self.assertEqual(ui.caid_rows(caids).split(),caids.split())
+        self.assertEqual(len(ui.caid_rows(caids).splitlines()),2)
+        self.assertEqual(ui.compact_ecm_cam('OSCam\n',' (2.26.09-11968-802@39e78a46)\n'),'OSCam (2.26.09-11968-802)')
+
+    def test_native_video_codec_is_optional_and_preserves_aspect_row(self):
+        plugin=load(ROOT)
+        ui=plugin._warder_channel
+        enum=types.SimpleNamespace(sVideoType=42)
+        for value,expected in ((0,'MPEG2'),(1,'AVC'),(7,'HEVC'),(9,'VP9'),(40,'AVS2'),
+                               (-1,None),(11,None),(999,None),(True,None),('7',None)):
+            info=types.SimpleNamespace(getInfo=lambda key:value)
+            self.assertEqual(ui.video_codec(info,enum),expected)
+            self.assertEqual(ui.video_format('16:9',info,enum),'16:9 · '+expected if expected else '16:9')
+        self.assertIsNone(ui.video_codec(None,enum))
+        self.assertIsNone(ui.video_codec(types.SimpleNamespace(),types.SimpleNamespace()))
+        def unavailable(key):raise RuntimeError('native field unavailable')
+        self.assertIsNone(ui.video_codec(types.SimpleNamespace(getInfo=unavailable),enum))
+
     def test_header_is_independent_and_stops_on_close(self):
         plugin=load(ROOT)
         screen=plugin.channelInfoCenter(types.SimpleNamespace())

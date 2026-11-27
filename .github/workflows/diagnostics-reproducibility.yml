@@ -39,7 +39,7 @@ jobs:
           wc -c /tmp/gsu-first/*.ipk
           ar p /tmp/gsu-first/*.ipk data.tar.gz | python -c 'import sys,tarfile; print("Installed regular file bytes:",sum(m.size for m in tarfile.open(fileobj=sys.stdin.buffer,mode="r|gz") if m.isfile()))'
       - name: Verify shipped runtime, minimal Python and OPKG epoch
-        run: python compatibility/verify-packaged-install.py /tmp/gsu-first/*.ipk --product gsu --version 0.41.5 --report /tmp/gsu-install.json
+        run: python compatibility/verify-packaged-install.py /tmp/gsu-first/*.ipk --product gsu --version "$(cat plugin/src/GlassSysUtil/version)" --report /tmp/gsu-install.json
       - uses: actions/checkout@v4
         with:
           repository: shr-project/opkg
@@ -63,6 +63,13 @@ jobs:
           for version in 13.40-r93 13.41-r4 13.41-r5 13.41-r6; do
             gh release download "v$version" --repo "$GITHUB_REPOSITORY" --pattern '*.ipk' --dir /tmp/gsu-history
           done
+          # Download the already active modern predecessor, if this build advances it.
+          previous="$(python -c 'import json; x=json.load(open("plugin/update/stable-modern.json"))["release"]; print(x["version"] if x else "")')"
+          current="$(cat plugin/src/GlassSysUtil/version)"
+          if [ -n "$previous" ] && [ "$previous" != "$current" ]; then
+            case "$previous" in 0.41.*) ;; *) exit 1 ;; esac
+            gh release download "v$previous" --repo "$GITHUB_REPOSITORY" --pattern '*.ipk' --dir /tmp/gsu-history
+          fi
           python compatibility/verify-modern-migration.py upstream/opkg/src/opkg-cl /tmp/gsu-history /tmp/gsu-first/*.ipk /tmp/gsu-first/migration.json
       - name: Check the publication manifest against the migrated bytes
         run: |

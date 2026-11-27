@@ -55,6 +55,10 @@ def apply(screen,api):
     for name,slot in (('txt8','txt7'),):
         position=layout[name if visible else slot]['position']
         x,y=map(int,position.split(','));screen[name].instance.move(api['ePoint'](x,y))
+    if 'cam_icon_7' in screen:
+        (screen['cam_icon_7'].show if visible else screen['cam_icon_7'].hide)()
+        x,y=map(int,layout['cam_icon_8' if visible else 'cam_icon_7']['position'].split(','))
+        screen['cam_icon_8'].instance.move(api['ePoint'](x,y))
     if not visible:
         if screen['config'].getCurrentIndex()!=0:screen['config'].setCurrentIndex(0)
         if screen.idxAllFnc==7:screen.idxAllFnc=8
@@ -65,6 +69,12 @@ def apply(screen,api):
     help_text={0:'Exit CAM/SRV Manager',1:'Downloading CAM/SRV from server and installing to CAM/SRV Manager',2:'Deleting CAM/SRV from CAM/SRV Manager',6:'Delayed start in seconds of CAM/SRV after start E2'}
     for key,text in help_text.items():screen.aa[key]=menu_text(screen,api['_'],text)
     screen['helpTXT'].setText(screen.aa.get(screen.idxAllFnc,''))
-    screen.setTitle(menu_text(screen,api['_'],'CAM/SRV Manager'))
-    selected=screen['txt%s' % screen.idxAllFnc].instance.position()
-    screen['select_pict'].move(api['ePoint'](selected.x()-api['fhd'](30),selected.y()))
+    title=menu_text(screen,api['_'],'CAM/SRV Manager')
+    screen.setTitle(title)
+    if 'cam_title' in screen:screen['cam_title'].setText(title)
+    if hasattr(screen,'_warder_cam'):
+        from .warder_cam import position_selection
+        position_selection(screen,api)
+    else:
+        selected=screen['txt%s' % screen.idxAllFnc].instance.position()
+        screen['select_pict'].move(api['ePoint'](selected.x()-api['fhd'](30),selected.y()))

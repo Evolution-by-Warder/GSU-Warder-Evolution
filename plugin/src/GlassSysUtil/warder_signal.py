@@ -69,3 +69,53 @@ def export(samples, directory='/tmp'):
         except BaseException:
             os.unlink(out.name)
             raise
+
+
+def satellite_identity(screen):
+    """Recognized native 15-field satellite tuple, never a service URL."""
+    raw=getattr(screen,'transponder',None)
+    if not isinstance(raw,(list,tuple)) or len(raw)!=15:return None
+    import re
+    def integer(v):
+        if type(v) is int:return v
+        if isinstance(v,str) and re.fullmatch(r'-?\d{1,9}',v):return int(v)
+        raise ValueError('unknown parameter')
+    try:
+        tp=tuple(integer(v) for v in raw)
+        selector=getattr(screen,'satfinder_scan_nims',None)
+        if selector is None:selector=getattr(screen,'scan_nims',None)
+        slot=integer(selector.value)
+    except (ValueError,TypeError,AttributeError):return None
+    if not (0<=slot<256 and 3000<=tp[0]<=30000 and 1<=tp[1]<=100000
+            and 0<=tp[2]<=3 and 0<=tp[5]<3600):return None
+    return slot,tp
+
+
+def measurement_record(identity,samples,stamp):
+    """Save only observed measurements; unlocked values do not enter averages."""
+    from .warder_live import statistics
+    if identity is None:return None
+    locked=[(t,v) for t,v in samples if v.get('lock')==1 and v.get('snr') is not None]
+    if len(locked)<3:return None
+    return {'identity':identity,'stamp':stamp,'duration':round(samples[-1][0]-samples[0][0],1),
+            'count':len(samples),'locked':len(locked),'losses':lock_losses(samples),
+            'stats':{key:statistics(locked,key) for key in ('snr','agc','db','ber')}}
+
+
+def comparison_text(records,tr):
+    def shown(v):return '—' if v is None else '%.1f'%v
+    lines=[]
+    for index,record in enumerate(records,1):
+        slot,tp=record['identity']
+        pos=tp[5];orbital=(3600-pos)/10 if pos>1800 else pos/10
+        lines.extend(('%d.  %.1f° %s   ·   %d %s   ·   %d kS/s   ·   Tuner %d'%(
+            index,orbital,'W' if pos>1800 else 'E',tp[0],('H','V','L','R')[tp[2]],tp[1],slot),
+            record['stamp']+'   ·   %.1f s'%record['duration'],
+            'LOCK + SNR   %d/%d   ·   %s %d'%(record['locked'],record['count'],tr('Lock losses'),record['losses']),
+            '%s / %s / %s'%(tr('Minimum'),tr('Maximum'),tr('Average'))))
+        for key,label,unit in (('snr','SNR','%'),('agc','AGC','%'),('db','SNR','dB'),('ber','BER','')):
+            lines.append(label+' '+unit+'   '+ ' / '.join(shown(v) for v in record['stats'][key]))
+        # Include native parameters so distinct MIS/PLS/FEC settings are visible.
+        lines.extend(('FEC / SYS / MOD   %d / %d / %d'%(tp[3],tp[6],tp[7]),
+                      'MIS / PLS / T2-MI   %d / %d:%d / %d:%d'%(tp[10],tp[11],tp[12],tp[13],tp[14]),''))
+    return '\n'.join(lines).strip() or tr('Unavailable')

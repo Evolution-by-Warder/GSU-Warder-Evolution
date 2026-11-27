@@ -8,12 +8,13 @@ def overview(probe=None):
     p=probe or Probe()
     memory=memory_values(p.text('/proc/meminfo',16384))
     checks=[resource_check('RAM',memory['ram_total'],memory['ram_available'])]
+    disk=None
     try:
         disk=p.usage(p.path('/'))
         checks.append(resource_check('Flash',disk.total,disk.free,warning=10,critical=5))
     except OSError:
         checks.append(resource_check('Flash',None,None))
-    return {'memory':memory,'checks':checks,'health':health_summary(checks)}
+    return {'memory':memory,'checks':checks,'health':health_summary(checks),'flash_usage':disk}
 
 def processes(probe=None):
     p=probe or Probe()
@@ -89,6 +90,28 @@ def cpu_processes(tr, cancel, p=None):
         for cpu, pid, name, rss in sorted(measured, key=lambda r: (-r[0], r[1]))) if measured else tr('Unavailable')
 
 
+def process_table(cancel, cpu_order=False, p=None):
+    """Return measured columns; keep processes with unavailable CPU measurements."""
+    import os
+    from time import monotonic
+    p=p or Probe()
+    rows=processes(p)
+    before={pid:process_ticks(p,pid) for pid,_,_,_ in rows}
+    started=monotonic()
+    if cancel.wait(0.5):return []
+    try:elapsed=(monotonic()-started)*os.sysconf('SC_CLK_TCK')
+    except (OSError,ValueError,TypeError):elapsed=0
+    result=[]
+    for pid,name,state,rss in rows:
+        old,new=before[pid],process_ticks(p,pid)
+        cpu=None
+        if old and new and old[0]==new[0] and new[1]>=old[1] and elapsed>0:
+            cpu=100*(new[1]-old[1])/elapsed
+        result.append((pid,name,state,rss,cpu))
+    column=4 if cpu_order else 3
+    return sorted(result,key=lambda row:(row[column] is None,-(row[column] or 0),row[0]))
+
+
 def dashboard(cancel, p=None):
     from .warder_live import Sampler
     from .warder_storage import mounts, disks
@@ -100,9 +123,138 @@ def dashboard(cancel, p=None):
         return None
     live = sampler.sample()
     local = disks(p, mounts(p))
-    selected = [usage for path, _, _, _, usage in local if path != '/' and usage]
+    selected = [(path,usage,device) for path, device, _, _, usage in local if path != '/' and usage and (path.startswith('/media/') or path.startswith('/mnt/'))]
+    best=max(selected,key=lambda item:item[1].free,default=None)
     flash = report['checks'][1]['available_percent']
     # List separate mount capacities. Bind mounts can otherwise double-count the same device.
     return {'health':report['health'], 'basis':report['memory']['ram_basis'],
+            'disk_mount':best[0] if best else None,
+            'temperature_source':sampler.temperature_source,
+            'memory':report['memory'],'flash_usage':report['flash_usage'],
+            'disk_usage':best[1] if best else None,'disk_device':best[2] if best else None,
             'values':(live['cpu'], live['ram'], live['swap'], flash,
-                      max((d.free for d in selected), default=None), live['temp'])}
+                      best[1].free if best else None, live['temp'])}
+
+
+PROTOCOLS=('FTP','Telnet','VPN','Samba','NFS')
+
+
+def observed_services(p,extended=False):
+    """Local daemon observations, not a connectivity or authentication test."""
+    names=set()
+    for pid in p.entries('/proc',8192):
+        if pid.isdigit():
+            name=p.text('/proc/'+pid+'/comm',128).strip().lower()
+            if name:names.add(name)
+    patterns=(('vsftpd','proftpd','pure-ftpd','ftpd'),('telnetd','in.telnetd'),
+              ('openvpn','wireguard','wg-quick'),('smbd','nmbd'),('nfsd','rpc.mountd','mountd'))
+    if extended:patterns+=(('sshd','dropbear'),)
+    return tuple(any(n in names for n in group) if names else None for group in patterns)
+
+
+def information(cancel, p=None):
+    from .warder_storage import smart
+    p=p or Probe()
+    result=dashboard(cancel,p)
+    if result is None or cancel.is_set():return None
+    result['services']=observed_services(p)
+    result['disk_temperature']=None
+    if result['disk_device'] and not cancel.is_set():
+        status=smart(result['disk_device'])
+        if status:result['disk_temperature']=status[1]
+    return None if cancel.is_set() else result
+
+
+def cpu_details(tr,cancel,p=None):
+    """Reuse the same counter arithmetic for individual logical CPUs."""
+    from .warder_telemetry import core_counters,cpu_percent
+    p=p or Probe()
+    before=core_counters(p.text('/proc/stat',65536))
+    if cancel.wait(0.25):return ''
+    after=core_counters(p.text('/proc/stat',65536))
+    rows=[]
+    for number in sorted(before.keys()|after.keys()):
+        if cancel.is_set():return ''
+        value=cpu_percent(before.get(number),after.get(number))
+        freq=None
+        for item in ('scaling_cur_freq','cpuinfo_cur_freq'):
+            raw=p.text('/sys/devices/system/cpu/cpu%d/cpufreq/'%number+item,32)
+            if raw.isdigit() and 0<int(raw)<20000000:
+                freq=int(raw)/1000
+                break
+        rows.append('CPU %d   %s   ·   %s'%(number,'—' if value is None else '%.1f %%'%value,
+                    '—' if freq is None else '%.0f MHz'%freq))
+    try:
+        uptime=float(p.text('/proc/uptime',128).split()[0])
+        if not 0<=uptime<3155760000:raise ValueError('invalid uptime')
+        days,seconds=divmod(int(uptime),86400)
+        hours,seconds=divmod(seconds,3600)
+        minutes,seconds=divmod(seconds,60)
+        shown='%d d  %02d:%02d:%02d'%(days,hours,minutes,seconds)
+    except (ValueError,IndexError,OverflowError):shown='—'
+    rows.extend(('',tr('Uptime')+'   '+shown))
+    return '\n'.join(rows).strip()
+
+
+def smart_diagnostics(tr,cancel,p=None,panels=False):
+    """Reuse resource checks, local network observations and installation health."""
+    from .warder_network import collect
+    from .warder_service import health
+    from .warder_storage import mounts,disks
+    p=p or Probe()
+    result=overview(p)
+    rows=[]
+    for check in result['checks']:
+        value=check['available_percent']
+        rows.append('%s   ·   %s   ·   %s'%(tr(check['name']),
+            tr({'ok':'Ready','warning':'Warning','critical':'Critical','unknown':'Not exposed'}[check['state']]),
+            '—' if value is None else '%.1f %%'%value))
+    score=result['health']
+    rows.extend((tr('Resource score')+'   '+('—' if score['score'] is None else str(score['score'])+'/100'),
+                 tr('Measured checks')+'   %d/%d (RAM / Flash)'%score['coverage']))
+    if score['state'] in ('warning','critical'):rows.append(tr('Review memory and storage'))
+    if cancel.is_set():return ''
+    rows.append('')
+    for target,device,fs,ro,usage in disks(p,mounts(p)):
+        if cancel.is_set():return ''
+        if target=='/':continue  # Flash is already covered.
+        check=resource_check(target,usage.total if usage else None,usage.free if usage else None)
+        value=check['available_percent']
+        rows.append('%s   ·   %s   ·   %s'%(target,
+            tr({'ok':'Ready','warning':'Warning','critical':'Critical','unknown':'Not exposed'}[check['state']]),
+            '—' if value is None else '%.1f %%'%value))
+        if ro:rows.append(tr('read-only'))
+    if cancel.is_set():return ''
+    net=collect(p)
+    active=[row['name'] for row in net['interfaces'] if row['state']=='up']
+    rows.extend(('',tr('Network link')+'   '+(', '.join(active) or tr('Not exposed')),
+                 tr('Default gateway')+'   '+(', '.join(net['gateways']) or '—'),
+                 tr('DNS configuration')+'   '+(', '.join(net['dns']) or '—')))
+    temperatures=p.temperatures(p.sensor_paths())
+    rows.append(tr('Temperature')+'   '+('%.1f °C'%max(s['celsius'] for s in temperatures) if temperatures else '—'))
+    if cancel.is_set():return ''
+    installation=health(tr,p)
+    scope=tr('This is a read-only check. Internet access, disk integrity and CAM decoding are not tested.')
+    if cancel.is_set():return ''
+    if panels:return ('\n'.join(rows),installation+'\n\n'+scope)
+    rows.extend(('',installation,'',scope))
+    return '\n'.join(rows)
+
+
+def process_memory(pid,expected_name,tr,p=None):
+    """Read only the selected process's proportional memory accounting."""
+    if type(pid) is not int or pid<=0:return tr('Unavailable')
+    p=p or Probe()
+    base='/proc/%d/'%pid
+    before=process_ticks(p,pid)
+    name=p.text(base+'comm',128).replace('\n',' ').replace('\r',' ')
+    if not before or name!=expected_name:return tr('Unavailable')
+    from .warder_telemetry import memory_fields
+    fields=memory_fields(p.text(base+'smaps_rollup',16384))
+    after=process_ticks(p,pid)
+    if not after or before[0]!=after[0]:return tr('Unavailable')
+    rows=['PID %d   ·   %s'%(pid,name),'']
+    for key in ('Rss','Pss','Pss_Anon','Pss_File','Pss_Shmem','Private_Clean','Private_Dirty','Shared_Clean','Shared_Dirty','Swap','SwapPss'):
+        value=fields.get(key)
+        rows.append('%s   %s'%(key,'—' if value is None else '%.2f MiB'%(value/1048576)))
+    return '\n'.join(rows)

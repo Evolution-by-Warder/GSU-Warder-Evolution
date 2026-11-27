@@ -17,40 +17,24 @@ class OriginalPortTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):cls.plugin=load(ROOT)
 
-    def test_system_panels_and_cpu_refresh_work_with_both_timer_apis(self):
+    def test_system_information_worker_is_single_and_ignores_closed_callbacks(self):
         from unittest.mock import MagicMock
-        module=self.plugin
-        for modern in (False, True):
-            with self.subTest(modern=modern):
-                callbacks=[]
-                signal=types.SimpleNamespace(get=lambda:callbacks)
-                if modern:
-                    signal.connect=lambda cb:callbacks.append(cb)
-                timer=MagicMock();timer.timeout=signal
-                with patch.object(module,'eTimer',return_value=timer) as factory, patch.object(module._warder_system,'install'):
-                    screen=module.GlassSysInfoBrowser(types.SimpleNamespace())
-                    for name in ('getMemInfo','getSpaceInfo','getServicesInfo'):
-                        setattr(screen,name,MagicMock())
-                    screen.getTempSensorsInfo=MagicMock(return_value='CPU Temp.: 65 C')
-                    screen.getProccess=MagicMock(return_value='3013 oscam-stable\n')
-                    screen.getDmesg=MagicMock(return_value='Linux receiver kernel\n')
-                    screen.LetsgoParty()
-                    self.assertEqual(screen['ProccessInfo'].text,'3013 oscam-stable\n')
-                    self.assertEqual(screen['DmesgInfo'].text,'Linux receiver kernel\n')
-                    timer.start.assert_called_with(200)
-                    self.assertEqual(callbacks,[screen.getCPUInfo])
-                    screen.getProccess.return_value='3017 oscam-stable\n'
-                    screen.LetsgoParty()
-                    self.assertEqual(screen['ProccessInfo'].text,'3017 oscam-stable\n')
-                    self.assertEqual(factory.call_count,1)
-                    self.assertEqual(callbacks,[screen.getCPUInfo])
-                    screen.exit()
-                    timer.stop.assert_called_once()
+        from twisted.internet import threads
+        screen=self.plugin.GlassSysInfoBrowser(types.SimpleNamespace())
+        with patch.object(threads,'deferToThread') as worker:
+            screen.refresh();screen.refresh()
+            worker.assert_called_once()
+            done,failed=worker.return_value.addCallbacks.call_args.args
+            screen.cancelled.set()
+            screen['value0'].setText=MagicMock()
+            done({'values':(1,)})
+            screen['value0'].setText.assert_not_called()
+            screen.refresh();worker.assert_called_once()
 
     def test_system_screen_can_close_before_initial_refresh(self):
         screen=self.plugin.GlassSysInfoBrowser(types.SimpleNamespace())
-        screen.exit()
-        self.assertIsNone(screen.cpuTimer)
+        for cb in screen.onClose:cb()
+        self.assertTrue(screen.cancelled.is_set())
 
     def test_channel_initial_data_and_ecm_work_with_both_timer_apis(self):
         from unittest.mock import MagicMock
@@ -318,6 +302,12 @@ class OriginalPortTests(unittest.TestCase):
         manifest=json.loads((BASE/'original-inventory.json').read_text())
         removed={'univCamMng.killDccamd','univCamMng.doLnk','univCamMng.chckDccamd'}
         removed.add('fill')
+        # The owner explicitly replaced this packed screen; its public class
+        # and constructor remain, while old duplicated process/log and legacy
+        # shell-based collection methods are intentionally retired.
+        removed.update(item['name'] for item in manifest['objects']
+                       if item['name'].startswith('GlassSysInfoBrowser.')
+                       and item['name']!='GlassSysInfoBrowser.__init__')
         retired=('settings_satxml','settings_center','autoInstallMain','autoInstallMngMain','autoInstStatus','cronMng','SetupCronConf','ipk_script_center','script_center','ipk_center','tar_center')
         removed.update(item['name'] for item in manifest['objects'] if item['name'].split('.')[0] in retired)
         self.assertTrue(removed.isdisjoint(actual))
@@ -326,6 +316,8 @@ class OriginalPortTests(unittest.TestCase):
                 self.assertTrue(item['name'] in actual,item['name'])
                 self.assertEqual(actual[item['name']],item['args'],item['name'])
         self.assertEqual(sum(isinstance(n,ast.ClassDef) for n in ast.walk(tree)),51)
+        self.assertIn('GlassSysInfoBrowser.__init__',actual)
+        self.assertTrue(issubclass(self.plugin.GlassSysInfoBrowser,self.plugin._warder_system.Information))
 
     def test_main_menu_keeps_eleven_legacy_actions_under_seven_centres(self):
         module=self.plugin

@@ -9,28 +9,14 @@ ROOT=Path(__file__).resolve().parents[1]/'src/GlassSysUtil'
 
 class PolishTests(unittest.TestCase):
     def setUp(self):self.plugin=load(ROOT)
-    def system(self):
-        with patch.object(self.plugin.GlassSysInfoBrowser,'getCpuInfo',return_value=[]):return self.plugin.GlassSysInfoBrowser(MagicMock())
-    def test_system_help_replaces_entire_body_without_dialog_and_preserves_scroll_components(self):
-        s=self.system();s['ram'].setText('2.8GB');processes=s['ProccessInfo'];s['telnet_on'].hide()
-        s.HelpKey();self.assertTrue(s._system_help.active)
-        self.assertFalse(s['ram'].visible);self.assertFalse(s['ProccessInfo'].visible)
-        self.assertTrue(s['system_help_text'].visible);self.assertIn('LEFT/RIGHT',s['system_help_text'].getText())
-        s.session.open.assert_not_called()
-        s['ram'].show();self.assertFalse(s['ram'].visible)
-        s._system_help.back();self.assertTrue(s['ram'].visible);self.assertEqual(s['ram'].getText(),'2.8GB')
-        self.assertIs(s['ProccessInfo'],processes);self.assertFalse(s['telnet_on'].visible)
-    def test_shifted_scroll_areas_keep_right_edge_and_settings_use_large_glass_window(self):
-        for suffix,width,height in (('',1280,720),('_FHD',1920,1080),('_UHD',3840,2160)):
-            system=self.plugin._warder_system
-            original=importlib.import_module('Plugins.Extensions.GlassSysUtil.GSU_skins'+suffix).GlassSysInfo
-            root=ET.fromstring(system.system_skin(original,width,height))
-            for name in ('ProccessInfo','DmesgInfo'):
-                node=root.find("widget[@name='%s']"%name)
-                x,y=map(int,node.get('position').split(','));w,h=map(int,node.get('size').split(','))
-                self.assertLessEqual(x+w,width);self.assertGreater(x,round(900*width/1920))
+    def test_system_information_uses_six_cards_and_settings_use_large_glass_window(self):
+        for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160)):
+            root=ET.fromstring(self.plugin._warder_system.information_skin(width,height))
+            self.assertIsNone(root.find("widget[@name='ProccessInfo']"))
+            self.assertIsNone(root.find("widget[@name='DmesgInfo']"))
+            self.assertIsNotNone(root.find("widget[@name='value5']"))
             settings=ET.fromstring(self.plugin._warder_settings.skin(width,height))
-            self.assertEqual(settings.get('size'),'%d,%d'%(width,height));self.assertEqual(settings.get('backgroundColor'),'#ff000000')
+            self.assertEqual(settings.get('size'),'%d,%d'%(width,height))
             self.assertIsNotNone(settings.find("widget[@name='config']"))
             self.assertIsNotNone(settings.find("widget[@name='glass_header_art']"))
     def test_editable_mark_changes_only_rendered_text_and_restores_original_method(self):

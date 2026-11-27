@@ -134,3 +134,43 @@ class RightWorkspaceTests(unittest.TestCase):
                 x,y=map(int,node.get('position').split(','));w,h=map(int,node.get('size').split(','))
                 self.assertGreaterEqual(y,round(550*height/1080));self.assertLessEqual(y+h,round(978*height/1080))
                 self.assertGreaterEqual(x,round(1137*width/1920));self.assertLessEqual(x+w,round(1863*width/1920))
+
+
+class ManagementChildTests(unittest.TestCase):
+    def test_management_child_skin_retains_native_controls_and_geometry(self):
+        plugin=load(ROOT)
+        ui=plugin._warder_right
+        api=vars(plugin)
+        for kind in ('swap','create','osd'):
+            target=ui.management_class(api,kind)
+            original=api[{'swap':'swap_manager','create':'SwapCreate','osd':'OSD_ECM_Menu'}[kind]]
+            self.assertTrue(issubclass(target,original))
+            for width,height in ((1280,720),(1920,1080),(2560,1440),(3840,2160),(1920,1200)):
+                root=ET.fromstring(ui.management_skin(width,height,kind,str))
+                name='list' if kind=='swap' else 'config'
+                node=root.find("widget[@name='%s']"%name)
+                self.assertIsNotNone(node)
+                self.assertEqual(int(node.get('size').split(',')[1])%int(node.get('itemHeight')),0)
+                for n in root:
+                    x,y=map(int,n.get('position').split(','));w,h=map(int,n.get('size').split(','))
+                    self.assertLessEqual(x+w,width);self.assertLessEqual(y+h,height)
+        session=MagicMock()
+        screen=ui.management_class(api,'swap')(session)
+        self.assertIn('heading',screen)
+        screen.setTitle('Creating swap...')
+        self.assertEqual(screen['heading'].getText(),'Creating swap...')
+        screen.add()
+        callback,child=session.openWithCallback.call_args.args
+        self.assertEqual(callback,screen.readSwapInfo)
+        self.assertTrue(issubclass(child,plugin.SwapCreate))
+        session.openWithCallback.reset_mock()
+        screen._swap_busy=True
+        screen.add()
+        session.openWithCallback.assert_not_called()
+        swap=importlib.import_module('Plugins.Extensions.GlassSysUtil.swap_ui')
+        with patch.object(swap,'swaps',return_value=[('/media/hdd/swapfile','file','1024','32','-2')]):
+            swap.read_info(screen,api)
+        self.assertEqual(screen['list'].l.list[0][0],'/media/hdd/swapfile')
+        for entry,(offset,span) in zip(screen['list'].l.list[0][1:],screen._warder_swap_geometry[0]):
+            self.assertEqual(entry['pos'][0],offset)
+            self.assertEqual(entry['size'][0],span)
