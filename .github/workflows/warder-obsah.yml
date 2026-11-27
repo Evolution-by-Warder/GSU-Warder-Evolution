@@ -1,0 +1,38 @@
+name: Kontrola prírastkov hlavnej vetvy
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    paths: ['.github/workflows/warder-obsah.yml']
+permissions: {contents: read}
+jobs:
+  obsah:
+    name: warder-obsah
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Overiť nové Git objekty a distribučné cesty
+        shell: bash
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init -q
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          git fetch -q --no-tags --filter=blob:none origin "$BASE" "$HEAD"
+          git merge-base --is-ancestor "$BASE" "$HEAD"
+          test "$(git rev-list --count "$BASE..$HEAD")" -le 60
+          while read -r rev; do
+            while IFS= read -r -d '' path; do
+              case "/${path,,}/" in
+                */dist/*|*/build/*|*/__pycache__/*|*/node_modules/*|*/.cache/*|*/backups/*|*.ipk/|*.deb/|*.zip/|*.zip.part*/|*.gz/|*.7z/|*.xz/|*.pyc/|*.bundle/|*.bak/|*.log/) echo 'Zakázaný pracovný alebo distribučný súbor'; exit 1 ;;
+              esac
+              read -r mode type object _ < <(git ls-tree "$rev" -- "$path")
+              test "$type" = blob && [[ "$mode" = 100644 || "$mode" = 100755 ]]
+              test "$(git cat-file -s "$object")" -le 5242880
+            done < <(git diff-tree --root -m -r --no-commit-id --no-renames --diff-filter=AMT --name-only -z "$rev")
+          done < <(git rev-list "$BASE..$HEAD")
+          git rev-list --objects --no-object-names "$HEAD" "^$BASE" | git cat-file --batch-check='%(objectsize)' |
+            awk '{sum+=$1} END {printf "Nové Git objekty: %.0f B\n",sum; exit(sum>8388608)}'
