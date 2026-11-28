@@ -55,3 +55,9 @@ Vlastník výslovne schválil prechod na vlastné trojzložkové číslovanie: c
 Pred vydaním over čistú inštaláciu, aktualizáciu zo skutočného podporovaného základu, jej opakovanie, bezpečné správanie pri chybe a návrat na pôvodnú zostavu. Pre každý nahradený súbor urči jeho vlastníctvo a spravované cesty. Zachovaj používateľské nastavenia, samostatné zálohy, údaje ostatných pluginov aj licenčne požadované súbory.
 
 Pri zmene skontroluj nové veľké binárne objekty, archívy a životnosť skúšobných artefaktov. Potrebné verejné balíky, katalógy a migračné adresy eviduj s ich závislosťami. Pred čistením histórie zmeraj Git aj pracovný strom, over nezávislú šifrovanú obnovu a vyžiadaj potvrdenie vlastníka pre zásah do histórie, produkčných referencií alebo viditeľnosti. Výsledok a následnú kontrolu služieb zapíš do registra. Rovnaké pravidlá preberajú nové projekty.
+
+## Čistá náhrada programových súborov cez OPKG
+
+Pri inštalácii, aktualizácii a obnove ponechaj nastavenia, prihlásenie, OAuth, knižnicu a ostatné osobné dáta na pôvodných cestách. Pred zmenou over cieľový podpísaný IPK, vlastníctvo ciest a účinok preinst, prerm, postrm a postinst. OPKG nahrádza vlastný programový obsah a nový plugin načíta existujúcu konfiguráciu. Poškodené alebo chýbajúce staré súbory sú podporovaný vstup. Kontrola integrity patrí novému balíku a výsledku inštalácie.
+
+Rešpektuj zámok, závislosti a vlastníctvo iných balíkov. Odstraňuj iba vlastný nahraditeľný kód a jeho cache. Bežná výmena prebieha bez zálohy alebo obnovy nedotknutých dát, medziverzií a ďalších archívov. Ak starý odinštalátor zasahuje do osobných dát, najprv oprav konkrétny deštruktívny krok alebo dolož najmenšiu potrebnú výnimku. Otestuj zmiešaný a neúplný stav aj načítanie pôvodných dát po výmene. Toto rozhodnutie má prednosť pred skoršími pokynmi k tejto výmene. [Rozhodnutie vlastníka, 28. 11. 2026](https://github.com/Evolution-by-Warder/Trezor/issues/5#issuecomment-7235637234).
